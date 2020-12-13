@@ -49,3 +49,9 @@ Location Updated Successfully!
 <b>Note: </b> The request body contains any of the attributes of the location except for the body
 
 
+
+<b>Functionality:</b> Delete a location <br>
+<b>Route: </b> /hr/deleteLocation/:ID <br>
+<b>Request type: </b> DELETE <br>
+<b>Request parameters : </b> The ID of the location to be deleted
+
