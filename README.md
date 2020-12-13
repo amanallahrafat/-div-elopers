@@ -55,3 +55,5 @@ Location Updated Successfully!
 <b>Request type: </b> DELETE <br>
 <b>Request parameters : </b> The ID of the location to be deleted
 
+
+
