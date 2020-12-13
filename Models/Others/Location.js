@@ -8,4 +8,4 @@ const LocationSchema = new Schema({
     type : Number, //{{0:"hall"},{1:"tut room"},{2:"office"},{3:"lab"}}
 });
 
-module.exporst =mongoose.model('Location',LocationSchema);
+module.exports =mongoose.model('Location',LocationSchema);

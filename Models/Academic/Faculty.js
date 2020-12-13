@@ -6,4 +6,4 @@ const FacultySchema = new Schema({
     departments : Array, // Array[departmentID]
 });
 
-module.exporst =mongoose.model('Faculty',FacultySchema);
+module.exports =mongoose.model('Faculty',FacultySchema);

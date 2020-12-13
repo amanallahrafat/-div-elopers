@@ -17,4 +17,4 @@ const StaffSchema = new Schema({
 });
 
 //StaffSchema.index();
-module.exporst =mongoose.model('Staff_Member',StaffSchema);
+module.exports =mongoose.model('Staff_Member',StaffSchema);

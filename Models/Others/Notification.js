@@ -8,4 +8,4 @@ const NotificationSchema = new Schema({
     date : Date,
 });
 
-module.exporst =mongoose.model('Notification',NotificationSchema);
+module.exports =mongoose.model('Notification',NotificationSchema);

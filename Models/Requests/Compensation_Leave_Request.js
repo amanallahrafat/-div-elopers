@@ -9,4 +9,4 @@ const CompensationLeaveRequestSchema = new Schema({
     absenceDate : Date,
 });
 
-module.exporst =mongoose.model('Compensation_Leave_Request',CompensationLeaveRequestSchema);
+module.exports =mongoose.model('Compensation_Leave_Request',CompensationLeaveRequestSchema);

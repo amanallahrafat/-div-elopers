@@ -9,4 +9,4 @@ const AccidentalLeaveRequestSchema = new Schema({
     requestedDate : Date,
 });
 
-module.exporst =mongoose.model('Accidental_Leave_Request',AccidentalLeaveRequestSchema);
+module.exports =mongoose.model('Accidental_Leave_Request',AccidentalLeaveRequestSchema);

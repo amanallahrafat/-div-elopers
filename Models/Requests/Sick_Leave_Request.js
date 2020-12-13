@@ -4,9 +4,9 @@ const Schema = mongoose.Schema
 const SickLeaveRequestSchema = new Schema({
     senderID : Number,
     receiverID : Number,
-    documents : URL,
+    documents : String,
     submissionDate : Date,
     requestedDate : Date,
 });
 
-module.exporst =mongoose.model('Sick_Leave_Request',SickLeaveRequestSchema);
+module.exports =mongoose.model('Sick_Leave_Request',SickLeaveRequestSchema);

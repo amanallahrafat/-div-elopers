@@ -6,7 +6,7 @@ const DepartmentSchema = new Schema({
     ID : {type:Number, unique:true, required:true},
     members : Array, //Array[memberID]
     hodID : Number,
-    courses : Array, //Array[courseID]
+    //courses : Array, //Array[courseID]
 });
 
-module.exporst =mongoose.model('Department',DepartmentSchema);
+module.exports =mongoose.model('Department',DepartmentSchema);

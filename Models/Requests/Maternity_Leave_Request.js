@@ -4,10 +4,10 @@ const Schema = mongoose.Schema
 const MaternityLeaveRequestSchema = new Schema({
     senderID : Number,
     receiverID : Number,
-    documents : URL,
+    documents : String,
     submissionDate : Date,
     startDate : Date,
     endDate : Date,
 });
 
-module.exporst =mongoose.model('Sick_Leave_Request',MaternityLeaveRequestSchema);
+module.exports =mongoose.model('Maternity_Leave_Request',MaternityLeaveRequestSchema);

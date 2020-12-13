@@ -12,4 +12,4 @@ const CourseScheduleSchema = new Schema({
 
 });
 
-module.exporst =mongoose.model('Course_Schedule',CourseScheduleSchema);
+module.exports =mongoose.model('Course_Schedule',CourseScheduleSchema);

@@ -8,7 +8,8 @@ const CourseSchema = new Schema({
     coverage : Number,
     scheduleID : {type:Number,unique:true},
     teachingStaff : Array, //Array[staffID]
+    department : Array, //Array[departmentID]
     description : String,
 });
 
-module.exporst =mongoose.model('Course',CourseSchema);
+module.exports =mongoose.model('Course',CourseSchema);

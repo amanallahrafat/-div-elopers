@@ -7,6 +7,7 @@ const AnnualLeaveRequestSchema = new Schema({
     msg : String,
     submissionDate : Date,
     requestedDate : Date,
+    slot : Array, 
 });
 
-module.exporst =mongoose.model('Annual_Leave_Request',AnnualLeaveRequestSchema);
+module.exports =mongoose.model('Annual_Leave_Request',AnnualLeaveRequestSchema);

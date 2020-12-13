@@ -8,4 +8,4 @@ const ChangeDayOffrequestSchema = new Schema({
     submissionDate : Date,
 });
 
-module.exporst =mongoose.model('Change_Day_Off_Request',ChangeDayOffrequestSchema);
+module.exports =mongoose.model('Change_Day_Off_Request',ChangeDayOffrequestSchema);
