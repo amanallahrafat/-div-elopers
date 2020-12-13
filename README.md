@@ -62,7 +62,7 @@ Location Updated Successfully!
 <b>Route: </b>/login<br>
 <b>Request type: </b>POST<br> 
 <b>Request Body : </b> `
-{"email": "req.body.name","password":"team9"}
+{"email": "ahmed@guc.edu.eg","password":"team9111"}
 `
 <br>
 
