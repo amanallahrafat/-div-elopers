@@ -56,4 +56,13 @@ Location Updated Successfully!
 <b>Request parameters : </b> The ID of the location to be deleted
 
 
+## Staff Member Functionality
+
+<b>Functionality: </b> Login with a unique email and password. <br>
+<b>Route: </b>/login<br>
+<b>Request type: </b>POST<br> 
+<b>Request Body : </b> `
+{"email": "req.body.name","password":"team9"}
+`
+<br>
 
