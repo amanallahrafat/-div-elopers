@@ -12,7 +12,7 @@ milestone-1-SarAhmed created by GitHub Classroom
 {"name" : "H12", "capacity" : 120, "type" : 0}
 `
 <br>
-<b>Note: </b> Type denotes whether the location is a hall, tutorial room, lab or office. 0 -->hall 1--> tut room 2--> office 3-->lab <br>
+<b>Note: </b> Type denotes whether the location is a hall, tutorial room, lab or office. 0 -->hall, 1--> tut room, 2--> office, 3-->lab <br>
 
 
 <b>Functionality: </b> Update a location <br>
@@ -54,6 +54,17 @@ Location Updated Successfully!
 <b>Route: </b> /hr/deleteLocation/:ID <br>
 <b>Request type: </b> DELETE <br>
 <b>Request parameters : </b> The ID of the location to be deleted
+
+
+<b>Functionality:</b> Add a staff member <br>
+<b>Route: </b> /hr/addStaffMember<br>
+<b>Request type: </b> POST <br>
+<b>Request bosy : </b>`
+{ "name" :"Ashry", "email" : "ahmed@guc.com","type" :0,"dayOff" :"sunday","gender" : "male", "officeID" : 1,"salary" :7000}
+`
+<br>
+<b>Note: </b> The officeID must be an ID of a location of type office (type = 2).  
+
 
 
 ## Staff Member Functionality

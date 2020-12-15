@@ -12,4 +12,7 @@ hrRouter.delete('/deleteFaculty/:name' ,hrController.deleteFaculty);
 
 hrRouter.post('/createDepartment' ,hrController.createDepartment);
 
+hrRouter.post('/addStaffMember',hrController.addStaffMember);
+
+
 module.exports = hrRouter;
