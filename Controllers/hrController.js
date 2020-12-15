@@ -12,10 +12,12 @@ const Maternity_Leave_Request = require('../Models/Requests/Maternity_Leave_Requ
 const Sick_Leave_Request = require('../Models/Requests/Sick_Leave_Request.js');
 const Academic_Member = require('../Models/Users/Academic_Member.js');
 const Staff_Member = require('../Models/Users/Staff_Member.js');
+const checkings = require('../utils/checkings.js');
 const mongoose = require('mongoose');
 
 const validator = require('../Validations/hrValidations.js');
 const mongoValidator = require('mongoose-validator');
+const { request } = require('express');
 
 // Start Location CRUD
 const createLocation = async (req,res) =>{
@@ -64,10 +66,158 @@ const deleteLocation = async(req, res)=>{
 }
 // End Location CRUD
 
+// Start Faculty CRUD
+const createFaculty = async (req,res) =>{
+    const isValid = validator.validateFaculty(req.body);
+    if(isValid.error)
+        return res.status(400).send({error : isValid.error.details[0].message});
+    const fac = await Faculty.find({name: req.body.name});
+    if(fac.length)
+        return res.status(400).send("Faculty name should be unique");
 
+    // Check that the departments exist.
+    for(let i = 0; i < req.body.departments.length; i++){
+        let dep =  await Department.find({ID: req.body.departments[i]});
+        if(dep.length == 0) return res.status(400).send("Department IDs are not valid");
+    }
+
+    // Check that no department is shared with another faculty.
+    const facArray = await Faculty.find();
+    for(const f of facArray){
+        for(const d of req.body.departments){
+            if(f.departments.includes(d))
+                return res.status(400).send("Deparments can not be shared between different faculties");
+        }
+    }
+
+    const faculty = new Faculty({
+        name : req.body.name,
+        departments : req.body.departments
+    })
+    await faculty.save();
+    res.send("Faculty Added Successfully!");
+}
+
+const updateFaculty = async (req,res) =>{
+    const faculty = await Faculty.findOne({name : req.params.name});
+    if(!faculty)
+        return res.status(404).send("Faculty Not Found");
+    
+    const body = req.body;
+    if(body.name==null)body.name = faculty.name;
+    if(body.departments==null)body.departments = faculty.departments;
+
+    const isValid = validator.validateFaculty(body);
+    if(isValid.error)
+        return res.status(400).send({error : isValid.error.details[0].message});
+
+    // Delete the faculty using the old name.
+    await Faculty.deleteOne({name : faculty.name});
+
+    const fac = await Faculty.find({name: body.name});
+    if(fac.length){
+        // Add the old faculty back to the DB.
+        const newFaculty = new Faculty({
+            name : faculty.name,
+            departments : faculty.departments
+        })
+        await newFaculty.save();
+        return res.status(400).send("Faculty name should be unique");
+    }
+
+    // Check that the departments exist.
+    for(let i = 0; i < body.departments.length; i++){
+        let dep =  await Department.find({ID: body.departments[i]});
+        if(dep.length == 0){
+            // Add the old faculty back to the DB.
+            const newFaculty = new Faculty({
+                name : faculty.name,
+                departments : faculty.departments
+            })
+            await newFaculty.save();
+            return res.status(400).send("Department IDs are not valid");
+        } 
+    }
+
+    // Check that no department is shared with another faculty.
+    const facArray = await Faculty.find();
+    for(const f of facArray){
+        for(const d of body.departments){
+            if(f.departments.includes(d)){
+                // Add the old faculty back to the DB.
+                const newFaculty = new Faculty({
+                    name : faculty.name,
+                    departments : faculty.departments
+                })
+                await newFaculty.save();
+                return res.status(400).send("Deparments can not be shared between different faculties");
+            }
+        }
+    }
+
+    const newFaculty = new Faculty({
+        name : body.name,
+        departments : body.departments
+    })
+    await newFaculty.save();
+    res.send("Faculty Updated Successfully!");
+}
+
+const deleteFaculty = async(req, res)=>{
+    const faculty = await Faculty.findOne({name : req.params.name});
+    if(!faculty)
+        return res.status(404).send("Faculty name Not Valid");
+
+    await Faculty.deleteOne({name : req.params.name});
+    res.send("Faculty Deleted Successfully!");
+}
+// End Faculty CRUD
  
+// Start Department CRUD
+const createDepartment = async (req,res) =>{
+    const isValid = validator.validateDepartment(req.body);
+    if(isValid.error)
+        return res.status(400).send({error : isValid.error.details[0].message});
+
+    // TODO: Check the question on piazza
+    // Check that the department members are academic members.
+    if(req.body.members){
+        for(const memID of req.body.members){
+            const exist = await Academic_Member.find({ID: memID});
+            console.log(exist.length)
+            if(exist.length==0)
+                return res.status(400).send("Members must be academic members");
+        }
+    }
+
+    // Check that the HOD is an academic member.
+    if(req.body.hodID){
+        const existHOD = await Academic_Member.find({ID: req.body.hodID});
+    if(existHOD.length==0)
+        return res.status(400).send("HOD must be an academic member");
+    }
+    
+    const departmentTable = await Department.find();
+    let max = 0 ;
+    if(departmentTable.length != 0){
+        max = Math.max.apply(Math, departmentTable.map(obj=>  obj.ID));
+    }
+    const department = new Department({
+        ID : max + 1,
+        name : req.body.name, 
+        members : req.body.members, //Array[memberID]
+        hodID : req.body.hodID,
+    })
+    await department.save();
+    res.send("Department Added Successfully!");
+}
+
 module.exports = {
     createLocation,
     updateLocation,
     deleteLocation,
+    createFaculty,
+    updateFaculty,
+    deleteFaculty,
+    createDepartment,
 }

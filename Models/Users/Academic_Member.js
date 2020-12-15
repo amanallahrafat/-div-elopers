@@ -9,4 +9,4 @@ const AcademicMemberSchema = new Schema({
     courses : Array, // Array[CourseID]
 });
 
-module.exports =mongoose.model('Academic_Member',AcademicMemberSchema);
+module.exports = mongoose.model('Academic_Member',AcademicMemberSchema);
