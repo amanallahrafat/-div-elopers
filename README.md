@@ -123,3 +123,8 @@ Location Updated Successfully!
 `
 <br>
 
+<b>Functionality: </b> Logout an already loged in user<br>
+<b>Route: </b>/logout<br>
+<b>Request type: </b>POST<br> 
+<br>
+
