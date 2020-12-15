@@ -67,12 +67,13 @@ Location Updated Successfully!
 
 
 <b>Functionality: </b> Add a new faculty <br>
-<b>Route: </b> /hr/createLocation <br>
+<b>Route: </b> /hr/createFaculty <br>
 <b>Request Type: </b> POST <br>
 <b>Request Body: </b> `
-{"name" : "H12", "capacity" : 120, "type" : 0}
+{"name" : "MET","departments" : [2,3]}
 `
 <br>
+<b>Note: </b> Departments array contains the ids of departments.  
 
 
 ## Staff Member Functionality
