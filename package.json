@@ -4,7 +4,8 @@
   "description": "Advanced Computer Lab Project",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -22,8 +23,9 @@
     "express": "^4.17.1",
     "joi": "^17.3.0",
     "jsonwebtoken": "^8.5.1",
+    "mongo": "^0.1.0",
     "mongodb": "^3.6.3",
-    "mongoose": "^5.11.7",
+    "mongoose": "^5.11.8",
     "mongoose-validator": "^2.1.0"
   },
   "devDependencies": {

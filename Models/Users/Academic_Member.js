@@ -5,7 +5,7 @@ const AcademicMemberSchema = new Schema({
     ID : {type:Number, required:true},
     facultyID : Number,
     departmentID : Number,
-    type : Number, // { {"0" : HOD }, {"1" : course Instructor} , {"2" : Cooridnator}}
+    type : Number, // { {"0" : HOD }, {"1" : course Instructor} , {"2" : Cooridnator}, {"3": Neither}}
     courses : Array, // Array[CourseID]
 });
 
