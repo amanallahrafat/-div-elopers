@@ -60,7 +60,7 @@ Location Updated Successfully!
 <b>Route: </b> /hr/addStaffMember<br>
 <b>Request type: </b> POST <br>
 <b>Request bosy : </b>`
-{ "name" :"Ashry", "email" : "req.body.email@dgdn.com","type" :0,"dayOff" :"sunday","gender" : "male", "officeID" : 1,"salary" :7000}
+{ "name" :"Ashry", "email" : "ahmed@guc.com","type" :0,"dayOff" :"sunday","gender" : "male", "officeID" : 1,"salary" :7000}
 `
 <br>
 <b>Note: </b> The officeID must be an ID of a location of type office (type = 2).  
