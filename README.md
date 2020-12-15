@@ -12,7 +12,7 @@ milestone-1-SarAhmed created by GitHub Classroom
 {"name" : "H12", "capacity" : 120, "type" : 0}
 `
 <br>
-<b>Note: </b> Type denotes whether the location is a hall, tutorial room, lab or office. 0 -->hall 1--> tut room 2--> office 3-->lab <br>
+<b>Note: </b> Type denotes whether the location is a hall, tutorial room, lab or office. 0 -->hall, 1--> tut room, 2--> office, 3-->lab <br>
 
 
 <b>Functionality: </b> Update a location <br>
