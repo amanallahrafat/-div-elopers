@@ -89,7 +89,7 @@ Location Updated Successfully!
 <b> Example of how to call the route:</b> /hr/updateFaculty/IET
 
 <b>Functionality:</b> Delete a faculty <br>
-<b>Route: </b> /hr/deleteFacultyn/:ID <br>
+<b>Route: </b> /hr/deleteFaculty/:ID <br>
 <b>Request type: </b> DELETE <br>
 <b>Request parameters : </b> The name of the faculty to be deleted
 <br>
@@ -104,6 +104,14 @@ Location Updated Successfully!
 `
 <br>
 <b>Note: </b> Members array contains the ids of members that should be added to the new department.  
+
+<b>Functionality:</b> Delete a department <br>
+<b>Route: </b> /hr/deleteDepartment/:ID <br>
+<b>Request type: </b> DELETE <br>
+<b>Request parameters : </b> The name of the department to be deleted
+<br>
+<b>Example of how to call the route:</b> /hr/deleteDepartment/1
+<br>
 
 ## Staff Member Functionality
 
