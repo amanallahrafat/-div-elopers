@@ -96,6 +96,15 @@ Location Updated Successfully!
 <b>Example of how to call the route:</b> /hr/facultyLocation/MET
 <br>
 
+<b>Functionality: </b> Add a new department <br>
+<b>Route: </b> /hr/createDepartment <br>
+<b>Request Type: </b> POST <br>
+<b>Request Body: </b> `
+{"name" : "MET","member" : [17], "hodID" : 17}
+`
+<br>
+<b>Note: </b> Members array contains the ids of members that should be added to the new department.  
+
 ## Staff Member Functionality
 
 <b>Functionality: </b> Login with a unique email and password. <br>
