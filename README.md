@@ -23,6 +23,8 @@ milestone-1-SarAhmed created by GitHub Classroom
 {"name" : "H30","type" : 200}
 `
 <br>
+<b>Example of how to call the route:</b> /hr/updateLocation/1
+<br>
 <b>Response</b>:
 `
 {"error": "\"type\" must be less than or equal to 3"}
@@ -54,7 +56,8 @@ Location Updated Successfully!
 <b>Route: </b> /hr/deleteLocation/:ID <br>
 <b>Request type: </b> DELETE <br>
 <b>Request parameters : </b> The ID of the location to be deleted
-
+<b>Example of how to call the route:</b> /hr/deleteLocation/1
+<br>
 
 <b>Functionality:</b> Add a staff member <br>
 <b>Route: </b> /hr/addStaffMember<br>
@@ -75,6 +78,22 @@ Location Updated Successfully!
 <br>
 <b>Note: </b> Departments array contains the ids of departments.  
 
+<b>Functionality: </b> Update a faculty <br>
+<b>Route: </b> hr/updateFaculty/:name <br>
+<b>Request Type: </b> PUT <br>
+<b>Request Parameter: </b> The name of the faculty to be updated<br>
+<b>Request body : </b> `
+{"name" : "MET", "departments": [4]}
+`
+<br>
+<b> Example of how to call the route:</b> /hr/updateFaculty/IET
+
+<b>Functionality:</b> Delete a faculty <br>
+<b>Route: </b> /hr/deleteFacultyn/:ID <br>
+<b>Request type: </b> DELETE <br>
+<b>Request parameters : </b> The name of the faculty to be deleted
+<b>Example of how to call the route:</b> /hr/facultyLocation/MET
+<br>
 
 ## Staff Member Functionality
 
