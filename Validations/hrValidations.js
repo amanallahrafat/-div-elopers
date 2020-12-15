@@ -14,8 +14,7 @@ const validateLocation = (request) =>{
 const validateFaculty = (request) =>{
     const createSchema = {
         name : joi.string().min(1).max(500).required(),
-        type : joi.number().min(0).max(3).required(),
-        capacity : joi.number().min(1).required()
+        departments : joi.array().items(joi.number())
     };
     return joi.validate(request,createSchema);
 }

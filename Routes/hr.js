@@ -11,6 +11,8 @@ hrRouter.put('/updateFaculty/:name' ,hrController.updateFaculty);
 hrRouter.delete('/deleteFaculty/:name' ,hrController.deleteFaculty);
 
 hrRouter.post('/createDepartment' ,hrController.createDepartment);
+hrRouter.put('/updateDepartment/:ID',hrController.updateDepartment);
+hrRouter.delete('/deleteDepartment/:ID',hrController.deleteDepartment);
 
 hrRouter.post('/addStaffMember',hrController.addStaffMember);
 
