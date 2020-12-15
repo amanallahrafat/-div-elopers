@@ -32,6 +32,13 @@ const logout = async (req,res) =>{
     res.send("Loged out Successfully!");
 }
 
+const viewProfile = async(req,res)=>{
+    const userType = req.header.user.ID;
+}
+
+const resetPassword = async(req,res)=>{
+
+}
 
 module.exports = {
     login,logout
