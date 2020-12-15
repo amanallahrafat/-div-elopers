@@ -92,6 +92,7 @@ Location Updated Successfully!
 <b>Route: </b> /hr/deleteFacultyn/:ID <br>
 <b>Request type: </b> DELETE <br>
 <b>Request parameters : </b> The name of the faculty to be deleted
+<br>
 <b>Example of how to call the route:</b> /hr/facultyLocation/MET
 <br>
 
