@@ -66,6 +66,14 @@ Location Updated Successfully!
 <b>Note: </b> The officeID must be an ID of a location of type office (type = 2).  
 
 
+<b>Functionality: </b> Add a new faculty <br>
+<b>Route: </b> /hr/createLocation <br>
+<b>Request Type: </b> POST <br>
+<b>Request Body: </b> `
+{"name" : "H12", "capacity" : 120, "type" : 0}
+`
+<br>
+
 
 ## Staff Member Functionality
 
