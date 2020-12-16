@@ -1,5 +1,9 @@
+const Department = require("../Models/Academic/Department");
 const Academic_Member = require("../Models/Users/Academic_Member");
 const Staff_Member = require("../Models/Users/Staff_Member");
+const Course  = require("../Models/Academic/Course");
+const Course_Schedule  = require("../Models/Academic/Course_Schedule");
+
 
 const isStaffMember = async (ID)=>{
     const exist = await Staff_Member.find({ID: ID});
@@ -8,6 +12,7 @@ const isStaffMember = async (ID)=>{
     }
     return exist.length==1;
 }
+
 const isStaffMember_arr = async (ID_arr)=>{
     const staff = (await Staff_Member.find()).map(obj=>  obj.ID);
     for(const ID of ID_arr){
@@ -32,5 +37,49 @@ const isAcademicMember_arr = async (ID_arr)=>{
     return true;
 }
 
+const courseCodeExists = async(code)=>{
+    const codeExist = await Course.findOne({code: code});
+    if(codeExist)
+        return true;
+    return false;
+}
 
+const scheduleExists = async(ID)=>{
+    const scheduleExist = await Course_Schedule.findOne({ID: ID});
+    if(scheduleExist)
+        return true;
+    return false;
+}
 
+const scheduleTaken = async(ID)=>{
+    const scheduleTaken = await Course.findOne({scheduleID: ID});
+    if(scheduleTaken)
+        return true;
+    return false;
+}
+
+const departmentExists = async(ID)=>{
+    const exists = await Department.findOne({ID: ID});
+    if(exists)
+        return true;
+    return false;
+}
+
+const departmentExists_arr = async(ID_arr)=>{
+    const departments = (await Department.find()).map(obj=>  obj.ID);;
+    for(const ID of ID_arr){
+        if(!departments.includes(ID))return false;
+    }
+    return true;
+}
+module.exports={
+    isStaffMember,
+    isStaffMember_arr,
+    isAcademicMember,
+    isAcademicMember_arr,
+    courseCodeExists,
+    scheduleExists,
+    scheduleTaken,
+    departmentExists,
+    departmentExists_arr,
+};
