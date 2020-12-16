@@ -243,4 +243,9 @@ Location Updated Successfully!
 `	
 <br>
 
+### <b>Functionality: </b> View Attendance <br>	
+<b>Route: </b> /viewAttendance <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> The Route has two options for the request body to view The whole Attendance Record or by month and the input requested body for the second should be like the following `{"month":12}`	
+<br>	
 
