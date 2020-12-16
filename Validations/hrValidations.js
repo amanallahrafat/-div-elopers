@@ -36,7 +36,7 @@ const validateAddStaffMember = (request)=>{
         dayOff :request.type == 1? joi.string().valid('saturday').required():
         joi.string().valid('saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday').required(),
         gender : joi.string().valid('male', 'female').required(),
-        officeID :joi.number().integer().required(),
+        officeID :joi.number().integer(),
         extraInfo : joi.string(),
         salary:joi.number().min(4000).required(),
         facultyName: request.type == 0? joi.string().required():joi.string(),

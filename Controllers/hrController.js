@@ -13,6 +13,8 @@ const Sick_Leave_Request = require('../Models/Requests/Sick_Leave_Request.js');
 const Academic_Member = require('../Models/Users/Academic_Member.js');
 const Staff_Member = require('../Models/Users/Staff_Member.js');
 const checkings = require('../utils/checkings.js');
+const removeCascade = require('../utils/removeCascade.js');
+const createCascade = require('../utils/createCascade.js');
 const mongoose = require('mongoose');
 
 const validator = require('../Validations/hrValidations.js');
@@ -65,6 +67,7 @@ const deleteLocation = async(req, res)=>{
         return res.status(404).send("Location ID Not Valid");
 
     await Location.deleteOne({ID : req.params.ID});
+    await removeCascade.removeLocation(req.params.ID);
     res.send("Location Deleted Successfully!");
 }
 // End Location CRUD
@@ -283,7 +286,7 @@ const createDepartment = async (req,res) =>{
         return res.status(400).send("HOD must be an academic member");
     }
 
-    if(!req.body.members.includes(req.body.hodID))
+    if(req.body.members  && !req.body.members.includes(req.body.hodID))
         return res.status(400).send("The HOD must be a member of the department first to be its head");
     
     const departmentTable = await Department.find();
@@ -296,13 +299,39 @@ const createDepartment = async (req,res) =>{
         name : req.body.name, 
         members : req.body.members, //Array[memberID]
         hodID : req.body.hodID,
-    })
+    });
+    await createCascade.createDepartment(max+1 , req.body.members);
     await department.save();
     res.send("Department Added Successfully!");
 }
 
 const updateDepartment = async (req,res) =>{
-    // TODO
+    const department = await Department.findOne({ID : req.params.ID});
+    if(!department)return res.status(400).send("this department doesn't exist");
+    if(req.body.name == null) req.body.name = department.name;
+    if(req.body.members == null) req.body.members = department.members;
+    if(req.body.hodID == null) req.body.hodID = department.hodID;
+
+    const isValid = validator.validateDepartment(req.body);
+    if(isValid.error)
+        return res.status(400).send({error : isValid.error.details[0].message});
+    
+    if( req.body.hodID != department.hodID){
+        if(!req.body.members.includes(req.body.hodID))
+            return res.status(400).send("The HOD must be a member of the Department !");
+    }
+    await Academic_Member.updateMany({departmentID : req.params.ID} , {$unset:{departmentID : 1}});
+   
+   // await Academic_Member.updateMany({departmentID : req.params.ID} , {departmentID : -1});
+    for(const member of req.body.members){
+        const mem = await Academic_Member.findOne({ID : member});
+        if( !mem)
+            return res.status(400).send("The Members must be Academic member!");
+        await Academic_Member.updateOne({ID:member},{departmentID:req.params.ID});
+    }
+    await Department.update({ID:req.params.ID},req.body);
+    res.send("department has been updated successfully");
+
 }
 
 const deleteDepartment = async (req,res) =>{
@@ -311,6 +340,7 @@ const deleteDepartment = async (req,res) =>{
         return res.status(404).send("Department name Not Valid");
 
     await Department.deleteOne({ID : req.params.ID});
+    await removeCascade.removeDepartment(req.params.ID);
     res.send("Department Deleted Successfully!");
 }
 
