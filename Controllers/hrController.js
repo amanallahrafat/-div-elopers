@@ -22,6 +22,10 @@ const { request } = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { find } = require('../Models/Academic/Course_Schedule');
+//const { delete } = require('../Routes/hr');
+//const { delete } = require('../Routes/hr');
+//const { delete } = require('../Routes/hr');
+// const { delete } = require('../Routes/hr');
 const key = "jkanbvakljbefjkawkfew";
 
 // Start Location CRUD
@@ -76,7 +80,6 @@ const getMaxStaffID=async (type)=>{
     if(staffTable.length != 0){
         max = Math.max.apply(Math, staffTable.map(obj=>  obj.ID));
     }
-    console.log(max);
     return max;
 }
 
@@ -191,39 +194,35 @@ const addStaffMember=async (req,res)=>{
     const isValid = validator.validateAddStaffMember(req.body);
     if(isValid.error)
         return res.status(400).send({error : isValid.error.details[0].message});
-
-    const office = await Location.find({ID : req.body.officeID, type: 2});
+    if(req.body.officeID){
+        const office = await Location.find({ID : req.body.officeID, type: 2});
+        if(office.length == 0){
+            return res.status(400).send("This location doesn't exist or it's not an office");
+        }
+        else {
+            const countMembers = await Staff_Member.find({officeID : req.body.officeID});
+            if(countMembers.length >= office[0].capacity)
+                return res.status(400).send("This location is full");        
+            }
+    }
     const users = await Staff_Member.find({email: req.body.email});
     if(users.length != 0){
         return res.status(400).send("This email already exists. Emails have to be unique");
     }
-    console.log("the office is ");
-    console.log(office);
-    if(office.length == 0){
-        return res.status(400).send("This location doesn't exist or it's not an office");
-    }
-    else {
-        const countMembers = await Staff_Member.find({officeID : req.body.officeID});
-        console.log("the countMembers are ");
-        console.log(countMembers);
-        if(countMembers.length == office[0].capacity)
-            return res.status(400).send("This location is full");
-    
-    }
+
+    let max  = await getMaxStaffID(req.body.type);
     if(req.body.type == 0){ //If it's an academic member 
-        const faculty = await Faculty.find({name:req.body.facultyName});
-        if(faculty.length == 0)
-            return res.status(400).send("This faculty doesn't exist");
-        const department  = await Department.find({ID: req.body.departmentID});
+        var department  = await Department.find({ID: req.body.departmentID});
         if(department.length == 0)
             return res.status(400).send("This department doesn't exist");
-            
+         //Adding him to the new department
+         department[0].members.push(max + 1); 
+         await Department.updateOne({ID : req.body.departmentID},department[0]);
     }
     // the salt number : recommended not to go above 14.
     const salt  = await bcrypt.genSalt(10);
     // always pass the body.passward as a string 
     const hashedPass = await bcrypt.hash("123456",salt);
-    let max  = await getMaxStaffID(req.body.type);
     const u = new Staff_Member({
         name : req.body.name,
         ID : max + 1,
@@ -242,7 +241,7 @@ const addStaffMember=async (req,res)=>{
     if(req.body.type == 0){ // If it's an academic member add it to academic member table
         const academic_member = new Academic_Member({
             ID : max + 1,
-            facultyName : req.body.facultyName,
+            //facultyName : req.body.facultyName,
             departmentID : req.body.departmentID,
             type : 3, // { {"0" : HOD }, {"1" : course Instructor} , {"2" : Cooridnator}, {"3": Neither}}
         })
@@ -251,16 +250,126 @@ const addStaffMember=async (req,res)=>{
     res.send("Registeration Completed!");
 }
 
+const updateAcademicMember = async(req, res)=>{
+    const academic_member = await Academic_Member.findOne({ID: req.params.ID});
+    if(!req.body.departmentID)req.body.departmentID =academic_member.departmentID;
+    else{
+        const dep = await Department.find({ID: req.body.departmentID});
+        if(dep.length == 0){
+            res.status(400).send("This department doesn't exist");
+            return true;
+        }
+        var oldDepartment = await Department.findOne({ID: academic_member.departmentID});
+        oldDepartment.members = oldDepartment.members.filter(function(value){ // Removing him from old department
+            return value!= req.params.ID;
+        })
+        //Removing him from old department
+        await Department.updateOne({ID:academic_member.departmentID},oldDepartment);
+        //Adding him to the new department
+        var newDepartment = await Department.findOne({ID: req.body.departmentID});
+        newDepartment.members.push(parseInt(req.params.ID));
+        await Department.updateOne({ID:req.body.departmentID},newDepartment);
+    }
+
+    // courses are not updated here
+    await Academic_Member.updateOne({ID : req.params.ID},req.body);
+
+}
+
 const updateStaffMember = async(req, res)=>{
-    const member = await Staff_Member.find({ID: req.params.ID});
+    const member = await Staff_Member.find({ID: req.params.ID, type: req.params.type});
+    const academic_member = null;
+    if(req.params.type == 0){ //If it's an academic member.
+        const fail = await updateAcademicMember(req,res);
+        if(fail)
+            return;
+    }
+
     if(member.length == 0){
         return res.status(400).send("This staff member doesn't exist");
     }
+    if(req.body.officeID){
+        const office = await Location.find({ID : req.body.officeID, type: 2});
+        if(office.length == 0){
+            return res.status(400).send("This location doesn't exist or it's not an office");
+        }
+        else {
+            const countMembers = await Staff_Member.find({officeID : req.body.officeID});
+            if(countMembers.length >= office[0].capacity)
+                return res.status(400).send("This location is full");        
+            }
+    }
 
-
-
+    req.body.type = req.params.type;
+    if(!req.body.name) req.body.name = member[0].name;
+    if(!req.body.email) req.body.email = member[0].email;
+    if(!req.body.dayOff) req.body.dayOff = member[0].dayOff;
+    if(!req.body.gender) req.body.gender = member[0].gender;
+    if(!req.body.officeID) req.body.officeID = member[0].officeID;
+    if(!req.body.extraInfo) req.body.extraInfo = member[0].extraInfo;
+    if(!req.body.salary) req.body.salary = member[0].salary;
+    const isValid = validator.validateAddStaffMember(req.body);
+    if(isValid.error)
+        return res.status(400).send({error : isValid.error.details[0].message});
+    await Staff_Member.updateOne({ID : req.params.ID, type:req.params.type},req.body);
+    res.send("Staff member Updated Successfully!");        
 }
  
+const deleteStaffMember = async(req, res)=>{
+    const member = await Staff_Member.findOne({ID:req.params.ID, type:req.params.type});
+    if(!member){
+       return res.status(400).send("This user doesn't exist");
+    }
+    if(req.params.type == 0){ // If it's an academic member
+    const academicMember = await Academic_Member.findOne({ID: req.params.ID}); 
+    const depID =  academicMember.departmentID;
+    const department = await Department.findOne({ID: depID});
+    //Remove the academic member from the department.
+    department.members =department.members.filter(function(value){
+        return value != parseInt(req.params.ID);
+    })
+    //If this member was the head of the department remove him
+    if(department.hodID == parseInt(req.params.ID)){ 
+        department.hodID = undefined;
+        delete(department.hodID);
+    }
+    //Get all courses
+    const allCourses = await Course.find();
+    for(let i = 0; i < allCourses.length; i++){
+        const courseID = allCourses[i].ID;
+        //If this member teaches this course
+        if(allCourses[i].teachingStaff.includes(parseInt(req.params.ID))){
+            //Remove his ID from slots of this course
+            const courseSchedule = await Course_Schedule.findOne({ID: courseID});
+            var courseSlots = courseSchedule.slots;
+            for(let j = 0; courseSlots!=null && j< courseSlots.length; j++){
+                if(courseSlots[j].instructorID == parseInt(req.params.ID)){
+                    courseSlots[j].instructorID = undefined;
+                    delete(courseSlots[j].instructorID);
+                }
+            }
+
+            //Updating the course slots in the schedule
+            courseSchedule.slots =courseSlots;
+            await Course_Schedule.update({ID:courseID},courseSchedule);
+
+            //Remove the member from the teaching staff of this course
+            allCourses[i].teachingStaff = allCourses[i].teachingStaff.filter(function(value){return value != req.params.ID});
+        }
+        //If this member was the course coordinator, remove him 
+        if(allCourses[i].coordinatorID == parseInt(req.params.ID)){
+            allCourses[i].coordinatorID = undefined;
+            delete(allCourses[i].coordinatorID);
+        }
+        await Course.replaceOne({ID: courseID}, allCourses[i]);
+    }
+    await Department.replaceOne({ID:depID}, department);
+    await Academic_Member.deleteOne({ID:req.params.ID});
+    }
+    
+    await Staff_Member.deleteOne({ID:req.params.ID});
+    return res.send("Staff member deleted successfully");
+}
 // Start Department CRUD
 const createDepartment = async (req,res) =>{
     const isValid = validator.validateDepartment(req.body);
@@ -272,7 +381,6 @@ const createDepartment = async (req,res) =>{
     if(req.body.members){
         for(const memID of req.body.members){
             const exist = await Academic_Member.find({ID: memID});
-            console.log(exist.length)
             if(exist.length==0)
                 return res.status(400).send("Members must be academic members");
         }
@@ -309,4 +417,6 @@ module.exports = {
     deleteFaculty,
     createDepartment,
     addStaffMember,
+    updateStaffMember,
+    deleteStaffMember
 }

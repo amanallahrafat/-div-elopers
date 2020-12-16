@@ -37,13 +37,12 @@ const validateAddStaffMember = (request)=>{
         dayOff :request.type == 1? joi.string().valid('saturday').required():
         joi.string().valid('saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday').required(),
         gender : joi.string().valid('male', 'female').required(),
-        officeID :joi.number().integer().required(),
-        extraInfo : joi.string(),
+        officeID :joi.number().integer(),
+        extraInfo : joi.array(),
         salary:joi.number().min(4000).required(),
-        facultyName: request.type == 0? joi.string().required():joi.string(),
+        //facultyName: request.type == 0? joi.string().required():joi.string(),
         departmentID: request.type == 0? joi.number().integer().required():joi.number().integer()
-
-
+       // courses: request.type == 0 ? joi.array()
     };
     return joi.validate(request, addSchema);
 }
