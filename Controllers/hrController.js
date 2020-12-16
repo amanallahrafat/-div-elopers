@@ -452,7 +452,5 @@ module.exports = {
     createLocation,updateLocation,deleteLocation,
     createFaculty,updateFaculty,deleteFaculty,
     createDepartment,updateDepartment,deleteDepartment,
-    addStaffMember,
-    updateStaffMember,
-    deleteStaffMember
+    addStaffMember,updateStaffMember,deleteStaffMember
 }

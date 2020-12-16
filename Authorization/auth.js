@@ -10,6 +10,7 @@ const authStaffMember = async (req,res,next)=>{
         const tokens = (await BlackListedToken.find()).map(obj=>obj.token);
         if(tokens.includes(token))
             return res.status(403).send("You are logged out!");
+            
         const payload = jwt.verify(token,key,(err,payload)=>{
             req.header.user = payload;
             next();
