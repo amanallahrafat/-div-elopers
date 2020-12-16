@@ -15,6 +15,9 @@ hrRouter.put('/updateDepartment/:ID',hrController.updateDepartment);
 hrRouter.delete('/deleteDepartment/:ID',hrController.deleteDepartment);
 
 hrRouter.post('/addStaffMember',hrController.addStaffMember);
+hrRouter.put('/updateStaffMember/:ID/:type',hrController.updateStaffMember);
+hrRouter.delete('/deleteStaffMember/:ID/:type',hrController.deleteStaffMember);
+
 
 
 module.exports = hrRouter;
