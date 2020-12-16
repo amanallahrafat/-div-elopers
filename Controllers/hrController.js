@@ -299,7 +299,15 @@ const updateStaffMember = async(req, res)=>{
 
     req.body.type = req.params.type;
     if(!req.body.name) req.body.name = member[0].name;
-    if(!req.body.email) req.body.email = member[0].email;
+    if(!req.body.email){
+     req.body.email = member[0].email;
+    }else{
+        const users = await Staff_Member.find({email: req.body.email});
+        if(users.length != 0&&users[0].ID!=req.params.ID&&sers[0].type!= req.params.type){
+            return res.status(400).send("This email already exists. Emails have to be unique");
+        }
+    
+    }    
     if(!req.body.dayOff) req.body.dayOff = member[0].dayOff;
     if(!req.body.gender) req.body.gender = member[0].gender;
     if(!req.body.officeID) req.body.officeID = member[0].officeID;
