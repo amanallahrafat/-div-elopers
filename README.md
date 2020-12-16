@@ -163,5 +163,13 @@ Location Updated Successfully!
 "gender": "male","officeID": 9,"salary": 5001,"annualBalance": 2.5,"accidentalLeaveBalance": 6}`
 <br>
 
+### <b>Functionality: </b> Reset Password <br>
+<b>Route: </b>/resetPassword<br>
+<b>Request type: </b>POST<br> 
+<b>Request Body : </b> `
+{"oldPassword":"123456","newPassword":"123457"}
+`
+<br>
+
 
 
