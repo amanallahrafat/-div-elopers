@@ -1,6 +1,6 @@
-const Course_Schedule = require('../Models/Academic/Course_Schedule');
+const Course_Schedule = require('../Models/Academic/Course_Schedule.js');
 const Course = require('../Models/Academic/Course.js');
-const Department = require('../Models/Academic/Department');
+const Department = require('../Models/Academic/Department.js');
 const Faculty = require('../Models/Academic/Faculty.js');
 const Location = require('../Models/Others/Location.js');
 const Notification = require('../Models/Others/Notification.js');
@@ -17,15 +17,9 @@ const mongoose = require('mongoose');
 
 const validator = require('../Validations/hrValidations.js');
 const mongoValidator = require('mongoose-validator');
-const { request } = require('express');
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { find } = require('../Models/Academic/Course_Schedule');
-//const { delete } = require('../Routes/hr');
-//const { delete } = require('../Routes/hr');
-//const { delete } = require('../Routes/hr');
-// const { delete } = require('../Routes/hr');
 const key = "jkanbvakljbefjkawkfew";
 
 // Start Location CRUD
@@ -190,7 +184,7 @@ const deleteFaculty = async(req, res)=>{
 }
 // End Faculty CRUD
 
-const addStaffMember=async (req,res)=>{
+const addStaffMember = async (req,res)=>{
     const isValid = validator.validateAddStaffMember(req.body);
     if(isValid.error)
         return res.status(400).send({error : isValid.error.details[0].message});
@@ -392,6 +386,9 @@ const createDepartment = async (req,res) =>{
     if(existHOD.length==0)
         return res.status(400).send("HOD must be an academic member");
     }
+
+    if(!req.body.members.includes(req.body.hodID))
+        return res.status(400).send("The HOD must be a member of the department first to be its head");
     
     const departmentTable = await Department.find();
     let max = 0 ;
@@ -408,14 +405,23 @@ const createDepartment = async (req,res) =>{
     res.send("Department Added Successfully!");
 }
 
+const updateDepartment = async (req,res) =>{
+    // TODO
+}
+
+const deleteDepartment = async (req,res) =>{
+    const department = await Department.findOne({ID : req.params.ID});
+    if(!department)
+        return res.status(404).send("Department name Not Valid");
+
+    await Department.deleteOne({ID : req.params.ID});
+    res.send("Department Deleted Successfully!");
+}
+
 module.exports = {
-    createLocation,
-    updateLocation,
-    deleteLocation,
-    createFaculty,
-    updateFaculty,
-    deleteFaculty,
-    createDepartment,
+    createLocation,updateLocation,deleteLocation,
+    createFaculty,updateFaculty,deleteFaculty,
+    createDepartment,updateDepartment,deleteDepartment,
     addStaffMember,
     updateStaffMember,
     deleteStaffMember
