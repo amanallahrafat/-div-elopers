@@ -186,6 +186,33 @@ Location Updated Successfully!
 <b>Example of how to call the route:</b> /hr/deleteDepartment/1
 <br>
 
+### <b>Functionality: </b> Create a new course <br>
+<b>Route: </b> /hr/createCourse <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> `
+{"name":"COMPUTER", "code": "CSEN111", "department": [4]}
+`
+<br>
+<b>Response :</b> Course has been added successfully <br>
+
+### <b>Functionality: </b> Update a course <br>
+<b>Route: </b> /hr/updateCourse/:ID <br>
+<b> Request type : </b> PUT <br>
+<b> Request body : </b> `
+{"name":"COMPUTER PROGRAMMING"}
+`
+<br>
+<b>Response :</b> Course has been updated successfully <br>
+
+### <b>Functionality: </b> Delete a course <br>
+<b>Route: </b> /hr/deleteCourse/:ID <br>
+<b> Request type : </b> DELETE <br>
+<b>Response :</b> Course has been deleted successfully <br>
+
+
+
+
+
 ## Staff Member Functionality
 
 ### <b>Functionality: </b> Login with a unique email and password. <br>
