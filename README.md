@@ -159,7 +159,7 @@ Location Updated Successfully!
 ### <b>Functionality: </b> View Profile <br>
 <b>Route: </b> /viewProfile <br>
 <b>Request Type: </b> GET <br>
-<b>Response: </b> {"extraInfo": [],"name": "mohamed","ID": 14,"email": "mk@guc.com","type": 0,"dayOff": "sunday",
+<b>Response: </b> ` {"extraInfo": [],"name": "mohamed","ID": 14,"email": "mk@guc.com","type": 0,"dayOff": "sunday",
 "gender": "male","officeID": 9,"salary": 5001,"annualBalance": 2.5,"accidentalLeaveBalance": 6}`
 <br>
 
