@@ -61,11 +61,39 @@ Location Updated Successfully!
 
 <b>Functionality:</b> Add a staff member <br>
 <b>Route: </b> /hr/addStaffMember<br>
-<b>Request type: </b> POST <br>
-<b>Request bosy : </b>`
-{ "name" :"Ashry", "email" : "ahmed@guc.com","type" :0,"dayOff" :"sunday","gender" : "male", "officeID" : 1,"salary" :7000}
+<b>Request Type: </b> POST <br>
+<b>Request Body : </b>
+`
+{"name": "user1", "email": "user1@guc.com", "type": 0, "dayOff": "sunday", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}
 `
 <br>
+<b>Resposne: </b>`Registeration Completed!`
+
+<b>Request Body : </b>
+`
+{"name": "user1", "email": "user1@guc.com", "type": 0, "dayOff": "sunday", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}
+`
+<br>
+<b>Resposne: </b>`This email already exists. Emails have to be unique`
+
+<b>Request Body : </b>
+`
+{"name": "user1", "email": "user1@guc.com", "type": 100, "dayOff": "sunday", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}`
+<br>
+<b>Resposne: </b>
+`{
+    "error": "\"type\" must be less than or equal to 1"
+}`
+
+<b>Request Body : </b>
+`
+{"name": "user1", "email": "user1@guc.com", "type": 0, "dayOff": "hamada", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}
+`
+<br>
+<b>Resposne: </b>
+`{
+    "error": "\"dayOff\" must be one of [saturday, sunday, monday, tuesday, wednesday, thursday]"
+}`
 <b>Note: </b> The officeID must be an ID of a location of type office (type = 2).  
 
 
@@ -127,4 +155,5 @@ Location Updated Successfully!
 <b>Route: </b>/logout<br>
 <b>Request type: </b>POST<br> 
 <br>
+
 
