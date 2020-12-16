@@ -95,6 +95,51 @@ Location Updated Successfully!
     "error": "\"dayOff\" must be one of [saturday, sunday, monday, tuesday, wednesday, thursday]"
 }`
 <b>Note: </b> The officeID must be an ID of a location of type office (type = 2).  
+### <b>Functionality:</b> Update a staff member <br>
+<b>Route: </b> /hr/updateStaffMember/:ID/:type<br>
+<b>Request Type: </b> POST <br>
+<b>Request Body : </b>
+`
+{"salary": 10000}
+`
+<br>
+<b>Resposne: </b>`Staff member Updated Successfully!`
+
+<b>Request Body : </b>
+`
+{"ID": 2}`
+<br>
+<b>Resposne: </b>`{
+    "error": "\"ID\" is not allowed"
+}`
+
+<b>Request Body : </b>
+`
+{"departmentID": 4}
+`
+<br>
+<b>Resposne: </b>`Staff member Updated Successfully!`
+
+<b>Request Body : </b>
+`
+{"officeID": 9}`
+<br>
+<b>Resposne: </b>`Staff member Updated Successfully!`
+### <b>Functionality:</b> Delete a staff member <br>
+<b>Route: </b> /hr/deleteStaffMember/:ID/:type<br>
+<b>Request Type: </b> DELETE <br>
+<b>Request Body : </b>
+`
+`
+<br>
+<b>Resposne: </b>`Staff member deleted successfully`
+
+<b>Request Body : </b>
+`
+`
+<br>
+<b>Resposne: </b>`This user doesn't exist`
+
 
 
 ### <b>Functionality: </b> Add a new faculty <br>
@@ -141,6 +186,33 @@ Location Updated Successfully!
 <b>Example of how to call the route:</b> /hr/deleteDepartment/1
 <br>
 
+### <b>Functionality: </b> Create a new course <br>
+<b>Route: </b> /hr/createCourse <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> `
+{"name":"COMPUTER", "code": "CSEN111", "department": [4]}
+`
+<br>
+<b>Response :</b> Course has been added successfully <br>
+
+### <b>Functionality: </b> Update a course <br>
+<b>Route: </b> /hr/updateCourse/:ID <br>
+<b> Request type : </b> PUT <br>
+<b> Request body : </b> `
+{"name":"COMPUTER PROGRAMMING"}
+`
+<br>
+<b>Response :</b> Course has been updated successfully <br>
+
+### <b>Functionality: </b> Delete a course <br>
+<b>Route: </b> /hr/deleteCourse/:ID <br>
+<b> Request type : </b> DELETE <br>
+<b>Response :</b> Course has been deleted successfully <br>
+
+
+
+
+
 ## Staff Member Functionality
 
 ### <b>Functionality: </b> Login with a unique email and password. <br>
@@ -154,6 +226,21 @@ Location Updated Successfully!
 ### <b>Functionality: </b> Logout an already loged in user<br>
 <b>Route: </b>/logout<br>
 <b>Request type: </b>POST<br> 
+<br>
+
+### <b>Functionality: </b> View Profile <br>	
+<b>Route: </b> /viewProfile <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> ` {"extraInfo": [],"name": "mohamed","ID": 14,"email": "mk@guc.com","type": 0,"dayOff": "sunday",	
+"gender": "male","officeID": 9,"salary": 5001,"annualBalance": 2.5,"accidentalLeaveBalance": 6}`	
+<br>	
+
+### <b>Functionality: </b> Reset Password <br>	
+<b>Route: </b>/resetPassword<br>	
+<b>Request type: </b>POST<br> 	
+<b>Request Body : </b> `	
+{"oldPassword":"123456","newPassword":"123457"}	
+`	
 <br>
 
 

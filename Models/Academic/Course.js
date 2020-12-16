@@ -7,8 +7,8 @@ const CourseSchema = new Schema({
     ID : {type:Number , unique:true , required:true},
     coordinatorID : Number,
     code : {type:String , unique:true},
-    coverage : Number,
-    scheduleID : {type:Number,unique:true},
+    // coverage : Number,
+    scheduleID : {type:Number},
     teachingStaff : Array, //Array[staffID]
     department : Array, //Array[departmentID]
     description : String,

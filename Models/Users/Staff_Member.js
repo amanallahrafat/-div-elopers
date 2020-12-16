@@ -10,6 +10,10 @@ const StaffSchema = new Schema({
     dayOff : String,
     gender : String,
     officeID : Number,
+    attendanceRecord : [Object], //Array[object] : object = {"status","signIn time","signout time"}
+                                // status : {0:absent , 1:attendant}
+                                // signin time : time of signing in "time stamp"
+                                // signout time : time of signing out "time stamp"
     extraInfo : Array,
     salary : Number,
     annualBalance : Number,
