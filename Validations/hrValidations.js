@@ -46,9 +46,23 @@ const validateAddStaffMember = (request)=>{
     return joi.validate(request, addSchema);
 }
 
+const validateCourse_hr = (request)=>{
+    const addSchema ={
+        name : joi.string().min(1).max(500).required(),
+       // coordinatorID : joi.number().integer(), // TO BE ADDED IN validateCourse_instructor
+        code : joi.string().min(1).max(500).required(),
+        // coverage : joi.number(),
+        scheduleID : joi.number().integer(),
+        //teachingStaff : joi.array().items(joi.number()), //Array[staffID] // TO BE ADDED IN validateCourse_instructor
+        department : joi.array().items(joi.number()), //Array[departmentID]
+        description : joi.string(),
+    };
+    return joi.validate(request, addSchema);
+}
 module.exports = {
     validateLocation,
     validateFaculty,
     validateDepartment,
     validateAddStaffMember,
+    validateCourse_hr,
 };

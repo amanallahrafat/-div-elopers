@@ -18,6 +18,10 @@ hrRouter.post('/addStaffMember',hrController.addStaffMember);
 hrRouter.put('/updateStaffMember/:ID/:type',hrController.updateStaffMember);
 hrRouter.delete('/deleteStaffMember/:ID/:type',hrController.deleteStaffMember);
 
+hrRouter.post('/createCourse',hrController.createCourse);
+hrRouter.put('/updateCourse/:ID',hrController.updateCourse);
+hrRouter.delete('/deleteCourse/:ID',hrController.deleteCourse);
+
 
 
 module.exports = hrRouter;

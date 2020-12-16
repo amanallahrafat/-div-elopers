@@ -71,14 +71,6 @@ const deleteLocation = async(req, res)=>{
     res.send("Location Deleted Successfully!");
 }
 // End Location CRUD
-const getMaxStaffID=async (type)=>{
-    const staffTable = await Staff_Member.find({type:type});
-    let max = 0 ;
-    if(staffTable.length != 0){
-        max = Math.max.apply(Math, staffTable.map(obj=>  obj.ID));
-    }
-    return max;
-}
 
 // Start Faculty CRUD
 const createFaculty = async (req,res) =>{
@@ -367,6 +359,7 @@ const deleteStaffMember = async(req, res)=>{
     await Staff_Member.deleteOne({ID:req.params.ID});
     return res.send("Staff member deleted successfully");
 }
+
 // Start Department CRUD
 const createDepartment = async (req,res) =>{
     const isValid = validator.validateDepartment(req.body);
@@ -447,12 +440,143 @@ const deleteDepartment = async (req,res) =>{
     await removeCascade.removeDepartment(req.params.ID);
     res.send("Department Deleted Successfully!");
 }
+// End Department CRUD
+
+// Start Course CRUD
+const createCourse = async (req, res)=>{
+    const isValid = validator.validateCourse_hr(req.body);
+    if(isValid.error)
+        return res.status(400).send({error : isValid.error.details[0].message});
+    
+    if(await checkings.courseCodeExists(req.body.code))
+        return res.status(400).send("Code must be unique");
+    
+    if(req.body.scheduleID){
+        if(!await checkings.scheduleExists(req.body.scheduleID))
+            return res.status(400).send("Schedule with the given ID does not exist");
+
+        if(await checkings.scheduleTaken(req.body.scheduleID))
+            return res.status(400).send("Schedule belongs to another course");
+    }
+
+    // if(req.body.teachingStaff){
+    //     if(!await checkings.isAcademicMember_arr(req.body.teachingStaff))
+    //         return res.status(400).send("Teaching staff should be academic members");
+    // }
+
+    if(req.body.department){
+        if(! await checkings.departmentExists_arr(req.body.department))
+            return res.status(400).send("Department does not exist");
+    }
+
+    const courseID = await getMaxCourseID() + 1;
+    const course = new Course({
+        ID : courseID,
+        name : req.body.name,
+        //coordinatorID : req.body.coordinatorID, // HR can not assign coordinator.
+        code : req.body.code,
+        scheduleID : req.body.scheduleID,
+        //teachingStaff : req.body.teachingStaff,
+        department : req.body.department,
+        description :req.body.description,
+    });
+
+    await course.save();
+    return res.send("Course has been added successfully");
+}
+
+const updateCourse = async (req, res)=>{
+    const courseID = parseInt(req.params.ID);
+    const oldCourse = await Course.findOneAndDelete({ID: courseID});
+    if(!oldCourse)
+        return res.status(400).send("Course does not exist");
+    if(!req.body.name)req.body.name=oldCourse.name;
+    if(!req.body.code)req.body.code=oldCourse.code;
+    if(!req.body.scheduleID)req.body.scheduleID=oldCourse.scheduleID;
+    if(!req.body.department)req.body.department=oldCourse.department;
+    if(!req.body.description)req.body.description=oldCourse.description;
+
+    if(await checkings.courseCodeExists(req.body.code))
+        return res.status(400).send("Code must be unique");
+    
+    if(req.body.scheduleID){
+        if(!await checkings.scheduleExists(req.body.scheduleID)){
+            const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
+            course.save();
+            return res.status(400).send("Schedule with the given ID does not exist");
+        }
+
+        if(await checkings.scheduleTaken(req.body.scheduleID)){
+            const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
+            course.save();
+            return res.status(400).send("Schedule belongs to another course");
+        }
+    }
+
+    if(req.body.department){
+        if(! await checkings.departmentExists_arr(req.body.department)){
+            const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
+            course.save();
+            return res.status(400).send("Department does not exist");
+        }
+    }
+
+    const isValid = validator.validateCourse_hr(req.body);
+    if(isValid.error){
+        const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
+        course.save();
+        return res.status(400).send({error : isValid.error.details[0].message});
+    }
+
+    const course = new Course({
+        ID : oldCourse.ID,
+        name : req.body.name,
+        //coordinatorID : req.body.coordinatorID, // HR can not assign coordinator.
+        code : req.body.code,
+        scheduleID : req.body.scheduleID,
+        //teachingStaff : req.body.teachingStaff,
+        department : req.body.department,
+        description :req.body.description,
+    });
+
+    await course.save();
+    return res.send("Course has been updated successfully");
+}
+
+const deleteCourse = async(req, res)=>{
+    const courseID = parseInt(req.params.ID);
+    const course = await Course.findOneAndDelete({ID: courseID});
+    if(!course)
+        return res.status(400).send("Course does not exist");
+    await Course.deleteOne({ID: courseID});
+    return res.send("Course has been deleted successfully");
+}
+
+// End Course CRUD
+
+// Generate IDs
+const getMaxStaffID=async (type)=>{
+    const staffTable = await Staff_Member.find({type:type});
+    let max = 0 ;
+    if(staffTable.length != 0){
+        max = Math.max.apply(Math, staffTable.map(obj=>  obj.ID));
+    }
+    return max;
+}
+
+const getMaxCourseID=async ()=>{
+    const courseTable = await Course.find();
+    let max = 0 ;
+    if(courseTable.length != 0){
+        max = Math.max.apply(Math, courseTable.map(obj=>  obj.ID));
+    }
+    return max;
+}
 
 module.exports = {
     createLocation,updateLocation,deleteLocation,
     createFaculty,updateFaculty,deleteFaculty,
     createDepartment,updateDepartment,deleteDepartment,
-    addStaffMember,
-    updateStaffMember,
-    deleteStaffMember
+    addStaffMember,updateStaffMember,deleteStaffMember,
+    createCourse, updateCourse,deleteCourse,
 }
