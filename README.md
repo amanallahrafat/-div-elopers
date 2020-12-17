@@ -67,7 +67,16 @@ Location Updated Successfully!
 {"name": "user99", "email": "user99@guc.com", "type": 0, "dayOff": "sunday", "gender": "male", "officeID": 5, "salary": 8000,"departmentID": 1,"memberType":0}
 `
 <br>
-<b>Resposne: </b>`Registeration Completed!`
+<b>Resposne: </b>`Registeration Completed!` <br>
+
+<b>Request Body : </b>
+`
+{"name": "user100", "email": "user100@guc.com", "type": 1, "dayOff": "saturday", "gender": "male", "officeID": 5, "salary": 8000,"departmentID": 1}
+`
+<br>
+<b>Resposne: </b>`Registeration Completed!` <br>
+
+
 <b>Notes: </b> 1- The officeID must be an ID of a location of type office (type = 2). </b><br>
 2- type denotes whether this staff member is an HR or an academic member (0-> academic member, 1-> hr) <br>
 3- memberType denotes whether this academic member is a HOD or an academic member <br>
