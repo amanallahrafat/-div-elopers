@@ -173,7 +173,7 @@ Location Updated Successfully!
 <b>Route: </b> /hr/createDepartment <br>
 <b>Request Type: </b> POST <br>
 <b>Request Body: </b> `
-{"name" : "MET","member" : [17], "hodID" : 17}
+{"name" : "MET","members" : [17], "hodID" : 17}
 `
 <br>
 <b>Note: </b> Members array contains the ids of members that should be added to the new department.  
@@ -243,4 +243,9 @@ Location Updated Successfully!
 `	
 <br>
 
+### <b>Functionality: </b> View Attendance <br>	
+<b>Route: </b> /viewAttendance <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> The Route has two options for the request body to view The whole Attendance Record or by month and the input requested body for the second should be like the following `{"month":12}`	
+<br>	
 

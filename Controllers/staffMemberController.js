@@ -12,7 +12,7 @@ const extraUtils=require('../utils/extraUtils');
 const signIn = async (req,res) => {
     const {ID,type} = req.header.user;
     const staff_member = await Staff_Member.findOne({ID : ID , type : type});
-   staff_member.attendanceRecord.push( {status : 1, signin : Date.now(), signout : ""});
+    staff_member.attendanceRecord.push( {status : 1, signin : Date.now(), signout : ""});
     console.log(staff_member.attendanceRecord)
     await Staff_Member.updateOne({ID : ID , type : type} , {attendanceRecord : staff_member.attendanceRecord});
     res.send("Sign in Sucessfully!");
