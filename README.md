@@ -249,3 +249,30 @@ Location Updated Successfully!
 <b>Request Body: </b> The Route has two options for the request body to view The whole Attendance Record or by month and the input requested body for the second should be like the following `{"month":12}`	
 <br>	
 
+
+## HOD functionality 
+ 
+ ### <b>Functionality: </b> Assign course instructor <br>	
+<b>Route: </b> /hod/assignCourseInstructor <br>	
+<b>Request Type: </b> PUT <br>	
+<b>Request Body: </b> `
+{"courseID":3, "instructorID": 1}
+`
+<br>
+<b>Response: </b>Course instructor assigned successfully
+<br>	
+
+ ### <b>Functionality: </b> Delete course instructor <br>	
+<b>Route: </b> /hod/deleteCourseInstructor <br>	
+<b>Request Type: </b> DELETE <br>	
+<b>Request Body: </b> `
+{"courseID":3, "instructorID": 1}
+`
+<br>
+<b>Response: </b>Course instructor was deleted successfully
+<br>	
+
+
+    
+    
+    
