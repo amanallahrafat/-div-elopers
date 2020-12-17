@@ -273,6 +273,73 @@ Location Updated Successfully!
 <br>	
 
 
+ ### <b>Functionality: </b> View Staff member in department <br>	
+<b>Route: </b> /hod/viewDepartmentMembers <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response : </b>Array of staff members
+`
+[
+    {
+        "name": "aca6",
+        "email": "aca6@guc.com",
+        "ID": 6,
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "officeID": "Not yet assigned",
+        "departmentID": "MNGT",
+        "extra info": []
+    },
+    {
+        "name": "aca7",
+        "email": "aca7@guc.com",
+        "ID": 7,
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "officeID": "Not yet assigned",
+        "departmentID": "MNGT",
+        "extra info": []
+    }
+]
+`
+<br>
+
+ ### <b>Functionality: </b> View staff members by course <br>	
+<b>Route: </b> /hod/viewDepartmentMembersByCourse/:courseID <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Parameters: </b>ID of the course whose teaching staff the head of the department wants to view  
+<br>
+<b>Response: </b>Array of staff members
+`
+[
+    {
+        "name": "sarah",
+        "email": "sarah@guc.com",
+        "ID": 1,
+        "type": 1,
+        "dayOff": "saturday",
+        "gender": "female",
+        "officeID": "Not yet assigned",
+        "departmentID": "MET",
+        "extra info": []
+    },
+    {
+        "name": "aca2",
+        "email": "aca2@guc.com",
+        "ID": 2,
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "officeID": "Not yet assigned",
+        "departmentID": "MET",
+        "extra info": []
+    }
+]
+`
+<br>
+	
+
     
     
     
