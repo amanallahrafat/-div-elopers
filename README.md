@@ -339,7 +339,40 @@ Location Updated Successfully!
 `
 <br>
 	
+ ### <b>Functionality: </b> View all staff day off <br>	
+<b>Route: </b> /hod/viewAllStaffDayOff <br>	
+<b>Request Type: </b> GET <br>	
+<br>
+<b>Response: </b>Array containing staff member name, ID and day off
+`
+[
+    {
+        "name": "aca6",
+        "id": "ac_6",
+        "dayOff": "sunday"
+    },
+    {
+        "name": "aca7",
+        "id": "ac_7",
+        "dayOff": "sunday"
+    }
+]
+`
+<br>	
 
-    
+ ### <b>Functionality: </b> View day off of single staff member in department <br>	
+<b>Route: </b> /hod/viewSingleStaffDayOff/:ID <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Parameters: </b> ID of the staff member the head of the department wants to view
+<br>
+<b>Response: </b>staff member name, ID and day off
+`
+{
+    "name": "aca6",
+    "id": "ac_6",
+    "day off": "sunday"
+}
+`
+<br>	
     
     
