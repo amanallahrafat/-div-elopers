@@ -19,7 +19,13 @@ const authStaffMember = async (req,res,next)=>{
        return res.status(403).send("Please login to continue!");
     }
 }
+const authHr=async(req,res,next)=>{
+    if(req.header.user.type!=1)
+    return res.status(403).send("you are not an HR and don't have authority");
+    next();
+}
+
 
 module.exports = {
-    authStaffMember,
+    authStaffMember,authHr,
 }
