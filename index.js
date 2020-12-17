@@ -15,6 +15,6 @@ app.use('/', staffMemberRouter);
 app.use('/hr', hrRouter);
 app.use('/ci', courseInstructorRouter);
 
-app.use('/courseCoordinator', courseCoordinatorRouter);
+app.use('/cc', courseCoordinatorRouter);
 
 module.exports = app;

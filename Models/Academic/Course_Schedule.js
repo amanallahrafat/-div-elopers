@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema
 const CourseScheduleSchema = new Schema({
-    ID: { type: Number, unique: true, required: true },
+    ID: { type: Number, unique: true, required: true }, // as same as the courseID
     slots: Array,
     //    Array[{
     //  "ID": Number,

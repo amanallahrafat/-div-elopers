@@ -37,7 +37,7 @@ const viewCourseCoverage = async(req, res) => {
 
     const course = await Course.findOne({ ID: courseID });
     const courseSchedule = await Course_Schedule.findOne({ ID: course.scheduleID });
-    if (!courseSchedule)
+    if (courseSchedule==null)
         return res.status(400).send("No schedule is set yet for the course");
     if (courseSchedule.slots.length == 0)
         return res.status(400).send("Course schedule has no slot entries yet");
@@ -61,108 +61,116 @@ const viewSlotAssignment = async(req, res) => {
 }
 
 const assignAcademicMemberToSlot = async(req, res) => {
-    const instructorID = 3 //req.header.user.ID;
-    const slotID = req.params.slotID;
-    const courseID = req.params.courseID;
-    const academicMemberID = req.params.academicMemberID;
-    // if (!await checkings.isAcademicMember(academicMemberID))
-    //     res.status(400).send("The provided ID does not an acadmic memeber");
-    if (!await checkings.isTA(academicMemberID))
-        res.status(400).send("The provided ID does not an acadmic memeber");
-    if (!await checkings.courseIDExists(courseID))
-        res.status(400).send("The provided ID does not belong to a valid course");
-    if (!await checkings.isInstructorOfCourse(instructorID, courseID))
-        res.status(400).send("You are not an instructor of the given course");
-
-    const course = await Course.findOne({ ID: courseID });
-    const schedule = await Course_Schedule.findOne({ ID: course.scheduleID });
-    if (schedule.slots == null || schedule.slots.length == 0) {
-        res.status(400).send("No slots are assigned for the given course yet");
-    }
-    const slot = schedule.slots.filter(x => x.ID = slotID);
-    if (slot[0] == null)
-        res.status(400).send("No slot is assigned for the given course with the provided slotID");
-    if (slot[0].instructor != null)
-        res.status(400).send("The slot is already assigned to another instructor");
-    // Q1: Could a course Instructor assign another course instructor (OR it should eb only a TA) to an assigned slot?
-    // Q2: What is the difference betweeh this functionalty and the functionality of the course-coordinator of assigning slot
-    // After the slot linkin request is approved.
-
-    slot[0].instructor = academicMemberID;
-
-    schedule.slots = schedule.slots.filter(x => x.ID != slotID).push(slot[0]);
-    await Course_Schedule.updateOne({ ID: scheduleID }, { slots: schedule.slots });
-    res.send("Academic memeber is assigned to the slot the successfuly");
-}
-
-const removeAssignmentOfAcademicMemberToSlot = async(req, res) => {
-
-    const instructorID = 3 //req.header.user.ID;
+    const instructorID = req.header.user.ID;
     const slotID = req.body.slotID;
     const courseID = req.body.courseID;
     const academicMemberID = req.body.academicMemberID;
     // if (!await checkings.isAcademicMember(academicMemberID))
     //     res.status(400).send("The provided ID does not an acadmic memeber");
     if (!await checkings.isTA(academicMemberID))
-        res.status(400).send("The provided ID does not an acadmic memeber");
+        return res.status(400).send("The provided ID is not an acadmic memeber");
     if (!await checkings.courseIDExists(courseID))
-        res.status(400).send("The provided ID does not belong to a valid course");
+        return res.status(400).send("The provided ID does not belong to a valid course");
     if (!await checkings.isInstructorOfCourse(instructorID, courseID))
-        res.status(400).send("You are not an instructor of the given course");
-
+        return res.status(400).send("You are not an instructor of the given course");
     const course = await Course.findOne({ ID: courseID });
     const schedule = await Course_Schedule.findOne({ ID: course.scheduleID });
     if (schedule.slots == null || schedule.slots.length == 0) {
-        res.status(400).send("No slots are assigned for the given course yet");
+        return res.status(400).send("No slots are assigned for the given course yet");
     }
-    const slot = schedule.slots.filter(x => x.ID = slotID);
-    if (slot[0] == null)
-        res.status(400).send("No slot is assigned for the given course with the provided slotID");
-    if (slot[0].instructor != academicMemberID)
-        res.status(400).send("The given academic member was not assigned to the provided slot");
+    const slot = schedule.slots.filter(x => x.ID == slotID);
+    console.log(slot);
+    if (slot[0] == null)  
+        return res.status(400).send("No slot is assigned for the given course with the provided slotID");
+    if (slot[0].instructor != null)
+        return res.status(400).send("The slot is already assigned to another instructor");
     // Q1: Could a course Instructor assign another course instructor (OR it should eb only a TA) to an assigned slot?
     // Q2: What is the difference betweeh this functionalty and the functionality of the course-coordinator of assigning slot
     // After the slot linkin request is approved.
-
-    slot[0].instructor = undefined;
-    delete(slot[0].instructor);
-
-    schedule.slots = schedule.slots.filter(x => x.ID != slotID).push(slot[0]);
-    await Course_Schedule.updateOne({ ID: scheduleID }, { slots: schedule.slots });
-    res.send("Academic memeber assignment to the slot is removed successfuly");
+    const slots = schedule.slots;
+    slots.forEach(elm => {
+        if( elm.ID == slotID ){
+            if(elm.instructor)
+                return res.status(400).send("The Specified slot is already assigned to an instructor !");
+            elm.instructor = academicMemberID;
+        }
+    });
+    await Course_Schedule.updateOne({ ID: course.scheduleID }, { slots: slots });
+    res.send("Academic memeber is assigned to the slot the successfuly");
 }
 
-const updateAssignmentOfAcademicMemberToSlot = async(req, res) => {
-    const instructorID = 3 //req.header.user.ID;
-    const newSlotID = req.params.newSlotID;
-    const oldSlotID = req.params.oldSlotID;
+const removeAssignmentOfAcademicMemberToSlot = async(req, res) => {
+
+    const instructorID = req.header.user.ID;
+    const slotID = req.body.slotID;
     const courseID = req.body.courseID;
     const academicMemberID = req.body.academicMemberID;
     // if (!await checkings.isAcademicMember(academicMemberID))
     //     res.status(400).send("The provided ID does not an acadmic memeber");
     if (!await checkings.isTA(academicMemberID))
-        res.status(400).send("The provided ID does not an acadmic memeber");
+        return res.status(400).send("The provided ID does not an acadmic memeber");
     if (!await checkings.courseIDExists(courseID))
-        res.status(400).send("The provided ID does not belong to a valid course");
+        return res.status(400).send("The provided ID does not belong to a valid course");
     if (!await checkings.isInstructorOfCourse(instructorID, courseID))
-        res.status(400).send("You are not an instructor of the given course");
+        return res.status(400).send("You are not an instructor of the given course");
 
     const course = await Course.findOne({ ID: courseID });
     const schedule = await Course_Schedule.findOne({ ID: course.scheduleID });
     if (schedule.slots == null || schedule.slots.length == 0) {
-        res.status(400).send("No slots are assigned for the given course yet");
+        return res.status(400).send("No slots are assigned for the given course yet");
     }
-    const oldSlot = schedule.slots.filter(x => x.ID = oldSlotID);
-    if (oldSlot == null)
-        res.status(400).send("No oldSlot is assigned for the given course with the provided slotID");
-    if (oldSlot[0].instructor != academicMemberID)
-        res.status(400).send("The given academic member was not assigned to the provided oldSlot");
+    const slot = schedule.slots.filter(x => x.ID == slotID);
+    if (slot[0] == null)
+        return res.status(400).send("No slot is assigned for the given course with the provided slotID");
+    if (slot[0].instructor != academicMemberID)
+        return res.status(400).send("The given academic member was not assigned to the provided slot");
+    // Q1: Could a course Instructor assign another course instructor (OR it should eb only a TA) to an assigned slot?
+    // Q2: What is the difference betweeh this functionalty and the functionality of the course-coordinator of assigning slot
+    // After the slot linkin request is approved.
+    const slots = schedule.slots;
+    slots.forEach(elm => {
+        if( elm.ID == slotID ){
+            elm.instructor = undefined;
+            delete(elm.instructor);
+        }
+    });
+    await Course_Schedule.updateOne({ ID: course.scheduleID }, { slots: slots });
+    res.send("Academic memeber assignment to the slot is removed successfuly");
+}
 
-    const newSlot = schedule.slots.filter(x => x.ID = newSlotID);
-    if (newSlot == null)
-        res.status(400).send("No newSlot is assigned for the given course with the provided slotID");
+const updateAssignmentOfAcademicMemberToSlot = async(req, res) => {
+    const instructorID = req.header.user.ID;
+    const newSlotID = req.body.newSlotID;
+    const oldSlotID = req.body.oldSlotID;
+    const courseID = req.body.courseID;
+    const academicMemberID = req.body.academicMemberID;
+    // if (!await checkings.isAcademicMember(academicMemberID))
+    //     res.status(400).send("The provided ID does not an acadmic memeber");
+    if (!await checkings.isTA(academicMemberID))
+        return res.status(400).send("The provided ID does not an acadmic memeber");
+    if (!await checkings.courseIDExists(courseID))
+        return res.status(400).send("The provided ID does not belong to a valid course");
+    if (!await checkings.isInstructorOfCourse(instructorID, courseID))
+        return res.status(400).send("You are not an instructor of the given course");
+
+    const course = await Course.findOne({ ID: courseID });
+    const schedule = await Course_Schedule.findOne({ ID: course.scheduleID });
+    if (schedule.slots == null || schedule.slots.length == 0) {
+        return res.status(400).send("No slots are assigned for the given course yet");
+    }
+    const oldSlot = schedule.slots.filter(x => x.ID == oldSlotID);
+    console.log(schedule.slots);
+    console.log(oldSlot);
+    if (oldSlot[0] == null)
+        return res.status(400).send("No oldSlot is assigned for the given course with the provided slotID");
+    if (oldSlot[0].instructor != academicMemberID)
+        return res.status(400).send("The given academic member was not assigned to the provided oldSlot");
+
+    const newSlot = schedule.slots.filter(x => x.ID == newSlotID);
+    if (newSlot[0] == null)
+        return res.status(400).send("No newSlot is assigned for the given course with the provided slotID");
     if (newSlot[0].instructor != null)
-        res.status(400).send("The slot is already assigned to another instructor");
+        return res.status(400).send("The slot is already assigned to another academic member");
     // Q1: Could a course Instructor assign another course instructor (OR it should eb only a TA) to an assigned slot?
     // Q2: What is the difference betweeh this functionalty and the functionality of the course-coordinator of assigning slot
     // After the slot linkin request is approved.
@@ -172,15 +180,20 @@ const updateAssignmentOfAcademicMemberToSlot = async(req, res) => {
 
     newSlot[0].instructor = academicMemberID;
 
-    schedule.slots = schedule.slots
-        .filter(x => x.ID != oldSlotID && x.ID != newSlotID)
-        .push(oldSlot[0])
-        .push(newSlot[0]);
+    const slots = schedule.slots;
+    slots.forEach(elm => {
+        if( elm.ID == oldSlotID ){
+            elm.instructor = undefined;
+            delete(elm.instructor);
+        }
+        if(elm.ID == newSlotID){
+            elm.instructor = academicMemberID;
+        }
+    });
 
-    await Course_Schedule.updateOne({ ID: scheduleID }, { slots: schedule.slots });
-    // res.send("Academic memeber assignment to the slot is removed successfuly");
-
-
+    await Course_Schedule.updateOne({ ID: course.scheduleID }, { slots: slots });
+    await Course_Schedule.updateOne({ ID: course.scheduleID }, { slots: schedule.slots });
+    res.send("Academic memeber assignment to the slot is updated successfuly");
 }
 
 module.exports = {

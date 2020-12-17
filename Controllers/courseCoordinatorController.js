@@ -53,7 +53,7 @@ const hendleSlotLinkingRequest = async (req,res) =>{
     }
 }
 
-const getMaxSlotID= async (slots)=>{
+const getMaxSlotID= (slots)=>{
     let max = 0 ;
     if(slots.length != 0){
         max = Math.max.apply(Math, slots.map(obj=>obj.ID));
@@ -62,7 +62,8 @@ const getMaxSlotID= async (slots)=>{
 }
 // body : {courseID , slot}
 // slot = {slotNumber:1,day:"sunday",locationID:1,ID:2}
-const addSlot = async (req,res)=>{
+// UNCOMPLETED TESTING
+const createSlot = async (req,res)=>{
     const {courseID,slot} = req.body;
 
     const isValid = validator.validateSlot(slot);
@@ -73,17 +74,24 @@ const addSlot = async (req,res)=>{
     if(!courseID)
         return res.status(400).send("the requested course does not existed!");
     
-    const course_schedule = await Course_Schedule.findOne({ID : course.scheduleID});
-    if(!course_schedule)
-        return res.status(400).send("the requested course does not have a schedule!");
+    let course_schedule = await Course_Schedule.findOne({ID : course.ID});
+    if(!course_schedule){
+        course_schedule = new Course_Schedule({
+            ID : courseID,
+            slots : []
+        });
+        await course_schedule.save();
+        await Course.updateOne({ID : course.ID } , {scheduleID : course.ID});
+    }
     
     const newSlot = { ID : getMaxSlotID(course_schedule.slots) + 1,
                     slotNumber : slot.slotNumber,
                     day : slot.day,
                     locationID : slot.locationID
     };
+
     course_schedule.slots.push(newSlot);
-    await Course_Schedule.updateOne({ID : course.scheduleID} , {slots : course_schedule.slots});
+    await Course_Schedule.updateOne({ID : course.ID} , {slots : course_schedule.slots});
     res.send("Slot added sucessfully !");
 }
 
@@ -92,5 +100,5 @@ const addSlot = async (req,res)=>{
 module.exports = {
     viewSlotLinkingRequests,
     hendleSlotLinkingRequest,
-    addSlot,
+    createSlot,
 }
