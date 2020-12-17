@@ -173,7 +173,7 @@ Location Updated Successfully!
 <b>Route: </b> /hr/createDepartment <br>
 <b>Request Type: </b> POST <br>
 <b>Request Body: </b> `
-{"name" : "MET","member" : [17], "hodID" : 17}
+{"name" : "MET","members" : [17], "hodID" : 17}
 `
 <br>
 <b>Note: </b> Members array contains the ids of members that should be added to the new department.  
