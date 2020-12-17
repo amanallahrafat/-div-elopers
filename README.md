@@ -64,37 +64,22 @@ Location Updated Successfully!
 <b>Request Type: </b> POST <br>
 <b>Request Body : </b>
 `
-{"name": "user1", "email": "user1@guc.com", "type": 0, "dayOff": "sunday", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}
+{"name": "user99", "email": "user99@guc.com", "type": 0, "dayOff": "sunday", "gender": "male", "officeID": 5, "salary": 8000,"departmentID": 1,"memberType":0}
 `
 <br>
-<b>Resposne: </b>`Registeration Completed!`
+<b>Resposne: </b>`Registeration Completed!` <br>
 
 <b>Request Body : </b>
 `
-{"name": "user1", "email": "user1@guc.com", "type": 0, "dayOff": "sunday", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}
+{"name": "user100", "email": "user100@guc.com", "type": 1, "dayOff": "saturday", "gender": "male", "officeID": 5, "salary": 8000,"departmentID": 1}
 `
 <br>
-<b>Resposne: </b>`This email already exists. Emails have to be unique`
+<b>Resposne: </b>`Registeration Completed!` <br>
 
-<b>Request Body : </b>
-`
-{"name": "user1", "email": "user1@guc.com", "type": 100, "dayOff": "sunday", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}`
-<br>
-<b>Resposne: </b>
-`{
-    "error": "\"type\" must be less than or equal to 1"
-}`
 
-<b>Request Body : </b>
-`
-{"name": "user1", "email": "user1@guc.com", "type": 0, "dayOff": "hamada", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}
-`
-<br>
-<b>Resposne: </b>
-`{
-    "error": "\"dayOff\" must be one of [saturday, sunday, monday, tuesday, wednesday, thursday]"
-}`
-<b>Note: </b> The officeID must be an ID of a location of type office (type = 2).  
+<b>Notes: </b> 1- The officeID must be an ID of a location of type office (type = 2). </b><br>
+2- type denotes whether this staff member is an HR or an academic member (0-> academic member, 1-> hr) <br>
+3- memberType denotes whether this academic member is a HOD or an academic member <br>
 ### <b>Functionality:</b> Update a staff member <br>
 <b>Route: </b> /hr/updateStaffMember/:ID/:type<br>
 <b>Request Type: </b> POST <br>
@@ -173,7 +158,7 @@ Location Updated Successfully!
 <b>Route: </b> /hr/createDepartment <br>
 <b>Request Type: </b> POST <br>
 <b>Request Body: </b> `
-{"name" : "MET","member" : [17], "hodID" : 17}
+{"name" : "MET","members" : [17], "hodID" : 17}
 `
 <br>
 <b>Note: </b> Members array contains the ids of members that should be added to the new department.  
@@ -248,4 +233,174 @@ Location Updated Successfully!
 <b>Request Type: </b> POST <br>	
 <b>Request Body: </b> The Route has two options for the request body to view The whole Attendance Record or by month and the input requested body for the second should be like the following `{"month":12}`	
 <br>	
+
+
+## HOD functionality 
+ 
+ ### <b>Functionality: </b> Assign course instructor <br>	
+<b>Route: </b> /hod/assignCourseInstructor <br>	
+<b>Request Type: </b> PUT <br>	
+<b>Request Body: </b> `
+{"courseID":3, "instructorID": 1}
+`
+<br>
+<b>Response: </b>Course instructor assigned successfully
+<br>	
+
+ ### <b>Functionality: </b> Delete course instructor <br>	
+<b>Route: </b> /hod/deleteCourseInstructor <br>	
+<b>Request Type: </b> DELETE <br>	
+<b>Request Body: </b> `
+{"courseID":3, "instructorID": 1}
+`
+<br>
+<b>Response: </b>Course instructor was deleted successfully
+<br>	
+
+
+ ### <b>Functionality: </b> View Staff member in department <br>	
+<b>Route: </b> /hod/viewDepartmentMembers <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response : </b>Array of staff members
+`
+[
+    {
+        "name": "aca6",
+        "email": "aca6@guc.com",
+        "ID": 6,
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "officeID": "Not yet assigned",
+        "departmentID": "MNGT",
+        "extra info": []
+    },
+    {
+        "name": "aca7",
+        "email": "aca7@guc.com",
+        "ID": 7,
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "officeID": "Not yet assigned",
+        "departmentID": "MNGT",
+        "extra info": []
+    }
+]
+`
+<br>
+
+ ### <b>Functionality: </b> View staff members by course <br>	
+<b>Route: </b> /hod/viewDepartmentMembersByCourse/:courseID <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Parameters: </b>ID of the course whose teaching staff the head of the department wants to view  
+<br>
+<b>Response: </b>Array of staff members
+`
+[
+    {
+        "name": "sarah",
+        "email": "sarah@guc.com",
+        "ID": 1,
+        "type": 1,
+        "dayOff": "saturday",
+        "gender": "female",
+        "officeID": "Not yet assigned",
+        "departmentID": "MET",
+        "extra info": []
+    },
+    {
+        "name": "aca2",
+        "email": "aca2@guc.com",
+        "ID": 2,
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "officeID": "Not yet assigned",
+        "departmentID": "MET",
+        "extra info": []
+    }
+]
+`
+<br>
+	
+ ### <b>Functionality: </b> View all staff day off <br>	
+<b>Route: </b> /hod/viewAllStaffDayOff <br>	
+<b>Request Type: </b> GET <br>	
+<br>
+<b>Response: </b>Array containing staff member name, ID and day off
+`
+[
+    {
+        "name": "aca6",
+        "id": "ac_6",
+        "dayOff": "sunday"
+    },
+    {
+        "name": "aca7",
+        "id": "ac_7",
+        "dayOff": "sunday"
+    }
+]
+`
+<br>	
+
+ ### <b>Functionality: </b> View day off of single staff member in department <br>	
+<b>Route: </b> /hod/viewSingleStaffDayOff/:ID <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Parameters: </b> ID of the staff member the head of the department wants to view
+<br>
+<b>Response: </b>staff member name, ID and day off
+`
+{
+    "name": "aca6",
+    "id": "ac_6",
+    "day off": "sunday"
+}
+`
+<br>	
+    
+ ### <b>Functionality: </b> View course teaching assignments <br>	
+<b>Route: </b> /hod/viewCourseTeachingAssignments/:ID <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Parameters: </b> ID of the course that the head of the department wants to view
+<br>
+<b>Response: </b> name of the course, code of the course and an array containing the slots of the course
+`
+{
+    "course name": "Graphics",
+    "course code": "DMET501",
+    "course slots": [
+        {
+            "slot": {
+                "ID": 1,
+                "slotNumber": 1,
+                "day": "monday",
+                "locationID": 1
+            },
+            "staff member name": "Not yet assigned"
+        },
+        {
+            "slot": {
+                "ID": 2,
+                "slotNumber": 2,
+                "day": "monday",
+                "locationID": 1
+            },
+            "staff member name": "Not yet assigned"
+        },
+        {
+            "slot": {
+                "ID": 3,
+                "slotNumber": 3,
+                "day": "monday",
+                "locationID": 1
+            },
+            "staff member name": "Not yet assigned"
+        }
+    ]
+}
+`
+<br>	
+
 

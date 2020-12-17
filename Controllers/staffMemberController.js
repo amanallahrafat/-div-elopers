@@ -12,7 +12,13 @@ const extraUtils=require('../utils/extraUtils');
 const signIn = async (req,res) => {
     const {ID,type} = req.header.user;
     const staff_member = await Staff_Member.findOne({ID : ID , type : type});
-   staff_member.attendanceRecord.push( {status : 1, signin : Date.now(), signout : ""});
+    if(staff_member.attendanceRecord.length!=0){
+    const lastRecord=staff_member.attendanceRecord[staff_member.attendanceRecord.length-1];
+    if(!lastRecord.signout)
+        return res.status(400).send("you can't follow a sign in with a signin without signing out");
+    }
+   staff_member.attendanceRecord.push( {status : 1, signin : Date.now()});
+    staff_member.attendanceRecord.push( {status : 1, signin : Date.now(), signout : ""});
     console.log(staff_member.attendanceRecord)
     await Staff_Member.updateOne({ID : ID , type : type} , {attendanceRecord : staff_member.attendanceRecord});
     res.send("Sign in Sucessfully!");
@@ -21,7 +27,14 @@ const signIn = async (req,res) => {
 const signOut = async (req,res) =>{
     const {ID, type} = req.header.user;
     const staff_member = await Staff_Member.findOne({ID : ID , type : type});
-     staff_member.attendanceRecord[staff_member.attendanceRecord.length-1].signout=Date.now();
+    if(staff_member.attendanceRecord.length==0){
+        return res.status(400).send("you can't signout without signing in");
+        
+    }
+        const lastRecord=staff_member.attendanceRecord[staff_member.attendanceRecord.length-1];
+    if((lastRecord.signout||!lastRecord.signin))
+        return res.status(400).send("you can't signout multiple times or without signing in");
+          lastRecord.signout=Date.now();
     await Staff_Member.updateOne({ID : ID , type : type} , {attendanceRecord : staff_member.attendanceRecord});
     res.send("Sign out Sucessfully!"); 
 }
@@ -78,13 +91,41 @@ const resetPassword = async(req,res)=>{
 const viewAttendance = async(req,res) =>{
     const {ID,type} = req.header.user;
     const staff_member = await Staff_Member.findOne({ID : ID,type:type});
-     staff_member.attendanceRecord.status = (staff_member.attendanceRecord.status == 0) ? "absent" : "attendant" ;
-     res.send(staff_member);
+    const attendanceArray=staff_member.attendanceRecord;
+    let responseArray=[];
+    for(const record of attendanceArray)
+      {
+      record.status=(record.status==1)?"attedant":"absent";
+   //   console.log((new Date(record.signin)).getMonth());
+      if(record.signin&&record.signout)
+      if(!req.body.month||((req.body.month-1)==(new Date(record.signin)).getMonth()))
+     {
+         record.signin=new Date(record.signin);
+         record.signout=new Date(record.signout);
+     responseArray.push(record);
+     }     
+    }      
+         res.send(responseArray);
 }
+
+const viewMissingHours= async(req,res)=>{
+    const {ID,type} = req.header.user;
+    const staff_member = await Staff_Member.findOne({ID : ID,type:type});
+    const missingHours=extraUtils.getMissingHours(staff_member);
+    if(missingHours>0){
+        res.send("the missing hours till today are ".concat(missingHours));
+    }else{
+        res.send("you have extra hours till today ".concat(-1*missingHours));
+    }
+
+   
+}
+
+
 
 module.exports = {
     login,logout,
     signIn,signOut,
     viewProfile,resetPassword,
-    viewAttendance
+    viewAttendance,viewMissingHours,
 }
