@@ -391,7 +391,7 @@ const createDepartment = async (req,res) =>{
         return res.status(400).send("HOD must be an academic member");
     }
 
-    if(req.body.members  && !req.body.members.includes(req.body.hodID))
+    if(req.body.members && req.body.members.length  && !req.body.members.includes(req.body.hodID))
         return res.status(400).send("The HOD must be a member of the department first to be its head");
     
     const departmentTable = await Department.find();
