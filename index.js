@@ -7,6 +7,7 @@ const auth = require('./Authentication/authenticate.js');
 
 const hrRouter = require('./Routes/hr.js');
 const staffMemberRouter = require('./Routes/staffMember.js');
+const courseInstructorRouter = require('./Routes/courseInstructor.js');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use('/', staffMemberRouter);
 
-app.use('/hr',hrRouter);
+app.use('/hr', hrRouter);
+app.use('/ci', courseInstructorRouter);
 
-module.exports = app ;
+module.exports = app;
