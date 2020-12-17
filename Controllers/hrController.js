@@ -206,6 +206,9 @@ const addStaffMember = async (req,res)=>{
             return res.status(400).send("This department doesn't exist");
          //Adding him to the new department
          department[0].members.push(max + 1); 
+         if(req.body.memberType!=null){
+             department[0].hodID = max + 1
+         }
          await Department.updateOne({ID : req.body.departmentID},department[0]);
     }
     // the salt number : recommended not to go above 14.
@@ -232,7 +235,7 @@ const addStaffMember = async (req,res)=>{
             ID : max + 1,
             //facultyName : req.body.facultyName,
             departmentID : req.body.departmentID,
-            type : 3, // { {"0" : HOD }, {"1" : course Instructor} , {"2" : Cooridnator}, {"3": Neither}}
+            type : req.body.memberType, // { {"0" : HOD }, {"1" : course Instructor} , {"2" : Cooridnator}, {"3": Neither}}
         })
         await academic_member.save();
     }
@@ -256,13 +259,33 @@ const updateAcademicMember = async(req, res)=>{
         await Department.updateOne({ID:academic_member.departmentID},oldDepartment);
         //Adding him to the new department
         var newDepartment = await Department.findOne({ID: req.body.departmentID});
+        if(!newDepartment){ // If this department doesn't exist
+            res.send("This department doesn't exist");
+            return true;
+        }
         newDepartment.members.push(parseInt(req.params.ID));
         await Department.updateOne({ID:req.body.departmentID},newDepartment);
     }
-
-    // courses are not updated here
+    if(req.body.departmentID!=null)academic_member.departmentID = req.body.departmentID;
+    if(req.body.memberType == null)req.body.memberType = academic_member.type;
+    else{ // If the HR is assigning the academic member to be a head of department 
+        if(!(parseInt(req.body.memberType) == 0)){
+            res.send("You are not allowed to do this action");
+            return true;
+        }
+        //If hr is assigning member to be the hod
+        if(parseInt(req.body.memberType) === 0){
+            const deptID =academic_member.departmentID;
+            const department  = await Department.findOne({ID: deptID})
+            //Assign this member to be head of the department 
+            department.hodID = academic_member.ID; 
+            await Department.updateOne({ID:deptID}, department)
+        }
+        academic_member.type = req.body.memberType;
+        await Academic_Member.updateOne({ID:req.params.ID},{type:req.body.memberType})
+    }
+    // courses are not updated here   
     await Academic_Member.updateOne({ID : req.params.ID},req.body);
-
 }
 
 const updateStaffMember = async(req, res)=>{
@@ -297,12 +320,11 @@ const updateStaffMember = async(req, res)=>{
         const users = await Staff_Member.find({email: req.body.email});
         if(users.length != 0&&users[0].ID!=req.params.ID&&sers[0].type!= req.params.type){
             return res.status(400).send("This email already exists. Emails have to be unique");
-        }
-    
+        }    
     }    
     if(!req.body.dayOff) req.body.dayOff = member[0].dayOff;
     if(!req.body.gender) req.body.gender = member[0].gender;
-    if(!req.body.officeID) req.body.officeID = member[0].officeID;
+    if(!req.body.officeID&&member[0].officeID!=undefined) req.body.officeID = member[0].officeID;
     if(!req.body.extraInfo) req.body.extraInfo = member[0].extraInfo;
     if(!req.body.salary) req.body.salary = member[0].salary;
     const isValid = validator.validateAddStaffMember(req.body);

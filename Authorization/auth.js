@@ -13,6 +13,8 @@ const authStaffMember = async (req,res,next)=>{
             
         const payload = jwt.verify(token,key,(err,payload)=>{
             req.header.user = payload;
+            if(!payload)
+                return res.status(403).send("Please login to continue!");
             next();
         });
     }

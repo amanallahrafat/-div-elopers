@@ -12,6 +12,7 @@ const CourseSchema = new Schema({
     teachingStaff : Array, //Array[staffID]
     department : Array, //Array[departmentID]
     description : String,
+    instructor: Array //Array[academic_memberID]
 });
 
 module.exports =mongoose.model('Course',CourseSchema);
