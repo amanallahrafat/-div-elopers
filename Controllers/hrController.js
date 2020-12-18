@@ -15,6 +15,7 @@ const Staff_Member = require('../Models/Users/Staff_Member.js');
 const checkings = require('../utils/checkings.js');
 const removeCascade = require('../utils/removeCascade.js');
 const createCascade = require('../utils/createCascade.js');
+const extraUtils=require('../utils/extraUtils');
 const mongoose = require('mongoose');
 
 const validator = require('../Validations/hrValidations.js');
@@ -23,6 +24,8 @@ const mongoValidator = require('mongoose-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const key = "jkanbvakljbefjkawkfew";
+
+
 
 // Start Location CRUD
 const createLocation = async (req,res) =>{
@@ -206,6 +209,9 @@ const addStaffMember = async (req,res)=>{
             return res.status(400).send("This department doesn't exist");
          //Adding him to the new department
          department[0].members.push(max + 1); 
+         if(req.body.memberType!=null){
+             department[0].hodID = max + 1
+         }
          await Department.updateOne({ID : req.body.departmentID},department[0]);
     }
     // the salt number : recommended not to go above 14.
@@ -232,7 +238,7 @@ const addStaffMember = async (req,res)=>{
             ID : max + 1,
             //facultyName : req.body.facultyName,
             departmentID : req.body.departmentID,
-            type : 3, // { {"0" : HOD }, {"1" : course Instructor} , {"2" : Cooridnator}, {"3": Neither}}
+            type : req.body.memberType, // { {"0" : HOD }, {"1" : course Instructor} , {"2" : Cooridnator}, {"3": Neither}}
         })
         await academic_member.save();
     }
@@ -256,13 +262,33 @@ const updateAcademicMember = async(req, res)=>{
         await Department.updateOne({ID:academic_member.departmentID},oldDepartment);
         //Adding him to the new department
         var newDepartment = await Department.findOne({ID: req.body.departmentID});
+        if(!newDepartment){ // If this department doesn't exist
+            res.send("This department doesn't exist");
+            return true;
+        }
         newDepartment.members.push(parseInt(req.params.ID));
         await Department.updateOne({ID:req.body.departmentID},newDepartment);
     }
-
-    // courses are not updated here
+    if(req.body.departmentID!=null)academic_member.departmentID = req.body.departmentID;
+    if(req.body.memberType == null)req.body.memberType = academic_member.type;
+    else{ // If the HR is assigning the academic member to be a head of department 
+        if(!(parseInt(req.body.memberType) == 0)){
+            res.send("You are not allowed to do this action");
+            return true;
+        }
+        //If hr is assigning member to be the hod
+        if(parseInt(req.body.memberType) === 0){
+            const deptID =academic_member.departmentID;
+            const department  = await Department.findOne({ID: deptID})
+            //Assign this member to be head of the department 
+            department.hodID = academic_member.ID; 
+            await Department.updateOne({ID:deptID}, department)
+        }
+        academic_member.type = req.body.memberType;
+        await Academic_Member.updateOne({ID:req.params.ID},{type:req.body.memberType})
+    }
+    // courses are not updated here   
     await Academic_Member.updateOne({ID : req.params.ID},req.body);
-
 }
 
 const updateStaffMember = async(req, res)=>{
@@ -297,12 +323,11 @@ const updateStaffMember = async(req, res)=>{
         const users = await Staff_Member.find({email: req.body.email});
         if(users.length != 0&&users[0].ID!=req.params.ID&&sers[0].type!= req.params.type){
             return res.status(400).send("This email already exists. Emails have to be unique");
-        }
-    
+        }    
     }    
     if(!req.body.dayOff) req.body.dayOff = member[0].dayOff;
     if(!req.body.gender) req.body.gender = member[0].gender;
-    if(!req.body.officeID) req.body.officeID = member[0].officeID;
+    if(!req.body.officeID&&member[0].officeID!=undefined) req.body.officeID = member[0].officeID;
     if(!req.body.extraInfo) req.body.extraInfo = member[0].extraInfo;
     if(!req.body.salary) req.body.salary = member[0].salary;
     const isValid = validator.validateAddStaffMember(req.body);
@@ -581,10 +606,112 @@ const getMaxCourseID=async ()=>{
     return max;
 }
 
+const addMissingSignInOut= async (req,res)=>{
+    const {ID, type} = req.header.user;
+    const signinYear=req.body.signinYear;
+    const signinMonth=req.body.signinMonth;
+    const signinDay=req.body.signinDay;
+    const signinHour=req.body.signinHour;
+    const signinMinute=req.body.signinMinute;
+    const signinSec=req.body.signinSec;
+  //  console.log(signinHour);
+    const signoutYear=req.body.signoutYear;
+    const signoutMonth=req.body.signoutMonth;
+    const signoutDay=req.body.signoutDay;
+    const signoutHour=req.body.signoutHour;
+    const signoutMinute=req.body.signoutMinute;
+    const signoutSec=req.body.signoutSec;
+    if(!(signinYear!=undefined&&signinMonth!=undefined&&signinDay!=undefined&&signinHour!=undefined&& signinMinute!=undefined&&signinSec!=undefined&&
+        signoutYear!=undefined&&signoutMonth!=undefined&&signoutDay!=undefined&&signoutHour!=undefined&& signoutMinute!=undefined&&signoutSec!=undefined))
+      return  res.status(400).send("please enter all specified signin date info and signout info(year,month,day,hour,min,sec)");
+    const staffMemberID=req.body.ID;
+    const staffMemberType=req.body.type;
+    if(!(staffMemberID&&staffMemberType!=undefined))
+       return   res.status(400).send("please enter the ID and the type of the staff Member");
+    if(staffMemberID==ID){
+     return   res.status(400).send("you can't add sign in/out for yourself");
+    }
+    const staffMember=await Staff_Member.findOne({ID:staffMemberID,type:staffMemberType});
+    if(!staffMember)
+    return res.status(400).send("please enter a valid ID and the type of the staff Member");
+    const newSignSession= {status:1,signin:new Date(signinYear,signinMonth,signinDay,signinHour,signinMinute,signinSec,0).getTime(),signout:new Date(signoutYear,signoutMonth,signoutDay,signoutHour,signoutMinute,signoutSec,0).getTime()};
+    if(newSignSession.signin>newSignSession.signout){
+        return res.status(400).send("you can't make signout in a time before signin");
+    }
+    staffMember.attendanceRecord.push(newSignSession);
+
+    await Staff_Member.updateOne({ID:staffMemberID,type:staffMemberType},staffMember);
+    res.send("adding login/out has done successfully")
+    }
+
+const viewStaffMemberAttendance= async (req,res)=>{
+    const staffMemberID=req.params.ID;
+    const staffMembertype=req.params.type;
+    if(staffMembertype==undefined||staffMemberID==undefined)
+        return res.status(400).send("please enter both ID and type of the staff member");
+    const mem=await Staff_Member.findOne({ID:staffMemberID,type:staffMembertype});
+    if(!mem)
+        return res.status(400).send("there doesn't exist a member with this ID and type");
+    const attendanceArray=mem.attendanceRecord;
+    let responseArray=[];
+    for(const record of attendanceArray)
+          {
+          record.status=(record.status==1)?"attedant":"absent";
+          if(record.signin&&record.signout)
+         {
+             record.signin=new Date(record.signin);
+             record.signout=new Date(record.signout);
+         responseArray.push(record);
+         }     
+        }      
+             res.send(responseArray);
+     
+    
+}
+
+const updateStaffMemberSalary=async (req,res)=>{
+    const staffMemberID=req.body.ID;
+    const staffMembertype=req.body.type;
+    const newSalary=req.body.salary;
+    if(!newSalary||newSalary<4000)
+    return res.status(400).send("this salary is below the minimum salary");
+    if(staffMembertype==undefined||staffMemberID==undefined)
+    return res.status(400).send("please enter both ID and type of the staff member");
+const mem=await Staff_Member.findOne({ID:staffMemberID,type:staffMembertype});
+if(!mem)
+    return res.status(400).send("there doesn't exist a member with this ID and type");
+
+await Staff_Member.updateOne({ID:staffMemberID,type:staffMembertype},{salary:newSalary});
+res.send("staff member salary has been updated successfully");
+
+ 
+}
+const viewStaffMembersWithMissingHours=async(req,res)=>{
+    const allStaffMembers= await Staff_Member.find();
+    //console.log(allStaffMembers[0]);
+    if(!allStaffMembers)return res.status(400).send("there aren't any academic members yet");
+    let allMissedMembers=[];
+  //  console.log(allStaffMembers);
+    for(const mem of allStaffMembers){
+        
+        const missingHours=extraUtils.getMissingHours(mem);
+        if(Number.isFinite(missingHours)&&missingHours>0){
+            const trimmedMem=extraUtils.trimMonogoObj(mem['_doc'],["_id","password","__v"]);
+            allMissedMembers.push(trimmedMem);
+        }
+    }
+    res.send(allMissedMembers);
+
+
+}
+
 module.exports = {
     createLocation,updateLocation,deleteLocation,
     createFaculty,updateFaculty,deleteFaculty,
     createDepartment,updateDepartment,deleteDepartment,
     addStaffMember,updateStaffMember,deleteStaffMember,
     createCourse, updateCourse,deleteCourse,
+    addMissingSignInOut,
+    viewStaffMemberAttendance,updateStaffMemberSalary,viewStaffMembersWithMissingHours,
 }
+

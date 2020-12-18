@@ -64,37 +64,22 @@ Location Updated Successfully!
 <b>Request Type: </b> POST <br>
 <b>Request Body : </b>
 `
-{"name": "user1", "email": "user1@guc.com", "type": 0, "dayOff": "sunday", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}
+{"name": "user99", "email": "user99@guc.com", "type": 0, "dayOff": "sunday", "gender": "male", "officeID": 5, "salary": 8000,"departmentID": 1,"memberType":0}
 `
 <br>
-<b>Resposne: </b>`Registeration Completed!`
+<b>Resposne: </b>`Registeration Completed!` <br>
 
 <b>Request Body : </b>
 `
-{"name": "user1", "email": "user1@guc.com", "type": 0, "dayOff": "sunday", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}
+{"name": "user100", "email": "user100@guc.com", "type": 1, "dayOff": "saturday", "gender": "male", "officeID": 5, "salary": 8000,"departmentID": 1}
 `
 <br>
-<b>Resposne: </b>`This email already exists. Emails have to be unique`
+<b>Resposne: </b>`Registeration Completed!` <br>
 
-<b>Request Body : </b>
-`
-{"name": "user1", "email": "user1@guc.com", "type": 100, "dayOff": "sunday", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}`
-<br>
-<b>Resposne: </b>
-`{
-    "error": "\"type\" must be less than or equal to 1"
-}`
 
-<b>Request Body : </b>
-`
-{"name": "user1", "email": "user1@guc.com", "type": 0, "dayOff": "hamada", "gender": "male", "officeID": 1, "salary": 8000,"departmentID": 7}
-`
-<br>
-<b>Resposne: </b>
-`{
-    "error": "\"dayOff\" must be one of [saturday, sunday, monday, tuesday, wednesday, thursday]"
-}`
-<b>Note: </b> The officeID must be an ID of a location of type office (type = 2).  
+<b>Notes: </b> 1- The officeID must be an ID of a location of type office (type = 2). </b><br>
+2- type denotes whether this staff member is an HR or an academic member (0-> academic member, 1-> hr) <br>
+3- memberType denotes whether this academic member is a HOD or an academic member (0 -> HOD, 3-> academic member)<br>
 ### <b>Functionality:</b> Update a staff member <br>
 <b>Route: </b> /hr/updateStaffMember/:ID/:type<br>
 <b>Request Type: </b> POST <br>
@@ -104,6 +89,14 @@ Location Updated Successfully!
 `
 <br>
 <b>Resposne: </b>`Staff member Updated Successfully!`
+
+<b>Request Body : </b>
+`
+{"memberType":0}
+`
+<br>
+<b>Resposne: </b>`Staff member Updated Successfully!`
+
 
 <b>Request Body : </b>
 `
@@ -375,4 +368,52 @@ Location Updated Successfully!
 `
 <br>	
     
-    
+ ### <b>Functionality: </b> View course teaching assignments <br>	
+<b>Route: </b> /hod/viewCourseTeachingAssignments/:ID <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Parameters: </b> ID of the course that the head of the department wants to view
+<br>
+<b>Response: </b> name of the course, code of the course and an array containing the slots of the course
+`
+{
+    "course name": "Graphics",
+    "course code": "DMET501",
+    "course slots": [
+        {
+            "slot": {
+                "ID": 1,
+                "slotNumber": 1,
+                "day": "monday",
+                "locationID": 1
+            },
+            "staff member name": "Not yet assigned"
+        },
+        {
+            "slot": {
+                "ID": 2,
+                "slotNumber": 2,
+                "day": "monday",
+                "locationID": 1
+            },
+            "staff member name": "Not yet assigned"
+        },
+        {
+            "slot": {
+                "ID": 3,
+                "slotNumber": 3,
+                "day": "monday",
+                "locationID": 1
+            },
+            "staff member name": "Not yet assigned"
+        }
+    ]
+}
+`
+<br>	
+
+ ### <b>Functionality: </b> View course coverage <br>	
+<b>Route: </b> /hod/viewCourseCoverage/:ID <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request parameters: </b> The ID of the course. <br>
+<b>Response: </b> The coverage of the course which has the ID specified in the request parameters(in decimal)
+<br>

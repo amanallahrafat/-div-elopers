@@ -28,6 +28,20 @@ const isAcademicMember = async(ID) => {
     }
     return exist.length == 1;
 }
+const isHOD = async (ID)=>{
+    const exist = await Academic_Member.find({ID: ID, type: 0});
+    if(exist.length>1){
+        console.log("ERROR: THERE IS A BUG IN UNIQUNESS OF ID");
+    }
+    return exist.length==1;
+}
+const courseIDExists = async(ID) => {
+    const courseExists = await Course.findOne({ ID: ID });
+    console.log(courseExists)
+    if (courseExists)
+        return true;
+    return false;
+}
 
 const isTA = async(ID) => {
     const exist = await Academic_Member.find({ ID: ID });
@@ -110,6 +124,7 @@ module.exports = {
     scheduleTaken,
     departmentExists,
     departmentExists_arr,
+    isHOD,
     courseIDExists,
     isInstructorOfCourse,
     isTA,isCourseCoordinator

@@ -5,6 +5,11 @@ const hrRouter = express.Router();
 
 auth = [authStaffMember , authHr];
 
+hrRouter.post('/createLocation' ,hrController.createLocation);
+hrRouter.put('/updateLocation/:ID' ,hrController.updateLocation);
+hrRouter.delete('/deleteLocation/:ID' ,hrController.deleteLocation);
+
+
 hrRouter.post('/createLocation',auth,hrController.createLocation);
 hrRouter.put('/updateLocation/:ID',auth ,hrController.updateLocation);
 hrRouter.delete('/deleteLocation/:ID',auth ,hrController.deleteLocation);
@@ -26,5 +31,9 @@ hrRouter.put('/updateCourse/:ID',auth,hrController.updateCourse);
 hrRouter.delete('/deleteCourse/:ID',auth,hrController.deleteCourse);
 
 
+hrRouter.post('/addMissingSignInOut',authorization.authStaffMember,authorization.authHr,hrController.addMissingSignInOut);
+hrRouter.get('/viewStaffMemberAttendance/:ID/:type',authorization.authStaffMember,authorization.authHr,hrController.viewStaffMemberAttendance);
+hrRouter.post('/updateStaffMemberSalary',authorization.authStaffMember,authorization.authHr,hrController.updateStaffMemberSalary);
+hrRouter.get('/viewStaffMembersWithMissingHours',authorization.authStaffMember,authorization.authHr,hrController.viewStaffMembersWithMissingHours);
 
 module.exports = hrRouter;

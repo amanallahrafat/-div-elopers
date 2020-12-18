@@ -8,11 +8,11 @@ const CourseSchema = new Schema({
     coordinatorID: Number,
     code: { type: String, unique: true },
     // coverage : Number,
-    scheduleID: { type: Number },
-    teachingStaff: Array, //Array[staffID]
-    department: Array, //Array[departmentID]
-    description: String,
-    instructor: Array,
+    scheduleID : {type:Number},
+    teachingStaff : Array, //Array[staffID]
+    department : Array, //Array[departmentID]
+    description : String,
+    instructor: Array //Array[academic_memberID]
 });
 
 module.exports = mongoose.model('Course', CourseSchema);
