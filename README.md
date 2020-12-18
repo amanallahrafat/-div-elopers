@@ -414,7 +414,6 @@ Location Updated Successfully!
  ### <b>Functionality: </b> View course coverage <br>	
 <b>Route: </b> /hod/viewCourseCoverage/:ID <br>	
 <b>Request Type: </b> GET <br>	
-<br>
 <b>Request parameters: </b> The ID of the course. <br>
 <b>Response: </b> The coverage of the course which has the ID specified in the request parameters(in decimal)
 <br>
