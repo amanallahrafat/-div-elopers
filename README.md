@@ -606,45 +606,31 @@ Location Updated Successfully!
 
 
 ### <b>Functionality: </b> View the status of all submitted requests and filter by accepted/rejected/pending<br>	
-<b>Route: </b> /ac/viewAllRequests <br>	
+<b>Route: </b> /ac/viewAllRequests/:view <br>	
 <b>Request Type: </b> GET <br>	
-<b>Request Body: </b> `{
-    "view" : 0
-}` <br>	
+<b>Request Parameters: </b> view : parameter has values 0, 1, 2 or 3 depending on the applied filter type. The filters are namely (all : 0 , accepted : 1, rejected : 2, pending : 3).<br>	
+<b> Example how to call the route: </b> /ac/viewAllRequests/1 <br>
 <b>Response: </b> 
-`
-[
-    {
-        "_id": "5fdcbc693f1a9333a81f075e",
-        "ID": 1,
-        "senderID": 4,
-        "receiverID": 3,
-        "courseID": 2,
-        "slotID": 1,
-        "status": "accepted",
-        "__v": 0
-    },
-    {
-        "_id": "5fdceeae4cad453d6467fc06",
-        "ID": 2,
-        "senderID": 4,
-        "receiverID": 3,
-        "courseID": 2,
-        "slotID": 2,
-        "status": "pending",
-        "__v": 0
-    },
-    {
-        "_id": "5fdcf2354cad453d6467fc08",
-        "ID": 3,
-        "senderID": 4,
-        "receiverID": 3,
-        "courseID": 2,
-        "slotID": 2,
-        "status": "rejected",
-        "__v": 0
-    }
+`[
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+        {
+            "_id": "5fdcbc693f1a9333a81f075e",
+            "ID": 1,
+            "senderID": 4,
+            "receiverID": 3,
+            "courseID": 2,
+            "slotID": 1,
+            "status": "accepted",
+            "__v": 0
+        }
+    ]
 ]
 `
 <br>
-<b>Note: </b> view parameter in the body has values 0, 1, 2 or 3 depending on the applied filter type. The filters are namely (all : 0 , accepted : 1, rejected : 2, pending : 3).
