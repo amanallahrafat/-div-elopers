@@ -541,7 +541,7 @@ Location Updated Successfully!
 <b>Route: </b> /cc/deleteSlot/:courseID/:slotID <br>	
 <b>Request Type: </b> DELETE <br>	
 <b> Request Parameters </b> slotID : the ID of the slot to be deleted , courseID : the ID of the course that has the to-be-deletd slot <br>
-<b> Example how to call the route :<b/> /cc/deleteSlot/2/1 <br>
+<b> Example how to call the route :</b> /cc/deleteSlot/2/1 <br>
 <b>Response: </b> The Slot has been deleted sucessfully
 <br>
 
@@ -549,7 +549,7 @@ Location Updated Successfully!
 <b>Route: </b> /cc/updateSlot/:courseID/:slotID <br>	
 <b>Request Type: </b> PUT <br>
 <b> Request Parameters </b> slotID : the ID of the slot to be updated , courseID : the ID of the course that has the to-be-updated slot <br>
-<b> Example how to call the route :<b/> /cc/updateSlot/2/1 <br>
+<b> Example how to call the route :</b> /cc/updateSlot/2/1 <br>
 <b>Request Body: the fields of the slot to be updated  </b> `{
     "slotNumber" : 5
 }` <br>
