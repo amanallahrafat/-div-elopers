@@ -8,6 +8,8 @@ const AnnualLeaveRequestSchema = new Schema({
     submissionDate : Date,
     requestedDate : Date,
     slot : Array, 
+    status: String,
+    replacementID : Number
 });
 
 module.exports =mongoose.model('Annual_Leave_Request',AnnualLeaveRequestSchema);

@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema
-const CompensationLeaveRequestSchema = new Schema({
+const ReplacementRequestSchema = new Schema({
     senderID : Number,
     receiverID : Number,
     submissionDate : Date,
     requestedDate : Date,
-    absenceDate : Date,
+    slotID : Number,
+    courseID: Number,
     status: String
 });
 
-module.exports =mongoose.model('Compensation_Leave_Request',CompensationLeaveRequestSchema);
+module.exports =mongoose.model('Replacement_Request',ReplacementRequestSchema);
