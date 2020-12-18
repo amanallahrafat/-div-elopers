@@ -120,12 +120,16 @@ const updateSlot = async(req,res) =>{
     const course_schedule = await Course_Schedule.findOne({ ID: courseID });
     let oldSlot = course_schedule.slots.filter((elem) => elem.ID == slotID);
     let slots = course_schedule.slots.filter((elm) => elm.ID != slotID);
-    if (req.body.slotNumber == null) oldSlot.slotNumber = req.body.slotNumber;
-    if (req.body.day == null) oldSlot.day = req.body.day;
-    if (req.body.locationID == null) oldSlot.locationID = req.body.locationID;
+    if (req.body.slotNumber == null)  req.body.slotNumber = oldSlot[0].slotNumber;
+    if (req.body.day == null)  req.body.day = oldSlot[0].day;
+    if (req.body.locationID == null) req.body.locationID = oldSlot[0].locationID;
     if (req.body.instructor != null)
-        return res.status(400).send("you are not allowed to update this field !");
-    slots.push(oldSlot);
+        return res.status(400).send("you are not allowed to update the instructor field !");
+    const isValid = validator.validateSlot(req.body);
+    if (isValid.error)
+        return res.status(400).send({ error: isValid.error.details[0].message });
+    req.body.ID = oldSlot[0].ID;
+    slots.push(req.body);
     await Course_Schedule.updateOne({ ID: courseID }, { slots: slots });
     res.send("The slot has been updated sucessfully !");
 }
