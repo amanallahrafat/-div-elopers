@@ -1,14 +1,14 @@
 const Course = require('../Models/Academic/Course.js');
 const Course_Schedule = require('../Models/Academic/Course_Schedule.js');
 const Notification = require('../Models/Others/Notification.js');
-const Slot_Linking_request = require('../Models/Requests/Slot_Linking_Request.js');
+const Slot_Linking_Request = require('../Models/Requests/Slot_Linking_Request.js');
 const validator = require('../Validations/courseCoordinatorValidation.js');
 const checkings = require('../utils/checkings.js');
 
 const viewSlotLinkingRequests = async (req,res)=>{
     const {ID,type} = req.header.user;
     const courseID = await Course.findOne({coordinatorID : ID});
-    const requests = await Slot_Linking_request.find({courseID : courseID});
+    const requests = await Slot_Linking_Request.find({courseID : courseID});
     res.send(requests);
 }
 
@@ -16,7 +16,7 @@ const viewSlotLinkingRequests = async (req,res)=>{
 const hendleSlotLinkingRequest = async (req,res) =>{
     const {ID , type} = req.header.user;
     const {requestID , decision} = req.body;
-    const request = await Slot_Linking_request.find({ID :requestID});
+    const request = await Slot_Linking_Request.find({ID :requestID});
     if( !request )
         return res.status(400).send("You can't handle unexisted request !");
     // handle rejection case
