@@ -552,3 +552,95 @@ Location Updated Successfully!
 <b>Response: </b> The slot has been updated sucessfully !
 <br>
 
+## Academic member functionality functionality 
+### <b>Functionality: </b> Send slot linking request<br>	
+<b>Route: </b> /ac/sendSlotLinkingRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{
+    "slotID" : 2,
+    "courseID" : 2
+}` <br>	
+<b>Response: </b> "The request has been sent sucessfully" or an error message denoting the error.
+<br>
+
+### <b>Functionality: </b> Send change day off request<br>	
+<b>Route: </b> /ac/sendChangeDayOffRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{
+    "newDayOff" : "saturday",
+    "msg" : "I need a vacation change"
+}` <br>	
+<b>Response: </b> "The request has been sent sucessfully" or an error message denoting the error.
+<br>
+
+
+### <b>Functionality: </b> Get Notified on requests acceptance or rejection<br>	
+<b>Route: </b> /ac/getAllNotifications <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> 
+`
+[
+    {
+        "_id": "5fdcc1431fbd6f07d46f0fc0",
+        "senderID": 3,
+        "receiverID": 4,
+        "msg": "Your Slot Linking Request for the slot with ID 2 for the course CSEN401 is accepted",
+        "date": "2020-12-18T14:48:35.008Z",
+        "__v": 0
+    },
+    {
+        "_id": "5fdcf25234ee0408843a217b",
+        "senderID": 3,
+        "receiverID": 4,
+        "msg": "Your Slot Linking Request for the slot with ID 3 for the course CSEN401 is rejected",
+        "date": "2020-12-18T18:17:54.407Z",
+        "__v": 0
+    }
+]
+`
+<br>
+
+
+### <b>Functionality: </b> View the status of all submitted requests and filter by accepted/rejected/pending<br>	
+<b>Route: </b> /ac/viewAllRequests <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Body: </b> `{
+    "view" : 0
+}` <br>	
+<b>Response: </b> 
+`
+[
+    {
+        "_id": "5fdcbc693f1a9333a81f075e",
+        "ID": 1,
+        "senderID": 4,
+        "receiverID": 3,
+        "courseID": 2,
+        "slotID": 1,
+        "status": "accepted",
+        "__v": 0
+    },
+    {
+        "_id": "5fdceeae4cad453d6467fc06",
+        "ID": 2,
+        "senderID": 4,
+        "receiverID": 3,
+        "courseID": 2,
+        "slotID": 2,
+        "status": "pending",
+        "__v": 0
+    },
+    {
+        "_id": "5fdcf2354cad453d6467fc08",
+        "ID": 3,
+        "senderID": 4,
+        "receiverID": 3,
+        "courseID": 2,
+        "slotID": 2,
+        "status": "rejected",
+        "__v": 0
+    }
+]
+`
+<br>
+<b>Note: </b> view parameter in the body has values 0, 1, 2 or 3 depending on the applied filter type. The filters are namely (all : 0 , accepted : 1, rejected : 2, pending : 3).
