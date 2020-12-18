@@ -79,7 +79,7 @@ Location Updated Successfully!
 
 <b>Notes: </b> 1- The officeID must be an ID of a location of type office (type = 2). </b><br>
 2- type denotes whether this staff member is an HR or an academic member (0-> academic member, 1-> hr) <br>
-3- memberType denotes whether this academic member is a HOD or an academic member <br>
+3- memberType denotes whether this academic member is a HOD or an academic member (0 -> HOD, 3-> academic member)<br>
 ### <b>Functionality:</b> Update a staff member <br>
 <b>Route: </b> /hr/updateStaffMember/:ID/:type<br>
 <b>Request Type: </b> POST <br>
@@ -89,6 +89,14 @@ Location Updated Successfully!
 `
 <br>
 <b>Resposne: </b>`Staff member Updated Successfully!`
+
+<b>Request Body : </b>
+`
+{"memberType":0}
+`
+<br>
+<b>Resposne: </b>`Staff member Updated Successfully!`
+
 
 <b>Request Body : </b>
 `
@@ -403,4 +411,10 @@ Location Updated Successfully!
 `
 <br>	
 
-
+ ### <b>Functionality: </b> View course coverage <br>	
+<b>Route: </b> /hod/viewCourseCoverage/:ID <br>	
+<b>Request Type: </b> GET <br>	
+<br>
+<b>Request parameters: </b> The ID of the course. <br>
+<b>Response: </b> The coverage of the course which has the ID specified in the request parameters(in decimal)
+<br>
