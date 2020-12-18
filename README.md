@@ -488,3 +488,67 @@ Location Updated Successfully!
 }` <br>	
 <b>Response: </b> Course coordinator is assigned successfully
 <br>
+
+## Course Coordinator functionality
+### <b>Functionality: </b> View Slot Linking Requests <br>	
+<b>Route: </b> /cc/viewSlotLinkingRequests <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> `[
+    {
+        "_id": "5fdcbc693f1a9333a81f075e",
+        "ID": 1,
+        "senderID": 4,
+        "receiverID": 3,
+        "courseID": 2,
+        "slotID": 1,
+        "status": "accepted",
+        "__v": 0
+    },
+    {
+        "_id": "5fdceeae4cad453d6467fc06",
+        "ID": 2,
+        "senderID": 4,
+        "receiverID": 3,
+        "courseID": 2,
+        "slotID": 2,
+        "status": "pending",
+        "__v": 0
+    }
+]`
+<br>
+
+### <b>Functionality: </b> Accept or Reject Slot Linking Request<br>	
+<b>Route: </b> /cc/handleSlotLinkingRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{
+    "requestID": 1,
+    "decision": 1 
+} //  0 for rejected and 1 for accepted` <br>	
+<b>Response: </b> The Request is accepted sucessfully !
+<br>
+
+### <b>Functionality: </b> Create Slot <br>	
+<b>Route: </b> /cc/createSlot <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{
+    "courseID": 1,
+    "slot": {"slotNumber":3,"day":"monday","locationID":1}
+}` <br>	
+<b>Response: </b> Slot added sucessfully !
+<br>
+
+### <b>Functionality: </b> delete Slot <br>	
+<b>Route: </b> /cc/deleteSlot/:courseID/:slotID <br>	
+<b>Request Type: </b> DELETE <br>	
+<b>Response: </b> The Slot has been deleted sucessfully
+<br>
+
+### <b>Functionality: </b> update Slot <br>	
+<b>Route: </b> /cc/updateSlot/:courseID/:slotID <br>	
+<b>Request Type: </b> PUT <br>	
+<b>Request Body: the fields of the slot to be updated  </b> `{
+    "slotNumber" : 5
+}` <br>
+<b>Response: </b> The slot has been updated sucessfully !
+<br>
+
