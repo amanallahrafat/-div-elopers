@@ -1,5 +1,4 @@
 const Academic_Member = require('../Models/Users/Academic_Member');
-const Course = require('../Models/Academic/Course.js');
 const Department = require('../Models/Academic/Department.js');
 const BlackListedToken = require('../Models/Others/BlackListedToken.js');
 const jwt = require('jsonwebtoken');
@@ -75,18 +74,17 @@ const authCourseCoordinator = async (req,res,next)=>{
     next();
 }
 
-const authTA = async (req,res,next)=>{
+const authAcademicMember = async (req,res,next)=>{
     const token = req.header('auth-token');
     if(!token)
         return res.status(403).send("ypu need to login to continue");
     const{ID , type} = req.header.user;
-    const academic_member = await Academic_Member.findOne({ID : ID});
-    if(academic_member.type != 3)
-        return res.status(401).send("you are not allowed. this operation is only for TAs only");
+    if(type != 0)
+        return res.status(401).send("you are not allowed. this operation is only for academic members only");
     next();
 }
 module.exports = {
     authStaffMember,
     authHr,authHOD,authCourseInstructor,
-    authCourseCoordinator,authTA
+    authCourseCoordinator,authAcademicMember
 }

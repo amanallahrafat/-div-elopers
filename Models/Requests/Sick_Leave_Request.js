@@ -7,6 +7,7 @@ const SickLeaveRequestSchema = new Schema({
     documents : String,
     submissionDate : Date,
     requestedDate : Date,
+    status: String
 });
 
 module.exports =mongoose.model('Sick_Leave_Request',SickLeaveRequestSchema);
