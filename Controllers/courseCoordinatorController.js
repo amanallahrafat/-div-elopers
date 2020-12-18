@@ -3,6 +3,7 @@ const Course_Schedule = require('../Models/Academic/Course_Schedule.js');
 const Notification = require('../Models/Others/Notification.js');
 const Slot_Linking_request = require('../Models/Requests/Slot_Linking_Request.js');
 const validator = require('../Validations/courseCoordinatorValidation.js');
+const checkings = require('../utils/checkings.js');
 
 const viewSlotLinkingRequests = async (req,res)=>{
     const {ID,type} = req.header.user;
@@ -62,7 +63,6 @@ const getMaxSlotID= (slots)=>{
 }
 // body : {courseID , slot}
 // slot = {slotNumber:1,day:"sunday",locationID:1,ID:2}
-// UNCOMPLETED TESTING
 const createSlot = async (req,res)=>{
     const {courseID,slot} = req.body;
 
@@ -95,10 +95,42 @@ const createSlot = async (req,res)=>{
     res.send("Slot added sucessfully !");
 }
 
-//const deleteSlot = ()
+// body : {courseID , slotID}
+const deleteSlot = async(req,res)=>{
+    const{ID , type} = req.header.user;
+    const{courseID , slotID} = req.params;
+    if(!checkings.isCourseCoordinator(ID , courseID))
+        return res.status(400).send("You are not the coordinator of the requested course");
+
+    const course_schedule = await Course_Schedule.findOne({ID : courseID});
+    let slots = course_schedule.slots.filter((elem)=> elem.ID != slotID);
+    if(slots.length == course_schedule.slots.length)
+        return res.status(400).send("The Specified slot id already deleted");
+    await Course_Schedule.updateOne({ID : courseID} , {slots : slots});
+    res.send("The Slot has been deleted sucessfully"); 
+}
+
+// body : slot fields to be updated
+const updateSlot = async(req,res) =>{
+    const{ID , type} = req.header.user;
+    const {courseID , slotID} = req.params;
+    if(!checkings.isCourseCoordinatorO(ID,courseID))
+        return res.status(400).send("You are not the coordinator of the requested course");
+    const course_schedule = await Course_Schedule.findOne({ID : courseID});
+    let oldSlot = course_schedule.slots.filter((elem)=>elem.ID == slotID);
+    let slots = course_schedule.slots.filter((elm)=>elm.ID != slotID);
+    if(req.body.slotNumber == null) oldSlot.slotNumber = req.body.slotNumber;
+    if(req.body.day == null) oldSlot.day = req.body.day;
+    if(req.body.locationID == null) oldSlot.locationID = req.body.locationID;
+    if(req.body.instructor != null) 
+        return res.status(400).send("you are not allowed to update this field !");
+    slots.push(oldSlot);
+    await Course_Schedule.updateOne({ID : courseID},{slots : slots});
+    res.send("The slot has been updated sucessfully !");
+}
 
 module.exports = {
     viewSlotLinkingRequests,
     hendleSlotLinkingRequest,
-    createSlot,
+    createSlot,updateSlot,deleteSlot,
 }

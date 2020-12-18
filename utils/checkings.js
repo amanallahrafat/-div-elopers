@@ -95,6 +95,11 @@ const departmentExists_arr = async(ID_arr) => {
     return true;
 }
 
+const isCourseCoordinator = async(coordinatorID , courseID)=>{
+    const course = await Course.findOne({ID : courseID});
+    return course.coordinatorID == coordinatorID ;
+}
+
 module.exports = {
     isStaffMember,
     isStaffMember_arr,
@@ -107,5 +112,5 @@ module.exports = {
     departmentExists_arr,
     courseIDExists,
     isInstructorOfCourse,
-    isTA,
+    isTA,isCourseCoordinator
 };

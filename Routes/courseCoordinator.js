@@ -8,6 +8,9 @@ auth = [authStaffMember,authCourseCoordinator];
 
 courseCoordinatorRouter.get('/viewSlotLinkingRequest',auth,courseCoordinatorController.viewSlotLinkingRequests)
 courseCoordinatorRouter.post('/handleSlotLinkingRequest',auth,courseCoordinatorController.hendleSlotLinkingRequest);
+
 courseCoordinatorRouter.post('/createSlot',auth,courseCoordinatorController.createSlot);
+courseCoordinatorRouter.delete('/deleteSlot/:courseID/:slotID',auth,courseCoordinatorController.deleteSlot);
+courseCoordinatorRouter.put('/updateSlot/:courseID/:slotID',auth,courseCoordinatorController.updateSlot);
 
 module.exports = courseCoordinatorRouter;
