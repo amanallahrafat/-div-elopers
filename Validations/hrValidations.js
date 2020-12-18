@@ -40,8 +40,9 @@ const validateAddStaffMember = (request)=>{
         extraInfo : joi.array(),
         salary:joi.number().min(4000).required(),
         //facultyName: request.type == 0? joi.string().required():joi.string(),
-        departmentID: request.type == 0? joi.number().integer().required():joi.number().integer()
+        departmentID: request.type == 0? joi.number().integer().required():joi.number().integer(),
        // courses: request.type == 0 ? joi.array()
+       memberType:request.type == 0? joi.number().integer().valid(0,3):joi.number()
     };
     return joi.validate(request, addSchema);
 }

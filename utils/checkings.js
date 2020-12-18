@@ -28,6 +28,20 @@ const isAcademicMember = async(ID) => {
     }
     return exist.length == 1;
 }
+const isHOD = async(ID) => {
+    const exist = await Academic_Member.find({ ID: ID, type: 0 });
+    if (exist.length > 1) {
+        console.log("ERROR: THERE IS A BUG IN UNIQUNESS OF ID");
+    }
+    return exist.length == 1;
+}
+const courseIDExists = async(ID) => {
+    const courseExists = await Course.findOne({ ID: ID });
+    console.log(courseExists)
+    if (courseExists)
+        return true;
+    return false;
+}
 
 const isTA = async(ID) => {
     const exist = await Academic_Member.find({ ID: ID });
@@ -59,6 +73,7 @@ const courseIDExists = async(ID) => {
         return true;
     return false;
 }
+
 
 const isInstructorOfCourse = async(instructorID, courseID) => {
     const course = await Course.findOne({ ID: courseID });
@@ -95,6 +110,11 @@ const departmentExists_arr = async(ID_arr) => {
     return true;
 }
 
+const isCourseCoordinator = async(coordinatorID, courseID) => {
+    const course = await Course.findOne({ ID: courseID });
+    return course.coordinatorID == coordinatorID;
+}
+
 module.exports = {
     isStaffMember,
     isStaffMember_arr,
@@ -105,7 +125,9 @@ module.exports = {
     scheduleTaken,
     departmentExists,
     departmentExists_arr,
+    isHOD,
     courseIDExists,
     isInstructorOfCourse,
     isTA,
+    isCourseCoordinator
 };

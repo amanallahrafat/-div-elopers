@@ -1,5 +1,7 @@
 const express = require('express');
 const hrRouter = require('./Routes/hr.js');
+const hodRouter = require('./Routes/hod.js');
+
 const staffMemberRouter = require('./Routes/staffMember.js');
 
 const courseInstructorRouter = require('./Routes/courseInstructor.js');
@@ -17,4 +19,7 @@ app.use('/ci', courseInstructorRouter);
 
 app.use('/cc', courseCoordinatorRouter);
 
-module.exports = app;
+app.use('/hod',hodRouter);
+
+module.exports = app ;
+
