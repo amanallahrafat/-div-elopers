@@ -34,7 +34,8 @@ const isTA = async(ID) => {
     if (exist.length > 1) {
         console.log("ERROR: THERE IS A BUG IN UNIQUNESS OF ID");
     }
-    return exist.length == 1 && exist[0].type == 3;
+    console.log(exist);
+    return exist.length == 1 && (exist[0].type == 3 || exist[0].type == 2);
 }
 
 const isAcademicMember_arr = async(ID_arr) => {
@@ -54,7 +55,6 @@ const courseCodeExists = async(code) => {
 
 const courseIDExists = async(ID) => {
     const courseExists = await Course.findOne({ ID: ID });
-    console.log(courseExists)
     if (courseExists)
         return true;
     return false;
