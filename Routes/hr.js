@@ -31,9 +31,9 @@ hrRouter.put('/updateCourse/:ID',auth,hrController.updateCourse);
 hrRouter.delete('/deleteCourse/:ID',auth,hrController.deleteCourse);
 
 
-hrRouter.post('/addMissingSignInOut',authorization.authStaffMember,authorization.authHr,hrController.addMissingSignInOut);
-hrRouter.get('/viewStaffMemberAttendance/:ID/:type',authorization.authStaffMember,authorization.authHr,hrController.viewStaffMemberAttendance);
-hrRouter.post('/updateStaffMemberSalary',authorization.authStaffMember,authorization.authHr,hrController.updateStaffMemberSalary);
-hrRouter.get('/viewStaffMembersWithMissingHours',authorization.authStaffMember,authorization.authHr,hrController.viewStaffMembersWithMissingHours);
+hrRouter.post('/addMissingSignInOut',auth,hrController.addMissingSignInOut);
+hrRouter.get('/viewStaffMemberAttendance/:ID/:type',auth,hrController.viewStaffMemberAttendance);
+hrRouter.post('/updateStaffMemberSalary',auth,hrController.updateStaffMemberSalary);
+hrRouter.get('/viewStaffMembersWithMissingHours',auth,hrController.viewStaffMembersWithMissingHours);
 
 module.exports = hrRouter;

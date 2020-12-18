@@ -47,9 +47,11 @@ const assignCourseInstructor = async(req, res)=>{ // ADD check that the course d
     const course = await Course.findOne({ID: req.body.courseID}); // Course to assign the instructor for
     if(!course)
         return res.status(400).send("This course doesn't exit");
-    if(!course.department.includes(hodDept)){
+    if(!course.department.includes(hodDept))
         return res.status(400).send("You can't assign an instructor for a course that it's not in your department");
-    }    
+    if(course.instructor.includes(req.body.instructorID))
+        return res.send("This instructor already teaches this course");
+    
     //Change this member to be an instructor (type = 1)
     const courseInstructor = await Academic_Member.findOne({ID: req.body.instructorID});
     if(courseInstructor.type != 0) // Don't change it if this academic member is a hod
@@ -63,10 +65,12 @@ const assignCourseInstructor = async(req, res)=>{ // ADD check that the course d
     return res.send("Course instructor assigned successfully");
 }
 
-//Bayzaaaaaaa
+
 const updateCourseInstructor = async(req, res)=>{
-    // Check that the input array only contains academic members 
-    if(!await checkings.isAcademicMember(req.body.instructorID)){
+    if(!await checkings.isAcademicMember(req.body.oldInstructorID)){
+        return res.status(400).send("Course instructor has to be an academic member");
+    }
+    if(!await checkings.isAcademicMember(req.body.newInstructorID)){
         return res.status(400).send("Course instructor has to be an academic member");
     }
     //Check that the course is in the department of this HOD 
@@ -78,41 +82,42 @@ const updateCourseInstructor = async(req, res)=>{
     const academic_member = await Academic_Member.findOne({ID:ID});
     //Get the departmentID of the HOD
     const hodDept = academic_member.departmentID; 
-    const course = await Course.findOne({ID: req.body.courseID}); // Course to assign the instructor for
+    const course = await Course.findOne({ID: req.params.ID}); // Course to assign the instructor for
     if(!course)
         return res.status(400).send("This course doesn't exit");
-    if(!course.department.includes(hodDept)){
-        return res.status(400).send("You can't assign an instructor for a course that it's not in your department");
-    }  
+    if(!course.department.includes(hodDept))
+        return res.status(400).send("You can't update an instructor for a course that it's not in your department");
+    if(!course.instructor.includes(req.body.oldInstructorID))
+        return res.status(400).send("This instructor doesn't teach this course");
+    if(course.instructor.includes(req.body.newInstructorID))
+        return res.status(400).send("This new instructor already teaches this course");            
+    if(req.body.oldInstructorID == req.body.newInstructorID)
+        return res.send("Course updated succefully")  
+
     //Remove the instructor from the instructors of the course
-    course.instructor = course.instructor.filter(function(value){return value != req.body.instructorID});   
-    
-    //insert the new one in the array of instructors of the course and set its type to be 1
-    if(!course.instructor.includes(req.body.instructorID)){
-        const courseSchedule = await Course_Schedule.findOne({ID: course.scheduleID});
-        if(courseSchedule && courseSchedule.slots){
-            for(const curSlot of courseSchedule.slots){
-                if(curSlot.instructor == req.body.instructorID){
-                    curSlot.instructor = undefined;
-                    delete(curSlot.instructor);
-                }
+    course.instructor = course.instructor.filter(function(value){return value != req.body.oldInstructorID});   
+    //Add the new instructor to the instructors of this course
+    course.instructor.push(req.body.newInstructorID)
+    //Remove the old instructor from his slots
+    const courseSchedule = await Course_Schedule.findOne({ID: course.scheduleID});
+    if(courseSchedule && courseSchedule.slots){
+        for(const curSlot of courseSchedule.slots){
+            if(curSlot.instructor == req.body.oldInstructorID){
+                curSlot.instructor = undefined;
+                delete(curSlot.instructor);
             }
         }
-        await Course_Schedule.updateOne({ID:course.scheduleID}, courseSchedule)
-        course.instructor.push(req.body.instructorID);
-        //Set the type of the new instructor to be 1
-        const academic_member2 = await Academic_Member.findOne({ID:req.body.instructorID})
-        //Change its type if he is not the head of department
-        if(academic_member2.type != 0)
-            academic_member2.type = 1; // course instructor
-        console.log(academic_member2)
-        // console.log(curInstructorID)
-        await Academic_Member.updateOne({ID: req.body.instructorID}, academic_member2);
     }
-    await Course.updateOne({ID:req.body.courseID}, course);
+    await Course_Schedule.updateOne({ID:course.scheduleID}, courseSchedule)
+    //Set the type of the new instructor to be 1
+    const academic_member2 = await Academic_Member.findOne({ID:req.body.newInstructorID})
+    //Change its type if he is not the head of department
+    if(academic_member2.type != 0)
+        academic_member2.type = 1; // course instructor
+    await Academic_Member.updateOne({ID: req.body.newInstructorID}, academic_member2);    
+    await Course.updateOne({ID:req.params.ID}, course);
     return res.send("Update was successfull");
 }
-
 
 const deleteCourseInstructor = async(req, res)=>{
     // Check that the input array only contains academic members 
@@ -128,7 +133,7 @@ const deleteCourseInstructor = async(req, res)=>{
     const academic_member = await Academic_Member.findOne({ID:ID});
     //Get the departmentID of the HOD
     const hodDept = academic_member.departmentID; 
-    const course = await Course.findOne({ID: req.body.courseID}); // Course to assign the instructor for
+    const course = await Course.findOne({ID: req.params.courseID}); // Course to assign the instructor for
     if(!course)
         return res.status(400).send("This course doesn't exit");
     if(!course.department.includes(hodDept)){
@@ -146,7 +151,7 @@ const deleteCourseInstructor = async(req, res)=>{
         }
     }
     await Course_Schedule.updateOne({ID:course.scheduleID}, courseSchedule);
-    await Course.updateOne({ID:req.body.courseID}, course);
+    await Course.updateOne({ID:req.params.courseID}, course);
     return res.send("Course instructor was deleted successfully")
 }
 
@@ -304,7 +309,6 @@ const viewCourseCoverage = async(req, res) => {
     const coverage = filteredSlots.length / courseSchedule.slots.length;
     return res.send(JSON.stringify(coverage));
 }
-
 
 const createMemEntry = async(curMem)=>{
     const curStaff = await Staff_Member.findOne({ID: curMem.ID});
