@@ -107,7 +107,6 @@ const createSlot = async(req, res) => {
     res.send("Slot added sucessfully !");
 }
 
-// body : {courseID , slotID}
 const deleteSlot = async(req, res) => {
     const { ID, type } = req.header.user;
     const { courseID, slotID } = req.params;
