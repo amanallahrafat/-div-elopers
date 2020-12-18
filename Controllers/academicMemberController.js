@@ -1,13 +1,17 @@
-const Annual_Leave_Request = require('../Models/Requests/Accidental_Leave_Request.js')
-const Course_Schedule = require('../Models/Academic/Course_Schedule.js');
+const Annual_Leave_Request = require('../Models/Requests/Annual_Leave_Request.js');
+const Slot_Linking_Request = require('../Models/Requests/Slot_Linking_Request.js');
+const Change_Day_Off_Request = require("../Models/Requests/Change_Day_Off_Request.js");
+const Accidental_Leave_Request = require('../Models/Requests/Accidental_Leave_Request.js');
+const Compensation_Leave_Request = require('../Models/Requests/Compensation_Leave_Request.js');
+const Maternity_Leave_Request = require('../Models/Requests/Maternity_Leave_Request.js');
 const Replacement_Request = require('../Models/Requests/Replacement_Request.js');
+const Sick_Leave_Request = require('../Models/Requests/Sick_Leave_Request');
+const Course_Schedule = require('../Models/Academic/Course_Schedule.js');
 const Academic_Member = require('../Models/Users/Academic_Member.js');
-const Slot_Linking_Request = require('../Models/Requests/Slot_Linking_Request');
 const Course = require('../Models/Academic/Course.js');
 const Department = require('../Models/Academic/Department.js');
-const Change_Day_Off_Request = require("../Models/Requests/Change_Day_Off_Request.js");
 const validator = require('../Validations/academicMemberValidations');
-
+const Notification = require('../Models/Others/Notification')
 
 // {replacementID, courseID, slotID}
 // const sendReplacementRequest = async (req, res) =>{
@@ -110,9 +114,64 @@ const sendChangeDayOffRequest = async (req, res) =>{
     await changeDayOffRequest.save();
     return res.send("The change day request is added successfully.");
 }
+const getAllNotifications = async (req, res) =>{
+    const {ID, type} = req.header.user;
+    res.send(await Notification.find({receiverID : ID}));
+}
+//{view : 0}
+//all : 0 , accepted : 1, rejected : 2, pending : 3.
+const viewAllRequests = async(req, res) => {
+const {ID, type} = req.header.user;
+if(req.body.view == 0){
+    const accidental = await Accidental_Leave_Request.find({senderID : ID});
+    const annual = await Annual_Leave_Request.find({senderID : ID});
+    const changeDayOff = await Change_Day_Off_Request.find({senderID : ID});
+    const compensation = await Compensation_Leave_Request.find({senderID : ID});
+    const maternity = await Maternity_Leave_Request.find({senderID : ID});
+    const replacement = await Replacement_Request.find({senderID : ID});
+    const sick = await Replacement_Request.find({senderID : ID});
+    const slotLinking = await Slot_Linking_Request.find({senderID : ID});
+    const result = accidental.concat(annual).concat(changeDayOff).concat(compensation).concat(maternity).concat(replacement).concat(sick).concat(slotLinking);
+    return res.send(result);
+}else if(req.body.view == 1){
+    const accidental = await Accidental_Leave_Request.find({senderID : ID, status : "accepted"});
+    const annual = await Annual_Leave_Request.find({senderID : ID, status : "accepted"});
+    const changeDayOff = await Change_Day_Off_Request.find({senderID : ID, status : "accepted"});
+    const compensation = await Compensation_Leave_Request.find({senderID : ID, status : "accepted"});
+    const maternity = await Maternity_Leave_Request.find({senderID : ID, status : "accepted"});
+    const replacement = await Replacement_Request.find({senderID : ID, status : "accepted"});
+    const sick = await Replacement_Request.find({senderID : ID, status : "accepted"});
+    const slotLinking = await Slot_Linking_Request.find({senderID : ID, status : "accepted"});
+    const result = accidental.concat(annual).concat(changeDayOff).concat(compensation).concat(maternity).concat(replacement).concat(sick).concat(slotLinking);
+    return res.send(result);
+}else if(req.body.view == 2){
+    
+    const accidental = await Accidental_Leave_Request.find({senderID : ID, status : "rejected"});
+    const annual = await Annual_Leave_Request.find({senderID : ID, status : "rejected"});
+    const changeDayOff = await Change_Day_Off_Request.find({senderID : ID, status : "rejected"});
+    const compensation = await Compensation_Leave_Request.find({senderID : ID, status : "rejected"});
+    const maternity = await Maternity_Leave_Request.find({senderID : ID, status : "rejected"});
+    const replacement = await Replacement_Request.find({senderID : ID, status : "rejected"});
+    const sick = await Replacement_Request.find({senderID : ID, status : "rejected"});
+    const slotLinking = await Slot_Linking_Request.find({senderID : ID, status : "rejected"});
+    const result = accidental.concat(annual).concat(changeDayOff).concat(compensation).concat(maternity).concat(replacement).concat(sick).concat(slotLinking);
+    return res.send(result);
+}else if(req.body.view == 3){
 
-
+    const accidental = await Accidental_Leave_Request.find({senderID : ID, status : "pending"});
+    const annual = await Annual_Leave_Request.find({senderID : ID, status : "pending"});
+    const changeDayOff = await Change_Day_Off_Request.find({senderID : ID, status : "pending"});
+    const compensation = await Compensation_Leave_Request.find({senderID : ID, status : "pending"});
+    const maternity = await Maternity_Leave_Request.find({senderID : ID, status : "pending"});
+    const replacement = await Replacement_Request.find({senderID : ID, status : "pending"});
+    const sick = await Replacement_Request.find({senderID : ID, status : "pending"});
+    const slotLinking = await Slot_Linking_Request.find({senderID : ID, status : "pending"});
+    const result = accidental.concat(annual).concat(changeDayOff).concat(compensation).concat(maternity).concat(replacement).concat(sick).concat(slotLinking);
+    return res.send(result);
+}
+return res.status(403).send("The required filer is not a valid one");
+}
 
 module.exports = {
-    sendSlotLinkingRequest,sendChangeDayOffRequest,
+    sendSlotLinkingRequest,sendChangeDayOffRequest,getAllNotifications, viewAllRequests
 }
