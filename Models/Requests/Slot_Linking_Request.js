@@ -7,6 +7,7 @@ const SlotLinkingRequestSchema = new Schema({
     receiverID : Number,
     courseID : Number,
     slotID : Number,
+    status : String,
 });
 
 module.exports = mongoose.model('Slot_Linking_request',SlotLinkingRequestSchema);

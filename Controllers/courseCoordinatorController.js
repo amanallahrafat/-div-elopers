@@ -4,6 +4,7 @@ const Notification = require('../Models/Others/Notification.js');
 const Slot_Linking_Request = require('../Models/Requests/Slot_Linking_Request.js');
 const validator = require('../Validations/courseCoordinatorValidation.js');
 const checkings = require('../utils/checkings.js');
+const { request } = require('express');
 
 
 const viewSlotLinkingRequests = async(req, res) => {
@@ -17,39 +18,49 @@ const viewSlotLinkingRequests = async(req, res) => {
 const hendleSlotLinkingRequest = async(req, res) => {
     const { ID, type } = req.header.user;
     const { requestID, decision } = req.body;
-    const request = await Slot_Linking_Request.find({ ID: requestID });
-    if (!request)
+    const request = await Slot_Linking_Request.findOne({ ID: requestID });
+    if (request == null)
         return res.status(400).send("You can't handle unexisted request !");
+
+    if(request.status != "pending")
+        return res.status(400).send("The request is already handled");
     // handle rejection case
     if (decision == 0) {
+        const course = await Course.findOne({ID : request.courseID});
         const notification = new Notification({
             senderID: ID,
             receiverID: request.senderID,
-            msg: "Your Slot Linking Request with ID" + request.slotID + "for the course with ID" +
-                request.courseID + " is rejected",
+            msg: "Your Slot Linking Request for the slot with ID " + request.slotID + " for the course " +
+                course.code + " is rejected",
             date: Date.now(),
         });
         await notification.save();
+        const request = await Course.findOne({ID : request.courseID});
+        await request.updateOne({ID : requestID} ,{status : "rejected"});
         res.send("The Request is rejected sucessfully !");
     }
     // handle acceptance case
     else {
-        const course = await Course.findOne({ ID: request.courseID });
-        const course_schedule = await Course_Schedule.findOne({ ID: course.scheduleID });
-        let slots = course_schedule.slots;
+        //const course = await Course.findOne({ ID: request.courseID });
+        const course_schedule = await Course_Schedule.findOne({ ID: request.courseID });
+        let slots = course_schedule.slots.filter((elm)=>elm.ID != request.slotID);
         // Assign the instructor to a course slot
-        let slot = slots.filter((elem) => { elem.ID == slotID });
-        slot.instructor = request.senderID;
-        await Course_Schedule.updateOne({ Id: courseID }, { slots: slots });
+        let slot = course_schedule.slots.filter((elm)=>elm.ID == request.slotID);
+        slot[0].instructor = request.senderID;
+        slots.push(slot[0]);
+        await Course_Schedule.updateOne({ ID: request.courseID }, { slots: slots });
         //....................
+        console.log(request);
         const notification = new Notification({
             senderID: ID,
             receiverID: request.senderID,
-            msg: "Your Slot Linking Request with ID" + request.slotID + "for the course with ID" +
-                request.courseID + " is accepted",
+            msg: "Your Slot Linking Request for the slot with ID " + request.slotID + " for the course " +
+                    course.code + " is accepted",
             date: Date.now(),
         });
         await notification.save();
+        const request = await Course.findOne({ID : request.courseID});
+        await request.updateOne({ID : requestID} ,{status : "rejected"});
         res.send("The Request is accepted sucessfully !");
     }
 }
