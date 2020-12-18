@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema
 const ReplacementRequestSchema = new Schema({
+    ID : Number,
     senderID : Number,
     receiverID : Number,
     submissionDate : Date,

@@ -7,7 +7,7 @@ const AccidentalLeaveRequestSchema = new Schema({
     msg : String,
     submissionDate : Date,
     requestedDate : Date,
-    status: String
+    status: String,
 });
 
 module.exports =mongoose.model('Accidental_Leave_Request',AccidentalLeaveRequestSchema);

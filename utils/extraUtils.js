@@ -7,13 +7,15 @@ const trimMonogoObj=(obj,deletedProperties)=>{
       }, {})
 }
 
-const getDifferenceInDays=(date1,date2)=>{
-      
+const getDifferenceInDays=(date2,data1)=>{
+  date1 = new Date(date1);
+  date2 = new Date(date2);
   const Difference_In_Time = date2.getTime() - date1.getTime(); 
-     
    // To calculate the no. of days between two dates 
    return (Difference_In_Time / (1000 * 3600 * 24)); 
 }
+
+
 const getMissingHours= (curStaffMember)=>{
    // console.log(curStaffMember);
    // console.log("*********");
@@ -58,14 +60,9 @@ const getMissingHours= (curStaffMember)=>{
    //     "**");
    const noOfDaysTillToday=getDifferenceInDays(startOfMonth,curDate);
    // console.log(noOfDaysTillToday);
-   return missingHours=noOfDaysTillToday*8.4-attendedHours;
-
-
-
-   
-   
+   return missingHours=noOfDaysTillToday*8.4-attendedHours; 
 }
 
 module.exports={
-    trimMonogoObj,getMissingHours,
+    trimMonogoObj,getMissingHours,getDifferenceInDays,
 }

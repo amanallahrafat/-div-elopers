@@ -6,9 +6,11 @@ const academicMemberRouter = express.Router();
 
 auth = [authStaffMember,authAcademicMember];
 
-
 academicMemberRouter.post('/sendSlotLinkingRequest', auth, academicMemberController.sendSlotLinkingRequest);
 academicMemberRouter.post('/sendChangeDayOffRequest', auth, academicMemberController.sendChangeDayOffRequest);
 academicMemberRouter.get('/getAllNotifications', auth, academicMemberController.getAllNotifications);
-academicMemberRouter.get('/viewAllRequests', auth, academicMemberController.viewAllRequests);
+academicMemberRouter.get('/viewAllRequests/:view', auth, academicMemberController.viewAllRequests);
+academicMemberRouter.post('/sendReplacementRequest', auth, academicMemberController.sendReplacementRequest);
+
+
 module.exports = academicMemberRouter;
