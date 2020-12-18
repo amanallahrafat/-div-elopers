@@ -112,17 +112,10 @@ const deleteSlot = async(req, res) => {
 }
 
 // body : slot fields to be updated
-<<<<<<< Updated upstream
-const updateSlot = async(req, res) => {
-    const { ID, type } = req.header.user;
-    const { courseID, slotID } = req.params;
-    if (!checkings.isCourseCoordinatorO(ID, courseID))
-=======
 const updateSlot = async(req,res) =>{
     const{ID , type} = req.header.user;
     const {courseID , slotID} = req.params;
     if(!checkings.isCourseCoordinator(ID,courseID))
->>>>>>> Stashed changes
         return res.status(400).send("You are not the coordinator of the requested course");
     const course_schedule = await Course_Schedule.findOne({ ID: courseID });
     let oldSlot = course_schedule.slots.filter((elem) => elem.ID == slotID);
