@@ -86,7 +86,7 @@ const authTA = async (req,res,next)=>{
     next();
 }
 module.exports = {
-    authStaffMember,authHr,
+    authStaffMember,
     authHr,authHOD,authCourseInstructor,
     authCourseCoordinator,authTA
 }

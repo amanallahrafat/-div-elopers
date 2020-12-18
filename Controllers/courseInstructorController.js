@@ -37,7 +37,7 @@ const viewCourseCoverage = async(req, res) => {
 
     const course = await Course.findOne({ ID: courseID });
     const courseSchedule = await Course_Schedule.findOne({ ID: course.scheduleID });
-    if (courseSchedule==null)
+    if (courseSchedule == null)
         return res.status(400).send("No schedule is set yet for the course");
     if (courseSchedule.slots.length == 0)
         return res.status(400).send("Course schedule has no slot entries yet");
@@ -46,16 +46,32 @@ const viewCourseCoverage = async(req, res) => {
     return res.send(JSON.stringify(coverage));
 }
 
+// const viewSlotAssignment = async(req, res) => {
+//     const instructorID = req.header.user.ID;
+//     const CourseScheduleTable = await Course_Schedule.find();
+//     const slots = [];
+//     for (const schedule of CourseScheduleTable) {
+//         for (const slot of schedule.slots) {
+//             if (slot.instructor == instructorID) {
+//                 slots.push(slot);
+//             }
+//         }
+//     }
+//     return res.send(JSON.stringify(slots));
+// }
+
 const viewSlotAssignment = async(req, res) => {
     const instructorID = req.header.user.ID;
-    const CourseScheduleTable = await Course_Schedule.find();
+    const courseTable = await Course.find();
     const slots = [];
-    for (const schedule of CourseScheduleTable) {
-        for (const slot of schedule.slots) {
-            if (slot.instructor == instructorID) {
-                slots.push(slot);
+    for (const course of courseTable) {
+        if (course.instructor && course.instructor.includes(instructorID)) {
+            const schedule = await Course_Schedule.findOne({ ID: course.ID });
+            if (schedule) {
+                slots.push(schedule);
             }
         }
+
     }
     return res.send(JSON.stringify(slots));
 }
@@ -79,8 +95,7 @@ const assignAcademicMemberToSlot = async(req, res) => {
         return res.status(400).send("No slots are assigned for the given course yet");
     }
     const slot = schedule.slots.filter(x => x.ID == slotID);
-    console.log(slot);
-    if (slot[0] == null)  
+    if (slot[0] == null)
         return res.status(400).send("No slot is assigned for the given course with the provided slotID");
     if (slot[0].instructor != null)
         return res.status(400).send("The slot is already assigned to another instructor");
@@ -89,8 +104,8 @@ const assignAcademicMemberToSlot = async(req, res) => {
     // After the slot linkin request is approved.
     const slots = schedule.slots;
     slots.forEach(elm => {
-        if( elm.ID == slotID ){
-            if(elm.instructor)
+        if (elm.ID == slotID) {
+            if (elm.instructor)
                 return res.status(400).send("The Specified slot is already assigned to an instructor !");
             elm.instructor = academicMemberID;
         }
@@ -100,7 +115,6 @@ const assignAcademicMemberToSlot = async(req, res) => {
 }
 
 const removeAssignmentOfAcademicMemberToSlot = async(req, res) => {
-
     const instructorID = req.header.user.ID;
     const slotID = req.body.slotID;
     const courseID = req.body.courseID;
@@ -129,7 +143,7 @@ const removeAssignmentOfAcademicMemberToSlot = async(req, res) => {
     // After the slot linkin request is approved.
     const slots = schedule.slots;
     slots.forEach(elm => {
-        if( elm.ID == slotID ){
+        if (elm.ID == slotID) {
             elm.instructor = undefined;
             delete(elm.instructor);
         }
@@ -138,7 +152,7 @@ const removeAssignmentOfAcademicMemberToSlot = async(req, res) => {
     res.send("Academic memeber assignment to the slot is removed successfuly");
 }
 
-const updateAssignmentOfAcademicMemberToSlot = async(req, res) => {
+const updateAcademicMemberslotAssignment = async(req, res) => {
     const instructorID = req.header.user.ID;
     const newSlotID = req.body.newSlotID;
     const oldSlotID = req.body.oldSlotID;
@@ -159,8 +173,6 @@ const updateAssignmentOfAcademicMemberToSlot = async(req, res) => {
         return res.status(400).send("No slots are assigned for the given course yet");
     }
     const oldSlot = schedule.slots.filter(x => x.ID == oldSlotID);
-    console.log(schedule.slots);
-    console.log(oldSlot);
     if (oldSlot[0] == null)
         return res.status(400).send("No oldSlot is assigned for the given course with the provided slotID");
     if (oldSlot[0].instructor != academicMemberID)
@@ -182,11 +194,11 @@ const updateAssignmentOfAcademicMemberToSlot = async(req, res) => {
 
     const slots = schedule.slots;
     slots.forEach(elm => {
-        if( elm.ID == oldSlotID ){
+        if (elm.ID == oldSlotID) {
             elm.instructor = undefined;
             delete(elm.instructor);
         }
-        if(elm.ID == newSlotID){
+        if (elm.ID == newSlotID) {
             elm.instructor = academicMemberID;
         }
     });
@@ -196,10 +208,104 @@ const updateAssignmentOfAcademicMemberToSlot = async(req, res) => {
     res.send("Academic memeber assignment to the slot is updated successfuly");
 }
 
+const removeAcademicMemberFromCourse = async(req, res) => {
+    const instructorID = req.header.user.ID;
+    const courseID = req.body.courseID;
+    const academicMemberID = req.body.academicMemberID;
+    if (!await checkings.isTA(academicMemberID))
+        return res.status(400).send("The provided ID is not an acadmic memeber");
+    if (!await checkings.courseIDExists(courseID))
+        return res.status(400).send("The provided ID does not belong to a valid course");
+    if (!await checkings.isInstructorOfCourse(instructorID, courseID))
+        return res.status(400).send("You are not an instructor of the given course");
+
+    const course = await Course.findOne({ ID: courseID });
+    // Remove the TA from the course's teaching staff.
+    if (!course.teachingStaff.includes(academicMemberID)) {
+        return res.status(400).send("The given acadmic memebr does not teach the given course");
+    } else {
+        course.teachingStaff = course.teachingStaff.filter(x => x != academicMemberID);
+        await Course.updateOne({ ID: courseID }, { teachingStaff: course.teachingStaff });
+    }
+
+    // Check if the academic member is the course coordinator.
+    if (course.coordinatorID == academicMemberID) {
+        delete(course['_doc'].coordinatorID);
+        await Course.updateOne({ ID: courseID }, { $unset: { coordinatorID: 1 } });
+
+        let stillCoordinator = false;
+        const courseTable = await Course.find();
+        for (const course of courseTable) {
+            if (course.coordinatorID == academicMemberID && course.ID != courseID)
+                stillCoordinator = true;
+        }
+
+        if (!stillCoordinator) {
+            await Academic_Member.updateOne({ ID: academicMemberID }, { type: 3 });
+        }
+    }
+
+
+    // Remove the TA from all assigned slots to him/her.
+    const schedule = await Course_Schedule.findOne({ ID: course.scheduleID });
+    if (schedule && schedule.slots) {
+        const slots = schedule.slots;
+        slots.forEach(elm => {
+            if (elm.instructor == academicMemberID) {
+                elm.instructor = undefined;
+                delete(elm.instructor);
+            }
+        });
+        await Course_Schedule.updateOne({ ID: course.scheduleID }, { slots: slots });
+    }
+    res.send("Academic memeber removed successfully");
+}
+
+const assignCourseCoordinator = async(req, res) => {
+    const instructorID = req.header.user.ID;
+    const courseID = req.body.courseID;
+    const academicMemberID = req.body.academicMemberID;
+    if (!await checkings.isTA(academicMemberID))
+        return res.status(400).send("The provided ID is not an acadmic memeber");
+    if (!await checkings.courseIDExists(courseID))
+        return res.status(400).send("The provided ID does not belong to a valid course");
+    if (!await checkings.isInstructorOfCourse(instructorID, courseID))
+        return res.status(400).send("You are not an instructor of the given course");
+
+    const course = await Course.findOne({ ID: courseID });
+    if (course.coordinatorID != null) {
+        // Check if the course.coordinator is still a coordinator (in another course)
+        const oldCoordinator = course.coordinatorID;
+        let stillCoordinator = false;
+        const courseTable = await Course.find();
+        for (const course of courseTable) {
+            if (course.coordinatorID == oldCoordinator && course.ID != courseID) {
+                stillCoordinator = true;
+            }
+        }
+
+        if (!stillCoordinator) {
+            await Academic_Member.updateOne({ ID: oldCoordinator }, { type: 3 });
+        }
+    }
+    await Academic_Member.updateOne({ ID: academicMemberID }, { type: 2 });
+
+    course.coordinatorID = academicMemberID;
+    if (!course.teachingStaff) course.teachingStaff = [];
+    if (!course.teachingStaff.includes(academicMemberID)) {
+        course.teachingStaff.push(academicMemberID);
+    }
+
+    await Course.updateOne({ ID: courseID }, course);
+    res.send("Course coordinator is assigned successfully");
+}
+
 module.exports = {
     viewCourseCoverage,
     assignAcademicMemberToSlot,
     removeAssignmentOfAcademicMemberToSlot,
-    updateAssignmentOfAcademicMemberToSlot,
+    updateAcademicMemberslotAssignment,
     viewSlotAssignment,
+    removeAcademicMemberFromCourse,
+    assignCourseCoordinator,
 }
