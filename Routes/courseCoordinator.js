@@ -6,7 +6,7 @@ const courseCoordinatorRouter = express.Router();
 
 auth = [authStaffMember,authCourseCoordinator];
 
-courseCoordinatorRouter.get('/viewSlotLinkingRequest',auth,courseCoordinatorController.viewSlotLinkingRequests)
+courseCoordinatorRouter.get('/viewSlotLinkingRequests',auth,courseCoordinatorController.viewSlotLinkingRequests)
 courseCoordinatorRouter.post('/handleSlotLinkingRequest',auth,courseCoordinatorController.hendleSlotLinkingRequest);
 
 courseCoordinatorRouter.post('/createSlot',auth,courseCoordinatorController.createSlot);

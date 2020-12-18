@@ -9,8 +9,10 @@ const { request } = require('express');
 
 const viewSlotLinkingRequests = async(req, res) => {
     const { ID, type } = req.header.user;
-    const courseID = await Course.findOne({ coordinatorID: ID });
-    const requests = await Slot_Linking_Request.find({ courseID: courseID });
+    const course = await Course.findOne({ coordinatorID: ID });
+    if( course == null )
+        return res.status(400).send("You are not a coordinator of any course");
+    const requests = await Slot_Linking_Request.find({ courseID: course.ID });
     res.send(requests);
 }
 
@@ -35,13 +37,12 @@ const hendleSlotLinkingRequest = async(req, res) => {
             date: Date.now(),
         });
         await notification.save();
-        const request = await Course.findOne({ID : request.courseID});
-        await request.updateOne({ID : requestID} ,{status : "rejected"});
+        await Slot_Linking_Request.updateOne({ID : requestID} ,{status : "rejected"});
         res.send("The Request is rejected sucessfully !");
     }
     // handle acceptance case
     else {
-        //const course = await Course.findOne({ ID: request.courseID });
+        const course = await Course.findOne({ ID: request.courseID });
         const course_schedule = await Course_Schedule.findOne({ ID: request.courseID });
         let slots = course_schedule.slots.filter((elm)=>elm.ID != request.slotID);
         // Assign the instructor to a course slot
@@ -50,7 +51,6 @@ const hendleSlotLinkingRequest = async(req, res) => {
         slots.push(slot[0]);
         await Course_Schedule.updateOne({ ID: request.courseID }, { slots: slots });
         //....................
-        console.log(request);
         const notification = new Notification({
             senderID: ID,
             receiverID: request.senderID,
@@ -59,8 +59,8 @@ const hendleSlotLinkingRequest = async(req, res) => {
             date: Date.now(),
         });
         await notification.save();
-        const request = await Course.findOne({ID : request.courseID});
-        await request.updateOne({ID : requestID} ,{status : "rejected"});
+        console.log(requestID)
+        await Slot_Linking_Request.updateOne({ID : requestID} ,{status : "accepted"});
         res.send("The Request is accepted sucessfully !");
     }
 }
