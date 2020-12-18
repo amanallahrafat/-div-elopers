@@ -417,3 +417,74 @@ Location Updated Successfully!
 <b>Request parameters: </b> The ID of the course. <br>
 <b>Response: </b> The coverage of the course which has the ID specified in the request parameters(in decimal)
 <br>
+
+
+## Course Instructor Functionality
+ ### <b>Functionality: </b> View course coverage <br>	
+<b>Route: </b> /ci/viewCourseCoverage/2 <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request parameters: </b> The ID of the course. <br>
+<b>Response: </b> The coverage of the course which has the ID specified in the request parameters(in decimal)
+<br>
+
+ ### <b>Functionality: </b> View slot Assignemnts<br>	
+<b>Route: </b> /ci/viewSlotAssignment <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> Array of the course slots that the course instructor is assigned to.
+<br>
+
+### <b>Functionality: </b> Assign academic member to a slot<br>	
+<b>Route: </b> /ci/assignAcademicMemberToSlot <br>	
+<b>Request Type: </b> Post <br>	
+<b>Request Body: </b> `{
+    "slotID": 1,
+    "courseID": 2,
+    "academicMemberID": 3
+}` <br>	
+<b>Response: </b> Academic memeber is assigned to the slot the successfuly
+<br>
+
+### <b>Functionality: </b> Remove academic member assignment from a slot<br>	
+<b>Route: </b> /ci/removeAcademicMemberToSlot <br>	
+<b>Request Type: </b> DELETE <br>	
+<b>Request Body: </b> `{
+    "slotID": 1,
+    "courseID": 2,
+    "academicMemberID": 3
+}` <br>	
+<b>Response: </b> Academic memeber assignment to the slot is removed successfuly
+<br>
+
+### <b>Functionality: </b> Update academic member slot assignment<br>	
+<b>Route: </b> /ci/updateAcademicMemberslotAssignment <br>	
+<b>Request Type: </b> PUT <br>	
+<b>Request Body: </b> `{
+    "oldSlotID": 2,
+    "newSlotID": 1,
+    "courseID": 2,
+    "academicMemberID": 3
+}` <br>	
+<b>Response: </b> Academic memeber assignment to the slot is updated successfuly
+<br>
+
+### <b>Functionality: </b> Remove academic member from a course<br>	
+<b>Route: </b> /ci/removeAcademicMemberFromCourse <br>	
+<b>Request Type: </b> DELETE <br>	
+<b>Request Body: </b> `{
+    "oldSlotID": 2,
+    "newSlotID": 1,
+    "courseID": 2,
+    "academicMemberID": 3
+}` <br>	
+<b>Response: </b> Academic memeber assignment to the slot is updated successfuly
+<br>
+
+### <b>Functionality: </b> Assign academic coordinator<br>	
+<b>Route: </b> /ci/assignCourseCoordinator <br>	
+<b>Request Type: </b> PUT <br>	
+<b>Request Body: </b> `{
+    "courseID": 2,
+    "academicMemberID": 3
+}` <br>	
+<b>Response: </b> Course coordinator is assigned successfully
+<br>
