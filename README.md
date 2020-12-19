@@ -202,9 +202,6 @@ Location Updated Successfully!
 <b> Request type : </b> DELETE <br>
 <b>Response :</b> Course has been deleted successfully <br>
 
-
-
-
 ### <b>Functionality: </b> add missing sign in/ sign out session <br>
 <b> add 'auth-token' of HR in the header</b><br/>
 
@@ -384,14 +381,29 @@ Location Updated Successfully!
 <br>	
 
  ### <b>Functionality: </b> Delete course instructor <br>	
-<b>Route: </b> /hod/deleteCourseInstructor <br>	
-<b>Request Type: </b> DELETE <br>	
+<b>Route: </b> /hod/deleteCourseInstructor/:courseID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the course <br>
 <b>Request Body: </b> `
-{"courseID":3, "instructorID": 1}
+{"instructorID":1}
 `
 <br>
+<b>Example of how to call the route: </b> /hod/deleteCourseInstructor/1 <br>
 <b>Response: </b>Course instructor was deleted successfully
-<br>	
+<br>
+
+ ### <b>Functionality: </b> Update course instructor <br>	
+<b>Route: </b> /hod/updateCourseInstructor/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request Parameters: </b> The ID of the course <br>
+<b>Request Body: </b> `
+{"newInstructorID": 2, "oldInstructorID":1}
+`
+<br>
+<b>Response: </b>Update was successfull
+<br>
+<b>Example of how to call the route: </b>/hod/updateCourseInstructor/1
+<b>Note: </b> newInstructorID is the ID of the instructor that you want to assign, oldInstructorID is the ID of the instructor you want to remove. <br>
 
 
  ### <b>Functionality: </b> View Staff member in department <br>	
@@ -459,6 +471,7 @@ Location Updated Successfully!
 ]
 `
 <br>
+<b>Example of how to call the route: </b> /hod/viewDepartmentMembersByCourse/1
 	
  ### <b>Functionality: </b> View all staff day off <br>	
 <b>Route: </b> /hod/viewAllStaffDayOff <br>	
@@ -495,6 +508,7 @@ Location Updated Successfully!
 }
 `
 <br>	
+<b>Example of how to call the route: </b> /hod/viewSingleStaffDayOff/1  <br>
     
  ### <b>Functionality: </b> View course teaching assignments <br>	
 <b>Route: </b> /hod/viewCourseTeachingAssignments/:ID <br>	
@@ -538,6 +552,7 @@ Location Updated Successfully!
 }
 `
 <br>	
+<b>Example of how to call the route: </b> /hod/viewCourseTeachingAssignments/1  <br>
 
  ### <b>Functionality: </b> View course coverage <br>	
 <b>Route: </b> /hod/viewCourseCoverage/:ID <br>	
@@ -545,6 +560,7 @@ Location Updated Successfully!
 <b>Request parameters: </b> The ID of the course. <br>
 <b>Response: </b> The coverage of the course which has the ID specified in the request parameters(in decimal)
 <br>
+<b>Example of how to call the route: </b> /hod/viewCourseCoverage/1  <br>
 
 
 ## Course Instructor Functionality
