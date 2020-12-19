@@ -15,5 +15,7 @@ academicMemberRouter.get('/viewAllRequests/:view', auth, academicMemberControlle
 academicMemberRouter.post('/sendReplacementRequest', auth, academicMemberController.sendReplacementRequest);
 //academicMemberRouter.post('/handleReplacmentRequest', auth, academicMemberController.handleReplacmentRequest);
 academicMemberRouter.get('/viewSchedule', auth, academicMemberController.viewSchedule);
+academicMemberRouter.get('/viewReplacementRequests', auth, academicMemberController.viewReplacementRequests);
+academicMemberRouter.put('/respondToReplacementRequest', auth, academicMemberController.respondToReplacementRequest);
 
 module.exports = academicMemberRouter;

@@ -8,7 +8,6 @@ const Replacement_Request = require('../Models/Requests/Replacement_Request.js')
 const Sick_Leave_Request = require('../Models/Requests/Sick_Leave_Request');
 const Course_Schedule = require('../Models/Academic/Course_Schedule.js');
 const Academic_Member = require('../Models/Users/Academic_Member.js');
-const Staff_Member = require('../Models/Users/Staff_Member');
 const Course = require('../Models/Academic/Course.js');
 const Department = require('../Models/Academic/Department.js');
 const validator = require('../Validations/academicMemberValidations');
@@ -335,6 +334,27 @@ const sendSickLeaveRequest = async(req, res) => {
 
 }
 
+const viewReplacementRequests = async (req, res)=>{
+    const academicMemberID = req.header.user.ID;
+    const sentReplacementReq = await Replacement_Request.find({ senderID: academicMemberID});
+    const recievedReplacementReq = await Replacement_Request.find({ receiverID: academicMemberID});
+    res.send(JSON.stringify(sentReplacementReq.concat(recievedReplacementReq)));
+}
+
+const respondToReplacementRequest = async(req, res)=>{
+    const academicMemberID = req.header.user.ID;
+    const requestID = req.body.requestID;
+    const response = req.body.response;
+    const recievedReplacementReq = await Replacement_Request.findOne({ receiverID: academicMemberID, ID: requestID});
+    if(recievedReplacementReq==null)
+        return res.status(400).send("You are trying to respond to an invalid request");
+    if(recievedReplacementReq.status!="pending")
+        return res.status(400).send("Request is already handled");
+    recievedReplacementReq.status = response ? "accepted" : "rejected";
+    await Replacement_Request.updateOne({ID: requestID}, recievedReplacementReq);
+    return res.send("Responded to replacement request successfully");
+}
+
 module.exports = {
     sendReplacementRequest,
     viewSchedule,
@@ -343,5 +363,7 @@ module.exports = {
     getAllNotifications,
     viewAllRequests,
     sendMaternityLeaveRequest,
-    sendSickLeaveRequest
+    sendSickLeaveRequest,
+    viewReplacementRequests,
+    respondToReplacementRequest,
 }
