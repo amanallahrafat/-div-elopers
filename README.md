@@ -563,6 +563,18 @@ Location Updated Successfully!
 <b>Example of how to call the route: </b> /hod/viewCourseCoverage/1  <br>
 
 
+### <b>Functionality: </b> update staff Member profile <br>
+<b> add 'auth-token' of the staff member in the header</b><br/>
+
+<b>Route: </b> /updateMyProfile <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> 
+`
+{"email":"ssarah@guc.edu.eg","salary":6000}
+`
+<br>
+<b>Response :</b> profile Updated Successfully! <br>
+
 ## Course Instructor Functionality
  ### <b>Functionality: </b> View course coverage <br>	
 <b>Route: </b> /ci/viewCourseCoverage/2 <br>	
