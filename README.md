@@ -556,7 +556,7 @@ Location Updated Successfully!
 <b>Response: </b> The slot has been updated sucessfully !
 <br>
 
-## Academic member functionality functionality 
+## Academic member functionality  
 ### <b>Functionality: </b> Send slot linking request<br>	
 <b>Route: </b> /ac/sendSlotLinkingRequest <br>	
 <b>Request Type: </b> POST <br>	
@@ -633,4 +633,17 @@ Location Updated Successfully!
     ]
 ]
 `
+<br>
+
+### <b>Functionality: </b> Send Replacement request<br>	
+<b>Route: </b> /ac/sendReplacementRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"replacementID" : 3, "courseID" : 2 , "slotID" : 1 , "requestedDate" : 1608807967732}` <br>
+<b> Note : </b> the requested date must be in the number of format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The replacement request has been sent sucessfully !" or an error message denoting the error.
 <br>
