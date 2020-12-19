@@ -8,12 +8,16 @@ const Replacement_Request = require('../Models/Requests/Replacement_Request.js')
 const Sick_Leave_Request = require('../Models/Requests/Sick_Leave_Request');
 const Course_Schedule = require('../Models/Academic/Course_Schedule.js');
 const Academic_Member = require('../Models/Users/Academic_Member.js');
+const Staff_Member = require('../Models/Users/Staff_Member');
 const Course = require('../Models/Academic/Course.js');
 const Department = require('../Models/Academic/Department.js');
 const validator = require('../Validations/academicMemberValidations');
+
 const extraUtils = require('../utils/extraUtils.js');
 const Notification = require('../Models/Others/Notification.js');
 const Staff_Member = require('../Models/Users/Staff_Member.js');
+
+
 
 // body : {replacementID, courseID, slotID , requestedDate}
 const sendReplacementRequest = async(req, res) => {
@@ -254,11 +258,90 @@ const viewSchedule = async(req, res) => {
 
 }
 
+
+// const viewSchedule = async(req, res) =>{
+//     const {ID, type} = req.header.user;
+
+// }
+// {documents : String, startDate : Number, endDate : Number, msg : String}
+const sendMaternityLeaveRequest = async(req, res) => {
+        const { ID, type } = req.header.user;
+        const gender = (await Staff_Member.findOne({ ID: ID })).gender;
+        if (gender != "female")
+            return res.status(403).send("You must be a female to have birth");
+        const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
+        const department = await Department.findOne({ ID: departmentID });
+        let message = req.body.msg;
+        const startDate = req.body.startDate;
+        const endDate = req.body.endDate;
+        const documents = req.body.documents;
+        if (department == null)
+            return res.status(403).send("The user does not belong to a department yet");
+        const hodID = department.hodID;
+        if (hodID == null)
+            return res.status(404).send("The department does not have a head yet, you can't send this request");
+        if (message == null)
+            message = "";
+        const isValid = validator.validateMaternityLeave(req.body);
+        if (isValid.error)
+            return res.status(400).send({ error: isValid.error.details[0].message });
+        const request = await Maternity_Leave_Request.find();
+        const maternity_leave_request = new Maternity_Leave_Request({
+            ID: getMaxSlotID(request),
+            senderID: ID,
+            receiverID: hodID,
+            documents: documents,
+            submissionDate: Date.now(),
+            startDate: startDate,
+            endDate: endDate,
+            msg: message,
+            status: "pending"
+        });
+        maternity_leave_request.save();
+        return res.send("The request has been created successfully.")
+    }
+    //{documents: String, requestedDate : Number, msg: String}
+
+const sendSickLeaveRequest = async(req, res) => {
+    const { ID, type } = req.header.user;
+    const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
+    const department = await Department.findOne({ ID: departmentID });
+    let message = req.body.msg;
+    const documents = req.body.documents;
+    const requestedDate = req.body.requestedDate;
+    if (department == null)
+        return res.status(403).send("The user does not belong to a department yet");
+    const hodID = department.hodID;
+    if (hodID == null)
+        return res.status(404).send("The department does not have a head yet, you can't send this request");
+    if (message == null)
+        message = "";
+    const isValid = validator.validateSickLeave(req.body);
+    if (isValid.error)
+        return res.status(400).send({ error: isValid.error.details[0].message });
+    const request = await Sick_Leave_Request.find();
+    const sick_leave_request = new Sick_Leave_Request({
+        ID: getMaxSlotID(request),
+        senderID: ID,
+        receiverID: hodID,
+        documents: documents,
+        submissionDate: Date.now(),
+        requestedDate: requestedDate,
+        status: "pending",
+        msg: message
+    });
+    sick_leave_request.save();
+    return res.send("The request has been created successfully.")
+
+}
+
 module.exports = {
+    sendReplacementRequest,
+    viewSchedule,
     sendSlotLinkingRequest,
     sendChangeDayOffRequest,
     getAllNotifications,
     viewAllRequests,
-    sendReplacementRequest,
-    viewSchedule,
+    sendMaternityLeaveRequest,
+    sendSickLeaveRequest
 }
