@@ -36,4 +36,6 @@ hrRouter.get('/viewStaffMemberAttendance/:ID/:type',auth,hrController.viewStaffM
 hrRouter.post('/updateStaffMemberSalary',auth,hrController.updateStaffMemberSalary);
 hrRouter.get('/viewStaffMembersWithMissingHours',auth,hrController.viewStaffMembersWithMissingHours);
 
+hrRouter.get('/viewStaffMembersWithMissingDays',auth,hrController.viewStaffMembersWithMissingDays);
+
 module.exports = hrRouter;

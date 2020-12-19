@@ -227,7 +227,10 @@ const viewSchedule = async(req, res) => {
                 if (slot.instructor == academicMemberID) {
                     const isReplaced = false;
                     for (const req of sentReplacementReq) {
-                        if (req.slotID == slot.ID && req.courseID == courseSchedule.ID) {
+                        if (req.slotID == slot.ID &&
+                            req.courseID == courseSchedule.ID &&
+                            extraUtils.isRequestInWeek(req.requestedDate, new Date())
+                        ) {
                             isReplaced = true;
                         }
                     }
@@ -244,7 +247,10 @@ const viewSchedule = async(req, res) => {
             for (const slot of courseSchedule.slots) {
                 if (slot.instructor == academicMemberID) {
                     for (const req of recievedReplacementReq) {
-                        if (req.slotID == slot.ID && req.courseID == courseSchedule.ID) {
+                        if (req.slotID == slot.ID &&
+                            req.courseID == courseSchedule.ID &&
+                            extraUtils.isRequestInWeek(req.requestedDate, new Date())
+                        ) {
                             schedule.push({ "courseID": courseSchedule.ID, "slot": slot });
                         }
                     }
@@ -354,6 +360,40 @@ const respondToReplacementRequest = async(req, res)=>{
     await Replacement_Request.updateOne({ID: requestID}, recievedReplacementReq);
     return res.send("Responded to replacement request successfully");
 }
+// body : {"requestedDate" , "msg"}
+const sendAnnualLeaveRequest = async(req, res) => {
+    const { ID, type } = req.header.user;
+    const requestedDate = req.body.requestedDate;
+    if (extraUtils.getDifferenceInDays(requestedDate, Date.now()) <= 0)
+        return res.status(400).send("The requested date already passed !");
+    const msg = req.body.msg;
+    if (msg == null)
+        req.body.msg = "";
+    console.log(req.body.msg)
+    const isValid = validator.validateAnnualLeaveRequest(req.body);
+    if (isValid.error)
+        return res.status(400).send({ error: isValid.error.details[0].message });
+    const user = await Academic_Member.findOne({ ID: ID });
+    const department = await Department.findOne({ ID: user.departmentID });
+    if (department == null)
+        return res.status(400).send("your department has no head !");
+    let replacementsRequests = await Replacement_Request.find({ senderID: ID });
+    replacementsRequests = replacementsRequests.filter((elm) => extraUtils.twoDatesAreEqual(new Date(elm.requestedDate), new Date(requestedDate)));
+    replacementsRequests = replacementsRequests.map((elm) => elm.ID);
+    const requests = await Replacement_Request.find();
+    const annual_leave_request = new Annual_Leave_Request({
+        ID: getMaxSlotID(requests) + 1,
+        senderID: ID,
+        receiverID: department.hodID,
+        msg: msg,
+        submissionDate: Date.now(),
+        requestedDate: requestedDate,
+        replacementRequestsID: replacementsRequests,
+        status: "pending",
+    });
+    await annual_leave_request.save();
+    res.send("the annual leave request has already sucessfully created !");
+}
 
 module.exports = {
     sendReplacementRequest,
@@ -366,4 +406,5 @@ module.exports = {
     sendSickLeaveRequest,
     viewReplacementRequests,
     respondToReplacementRequest,
+    sendAnnualLeaveRequest,
 }

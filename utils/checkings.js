@@ -72,7 +72,6 @@ const courseCodeExists = async(code) => {
 //         return true;
 //     return false;
 // }
-
 const isInstructorOfCourse = async(instructorID, courseID) => {
     const course = await Course.findOne({ ID: courseID });
     if (!course || course.instructor == null) return false;
@@ -127,5 +126,5 @@ module.exports = {
     courseIDExists,
     isInstructorOfCourse,
     isTA,
-    isCourseCoordinator
+  isCourseCoordinator
 };
