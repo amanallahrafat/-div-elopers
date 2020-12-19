@@ -363,13 +363,14 @@ const respondToReplacementRequest = async(req, res)=>{
 // body : {"requestedDate" , "msg"}
 const sendAnnualLeaveRequest = async(req, res) => {
     const { ID, type } = req.header.user;
+    const staff_member = await Staff_Member.findOne({ID : ID});
+    if(staff_member.accidentalLeaveBalance < 1)
+        return res.status(400).send("you don't have enough leave balance");
     const requestedDate = req.body.requestedDate;
     if (extraUtils.getDifferenceInDays(requestedDate, Date.now()) <= 0)
         return res.status(400).send("The requested date already passed !");
-    const msg = req.body.msg;
-    if (msg == null)
-        req.body.msg = "";
-    console.log(req.body.msg)
+    let message = req.body.msg;
+    if(message == null) message = "";
     const isValid = validator.validateAnnualLeaveRequest(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
@@ -380,12 +381,12 @@ const sendAnnualLeaveRequest = async(req, res) => {
     let replacementsRequests = await Replacement_Request.find({ senderID: ID });
     replacementsRequests = replacementsRequests.filter((elm) => extraUtils.twoDatesAreEqual(new Date(elm.requestedDate), new Date(requestedDate)));
     replacementsRequests = replacementsRequests.map((elm) => elm.ID);
-    const requests = await Replacement_Request.find();
+    const requests = await Annual_Leave_Request.find();
     const annual_leave_request = new Annual_Leave_Request({
         ID: getMaxSlotID(requests) + 1,
         senderID: ID,
         receiverID: department.hodID,
-        msg: msg,
+        msg: message,
         submissionDate: Date.now(),
         requestedDate: requestedDate,
         replacementRequestsID: replacementsRequests,
