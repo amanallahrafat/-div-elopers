@@ -329,6 +329,151 @@ Location Updated Successfully!
 <br> <b> note that the output depends on the data inside the database and the current day when the code runs </b>
 <br>
 
+### <b>Functionality: </b> view Staff members with missing days <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/viewStaffMembersWithMissingDays <br>
+<b> Request type : </b> GET <br>
+<b>Response :</b>  
+`
+[
+    {
+        "attendanceRecord": [
+            {
+                "status": 1,
+                "signin": "2020-12-17T12:49:25.810Z",
+                "signout": "2020-12-17T12:49:32.526Z"
+            }
+        ],
+        "extraInfo": [],
+        "name": "sarah",
+        "ID": 1,
+        "email": "ssarah@guc.edu.eg",
+        "type": 1,
+        "dayOff": "saturday",
+        "gender": "female",
+        "salary": 6000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6,
+        "officeID": null
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aaaaaa",
+        "ID": 2,
+        "email": "aca2@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6,
+        "officeID": null
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "User3",
+        "ID": 3,
+        "email": "aca3@guc.com",
+        "type": 0,
+        "dayOff": "saturday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca4",
+        "ID": 4,
+        "email": "aca4@guc.com",
+        "type": 0,
+        "dayOff": "saturday",
+        "gender": "female",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca5",
+        "ID": 5,
+        "email": "aca5@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "female",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca6",
+        "ID": 6,
+        "email": "aca6@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca7",
+        "ID": 7,
+        "email": "aca7@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "user99",
+        "ID": 8,
+        "email": "user99@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "officeID": 5,
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "user100",
+        "ID": 2,
+        "email": "user100@guc.com",
+        "type": 1,
+        "dayOff": "saturday",
+        "gender": "male",
+        "officeID": 5,
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    }
+]
+`
+<br> <b> note that the output depends on the data inside the database and the current day when the code runs <br>
+since it starts from the beginning of the academic month till the current day</b>
+<br>
+
+
+
+
+
 
 
 ## Staff Member Functionality
