@@ -367,7 +367,17 @@ Location Updated Successfully!
 <b>Request Body: </b> The Route has two options for the request body to view The whole Attendance Record or by month and the input requested body for the second should be like the following `{"month":12}`	
 <br>	
 
+### <b>Functionality: </b> update staff Member profile <br>
+<b> add 'auth-token' of the staff member in the header</b><br/>
 
+<b>Route: </b> /updateMyProfile <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> 
+`
+{"email":"ssarah@guc.edu.eg"}
+`
+<br>
+<b>Response :</b> profile Updated Successfully! <br>
 ## HOD functionality 
  
  ### <b>Functionality: </b> Assign course instructor <br>	
@@ -563,17 +573,7 @@ Location Updated Successfully!
 <b>Example of how to call the route: </b> /hod/viewCourseCoverage/1  <br>
 
 
-### <b>Functionality: </b> update staff Member profile <br>
-<b> add 'auth-token' of the staff member in the header</b><br/>
 
-<b>Route: </b> /updateMyProfile <br>
-<b> Request type : </b> POST <br>
-<b> Request body : </b> 
-`
-{"email":"ssarah@guc.edu.eg","salary":6000}
-`
-<br>
-<b>Response :</b> profile Updated Successfully! <br>
 
 ## Course Instructor Functionality
  ### <b>Functionality: </b> View course coverage <br>	
