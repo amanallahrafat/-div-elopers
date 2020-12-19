@@ -65,7 +65,6 @@ const assignCourseInstructor = async(req, res)=>{ // ADD check that the course d
     return res.send("Course instructor assigned successfully");
 }
 
-
 const updateCourseInstructor = async(req, res)=>{
     if(!await checkings.isAcademicMember(req.body.oldInstructorID)){
         return res.status(400).send("Course instructor has to be an academic member");
@@ -308,6 +307,69 @@ const viewCourseCoverage = async(req, res) => {
     return res.send(JSON.stringify(coverage));
 }
 
+//To be tested
+const viewAllRequests = async(req, res)=>{
+    const {ID, type} = req.header.user;
+    if(!await checkings.isHOD(ID)){
+        return res.status(400).send("You have to be a head of department to do this");
+    }
+    let totalArray = [];
+    const accidentalLeaveRequests = await Accidental_Leave_Request.find({receiverID:ID});
+    if(accidentalLeaveRequests == null) accidentalLeaveRequests=[];
+    totalArray.push({"type": "accidental leave requests", "requests":accidentalLeaveRequests})
+
+    const annualLeaveRequests = await Annual_Leave_Request.find({receiverID:ID});
+    if(annualLeaveRequests == null) annualLeaveRequests=[];
+    totalArray.push({"type": "annual leave requests", "requests":annualLeaveRequests})
+
+    const changeDayOffRequests = await Change_Day_Off_Request.find({receiverID:ID});
+    if(changeDayOffRequests == null) changeDayOffRequests=[];
+    totalArray.push({"type": "change day off requests", "requests":changeDayOffRequests})
+
+    const compensationLeaveRequests = await Compensation_Leave_Request.find({receiverID:ID});
+    if(compensationLeaveRequests == null) compensationLeaveRequests=[];
+    totalArray.push({"type": "compensation leave requests", "requests":compensationLeaveRequests})
+
+    const maternityLeaveRequests = await Maternity_Leave_Request.find({receiverID:ID});
+    if(maternityLeaveRequests == null) maternityLeaveRequests=[];
+    totalArray.push({"type": "maternity leave requests", "requests":maternityLeaveRequests})
+
+    const sickLeaveRequests = await Sick_Leave_Request.find({receiverID:ID});
+    if(sickLeaveRequests == null) sickLeaveRequests=[];
+    totalArray.push({"type": "sick leave requests", "requests":sickLeaveRequests});
+        
+    return res.send(totalArray);
+}
+
+//{ID, response, dayOff}
+const respondToChangeDayOffRequests = async(req, res)=>{
+    const {ID, type} = req.header.user;
+    if(!await checkings.isHOD(ID)){
+        return res.status(400).send("You have to be a head of department to do this");
+    }
+    const request = await Change_Day_Off_Request.find({ID:parseInt(req.params.ID)});
+    if(request == null)
+        return res.status(400).send("This request doesn't exist");
+    const memID = request.senderID;
+    if(!await checkings.isAcademicMember(memID)){
+        return res.status(400).send("This member is not an academic member");
+    }
+    const isValid = validator.assignInstructorValidator(req.body);
+    if(isValid.error)
+        return res.status(400).send({error : isValid.error.details[0].message});
+    const member = await Academic_Member.find({ID:memID});
+    const notification = new Notification({})    
+     if(req.body.response == 1){
+        await Staff_Member.updateOne({ID:memID}, {dayOff:request.targetDayOff});
+        await Change_Day_Off_Request.updateOne({ID:parseInt(req.params.ID)},{status:"accept"});
+        return res.send('Request accepted succefull');
+     }
+     if(req.body.response == 0){
+        await Change_Day_Off_Request.updateOne({ID:parseInt(req.params.ID)},{status:"reject"});
+        return res.send('Request rejected succefull');
+     }
+}
+
 const createMemEntry = async(curMem)=>{
     const curStaff = await Staff_Member.findOne({ID: curMem.ID, type:0});
     const office = await Location.findOne({ID:curStaff.officeID, type:2})
@@ -322,9 +384,12 @@ const createMemEntry = async(curMem)=>{
     "officeID": office? office.name: "Not yet assigned",
     "departmentID": dept.name,
     "extra info": curStaff.extraInfo? curStaff.extraInfo: "None",
-    }    
+}    
     return curEntry;
 }
+
+
+
 module.exports = 
 {assignCourseInstructor,
 updateCourseInstructor, 
@@ -334,4 +399,6 @@ viewDepartmentMembersByCourse,
 viewAllStaffDayOff,
 viewSingleStaffDayOff,
 viewCourseTeachingAssignments,
-viewCourseCoverage}
+viewCourseCoverage,
+viewAllRequests,
+respondToChangeDayOffRequests}

@@ -205,6 +205,134 @@ Location Updated Successfully!
 
 
 
+### <b>Functionality: </b> add missing sign in/ sign out session <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/addMissingSignInOut <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> 
+`
+{"ID":1,"type":0,
+   "signinYear":2020,
+    "signinMonth":12,
+     "signinDay":1,
+     "signinHour":1,
+     "signinMinute":0,
+    "signinSec":0,
+     "signoutYear":2021,
+     "signoutMonth":12,
+    "signoutDay":2,
+     "signoutHour":1,
+     "signoutMinute":0,
+     "signoutSec":0}
+`
+<br>
+<b>Response :</b>  adding login/out has done successfully <br>
+
+
+### <b>Functionality: </b> view a Staff member attendance <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/viewStaffMemberAttendance/:ID/:type <br>
+<b> for example</b> /hr/viewStaffMemberAttendance/1/1<br>
+<b> Request type : </b> GET <br>
+<b>Response :</b>  
+`[
+    {
+        "status": "attedant",
+        "signin": "2020-12-17T12:49:25.810Z",
+        "signout": "2020-12-17T12:49:32.526Z"
+    }
+]
+`
+<br>
+
+### <b>Functionality: </b> update staff Member salary <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/updateStaffMemberSalary <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> 
+`
+{"ID":1,"type":1,"salary":4000}
+`
+<br>
+<b>Response :</b>  staff member salary has been updated successfully <br>
+
+
+### <b>Functionality: </b> view Staff members with missing hours <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/viewStaffMembersWithMissingHours <br>
+<b> Request type : </b> GET <br>
+<b>Response :</b>  
+`
+[
+    {
+        "attendanceRecord": [
+            {
+                "status": 1,
+                "signin": 1608209365810,
+                "signout": 1608209372526
+            }
+        ],
+        "extraInfo": [],
+        "name": "sarah",
+        "ID": 1,
+        "email": "sarah@guc.com",
+        "type": 1,
+        "dayOff": "saturday",
+        "gender": "female",
+        "salary": 4000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca1",
+        "ID": 1,
+        "email": "aca1@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6,
+        "officeID": 5
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aaaaaa",
+        "ID": 2,
+        "email": "aca2@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6,
+        "officeID": null
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "User3",
+        "ID": 3,
+        "email": "aca3@guc.com",
+        "type": 0,
+        "dayOff": "saturday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    }]  
+`
+<br> <b> note that the output depends on the data inside the database and the current day when the code runs </b>
+<br>
+
+
 
 ## Staff Member Functionality
 
@@ -556,7 +684,7 @@ Location Updated Successfully!
 <b>Response: </b> The slot has been updated sucessfully !
 <br>
 
-## Academic member functionality functionality 
+## Academic member functionality  
 ### <b>Functionality: </b> Send slot linking request<br>	
 <b>Route: </b> /ac/sendSlotLinkingRequest <br>	
 <b>Request Type: </b> POST <br>	
@@ -633,4 +761,17 @@ Location Updated Successfully!
     ]
 ]
 `
+<br>
+
+### <b>Functionality: </b> Send Replacement request<br>	
+<b>Route: </b> /ac/sendReplacementRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"replacementID" : 3, "courseID" : 2 , "slotID" : 1 , "requestedDate" : 1608807967732}` <br>
+<b> Note : </b> the requested date must be in the number of format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The replacement request has been sent sucessfully !" or an error message denoting the error.
 <br>

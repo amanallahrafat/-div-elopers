@@ -575,12 +575,16 @@ const updateCourse = async (req, res)=>{
     await course.save();
     return res.send("Course has been updated successfully");
 }
-
+//delete the course schedule 
 const deleteCourse = async(req, res)=>{
     const courseID = parseInt(req.params.ID);
     const course = await Course.findOneAndDelete({ID: courseID});
     if(!course)
         return res.status(400).send("Course does not exist");
+    const scheduleID = course.scheduleID;
+    if(scheduleID != null){
+        await Course_Schedule.deleteOne({ID:scheduleID});
+    }
     await Course.deleteOne({ID: courseID});
     return res.send("Course has been deleted successfully");
 }
