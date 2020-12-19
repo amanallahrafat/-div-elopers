@@ -508,7 +508,7 @@ since it starts from the beginning of the academic month till the current day</b
 
 ### <b>Functionality: </b> View Attendance <br>	
 <b>Route: </b> /viewAttendance <br>	
-<b>Request Type: </b> POST <br>	
+<b>Request Type: </b> GET <br>	
 <b>Request Body: </b> The Route has two options for the request body to view The whole Attendance Record or by month and the input requested body for the second should be like the following `{"month":12}`	
 <br>	
 
@@ -523,6 +523,25 @@ since it starts from the beginning of the academic month till the current day</b
 `
 <br>
 <b>Response :</b> profile Updated Successfully! <br>
+
+### <b>Functionality: </b> View Missing Days <br>	
+<b> add 'auth-token' of the staff member in the header</b><br/>
+
+<b>Route: </b> /viewMissingDays <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> ` 
+[
+    "2020-12-13T00:00:00.000Z",
+    "2020-12-14T00:00:00.000Z",
+    "2020-12-15T00:00:00.000Z",
+    "2020-12-16T00:00:00.000Z"
+]`
+<br>	
+<br> <b> note that the output depends on the data inside the database and the current day when the code runs <br>
+since it starts from the beginning of the academic month till the current day</b>
+<br>
+
+
 ## HOD functionality 
  
  ### <b>Functionality: </b> Assign course instructor <br>	
