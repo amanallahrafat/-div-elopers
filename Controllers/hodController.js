@@ -215,12 +215,10 @@ const viewAllStaffDayOff = async(req, res)=>{
     const dept = await Department.findOne({ID:deptID})
     if(dept.members){
         for(const curMem of dept.members){
-            console.log("the curMem is ")
-            console.log(curMem)
-            const curStaff = await Staff_Member.findOne({ID: curMem})
+            const curStaff = await Staff_Member.findOne({ID: curMem, type:0})
             const curEntry = {
                 "name": curStaff.name,
-                "id": "ac_" + curStaff.ID,
+                "id": "ac-" + curStaff.ID,
                 "dayOff" : curStaff.dayOff
             }
             totalArray.push(curEntry)
@@ -240,8 +238,8 @@ const viewSingleStaffDayOff = async(req, res)=>{
     if(!(dept.members && dept.members.includes(req.params.ID))){
         return res.status(400).send("This staff member is not in your department")
     }
-    const curStaff = await Staff_Member.findOne({ID:req.params.ID});
-    const entry = {"name": curStaff.name, "id": "ac_"+curStaff.ID, "day off": curStaff.dayOff}
+    const curStaff = await Staff_Member.findOne({ID:req.params.ID, type:0});
+    const entry = {"name": curStaff.name, "id": "ac-"+curStaff.ID, "day off": curStaff.dayOff}
     return res.send(entry)
 }
 
@@ -270,7 +268,7 @@ const viewCourseTeachingAssignments = async(req, res)=>{
     for(const curSlot of curSchedule.slots){
         let slotInst = "Not yet assigned";
         if(curSlot.instructor){
-            const curInst = await Staff_Member.findOne({ID:curSlot.instructor});
+            const curInst = await Staff_Member.findOne({ID:curSlot.instructor, type:0});
             slotInst = curInst.name
         }
         const curSubEntry = {"slot":curSlot, "staff member name": slotInst}
@@ -373,13 +371,13 @@ const respondToChangeDayOffRequests = async(req, res)=>{
 }
 
 const createMemEntry = async(curMem)=>{
-    const curStaff = await Staff_Member.findOne({ID: curMem.ID});
+    const curStaff = await Staff_Member.findOne({ID: curMem.ID, type:0});
     const office = await Location.findOne({ID:curStaff.officeID, type:2})
     const dept = await Department.findOne({ID: curMem.departmentID})
     const curEntry = {
     "name": curStaff.name,
     "email": curStaff.email,
-    "ID":"ac_"+curStaff.ID,
+    "ID":"ac-"+curStaff.ID,
     "type": curStaff.type,
     "dayOff": curStaff.dayOff, 
     "gender": curStaff.gender, 

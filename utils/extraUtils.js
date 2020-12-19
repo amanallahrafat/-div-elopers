@@ -1,43 +1,58 @@
+
 const Accidental_Leave_Request = require("../Models/Requests/Accidental_Leave_Request")
 const Annual_Leave_Request = require("../Models/Requests/Annual_Leave_Request")
 const Compensation_Leave_Request = require("../Models/Requests/Compensation_Leave_Request")
 const Maternity_Leave_Request = require("../Models/Requests/Maternity_Leave_Request")
 const Sick_Leave_Request = require("../Models/Requests/Sick_Leave_Request")
 
-const trimMonogoObj=(obj,deletedProperties)=>{
-   return Object.keys(obj).reduce((object, key) => {
-        if (!deletedProperties.includes(key)  ) {
-          object[key] = obj[key]
-        }
+
+const trimMonogoObj = (obj, deletedProperties) => {
+    return Object.keys(obj).reduce((object, key) => {
+        if (!deletedProperties.includes(key)) {
+            object[key] = obj[key]
+      }
         return object
-      }, {})
+    }, {})
 }
 
-const getDifferenceInDays=(date2,date1)=>{
-  date1 = new Date(date1);
-  date2 = new Date(date2);
-  const Difference_In_Time = date2.getTime() - date1.getTime(); 
-   // To calculate the no. of days between two dates 
-   return (Difference_In_Time / (1000 * 3600 * 24)); 
+const getDifferenceInDays = (date2, date1) => {
+    date1 = new Date(date1);
+    date2 = new Date(date2);
+    const Difference_In_Time = date2.getTime() - date1.getTime();
+    // To calculate the no. of days between two dates 
+    return (Difference_In_Time / (1000 * 3600 * 24));
+
 }
 
+const isRequestInWeek = (RequestDate, date) => { // all dates are entered in normal format not in miliseconds
+    const dateYear = date.getFullYear();
+    const dateMonth = date.getMonth();
+    const dateDay = date.getDate();
 
-const getMissingHours= (curStaffMember)=>{
-   // console.log(curStaffMember);
-   // console.log("*********");
-   const curDate=new Date();
-   const curYear=curDate.getFullYear();
-   const curMonth=curDate.getMonth();
-   const curDay=curDate.getDate();
-   // console.log(curDate);
-   // console.log(curYear);
-   // console.log(curMonth);
-   // console.log(curDay);
-   const startOfMonth=new Date(curYear,curMonth,11,2,0,0,0);
-   // console.log(startOfMonth);
-   const endOfMonth=new Date(curYear,curMonth+1,10,2,0,0,0);
-   if(curDay<=10){
-        startOfMonth.setMonth(curMonth-1);
+    const dateDayInWeek = date.getDay();
+    const startDayOfWeek = new Date(dateYear, dateMonth, dateDay - ((dateDayInWeek + 1) % 7), 2, 0, 0, 0);
+    const endDayOfWeek = new Date(dateYear, dateMonth, dateDay, dateDay - ((dateDayInWeek + 1) % 7) + 6, 2, 0, 0, 0);
+    return (startDayOfWeek <= RequestDate && RequestDate <= endDayOfWeek);
+
+
+}
+
+const getMissingHours = (curStaffMember) => {
+    // console.log(curStaffMember);
+    // console.log("*********");
+    const curDate = new Date();
+    const curYear = curDate.getFullYear();
+    const curMonth = curDate.getMonth();
+    const curDay = curDate.getDate();
+    // console.log(curDate);
+    // console.log(curYear);
+    // console.log(curMonth);
+    // console.log(curDay);
+    const startOfMonth = new Date(curYear, curMonth, 11, 2, 0, 0, 0);
+    // console.log(startOfMonth);
+    const endOfMonth = new Date(curYear, curMonth + 1, 10, 2, 0, 0, 0);
+    if (curDay <= 10) {
+        startOfMonth.setMonth(curMonth - 1);
         endOfMonth.setMonth(curMonth);
    }
    
@@ -189,4 +204,15 @@ return true;
 
 module.exports={
     trimMonogoObj,getMissingHours,getDifferenceInDays,getMissingDays,haveMissingDays
+    }
+
+    
+
+
+module.exports = {
+    trimMonogoObj,
+    getMissingHours,
+    getDifferenceInDays,
+    twoDatesAreEqual,
+    isRequestInWeek
 }

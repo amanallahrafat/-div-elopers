@@ -37,7 +37,6 @@ const isHOD = async(ID) => {
 }
 const courseIDExists = async(ID) => {
     const courseExists = await Course.findOne({ ID: ID });
-    console.log(courseExists)
     if (courseExists)
         return true;
     return false;
@@ -48,7 +47,6 @@ const isTA = async(ID) => {
     if (exist.length > 1) {
         console.log("ERROR: THERE IS A BUG IN UNIQUNESS OF ID");
     }
-    console.log(exist);
     return exist.length == 1 && (exist[0].type == 3 || exist[0].type == 2);
 }
 
@@ -74,8 +72,6 @@ const courseCodeExists = async(code) => {
 //         return true;
 //     return false;
 // }
-
-
 const isInstructorOfCourse = async(instructorID, courseID) => {
     const course = await Course.findOne({ ID: courseID });
     if (!course || course.instructor == null) return false;
@@ -130,5 +126,5 @@ module.exports = {
     courseIDExists,
     isInstructorOfCourse,
     isTA,
-    isCourseCoordinator
+  isCourseCoordinator
 };
