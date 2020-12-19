@@ -11,6 +11,7 @@ academicMemberRouter.post('/sendChangeDayOffRequest', auth, academicMemberContro
 academicMemberRouter.get('/getAllNotifications', auth, academicMemberController.getAllNotifications);
 academicMemberRouter.get('/viewAllRequests/:view', auth, academicMemberController.viewAllRequests);
 academicMemberRouter.post('/sendReplacementRequest', auth, academicMemberController.sendReplacementRequest);
+//academicMemberRouter.post('/handleReplacmentRequest', auth, academicMemberController.handleReplacmentRequest);
 
 
 module.exports = academicMemberRouter;

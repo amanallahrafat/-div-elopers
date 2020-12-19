@@ -7,7 +7,7 @@ const trimMonogoObj=(obj,deletedProperties)=>{
       }, {})
 }
 
-const getDifferenceInDays=(date2,data1)=>{
+const getDifferenceInDays = (date2,date1)=>{
   date1 = new Date(date1);
   date2 = new Date(date2);
   const Difference_In_Time = date2.getTime() - date1.getTime(); 

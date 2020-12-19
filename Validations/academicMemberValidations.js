@@ -8,6 +8,16 @@ const validateDayOff = (request) =>{
     return joi.validate(request,createSchema);
 }
 
+const validateReplacementRequest = (request) =>{
+    const createSchema = {
+        requestedDate : joi.number().required(),
+        replacementID : joi.number().required(), 
+        courseID : joi.number().required(), 
+        slotID : joi.number().required()
+    };
+    return joi.validate(request,createSchema);
+}
+
 module.exports = {
-    validateDayOff,
+    validateDayOff,validateReplacementRequest,
 };

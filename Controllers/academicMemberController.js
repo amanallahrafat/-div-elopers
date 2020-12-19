@@ -13,29 +13,31 @@ const Department = require('../Models/Academic/Department.js');
 const validator = require('../Validations/academicMemberValidations');
 const extraUtils = require('../utils/extraUtils.js');
 const Notification = require('../Models/Others/Notification.js');
+const Staff_Member = require('../Models/Users/Staff_Member.js');
 
-// {replacementID, courseID, slotID , requestedDate}
-// UNCOMPLETED TESTING
+// body : {replacementID, courseID, slotID , requestedDate}
 const sendReplacementRequest = async (req, res) =>{
     const {ID, type}  = req.header.user;
     const courseID = req.body.courseID;
     const replacementID = req.body.replacementID;
     const slotID = req.body.slotID;
-    if( requestedDate == null )
-        return res.status(400).send("Requested date is required !");
-    const replacedCourse = (await Course_Schedule.find({ID: courseID}));
+    const requestedDate = req.body.requestedDate;
+    const isValid = validator.validateReplacementRequest(req.body);
+    if(isValid.error)
+        return res.status(400).send({ error: isValid.error.details[0].message });
+    const replacedCourse = (await Course_Schedule.findOne({ID: courseID}));
     if(replacedCourse == null)
         return res.status(404).send("The requested course was not found");
     const replacedSlot = replacedCourse.slots.filter((elm) => elm.ID == slotID);
     if(replacedSlot == null)
         return res.status(404).send("The requested slot was not found");
-    if((await Academic_Member.find({ID : replacementID})) == null)
+    if((await Academic_Member.findOne({ID : replacementID})) == null)
         return res.status(404).send("The replacement member was not found");
     if((await Academic_Member.findOne({ID : ID})).departmentID != (await Academic_Member.findOne({ID : replacementID})).departmentID)
         return res.status(400).send("you cannot be replaced by a member does not belong to your department");
     const course = await Course.findOne({ID : courseID});
-    if((course.teachingStaff.includes(ID) ^ course.instructor.includes(ID)) &&
-         (course.teachingStaff.includes(replacementID) ^ course.instructor.includes(replacementID)))
+    if(!((course.teachingStaff.includes(ID) ^ course.instructor.includes(ID)) &&
+         (course.teachingStaff.includes(replacementID) ^ course.instructor.includes(replacementID))))
          return res.status(400).send("you canot be replaced by a member does not teach the same course");
     if(extraUtils.getDifferenceInDays(requestedDate,Date.now()) <= 0)
         return res.status(400).send("The requested date already passed !");
@@ -60,8 +62,26 @@ const sendReplacementRequest = async (req, res) =>{
         status: "pending"
     });
     await replacement_request.save();
+    const replaced_member = await Staff_Member.findOne({ID : ID , type : type });
+    const replacedSlotNumber = ((await Course_Schedule.findOne({ID : courseID})).slots.filter((elem)=>
+            elem.ID == slotID))[0].slotNumber;
+    const notification = new Notification({
+        senderID: ID,
+        receiverID: replacementID,
+        msg: "you have a replacement request from " + replaced_member.name + " for the slot number "+
+               replacedSlotNumber + " in the course" + course.name ,
+        date: Date.now(),
+    });
+    await notification.save();
     res.send("The replacement request has been sent sucessfully !");
 }
+
+// body : {requestID , decision} // 0 for rejection and 1 for accepting
+// const handleReplacmentRequest = async (req,res)=>{
+//     const {ID,type} = req.header.user;
+
+// }
+
 const getMaxSlotID = (requests) => {
     let max = 0;
     if (requests.length != 0) {
