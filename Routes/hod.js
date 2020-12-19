@@ -12,6 +12,11 @@ hodRouter.get('/viewAllStaffDayOff', authorization.authStaffMember, hodControlle
 hodRouter.get('/viewSingleStaffDayOff/:ID', authorization.authStaffMember, hodController.viewSingleStaffDayOff);
 hodRouter.get('/viewCourseTeachingAssignments/:ID', authorization.authStaffMember, hodController.viewCourseTeachingAssignments);
 hodRouter.get('/viewCourseCoverage/:ID', authorization.authStaffMember, hodController.viewCourseCoverage);
+hodRouter.get('/viewAllRequests', authorization.authStaffMember, hodController.viewAllRequests);
+hodRouter.put('/respondToChangeDayOffRequests/:ID', authorization.authStaffMember, hodController.respondToChangeDayOffRequests);
+
+
+
 
 
 
