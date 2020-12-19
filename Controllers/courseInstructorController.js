@@ -300,6 +300,66 @@ const assignCourseCoordinator = async(req, res) => {
     res.send("Course coordinator is assigned successfully");
 }
 
+const viewStaffProfilesInDepartment = async(req, res)=>{
+    const instructorID = req.header.user.ID;
+    const instructor = await Academic_Member.findOne({ID: instructorID});
+    const staffProfiles = [];
+    if(instructor.departmentID !=null){
+    const staffInDep = await Academic_Member.find({departmentID: instructor.departmentID});
+      for(const mem of staffInDep){
+        const s = await Staff_Member.findOne({ID: mem.ID, type: 0});
+        staffProfiles.push({
+          "name": s.name,
+          "email": s.email,
+          "ID": `ac-${s.ID}`,
+          "type": mem.type,
+          "dayOff": s.dayOff,
+          "gender": s.gender,
+          "officeID": s.Change_Day_Off_Request,
+          "departmentID": mem.departmentID,
+          "extra info": s.extraInfo
+        });
+      }
+    }
+    
+    res.send(JSON.stringify(staffProfiles));
+}
+
+const viewStaffProfilesInCourse = async(req, res)=>{
+    const instructorID = req.header.user.ID;
+    const courseID = parseInt(req.params.courseID);
+    if(!await checkings.isInstructorOfCourse(instructorID, courseID)){
+      return req.status(400).send("You are not authorized to view the provided course")
+    }
+    const instructor = await Academic_Member.findOne({ID: instructorID});
+    const staffProfiles = [];
+    if(instructor.departmentID !=null){
+    const CourseTable = await Course.find();
+      for(const course of CourseTable){
+        if(!course.department || !course.department.includes(instructor.departmentID))
+          continue;
+        const staff = (course.teachingStaff || [] ).concat(course.instructor || []);
+        for(const mem of staff){
+        const s = await Staff_Member.findOne({ID: mem, type:0});
+        staffProfiles.push({
+          "name": s.name,
+          "email": s.email,
+          "ID": `ac-${s.ID}`,
+          "type": mem.type,
+          "dayOff": s.dayOff,
+          "gender": s.gender,
+          "officeID": s.Change_Day_Off_Request,
+          "departmentID": mem.departmentID,
+          "extra info": s.extraInfo
+        });
+      }
+
+      }
+    }
+    
+    res.send(JSON.stringify(staffProfiles));
+}
+
 module.exports = {
     viewCourseCoverage,
     assignAcademicMemberToSlot,
@@ -308,4 +368,6 @@ module.exports = {
     viewSlotAssignment,
     removeAcademicMemberFromCourse,
     assignCourseCoordinator,
+    viewStaffProfilesInDepartment,
+    viewStaffProfilesInCourse,
 }

@@ -13,4 +13,7 @@ courseInstructorRouter.put('/updateAcademicMemberslotAssignment', auth, courseIn
 courseInstructorRouter.delete('/removeAcademicMemberFromCourse', auth, courseInstructorController.removeAcademicMemberFromCourse);
 courseInstructorRouter.put('/assignCourseCoordinator', auth, courseInstructorController.assignCourseCoordinator);
 
+courseInstructorRouter.get('/viewStaffProfilesInDepartment', auth, courseInstructorController.viewStaffProfilesInDepartment);
+courseInstructorRouter.get('/viewStaffProfilesInCourse/:courseID', auth, courseInstructorController.viewStaffProfilesInCourse);
+
 module.exports = courseInstructorRouter;

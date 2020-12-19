@@ -202,7 +202,132 @@ Location Updated Successfully!
 <b> Request type : </b> DELETE <br>
 <b>Response :</b> Course has been deleted successfully <br>
 
+### <b>Functionality: </b> add missing sign in/ sign out session <br>
+<b> add 'auth-token' of HR in the header</b><br/>
 
+<b>Route: </b> /hr/addMissingSignInOut <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> 
+`
+{"ID":1,"type":0,
+   "signinYear":2020,
+    "signinMonth":12,
+     "signinDay":1,
+     "signinHour":1,
+     "signinMinute":0,
+    "signinSec":0,
+     "signoutYear":2021,
+     "signoutMonth":12,
+    "signoutDay":2,
+     "signoutHour":1,
+     "signoutMinute":0,
+     "signoutSec":0}
+`
+<br>
+<b>Response :</b>  adding login/out has done successfully <br>
+
+
+### <b>Functionality: </b> view a Staff member attendance <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/viewStaffMemberAttendance/:ID/:type <br>
+<b> for example</b> /hr/viewStaffMemberAttendance/1/1<br>
+<b> Request type : </b> GET <br>
+<b>Response :</b>  
+`[
+    {
+        "status": "attedant",
+        "signin": "2020-12-17T12:49:25.810Z",
+        "signout": "2020-12-17T12:49:32.526Z"
+    }
+]
+`
+<br>
+
+### <b>Functionality: </b> update staff Member salary <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/updateStaffMemberSalary <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> 
+`
+{"ID":1,"type":1,"salary":4000}
+`
+<br>
+<b>Response :</b>  staff member salary has been updated successfully <br>
+
+
+### <b>Functionality: </b> view Staff members with missing hours <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/viewStaffMembersWithMissingHours <br>
+<b> Request type : </b> GET <br>
+<b>Response :</b>  
+`
+[
+    {
+        "attendanceRecord": [
+            {
+                "status": 1,
+                "signin": 1608209365810,
+                "signout": 1608209372526
+            }
+        ],
+        "extraInfo": [],
+        "name": "sarah",
+        "ID": 1,
+        "email": "sarah@guc.com",
+        "type": 1,
+        "dayOff": "saturday",
+        "gender": "female",
+        "salary": 4000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca1",
+        "ID": 1,
+        "email": "aca1@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6,
+        "officeID": 5
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aaaaaa",
+        "ID": 2,
+        "email": "aca2@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6,
+        "officeID": null
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "User3",
+        "ID": 3,
+        "email": "aca3@guc.com",
+        "type": 0,
+        "dayOff": "saturday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    }]  
+`
+<br> <b> note that the output depends on the data inside the database and the current day when the code runs </b>
+<br>
 
 
 
@@ -242,7 +367,17 @@ Location Updated Successfully!
 <b>Request Body: </b> The Route has two options for the request body to view The whole Attendance Record or by month and the input requested body for the second should be like the following `{"month":12}`	
 <br>	
 
+### <b>Functionality: </b> update staff Member profile <br>
+<b> add 'auth-token' of the staff member in the header</b><br/>
 
+<b>Route: </b> /updateMyProfile <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> 
+`
+{"email":"ssarah@guc.edu.eg"}
+`
+<br>
+<b>Response :</b> profile Updated Successfully! <br>
 ## HOD functionality 
  
  ### <b>Functionality: </b> Assign course instructor <br>	
@@ -256,14 +391,29 @@ Location Updated Successfully!
 <br>	
 
  ### <b>Functionality: </b> Delete course instructor <br>	
-<b>Route: </b> /hod/deleteCourseInstructor <br>	
-<b>Request Type: </b> DELETE <br>	
+<b>Route: </b> /hod/deleteCourseInstructor/:courseID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the course <br>
 <b>Request Body: </b> `
-{"courseID":3, "instructorID": 1}
+{"instructorID":1}
 `
 <br>
+<b>Example of how to call the route: </b> /hod/deleteCourseInstructor/1 <br>
 <b>Response: </b>Course instructor was deleted successfully
-<br>	
+<br>
+
+ ### <b>Functionality: </b> Update course instructor <br>	
+<b>Route: </b> /hod/updateCourseInstructor/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request Parameters: </b> The ID of the course <br>
+<b>Request Body: </b> `
+{"newInstructorID": 2, "oldInstructorID":1}
+`
+<br>
+<b>Response: </b>Update was successfull
+<br>
+<b>Example of how to call the route: </b>/hod/updateCourseInstructor/1
+<b>Note: </b> newInstructorID is the ID of the instructor that you want to assign, oldInstructorID is the ID of the instructor you want to remove. <br>
 
 
  ### <b>Functionality: </b> View Staff member in department <br>	
@@ -331,6 +481,7 @@ Location Updated Successfully!
 ]
 `
 <br>
+<b>Example of how to call the route: </b> /hod/viewDepartmentMembersByCourse/1
 	
  ### <b>Functionality: </b> View all staff day off <br>	
 <b>Route: </b> /hod/viewAllStaffDayOff <br>	
@@ -367,6 +518,7 @@ Location Updated Successfully!
 }
 `
 <br>	
+<b>Example of how to call the route: </b> /hod/viewSingleStaffDayOff/1  <br>
     
  ### <b>Functionality: </b> View course teaching assignments <br>	
 <b>Route: </b> /hod/viewCourseTeachingAssignments/:ID <br>	
@@ -410,6 +562,7 @@ Location Updated Successfully!
 }
 `
 <br>	
+<b>Example of how to call the route: </b> /hod/viewCourseTeachingAssignments/1  <br>
 
  ### <b>Functionality: </b> View course coverage <br>	
 <b>Route: </b> /hod/viewCourseCoverage/:ID <br>	
@@ -417,6 +570,9 @@ Location Updated Successfully!
 <b>Request parameters: </b> The ID of the course. <br>
 <b>Response: </b> The coverage of the course which has the ID specified in the request parameters(in decimal)
 <br>
+<b>Example of how to call the route: </b> /hod/viewCourseCoverage/1  <br>
+
+
 
 
 ## Course Instructor Functionality
@@ -431,6 +587,23 @@ Location Updated Successfully!
 <b>Route: </b> /ci/viewSlotAssignment <br>	
 <b>Request Type: </b> GET <br>	
 <b>Response: </b> Array of the course slots that the course instructor is assigned to.
+<br>
+
+### <b>Functionality: </b> Get profiles of staff members in his/her department<br>	
+<b>Route: </b> /ci/viewStaffProfilesInDepartment <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> 
+`
+[{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","type":0,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","type":1,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]},{"name":"user99","email":"user99@guc.com","ID":"ac-8","type":0,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]}]
+`
+<br>
+### <b>Functionality: </b> Get profiles of staff members in a course under his/her department<br>	
+<b>Route: </b> /ci/viewStaffProfilesInCourse/1 <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> 
+`
+[{"name":"User3","email":"aca3@guc.com","ID":"ac-3","dayOff":"saturday","gender":"male","extra info":[]},{"name":"aca4","email":"aca4@guc.com","ID":"ac-4","dayOff":"saturday","gender":"female","extra info":[]},{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aca4","email":"aca4@guc.com","ID":"ac-4","dayOff":"saturday","gender":"female","extra info":[]},{"name":"User3","email":"aca3@guc.com","ID":"ac-3","dayOff":"saturday","gender":"male","extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","dayOff":"sunday","gender":"male","extra info":[]}]
+`
 <br>
 
 ### <b>Functionality: </b> Assign academic member to a slot<br>	
@@ -556,7 +729,7 @@ Location Updated Successfully!
 <b>Response: </b> The slot has been updated sucessfully !
 <br>
 
-## Academic member functionality functionality 
+## Academic member functionality  
 ### <b>Functionality: </b> Send slot linking request<br>	
 <b>Route: </b> /ac/sendSlotLinkingRequest <br>	
 <b>Request Type: </b> POST <br>	
@@ -633,4 +806,31 @@ Location Updated Successfully!
     ]
 ]
 `
+<br>
+
+### <b>Functionality: </b> Send replacement request<br>	
+<b>Route: </b> /ac/sendReplacementRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"replacementID" : 3, "courseID" : 2 , "slotID" : 1 , "requestedDate" : 1608807967732}` <br>
+<b> Note : </b> the requested date must be in the number of format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The replacement request has been sent sucessfully !" or an error message denoting the error.
+<br>
+
+### <b>Functionality: </b> Send maternity request<br>	
+<b>Route: </b> /ac/sendMaternityLeaveRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"documents" : "https://google.com/ali", "startDate" :1608817862056, "endDate" : 1609250179792, "msg" : "Ali"}
+` <br>
+<b> Note : </b> the start/end dates must be in the number of format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The request has been created successfully." or an error message denoting the error.
 <br>
