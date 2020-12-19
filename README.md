@@ -976,7 +976,7 @@ since it starts from the beginning of the academic month till the current day</b
 <b>Route: </b> /ac/sendReplacementRequest <br>	
 <b>Request Type: </b> POST <br>	
 <b>Request Body: </b> `{"replacementID" : 3, "courseID" : 2 , "slotID" : 1 , "requestedDate" : 1608807967732}` <br>
-<b> Note : </b> the requested date must be in the number of format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+<b> Note : </b> the requested date must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
   var date = new Date(Date.now());
   var newDate = new Date();
   newDate.setDate(date.getDate() + addedOrsubtractedDays);
@@ -985,12 +985,12 @@ since it starts from the beginning of the academic month till the current day</b
 <b>Response: </b> "The replacement request has been sent sucessfully !" or an error message denoting the error.
 <br>
 
-### <b>Functionality: </b> Send maternity request<br>	
+### <b>Functionality: </b> Send maternity leave request<br>	
 <b>Route: </b> /ac/sendMaternityLeaveRequest <br>	
 <b>Request Type: </b> POST <br>	
 <b>Request Body: </b> `{"documents" : "https://google.com/ali", "startDate" :1608817862056, "endDate" : 1609250179792, "msg" : "Ali"}
 ` <br>
-<b> Note : </b> the start/end dates must be in the number of format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+<b> Note : </b> the start/end dates must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
   var date = new Date(Date.now());
   var newDate = new Date();
   newDate.setDate(date.getDate() + addedOrsubtractedDays);
@@ -998,3 +998,23 @@ since it starts from the beginning of the academic month till the current day</b
 } `  <br>
 <b>Response: </b> "The request has been created successfully." or an error message denoting the error.
 <br>
+
+
+
+### <b>Functionality: </b> Send sick leave request<br>	
+<b>Route: </b> /ac/sendSickLeaveRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"documents": "https://kabeel.com/doc.html", "requestedDate": 1608315083669, "msg" : "We won!" }
+` <br>
+<b> Note : </b> the requestedDate date must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The request has been created successfully." or an error message denoting the error.
+<br>
+
+
+
+
