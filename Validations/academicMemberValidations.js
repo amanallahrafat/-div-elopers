@@ -7,7 +7,24 @@ const validateDayOff = (request) =>{
     };
     return joi.validate(request,createSchema);
 }
+const validateMaternityLeave = (request) =>{
+    const createSchema = {
+        documents : joi.string().required(),
+        startDate : joi.number().required(),
+        endDate : joi.number().required(),
+        msg : joi.string()
+    };
+    return joi.validate(request,createSchema);
+}
+const validateSickLeave = (request) =>{
+    const createSchema = {
+        documents : joi.string().required(),
+        requestedDate : joi.number().required(),
+        msg : joi.string()
+    };
+    return joi.validate(request,createSchema);
+}
 
 module.exports = {
-    validateDayOff,
+    validateDayOff,validateMaternityLeave,validateSickLeave
 };
