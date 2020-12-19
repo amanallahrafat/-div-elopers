@@ -589,6 +589,23 @@ Location Updated Successfully!
 <b>Response: </b> Array of the course slots that the course instructor is assigned to.
 <br>
 
+### <b>Functionality: </b> Get profiles of staff members in his/her department<br>	
+<b>Route: </b> /ci/viewStaffProfilesInDepartment <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> 
+`
+[{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","type":0,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","type":1,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]},{"name":"user99","email":"user99@guc.com","ID":"ac-8","type":0,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]}]
+`
+<br>
+### <b>Functionality: </b> Get profiles of staff members in a course under his/her department<br>	
+<b>Route: </b> /ci/viewStaffProfilesInCourse/1 <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> 
+`
+[{"name":"User3","email":"aca3@guc.com","ID":"ac-3","dayOff":"saturday","gender":"male","extra info":[]},{"name":"aca4","email":"aca4@guc.com","ID":"ac-4","dayOff":"saturday","gender":"female","extra info":[]},{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aca4","email":"aca4@guc.com","ID":"ac-4","dayOff":"saturday","gender":"female","extra info":[]},{"name":"User3","email":"aca3@guc.com","ID":"ac-3","dayOff":"saturday","gender":"male","extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","dayOff":"sunday","gender":"male","extra info":[]}]
+`
+<br>
+
 ### <b>Functionality: </b> Assign academic member to a slot<br>	
 <b>Route: </b> /ci/assignAcademicMemberToSlot <br>	
 <b>Request Type: </b> Post <br>	
