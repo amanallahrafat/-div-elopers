@@ -1593,7 +1593,7 @@ function generateDateFormat(addedOrsubtractedDays){
 <b>Route: </b> /ac/cancelSlotLinkingRequest/:ID <br>	
 <b>Request Type: </b> DELETE <br>
 <b>Request Parameters: </b> The ID of the slot linking request that the academic member wants to cancel. <br>
-<b>Example of how to call the route:</b> /ac/cancelSlotLinkingRequest/:ID
+<b>Example of how to call the route:</b> /ac/cancelSlotLinkingRequest/1
 <br>
 ### <b>Functionality: </b> Cancel Accidental Leave request<br>	
 <b> add 'auth-token' of academic member </b><br/>
