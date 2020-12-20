@@ -1453,7 +1453,7 @@ function generateDateFormat(addedOrsubtractedDays){
 ### <b>Functionality: </b> Respond to replacement request<br>	
 <b>Route: </b> /ac/respondToReplacementRequest <br>	
 <b>Request Type: </b> PUT <br>	
-<b>Request Body: </b> `{"request" : 3, "response" : 1}` <br>
+<b>Request Body: </b> `{"requestID" : 1, "response" : 1}` <br>
 <b> Note : </b> repsone == 1 == "accepted", repsone == 0 == "rejected"  <br>
 <b>Response: </b> "Responded to replacement request successfully" or an error message denoting the error.
 <br>
