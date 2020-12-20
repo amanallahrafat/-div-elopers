@@ -582,7 +582,8 @@ since it starts from the beginning of the academic month till the current day</b
 `
 <br>
 <b>Example of how to call the route: </b> /hod/deleteCourseInstructor/1 <br>
-<b>Response: </b>Course instructor was deleted successfully
+<b>Response: </b>Course instructor was deleted successfully <br>
+<b>Note: </b> instructorID is the ID of the instructor that the hod wants to delete from the course
 <br>
 
  ### <b>Functionality: </b> Update course instructor <br>	
