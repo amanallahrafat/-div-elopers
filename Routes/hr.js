@@ -10,10 +10,6 @@ hrRouter.put('/updateLocation/:ID' ,hrController.updateLocation);
 hrRouter.delete('/deleteLocation/:ID' ,hrController.deleteLocation);
 
 
-hrRouter.post('/createLocation',auth,hrController.createLocation);
-hrRouter.put('/updateLocation/:ID',auth ,hrController.updateLocation);
-hrRouter.delete('/deleteLocation/:ID',auth ,hrController.deleteLocation);
-
 hrRouter.post('/createFaculty',auth ,hrController.createFaculty);
 hrRouter.put('/updateFaculty/:name',auth ,hrController.updateFaculty);
 hrRouter.delete('/deleteFaculty/:name',auth ,hrController.deleteFaculty);

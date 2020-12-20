@@ -387,6 +387,7 @@ const sendCompensationLeaveRequest = async(req, res) =>{
     receiverID : hodID,
     submissionDate : Date.now(),
     requestedDate : requestedDate,
+    msg : req.body.msg,
     absenceDate : absenceDate,
     status: "pending"
     });
@@ -484,7 +485,7 @@ const sendAnnualLeaveRequest = async(req, res) => {
         status: "pending",
     });
     await annual_leave_request.save();
-    res.send("the annual leave request has already sucessfully created !");
+    res.send("The annual leave request has already sucessfully created !");
 }
 
 module.exports = {
