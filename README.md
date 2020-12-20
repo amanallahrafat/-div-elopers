@@ -272,6 +272,8 @@ Location Updated Successfully!
 `
 <br>
 <b>Response :</b>  staff member salary has been updated successfully <br>
+<b>Note: </b> 1-ID is the ID of the staff member that the HR wants to update the salary for.<br>
+2- type denotes whether this staff member is an HR (type : 1) or academic member (type :0). <br>
 
 
 ### <b>Functionality: </b> view Staff members with missing hours <br>
