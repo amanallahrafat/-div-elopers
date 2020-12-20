@@ -81,7 +81,7 @@ Location Updated Successfully!
 3- memberType denotes whether this academic member is a HOD or an academic member (0 -> HOD, 3-> academic member)<br>
 ### <b>Functionality:</b> Update a staff member <br>
 <b>Route: </b> /hr/updateStaffMember/:ID/:type<br>
-<b>Request Type: </b> POST <br>
+<b>Request Type: </b> PUT <br>
 <b>Request Body : </b>
 `
 {"salary": 10000}
