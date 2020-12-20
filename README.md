@@ -171,10 +171,22 @@ Location Updated Successfully!
 <br>
 <b>Note: </b> Members array contains the ids of members that should be added to the new department.  
 
+### <b>Functionality:</b> Update a department <br>
+<b>Route: </b> /hr/updateDepartment/:ID <br>
+<b>Request type: </b> PUT <br>
+<b>Request parameters : </b> The ID of the department to be updated <br>
+<b>Request body: </b> `
+{"hodID": 4}
+`
+<br>
+<b>Example of how to call the route:</b> /hr/updateDepartment/2
+<br>
+
+
 ### <b>Functionality:</b> Delete a department <br>
 <b>Route: </b> /hr/deleteDepartment/:ID <br>
 <b>Request type: </b> DELETE <br>
-<b>Request parameters : </b> The name of the department to be deleted
+<b>Request parameters : </b> The ID of the department to be deleted
 <br>
 <b>Example of how to call the route:</b> /hr/deleteDepartment/1
 <br>
