@@ -1168,11 +1168,13 @@ since it starts from the beginning of the academic month till the current day</b
 
 
 
+
 ## Course Instructor Functionality
- ### <b>Functionality: </b> View course coverage <br>	
-<b>Route: </b> /ci/viewCourseCoverage/2 <br>	
+ ### <b>Functionality: </b> View course coverage <br>
+<b>Route Example: </b> /ci/viewCourseCoverage/:courseID <br>	
 <b>Request Type: </b> GET <br>	
 <b>Request parameters: </b> The ID of the course. <br>
+<b>Route Example: </b> /ci/viewCourseCoverage/2 <br>	
 <b>Response: </b> The coverage of the course which has the ID specified in the request parameters(in decimal)
 <br>
 
@@ -1180,6 +1182,7 @@ since it starts from the beginning of the academic month till the current day</b
 <b>Route: </b> /ci/viewSlotAssignment <br>	
 <b>Request Type: </b> GET <br>	
 <b>Response: </b> Array of the course slots that the course instructor is assigned to.
+<b>Response Example: </b>[{"slots":[{"ID":1,"slotNumber":3,"day":"monday","locationID":1},{"ID":2,"slotNumber":2,"day":"monday","locationID":1},{"ID":3,"slotNumber":5,"day":"monday","locationID":1},{"ID":4,"slotNumber":5,"day":"monday","locationID":1},{"ID":5,"slotNumber":2,"day":"monday","locationID":1},{"ID":6,"slotNumber":2,"day":"tuesday","locationID":1},{"ID":7,"slotNumber":2,"day":"tuesday","locationID":34},{"ID":8,"slotNumber":2,"day":"tuesday","locationID":6},{"ID":9,"slotNumber":2,"day":"friday","locationID":6}],"id":"5fdf6dda7f75c63a8cf2928e","ID":1,"_v":0}]
 <br>
 
 ### <b>Functionality: </b> Get profiles of staff members in his/her department<br>	
@@ -1187,27 +1190,46 @@ since it starts from the beginning of the academic month till the current day</b
 <b>Request Type: </b> GET <br>	
 <b>Response: </b> 
 `
-[{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","type":0,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","type":1,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]},{"name":"user99","email":"user99@guc.com","ID":"ac-8","type":0,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]}]
+[{"name":"ac13","email":"ac13@guc.com","ID":"ac-11","type":0,"dayOff":"sunday","gender":"male","officeID":2,"departmentID":2,"extra
+info":[]},{"name":"ac14","email":"ac14@guc.com","ID":"ac-12","type":3,"dayOff":"sunday","gender":"male","officeID":2,"departmentID":2,"extra
+info":[]},{"name":"ac15","email":"ac15@guc.com","ID":"ac-13","type":3,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac16","email":"ac16@guc.com","ID":"ac-14","type":3,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac17","email":"ac17@guc.com","ID":"ac-15","type":3,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac18","email":"ac18@guc.com","ID":"ac-16","type":3,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac19","email":"ac19@guc.com","ID":"ac-17","type":3,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac20","email":"ac20@guc.com","ID":"ac-18","type":1,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac21","email":"ac21@guc.com","ID":"ac-19","type":1,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac22","email":"ac22@guc.com","ID":"ac-20","type":1,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac23","email":"ac23@guc.com","ID":"ac-21","type":3,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac24","email":"ac24@guc.com","ID":"ac-22","type":3,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac25","email":"ac25@guc.com","ID":"ac-23","type":2,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]}]
 `
 <br>
 ### <b>Functionality: </b> Get profiles of staff members in a course under his/her department<br>	
-<b>Route: </b> /ci/viewStaffProfilesInCourse/1 <br>	
+<b>Route: </b> /ci/viewStaffProfilesInCourse/:courseID <br>
+<b>Requet Parameters:</b> courseID represents an ID of existing course </br>
 <b>Request Type: </b> GET <br>	
-<b>Response: </b> 
+<b>Route Example: </b> /ci/viewStaffProfilesInCourse/1 <br>	
+<b>Response Example: </b> 
 `
-[{"name":"User3","email":"aca3@guc.com","ID":"ac-3","dayOff":"saturday","gender":"male","extra info":[]},{"name":"aca4","email":"aca4@guc.com","ID":"ac-4","dayOff":"saturday","gender":"female","extra info":[]},{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aca4","email":"aca4@guc.com","ID":"ac-4","dayOff":"saturday","gender":"female","extra info":[]},{"name":"User3","email":"aca3@guc.com","ID":"ac-3","dayOff":"saturday","gender":"male","extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","dayOff":"sunday","gender":"male","extra info":[]}]
+[{"name":"ac25","email":"ac25@guc.com","ID":"ac-23","type":2,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac22","email":"ac22@guc.com","ID":"ac-20","type":1,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac21","email":"ac21@guc.com","ID":"ac-19","type":1,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]},{"name":"ac20","email":"ac20@guc.com","ID":"ac-18","type":1,"dayOff":"sunday","gender":"male","officeID":3,"departmentID":2,"extra
+info":[]}]
 `
 <br>
 
 ### <b>Functionality: </b> Assign academic member to a slot<br>	
 <b>Route: </b> /ci/assignAcademicMemberToSlot <br>	
-<b>Request Type: </b> Post <br>	
+<b>Request Type: </b> POST <br>	
 <b>Request Body: </b> `{
     "slotID": 1,
     "courseID": 2,
     "academicMemberID": 3
 }` <br>	
-<b>Response: </b> Academic memeber is assigned to the slot the successfuly
+<b>Response: </b> Academic memeber is assigned to the slot the successfuly or Error if invalid body
 <br>
 
 ### <b>Functionality: </b> Remove academic member assignment from a slot<br>	
@@ -1218,7 +1240,7 @@ since it starts from the beginning of the academic month till the current day</b
     "courseID": 2,
     "academicMemberID": 3
 }` <br>	
-<b>Response: </b> Academic memeber assignment to the slot is removed successfuly
+<b>Response: </b> Academic memeber assignment to the slot is removed successfuly or Error if invalid body
 <br>
 
 ### <b>Functionality: </b> Update academic member slot assignment<br>	
@@ -1236,16 +1258,10 @@ since it starts from the beginning of the academic month till the current day</b
 ### <b>Functionality: </b> Remove academic member from a course<br>	
 <b>Route: </b> /ci/removeAcademicMemberFromCourse <br>	
 <b>Request Type: </b> DELETE <br>	
-<b>Request Body: </b> `{
-    "oldSlotID": 2,
-    "newSlotID": 1,
-    "courseID": 2,
-    "academicMemberID": 3
-}` <br>	
-<b>Response: </b> Academic memeber assignment to the slot is updated successfuly
-<br>
+<b>Request Body: </b> `{"courseID": 1, "academicMemberID": 3 }` <br>	
+<b>Response: </b> Academic memeber removed successfully
 
-### <b>Functionality: </b> Assign academic coordinator<br>	
+### <b>Functionality: </b> Assign academic as a coordinator<br>	
 <b>Route: </b> /ci/assignCourseCoordinator <br>	
 <b>Request Type: </b> PUT <br>	
 <b>Request Body: </b> `{
