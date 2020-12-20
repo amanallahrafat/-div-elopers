@@ -26,8 +26,7 @@ const signIn = async(req, res) => {
             return res.status(400).send("you can't follow a sign in with a signin without signing out");
     }
     staff_member.attendanceRecord.push({ status: 1, signin: Date.now() });
-    staff_member.attendanceRecord.push({ status: 1, signin: Date.now(), signout: "" });
-    console.log(staff_member.attendanceRecord)
+   // console.log(staff_member.attendanceRecord)
     await Staff_Member.updateOne({ ID: ID, type: type }, { attendanceRecord: staff_member.attendanceRecord });
     res.send("Sign in Sucessfully!");
 }

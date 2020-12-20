@@ -85,17 +85,21 @@ const createFaculty = async(req, res) => {
         return res.status(400).send("Faculty name should be unique");
 
     // Check that the departments exist.
-    for (let i = 0; i < req.body.departments.length; i++) {
-        let dep = await Department.find({ ID: req.body.departments[i] });
-        if (dep.length == 0) return res.status(400).send("Department IDs are not valid");
+    if(req.body.departments!=null){
+        for (let i = 0; i < req.body.departments.length; i++) {
+            let dep = await Department.find({ ID: req.body.departments[i] });
+            if (dep.length == 0) return res.status(400).send("Department IDs are not valid");
+        }
     }
 
     // Check that no department is shared with another faculty.
     const facArray = await Faculty.find();
     for (const f of facArray) {
-        for (const d of req.body.departments) {
-            if (f.departments.includes(d))
-                return res.status(400).send("Deparments can not be shared between different faculties");
+        if(req.body.departments != null){
+            for (const d of req.body.departments) {
+                if (f.departments.includes(d))
+                    return res.status(400).send("Deparments can not be shared between different faculties");
+            }
         }
     }
 
@@ -258,7 +262,7 @@ const updateAcademicMember = async(req, res) => {
                 return value != req.params.ID;
             })
             //Removing him from old department
-        await Department.updateOne({ ID: academic_member.departmentID }, oldDepartment);
+        await Department.updateOne({ID: academic_member.departmentID }, oldDepartment);
         //Adding him to the new department
         var newDepartment = await Department.findOne({ ID: req.body.departmentID });
         if (!newDepartment) { // If this department doesn't exist
@@ -291,6 +295,9 @@ const updateAcademicMember = async(req, res) => {
 }
 
 const updateStaffMember = async(req, res) => {
+    if(req.body.type!=null){
+        return res.status(400).send("You can't update the type of the staff member");
+    }
     const member = await Staff_Member.find({ ID: req.params.ID, type: req.params.type });
     const academic_member = null;
     if (req.params.type == 0) { //If it's an academic member.
@@ -329,6 +336,7 @@ const updateStaffMember = async(req, res) => {
     if (!req.body.officeID && member[0].officeID != undefined) req.body.officeID = member[0].officeID;
     if (!req.body.extraInfo) req.body.extraInfo = member[0].extraInfo;
     if (!req.body.salary) req.body.salary = member[0].salary;
+    req.body =  extraUtils.trimMonogoObj(req.body, ["memberType"]);
     const isValid = validator.validateAddStaffMember(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
@@ -387,8 +395,7 @@ const deleteStaffMember = async(req, res) => {
         await Department.replaceOne({ ID: depID }, department);
         await Academic_Member.deleteOne({ ID: req.params.ID });
     }
-
-    await Staff_Member.deleteOne({ ID: req.params.ID });
+    await Staff_Member.deleteOne({ ID: req.params.ID , type:req.params.type});
     return res.send("Staff member deleted successfully");
 }
 
@@ -435,6 +442,8 @@ const createDepartment = async(req, res) => {
 }
 
 const updateDepartment = async(req, res) => {
+    if(req.body.members!=null)
+        return res.status(400).send("You can't update the department member, you have to update the academic members themselves");
     const department = await Department.findOne({ ID: req.params.ID });
     if (!department) return res.status(400).send("this department doesn't exist");
     if (req.body.name == null) req.body.name = department.name;
@@ -447,8 +456,9 @@ const updateDepartment = async(req, res) => {
 
     if (req.body.hodID != department.hodID) {
         if (!req.body.members.includes(req.body.hodID))
-            return res.status(400).send("The HOD must be a member of the Department !");
+            return res.status(400).send("The HOD must be a member of the Department !");    
     }
+    
     await Academic_Member.updateMany({ departmentID: req.params.ID }, { $unset: { departmentID: 1 } });
 
     // await Academic_Member.updateMany({departmentID : req.params.ID} , {departmentID : -1});
@@ -457,6 +467,9 @@ const updateDepartment = async(req, res) => {
         if (!mem)
             return res.status(400).send("The Members must be Academic member!");
         await Academic_Member.updateOne({ ID: member }, { departmentID: req.params.ID });
+    }
+    if(req.body.hodID != null){
+        await Academic_Member.updateOne({ID:req.body.hodID}, {type : 0});
     }
     await Department.update({ ID: req.params.ID }, req.body);
     res.send("department has been updated successfully");
