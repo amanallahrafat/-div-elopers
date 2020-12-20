@@ -633,7 +633,7 @@ const cancelAccidentalLeaveRequest=async(req,res)=>{
     }
     if(accidentalLeave.status=="rejected")
     {
-        await Accidental_Leave_Request.deleteOne({ID:req.body.ID});
+      //  await Accidental_Leave_Request.deleteOne({ID:req.body.ID});
         return res.send("request is already rejected ");
     }
     if(accidentalLeave.status=="accepted"){
@@ -666,7 +666,7 @@ const cancelAnnualLeaveRequest=async(req,res)=>{
     }
     if(annualLeave.status=="rejected")
     {
-        await Annual_Leave_Request.deleteOne({ID:req.body.ID});
+       // await Annual_Leave_Request.deleteOne({ID:req.body.ID});
         return res.send("request is already rejected ");
     }
     if(annualLeave.status=="accepted"){
