@@ -109,7 +109,10 @@ Location Updated Successfully!
 `
 {"officeID": 9}`
 <br>
-<b>Resposne: </b>`Staff member Updated Successfully!`
+<b>Resposne: </b>`Staff member Updated Successfully!` <br>
+<b>Request Parameters : </b> ID is the ID of the staff member, type denotes whether it's an HR or academic member (0--> academic member, 1 --> HR) <br>
+<b>Example of how to call the route :</b> /hr/updateStaffMember/1/0 <br>
+
 ### <b>Functionality:</b> Delete a staff member <br>
 <b>Route: </b> /hr/deleteStaffMember/:ID/:type<br>
 <b>Request Type: </b> DELETE <br>
@@ -124,7 +127,8 @@ Location Updated Successfully!
 `
 <br>
 <b>Resposne: </b>`This user doesn't exist`
-
+<b>Request Parameters : </b> ID is the ID of the staff member, type denotes whether it's an HR or academic member (0--> academic member, 1 --> HR) <br>
+<b>Example of how to call the route :</b> /hr/deleteStaffMember/1/0 <br>
 
 
 ### <b>Functionality: </b> Add a new faculty <br>
