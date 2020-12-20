@@ -43,10 +43,27 @@ const validateAnnualLeaveRequest = (request) => {
     return joi.validate(request, createSchema);
 }
 
+const validateCompensationRequest = (request) => {
+    const createSchema = {
+        absenceDate: joi.number().required(),
+        requestedDate: joi.number().required(),
+        msg : joi.string().required()
+    };
+    return joi.validate(request, createSchema);
+}
+const validateAccidentalRequest = (request) =>{
+    const createSchema = {
+        requestedDate: joi.number().required(),
+        msg : joi.string()
+    };
+    return joi.validate(request, createSchema);
+}
 module.exports = {
     validateReplacementRequest,
     validateDayOff,
     validateMaternityLeave,
     validateSickLeave,
     validateAnnualLeaveRequest,
+    validateCompensationRequest,
+    validateAccidentalRequest
 };

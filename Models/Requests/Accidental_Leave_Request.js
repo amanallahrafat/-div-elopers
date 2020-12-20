@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema
 const AccidentalLeaveRequestSchema = new Schema({
+    ID : Number,
     senderID : Number,
     receiverID : Number,
     msg : String,
