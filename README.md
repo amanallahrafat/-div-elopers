@@ -214,7 +214,10 @@ Location Updated Successfully!
 ### <b>Functionality: </b> Delete a course <br>
 <b>Route: </b> /hr/deleteCourse/:ID <br>
 <b> Request type : </b> DELETE <br>
+<b> Request parameters : </b> ID of the course that the HR wants to delete <br>
 <b>Response :</b> Course has been deleted successfully <br>
+<b>Example of how to call the route : </b>/hr/deleteCourse/2 <br>
+
 
 ### <b>Functionality: </b> add missing sign in/ sign out session <br>
 <b> add 'auth-token' of HR in the header</b><br/>
