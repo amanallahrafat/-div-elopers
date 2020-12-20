@@ -1452,3 +1452,56 @@ since it starts from the beginning of the academic month till the current day</b
 } `  <br>
 <b>Response: </b> "The accidental leave request created successfully" or an error message denoting the error.
 <br>
+
+### <b>Functionality: </b> Cancel compensation leave request<br>	
+<b>Route: </b> /ac/cancelCompensationLeaveRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the compensation leave request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelCompensationLeaveRequest/5 
+<br>
+
+### <b>Functionality: </b> Cancel sick leave request<br>	
+<b>Route: </b> /ac/cancelSickLeaveRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the sick leave request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelSickLeaveRequest/3 
+<br>
+
+### <b>Functionality: </b> Cancel maternity leave request<br>	
+<b>Route: </b> /ac/cancelMaternityLeaveRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the maternity leave request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelMaternityLeaveRequest/1
+<br>
+
+### <b>Functionality: </b> Cancel change day off request<br>	
+<b>Route: </b> /ac/cancelChangeDayOffRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the change day off leave request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelChangeDayOffRequest/1
+<br>
+
+### <b>Functionality: </b> Cancel replacement request<br>	
+<b>Route: </b> /ac/cancelReplacementRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the replacement request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelReplacementRequest/1
+<br>
+
+
+### <b>Functionality: </b> Cancel slot linking request<br>	
+<b>Route: </b> /ac/cancelSlotLinkingRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the slot linking request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelSlotLinkingRequest/:ID
+<br>
+
+
+
+
+
+
+
+
+
+
