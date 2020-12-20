@@ -63,6 +63,11 @@ const getMissingHours= (curStaffMember)=>{
    return missingHours=noOfDaysTillToday*8.4-attendedHours; 
 }
 
+const getCurDay=(date)=>{// date entered as normal date not miliseconds
+  const days=[ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday','friday','saturday'];
+  return days[date.getDay()];
+}
+
 module.exports={
-    trimMonogoObj,getMissingHours,getDifferenceInDays,
+    trimMonogoObj,getMissingHours,getDifferenceInDays,getCurDay
 }

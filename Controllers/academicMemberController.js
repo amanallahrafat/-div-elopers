@@ -191,8 +191,129 @@ if(req.params.view == 0){
     res.status(403).send("The required filer is not a valid one");
 }
 
+
+
+//This whole part was not tested
+//parameters of the request is the ID of the request to be cancelled
+//We only change if it's still pending 
+const cancelChangeDayOffRequest=async(req, res)=>{
+    const {ID,type} = req.header.user;
+    const reqID = parseInt(req.params.ID);
+    const request = await Change_Day_Off_Request.findOne({ID:reqID});
+    if(request == null)
+        return res.status(400).send("This request doesn't exist");
+    if(ID != request.senderID){
+        return res.status(400).send("You didn't send this request");
+    }     
+    if(request.status != "pending"){
+        return res.status(400).send("This request can't be cancelled");
+    }
+    //Delete from the database 
+    await Change_Day_Off_Request.deleteOne({ID:reqID});
+    return res.send("The change day off request was cancelled successfully");
+}
+const cancelCompensationLeaveRequest = async(req, res)=>{
+    const {ID,type} = req.header.user;    
+    const reqID = parseInt(req.params.ID);
+    const request = await Compensation_Leave_Request.findOne({ID:reqID});
+    if(request == null)
+        return res.status(400).send("This request doesn't exist");
+    if(ID != request.senderID){
+        return res.status(400).send("You didn't send this request");
+    }    
+    if(request.status == "rejected"){
+        return res.send("This request was rejected");
+    }
+    if(request.status == "pending"){
+        await Compensation_Leave_Request.deleteOne({ID:reqID});
+        return res.send("Compensation leave was deleted successfully");
+    }
+    //request is still pending
+    if(new Date(Date.now()) > new Date(request.requestedDate)){
+        return res.send("You can't cancel this request");
+    }
+    await Compensation_Leave_Request.deleteOne({ID:reqID});
+    return res.send("Compensation leave was deleted successfully");
+    
+}
+const cancelMaternityLeaveRequest = async(req, res)=>{
+    const {ID,type} = req.header.user;    
+    const reqID = parseInt(req.params.ID);
+    const request = await Maternity_Leave_Request.findOne({ID:reqID});
+    if(request == null)
+        return res.status(400).send("This request doesn't exist");
+    if(ID != request.senderID){
+        return res.status(400).send("You didn't send this request");
+    }    
+    if(request.status == "rejected"){
+        return res.send("This request was rejected");
+    }
+    if(request.status == "pending"){
+        await Maternity_Leave_Request.deleteOne({ID:reqID});
+        return res.send("Maternity leave was deleted successfully");
+    }
+    //request is still pending
+    if(new Date() > request.startDate){
+        return res.send("You can't cancel this request");
+    }
+    await Maternity_Leave_Request.deleteOne({ID:reqID});
+    return res.send("Maternity leave was deleted successfully");
+
+}
+const cancelSickLeaveRequest = async(req, res)=>{
+    const {ID,type} = req.header.user;    
+    const reqID = parseInt(req.params.ID);
+    const request = await Sick_Leave_Request.findOne({ID:reqID});
+    if(request == null)
+        return res.status(400).send("This request doesn't exist");
+    if(ID != request.senderID){
+        return res.status(400).send("You didn't send this request");
+    }    
+    if(request.status == "rejected"){
+        return res.send("This request was rejected");
+    }
+    if(request.status == "pending"){
+        await Sick_Leave_Request.deleteOne({ID:reqID});
+        return res.send("Sick leave was deleted successfully");
+    }
+    //request is still pending
+    if(new Date() > request.requestedDate){
+        return res.send("You can't cancel this request");
+    }
+    await Sick_Leave_Request.deleteOne({ID:reqID});
+    return res.send("Sick leave was deleted successfully");
+}
+const cancelReplacementRequest = async(req, res)=>{
+    const {ID,type} = req.header.user;    
+    const reqID = parseInt(req.params.ID);
+    const request = await Replacement_Request.findOne({ID:reqID});
+    if(request == null)
+        return res.status(400).send("This request doesn't exist");
+    if(ID != request.senderID){
+        return res.status(400).send("You didn't send this request");
+    }    
+    if(request.status == "rejected"){
+        return res.send("This request was rejected");
+    }
+    if(request.status == "pending"){
+        await Replacement_Request.deleteOne({ID:reqID});
+        return res.send("Replacement request was deleted successfully");
+    }
+    //request is still pending
+    if(new Date() > request.requestedDate){
+        return res.send("You can't cancel this request");
+    }
+    await Replacement_Request.deleteOne({ID:reqID});
+    return res.send("Replacement request was deleted successfully");
+
+}
 module.exports = {
     sendSlotLinkingRequest,sendChangeDayOffRequest,
     getAllNotifications, viewAllRequests,
     sendReplacementRequest,
+    cancelChangeDayOffRequest,
+    cancelCompensationLeaveRequest,
+    cancelMaternityLeaveRequest,
+    cancelSickLeaveRequest,
+    cancelReplacementRequest
 }

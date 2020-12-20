@@ -7,9 +7,10 @@ const assignInstructorValidator = (request) =>{
     return joi.validate(request,createSchema);
 }
 
-const updateDayOffValidation = (request)=>{
+const requestResponseValidation = (request)=>{
     const updateSchema = {
-        reponse:joi.number().integer().min(0).max(1)
+        response:joi.number().integer().min(0).max(1).required(),
+        msg:joi.string()
     }
     return joi.validate(request, updateSchema);
 }
@@ -17,5 +18,5 @@ const updateDayOffValidation = (request)=>{
 
 module.exports={
     assignInstructorValidator,
-    updateDayOffValidation
+    requestResponseValidation
 }

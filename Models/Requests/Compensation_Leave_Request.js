@@ -5,8 +5,8 @@ const CompensationLeaveRequestSchema = new Schema({
     senderID : Number,
     receiverID : Number,
     submissionDate : Date,
-    requestedDate : Date,
-    absenceDate : Date,
+    requestedDate : Date,//The day he will attend
+    absenceDate : Date,//The day he will be absent
     status: String
 });
 

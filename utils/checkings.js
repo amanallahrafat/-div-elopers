@@ -75,15 +75,13 @@ const courseCodeExists = async(code) => {
 //     return false;
 // }
 
-<<<<<<< Updated upstream
-=======
+
 // const courseIDExists = async(ID) => {
 //     const courseExists = await Course.findOne({ ID: ID });
 //     if (courseExists)
 //         return true;
 //     return false;
 // }
->>>>>>> Stashed changes
 
 const isInstructorOfCourse = async(instructorID, courseID) => {
     const course = await Course.findOne({ ID: courseID });

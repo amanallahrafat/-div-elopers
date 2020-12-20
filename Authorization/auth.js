@@ -45,7 +45,10 @@ const authHOD = async (req,res,next) =>{
     const token = req.header("auth-token");
     if(!token)
         return res.status(403).send("You need to login to continue");
-    const {ID , type} = req.header.user;
+    const {ID , type} = req.header.user;    
+    if(type==1){
+        return res.status(400).send("You have to be a head of department to do this");
+    }
     const department = await Department.findOne({hodID : ID});
     if(!department)
         return res.status(401).send("you are not allowed. this opreation is only for Head")

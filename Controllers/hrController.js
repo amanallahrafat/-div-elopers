@@ -292,6 +292,7 @@ const updateAcademicMember = async(req, res)=>{
 }
 
 const updateStaffMember = async(req, res)=>{
+    
     const member = await Staff_Member.find({ID: req.params.ID, type: req.params.type});
     const academic_member = null;
     if(req.params.type == 0){ //If it's an academic member.
@@ -321,7 +322,7 @@ const updateStaffMember = async(req, res)=>{
      req.body.email = member[0].email;
     }else{
         const users = await Staff_Member.find({email: req.body.email});
-        if(users.length != 0&&users[0].ID!=req.params.ID&&sers[0].type!= req.params.type){
+        if(users.length != 0&&users[0].ID!=req.params.ID&&users[0].type!= req.params.type){
             return res.status(400).send("This email already exists. Emails have to be unique");
         }    
     }    
@@ -690,6 +691,7 @@ res.send("staff member salary has been updated successfully");
 
  
 }
+
 const viewStaffMembersWithMissingHours=async(req,res)=>{
     const allStaffMembers= await Staff_Member.find();
     //console.log(allStaffMembers[0]);
