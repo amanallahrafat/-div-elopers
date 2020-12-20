@@ -250,7 +250,7 @@ Location Updated Successfully!
 <b>Route: </b> /hr/viewStaffMemberAttendance/:ID/:type <br>
 <b> for example</b> /hr/viewStaffMemberAttendance/1/1<br>
 <b> Request type : </b> GET <br>
-<b> Request Parameters : </b> ID is the ID of the staff member whose attendance is to be viewed. type is 0 if he is academic member and type is 1 if he is an HR
+<b> Request Parameters : </b> ID is the ID of the staff member whose attendance is to be viewed. type is 0 if he is academic member and type is 1 if he is an HR <br>
 <b>Response :</b>  
 `[
     {
