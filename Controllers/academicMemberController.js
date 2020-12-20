@@ -217,24 +217,26 @@ const viewAllRequests = async(req, res) => {
 const viewSchedule = async(req, res) => {
     const academicMemberID = req.header.user.ID;
     const courseSchdeduleTable = await Course_Schedule.find();
-    const sentReplacementReq = await Replacement_Request.find({ senderID: academicMemberID, status: "accepted" });
     const recievedReplacementReq = await Replacement_Request.find({ receiverID: academicMemberID, status: "accepted" });
+    const sentAnnualLeaveReqTable = await Annual_Leave_Request.find({ senderID: academicMemberID, status: "accepted" });
+    const annualLeaveReqTable = await Annual_Leave_Request.find({ status: "accepted" });
 
     const schedule = [];
     for (const courseSchedule of courseSchdeduleTable) {
-        if (courseSchedule.slots) {
+        if (courseSchedule.slots != null) {
             for (const slot of courseSchedule.slots) {
                 if (slot.instructor == academicMemberID) {
-                    const isReplaced = false;
-                    for (const req of sentReplacementReq) {
-                        if (req.slotID == slot.ID &&
-                            req.courseID == courseSchedule.ID &&
-                            extraUtils.isRequestInWeek(req.requestedDate, new Date())
+                    const leaveAccepted = false;
+                    for (const req of sentAnnualLeaveReqTable) {
+                        if (extraUtils.getCurDay(req.requestedDate) == slot.day &&
+                            extraUtils.isRequestInWeek(new Date(req.requestedDate), new Date(Date.now()))
                         ) {
-                            isReplaced = true;
+                            leaveAccepted = true;
+                            break;
                         }
                     }
-                    if (!isReplaced) {
+
+                    if (!leaveAccepted) {
                         schedule.push({ "courseID": courseSchedule.ID, "slot": slot });
                     }
                 }
@@ -242,25 +244,29 @@ const viewSchedule = async(req, res) => {
         }
     }
 
-    for (const courseSchedule of courseSchdeduleTable) {
-        if (courseSchedule.slots) {
-            for (const slot of courseSchedule.slots) {
-                if (slot.instructor == academicMemberID) {
-                    for (const req of recievedReplacementReq) {
-                        if (req.slotID == slot.ID &&
-                            req.courseID == courseSchedule.ID &&
-                            extraUtils.isRequestInWeek(req.requestedDate, new Date())
-                        ) {
-                            schedule.push({ "courseID": courseSchedule.ID, "slot": slot });
-                        }
-                    }
+    for (const annualReq of annualLeaveReqTable) {
+        if (annualReq.replacementRequestsID) {
+            for (const replReqID of annualReq.replacementRequestsID) {
+                const replReq = recievedReplacementReq.filter(req =>
+                    req.ID == replReqID &&
+                    req.status == "accepted");
+                if (replReq.length) {
+                    const req = replReq[0];
+                    const slot = courseSchdeduleTable.filter(sch =>
+                        sch.ID == req.courseID &&
+                        sch.slots != null &&
+                        sch.slots.filter(s => s.ID == req.slotID).length
+                    );
+                    if (slot.length)
+                        schedule.push({ "courseID": req.courseID, "slot": slot[0] });
+                    else
+                        console.log("SOMETHING IS GOING WRONG");
                 }
             }
         }
     }
 
     return res.send(JSON.stringify(schedule));
-
 }
 
 
@@ -431,37 +437,48 @@ const sendAccidentalLeaveRequest = async (req, res) =>{
     return res.send("The accidental leave request created successfully");
 }
 
-const viewReplacementRequests = async (req, res)=>{
+const viewReplacementRequests = async(req, res) => {
     const academicMemberID = req.header.user.ID;
-    const sentReplacementReq = await Replacement_Request.find({ senderID: academicMemberID});
-    const recievedReplacementReq = await Replacement_Request.find({ receiverID: academicMemberID});
+    const sentReplacementReq = await Replacement_Request.find({ senderID: academicMemberID });
+    const recievedReplacementReq = await Replacement_Request.find({ receiverID: academicMemberID });
     res.send(JSON.stringify(sentReplacementReq.concat(recievedReplacementReq)));
 }
 
-const respondToReplacementRequest = async(req, res)=>{
-    const academicMemberID = req.header.user.ID;
-    const requestID = req.body.requestID;
-    const response = req.body.response;
-    const recievedReplacementReq = await Replacement_Request.findOne({ receiverID: academicMemberID, ID: requestID});
-    if(recievedReplacementReq==null)
-        return res.status(400).send("You are trying to respond to an invalid request");
-    if(recievedReplacementReq.status!="pending")
-        return res.status(400).send("Request is already handled");
-    recievedReplacementReq.status = response ? "accepted" : "rejected";
-    await Replacement_Request.updateOne({ID: requestID}, recievedReplacementReq);
-    return res.send("Responded to replacement request successfully");
-}
-// body : {"requestedDate" , "msg"}
+const respondToReplacementRequest = async(req, res) => {
+        const academicMemberID = req.header.user.ID;
+        const requestID = req.body.requestID;
+        const response = req.body.response;
+        const recievedReplacementReq = await Replacement_Request.findOne({ receiverID: academicMemberID, ID: requestID });
+        const replacementReqTable = await Replacement_Request.find();
+        if (recievedReplacementReq == null)
+            return res.status(400).send("You are trying to respond to an invalid request");
+        if (recievedReplacementReq.status != "pending")
+            return res.status(400).send(`You already responded ${recievedReplacementReq.status}.You can not respond multiple times!`);
+        if (replacementReqTable.filter(req =>
+                req.senderID == recievedReplacementReq.senderID &&
+                req.receiverID != recievedReplacementReq.receiverID &&
+                req.requestedDate == recievedReplacementReq.requestedDate &&
+                req.courseID == recievedReplacementReq.courseID &&
+                req.slotID == recievedReplacementReq.slotID &&
+                req.status == "accepted"
+            ).length) {
+            return res.status(400).send("Request is no longer availible. Another member accepted the request");
+        }
+        recievedReplacementReq.status = response ? "accepted" : "rejected";
+        await Replacement_Request.updateOne({ ID: requestID }, recievedReplacementReq);
+        return res.send("Responded to replacement request successfully");
+    }
+    // body : {"requestedDate" , "msg"}
 const sendAnnualLeaveRequest = async(req, res) => {
     const { ID, type } = req.header.user;
-    const staff_member = await Staff_Member.findOne({ID : ID});
-    if(staff_member.accidentalLeaveBalance < 1)
+    const staff_member = await Staff_Member.findOne({ ID: ID });
+    if (staff_member.accidentalLeaveBalance < 1)
         return res.status(400).send("you don't have enough leave balance");
     const requestedDate = req.body.requestedDate;
     if (extraUtils.getDifferenceInDays(requestedDate, Date.now()) <= 0)
         return res.status(400).send("The requested date already passed !");
     let message = req.body.msg;
-    if(message == null) message = "";
+    if (message == null) message = "";
     const isValid = validator.validateAnnualLeaveRequest(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });

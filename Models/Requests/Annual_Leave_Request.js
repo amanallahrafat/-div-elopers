@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const AnnualLeaveRequestSchema = new Schema({
     ID: Number,
     senderID: Number,
-    receiverID: Number,
+    receiverID: Number, // HOD ID
     msg: String,
     submissionDate: Date,
     requestedDate: Date,
