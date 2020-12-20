@@ -51,8 +51,11 @@ const getMissingHours = (curStaffMember) => {
     const staff_member = curStaffMember;
     const attendanceArray = staff_member.attendanceRecord;
     let attendedHours = 0;
+    let totalHours=0;
     for (const record of attendanceArray) {
         if (record.signin && record.signout && startOfMonth.getTime() <= record.signin && record.signin <= endOfMonth.getTime()) {
+            if (curStaffMember.dayOff == getCurDay(new Date(record.signin)) || (getCurDay(new Date(record.signin)) == "friday")) continue;
+
             const signinDate = new Date(record.signin);
             const signinYear = signinDate.getFullYear();
             const signinMonth = signinDate.getMonth();
@@ -66,6 +69,7 @@ const getMissingHours = (curStaffMember) => {
         }
     }
     const noOfDaysTillToday = getDifferenceInDays(curDate.getTime(), startOfMonth.getTime());
+    
     return missingHours = noOfDaysTillToday * 8.4 - attendedHours;
 }
 

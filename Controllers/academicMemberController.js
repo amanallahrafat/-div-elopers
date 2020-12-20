@@ -108,13 +108,14 @@ const sendSlotLinkingRequest = async(req, res) => {
         const course = await Course.findOne({ ID: courseID });
         if (course == null)
             return res.status(404).send("The requested course was not found");
-        if (!course.instructor.includes(ID) && !course.teachingStaff.includes(ID))
-            res.status(403).send("You are not part of the course teaching staff")
+    // if (!course.instructor.includes(ID) && !course.teachingStaff.includes(ID))
+    //     res.status(403).send("You are not part of the course teaching staff")
         const course_schedule = await Course_Schedule.findOne({ ID: courseID })
         if (course_schedule == null)
             res.status(404).send("The requested course does not exist");
         const slot = course_schedule.slots.filter((elm) => elm.ID == slotID);
-        if (slot == null)
+        console.log(slot)
+        if (slot == null || slot.length == 0)
             return res.status(404).send("The requested slot was not found");
         if (slot.instructor != null)
             return res.status(400).send("The requested slot is already assigned to another academic member");
@@ -625,6 +626,8 @@ const cancelSlotLinkingRequest = async(req, res) => {
     const request = await Slot_Linking_Request.findOne({ ID: requestID });
     if (request == null)
         return res.status(400).send("Invalid request ID");
+    if(request.status != "pending")
+        return  res.status(400).send("You can't cancel this request");    
     await Slot_Linking_Request.deleteOne({ ID: requestID });
     res.send("Slot linking request deleted successfully");
 }

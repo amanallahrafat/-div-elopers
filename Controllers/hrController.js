@@ -212,8 +212,11 @@ const addStaffMember = async(req, res) => {
             return res.status(400).send("This department doesn't exist");
         //Adding him to the new department
         department[0].members.push(max + 1);
-        if (req.body.memberType != null) {
+        if (req.body.memberType != null && req.body.memberType == 0) {
             department[0].hodID = max + 1
+        }
+        else{
+            req.body.memberType = 3; // Set it as an academic member
         }
         await Department.updateOne({ ID: req.body.departmentID }, department[0]);
     }

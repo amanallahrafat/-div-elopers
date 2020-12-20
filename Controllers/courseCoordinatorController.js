@@ -2,9 +2,10 @@ const Course = require('../Models/Academic/Course.js');
 const Course_Schedule = require('../Models/Academic/Course_Schedule.js');
 const Notification = require('../Models/Others/Notification.js');
 const Slot_Linking_Request = require('../Models/Requests/Slot_Linking_Request.js');
+
+const Location = require('../Models/Others/Location.js')
 const validator = require('../Validations/courseCoordinatorValidation.js');
 const checkings = require('../utils/checkings.js');
-const { request } = require('express');
 
 
 const viewSlotLinkingRequests = async(req, res) => {
@@ -20,6 +21,8 @@ const viewSlotLinkingRequests = async(req, res) => {
 const hendleSlotLinkingRequest = async(req, res) => {
     const { ID, type } = req.header.user;
     const { requestID, decision } = req.body;
+    if(decision != 0 && decision != 1)
+        return res.status(400).send("Decision must either be 0 or 1");
     const request = await Slot_Linking_Request.findOne({ ID: requestID });
     if (request == null)
         return res.status(400).send("You can't handle unexisted request !");
@@ -75,6 +78,7 @@ const getMaxSlotID = (slots) => {
 // body : {courseID , slot}
 // slot = {slotNumber:1,day:"sunday",locationID:1,ID:2}
 const createSlot = async(req, res) => {
+    const {ID, type} = req.header.user;
     const { courseID, slot } = req.body;
     const isValid = validator.validateSlot(slot);
     if (isValid.error)
@@ -83,7 +87,18 @@ const createSlot = async(req, res) => {
     const course = await Course.findOne({ ID: courseID });
     if (!courseID)
         return res.status(400).send("the requested course does not existed!");
+    if(course.coordinatorID!= ID){
+        return res.status(400).send("You have to be a coordinator of this course to do this");
 
+    }
+
+    const location = await Location.findOne({ID:slot.locationID});
+    if(location == null)
+        return res.status(400).send("This location doesn't exist");
+    if(location.type == 2){
+        return res.status(400).send("You can't assign a slot in an office");
+    }
+    
     let course_schedule = await Course_Schedule.findOne({ ID: course.ID });
     if (!course_schedule) {
         course_schedule = new Course_Schedule({
@@ -126,6 +141,13 @@ const updateSlot = async(req, res) => {
     const { courseID, slotID } = req.params;
     if (!checkings.isCourseCoordinator(ID, courseID))
         return res.status(400).send("You are not the coordinator of the requested course");
+        
+    if(req.body.locationID!=null){
+        const location = await Location.findOne({ID:req.body.locationID});
+        if(location.type == 2){
+            return res.status(400).send("You can't assign a slot in an office");
+        } 
+    }   
     const course_schedule = await Course_Schedule.findOne({ ID: courseID });
     let oldSlot = course_schedule.slots.filter((elem) => elem.ID == slotID);
     let slots = course_schedule.slots.filter((elm) => elm.ID != slotID);
