@@ -54,7 +54,7 @@ Location Updated Successfully!
 ### <b>Functionality:</b> Delete a location <br>
 <b>Route: </b> /hr/deleteLocation/:ID <br>
 <b>Request type: </b> DELETE <br>
-<b>Request parameters : </b> The ID of the location to be deleted
+<b>Request parameters : </b> The ID of the location to be deleted <br/>
 <b>Example of how to call the route:</b> /hr/deleteLocation/1
 <br>
 
