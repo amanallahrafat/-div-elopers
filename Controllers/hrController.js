@@ -314,12 +314,12 @@ const updateStaffMember = async(req, res) => {
     }
 
     req.body.type = req.params.type;
-    if(!req.body.name) req.body.name = member[0].name;
-    if(!req.body.email){
-     req.body.email = member[0].email;
-    }else{
-        const users = await Staff_Member.find({email: req.body.email});
-        if(users.length != 0&&users[0].ID!=req.params.ID&&users[0].type!= req.params.type){
+    if (!req.body.name) req.body.name = member[0].name;
+    if (!req.body.email) {
+        req.body.email = member[0].email;
+    } else {
+        const users = await Staff_Member.find({ email: req.body.email });
+        if (users.length != 0 && users[0].ID != req.params.ID && users[0].type != req.params.type) {
             return res.status(400).send("This email already exists. Emails have to be unique");
         }
     }
@@ -608,36 +608,35 @@ const getMaxCourseID = async() => {
     return max;
 }
 
-const addMissingSignInOut= async (req,res)=>{
-    const {ID, type} = req.header.user;
-    const signinYear=req.body.signinYear;
-    const signinMonth=req.body.signinMonth;
-    const signinDay=req.body.signinDay;
-    const signinHour=req.body.signinHour;
-    const signinMinute=req.body.signinMinute;
-    const signinSec=req.body.signinSec;
-  //  console.log(signinHour);
-    const signoutYear=req.body.signoutYear;
-    const signoutMonth=req.body.signoutMonth;
-    const signoutDay=req.body.signoutDay;
-    const signoutHour=req.body.signoutHour;
-    const signoutMinute=req.body.signoutMinute;
-    const signoutSec=req.body.signoutSec;
-    if(!(signinYear!=undefined&&signinMonth!=undefined&&signinDay!=undefined&&signinHour!=undefined&& signinMinute!=undefined&&signinSec!=undefined&&
-        signoutYear!=undefined&&signoutMonth!=undefined&&signoutDay!=undefined&&signoutHour!=undefined&& signoutMinute!=undefined&&signoutSec!=undefined))
-      return  res.status(400).send("please enter all specified signin date info and signout info(year,month,day,hour,min,sec)");
-    const staffMemberID=req.body.ID;
-    const staffMemberType=req.body.type;
-    if(!(staffMemberID&&staffMemberType!=undefined))
-       return   res.status(400).send("please enter the ID and the type of the staff Member");
-    if(staffMemberID==ID&&staffMemberType==type){
-     return   res.status(400).send("you can't add sign in/out for yourself");
+const addMissingSignInOut = async(req, res) => {
+    const { ID, type } = req.header.user;
+    const signinYear = req.body.signinYear;
+    const signinMonth = req.body.signinMonth;
+    const signinDay = req.body.signinDay;
+    const signinHour = req.body.signinHour;
+    const signinMinute = req.body.signinMinute;
+    const signinSec = req.body.signinSec;
+    const signoutYear = req.body.signoutYear;
+    const signoutMonth = req.body.signoutMonth;
+    const signoutDay = req.body.signoutDay;
+    const signoutHour = req.body.signoutHour;
+    const signoutMinute = req.body.signoutMinute;
+    const signoutSec = req.body.signoutSec;
+    if (!(signinYear != undefined && signinMonth != undefined && signinDay != undefined && signinHour != undefined && signinMinute != undefined && signinSec != undefined &&
+            signoutYear != undefined && signoutMonth != undefined && signoutDay != undefined && signoutHour != undefined && signoutMinute != undefined && signoutSec != undefined))
+        return res.status(400).send("please enter all specified signin date info and signout info(year,month,day,hour,min,sec)");
+    const staffMemberID = req.body.ID;
+    const staffMemberType = req.body.type;
+    if (!(staffMemberID && staffMemberType != undefined))
+        return res.status(400).send("please enter the ID and the type of the staff Member");
+    if (staffMemberID == ID && staffMemberType == type) {
+        return res.status(400).send("you can't add sign in/out for yourself");
     }
-    const staffMember=await Staff_Member.findOne({ID:staffMemberID,type:staffMemberType});
-    if(!staffMember)
-    return res.status(400).send("please enter a valid ID and the type of the staff Member");
-    const newSignSession= {status:1,signin:new Date(signinYear,signinMonth-1,signinDay,signinHour,signinMinute,signinSec,0).getTime(),signout:new Date(signoutYear,signoutMonth-1,signoutDay,signoutHour,signoutMinute,signoutSec,0).getTime()};
-    if(newSignSession.signin>newSignSession.signout){
+    const staffMember = await Staff_Member.findOne({ ID: staffMemberID, type: staffMemberType });
+    if (!staffMember)
+        return res.status(400).send("please enter a valid ID and the type of the staff Member");
+    const newSignSession = { status: 1, signin: new Date(signinYear, signinMonth - 1, signinDay, signinHour, signinMinute, signinSec, 0).getTime(), signout: new Date(signoutYear, signoutMonth - 1, signoutDay, signoutHour, signoutMinute, signoutSec, 0).getTime() };
+    if (newSignSession.signin > newSignSession.signout) {
         return res.status(400).send("you can't make signout in a time before signin");
     }
     staffMember.attendanceRecord.push(newSignSession);
@@ -688,10 +687,8 @@ const updateStaffMemberSalary = async(req, res) => {
 }
 const viewStaffMembersWithMissingHours = async(req, res) => {
     const allStaffMembers = await Staff_Member.find();
-    //console.log(allStaffMembers[0]);
     if (!allStaffMembers) return res.status(400).send("there aren't any academic members yet");
     let allMissedMembers = [];
-    //  console.log(allStaffMembers);
     for (const mem of allStaffMembers) {
 
         const missingHours = extraUtils.getMissingHours(mem);
@@ -705,34 +702,36 @@ const viewStaffMembersWithMissingHours = async(req, res) => {
 
 }
 
-const viewStaffMembersWithMissingDays=async (req,res)=>{
-const staffMembers= await Staff_Member.find({});
-if(!staffMembers){
- return   res.send("there is no staff members in the database yet");
-}
-const accidentalLeaves= await Accidental_Leave_Request.find({});
-const annualLeaves=await Annual_Leave_Request.find();
-
-const compensationLeaves=await Compensation_Leave_Request.find();
-
-const maternalityLeaves=await Maternity_Leave_Request.find();
-const sickLeaves=await Sick_Leave_Request.find();
-
-let membersWithMissingDays=[];
-//console.log(staffMembers);
-for(const mem of staffMembers){
-    const haveMissed=await extraUtils.haveMissingDays(mem,accidentalLeaves,annualLeaves,compensationLeaves,maternalityLeaves,sickLeaves);
-    if(haveMissed){
-        const trimmedMem=extraUtils.trimMonogoObj(mem['_doc'],["_id","password","__v"]);
-         trimmedMem.attendanceRecord=trimmedMem.attendanceRecord.filter((x)=>{return  (x.signin&&x.signout)}).map((x)=>{x.signin=new Date(x.signin);
-        x.signout=new Date(x.signout); return x;});
-
-        membersWithMissingDays.push(trimmedMem);
-  
+const viewStaffMembersWithMissingDays = async(req, res) => {
+    const staffMembers = await Staff_Member.find({});
+    if (!staffMembers) {
+        return res.send("there is no staff members in the database yet");
     }
-}
+    const accidentalLeaves = await Accidental_Leave_Request.find({});
+    const annualLeaves = await Annual_Leave_Request.find();
 
-return res.send(membersWithMissingDays);
+    const compensationLeaves = await Compensation_Leave_Request.find();
+
+    const maternalityLeaves = await Maternity_Leave_Request.find();
+    const sickLeaves = await Sick_Leave_Request.find();
+
+    let membersWithMissingDays = [];
+    for (const mem of staffMembers) {
+        const haveMissed = await extraUtils.haveMissingDays(mem, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
+        if (haveMissed) {
+            const trimmedMem = extraUtils.trimMonogoObj(mem['_doc'], ["_id", "password", "__v"]);
+            trimmedMem.attendanceRecord = trimmedMem.attendanceRecord.filter((x) => { return (x.signin && x.signout) }).map((x) => {
+                x.signin = new Date(x.signin);
+                x.signout = new Date(x.signout);
+                return x;
+            });
+
+            membersWithMissingDays.push(trimmedMem);
+
+        }
+    }
+
+    return res.send(membersWithMissingDays);
 }
 
 module.exports = {
@@ -752,6 +751,8 @@ module.exports = {
     updateCourse,
     deleteCourse,
     addMissingSignInOut,
-    viewStaffMemberAttendance,updateStaffMemberSalary,viewStaffMembersWithMissingHours,viewStaffMembersWithMissingDays
+    viewStaffMemberAttendance,
+    updateStaffMemberSalary,
+    viewStaffMembersWithMissingHours,
+    viewStaffMembersWithMissingDays
 }
-

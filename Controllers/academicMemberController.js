@@ -145,7 +145,6 @@ const sendChangeDayOffRequest = async(req, res) => {
     if (message == null)
         message = "";
     const isValid = validator.validateDayOff(req.body);
-    console.log(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
     const request = await Change_Day_Off_Request.find();
@@ -277,10 +276,9 @@ const viewSchedule = async(req, res) => {
 // {documents : String, startDate : Number, endDate : Number, msg : String}
 const sendMaternityLeaveRequest = async(req, res) => {
         const { ID, type } = req.header.user;
-        const gender = (await Staff_Member.findOne({ ID: ID, type : type })).gender;
-        console.log(gender)
+        const gender = (await Staff_Member.findOne({ ID: ID, type: type })).gender;
         if (gender != "female")
-            return res.status(403).send("You must be a female to have birth");  
+            return res.status(403).send("You must be a female to have birth");
         const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
         const department = await Department.findOne({ ID: departmentID });
         let message = req.body.msg;
@@ -312,106 +310,99 @@ const sendMaternityLeaveRequest = async(req, res) => {
         await maternity_leave_request.save();
         return res.send("The request has been created successfully.")
     }
-//{documents: String, requestedDate : Number, msg: String}
+    //{documents: String, requestedDate : Number, msg: String}
 const sendSickLeaveRequest = async(req, res) => {
-    const { ID, type } = req.header.user;
-    const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
-    const department = await Department.findOne({ ID: departmentID });
-    let message = req.body.msg;
-    const documents = req.body.documents;
-    const requestedDate = req.body.requestedDate;
-    if (department == null)
-        return res.status(403).send("The user does not belong to a department yet");
-    const hodID = department.hodID;
-    if (hodID == null)
-        return res.status(404).send("The department does not have a head yet, you can't send this request");
-    if (message == null)
-        message = "";
-    const isValid = validator.validateSickLeave(req.body);
-    if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
-    console.log(extraUtils.getDifferenceInDays(Date.now(),requestedDate))
-    if(extraUtils.getDifferenceInDays(Date.now(),requestedDate) > 3)
-        return res.status(400).send("You can't send sick leave requests for days more than three days before.")
-    const request = await Sick_Leave_Request.find();
-    const sick_leave_request = new Sick_Leave_Request({
-        ID: getMaxSlotID(request) + 1,
-        senderID: ID,
-        receiverID: hodID,
-        documents: documents,
-        submissionDate: Date.now(),
-        requestedDate: requestedDate,
-        status: "pending",
-        msg: message
-    });
-    await sick_leave_request.save();
-    return res.send("The request has been created successfully.")
+        const { ID, type } = req.header.user;
+        const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
+        const department = await Department.findOne({ ID: departmentID });
+        let message = req.body.msg;
+        const documents = req.body.documents;
+        const requestedDate = req.body.requestedDate;
+        if (department == null)
+            return res.status(403).send("The user does not belong to a department yet");
+        const hodID = department.hodID;
+        if (hodID == null)
+            return res.status(404).send("The department does not have a head yet, you can't send this request");
+        if (message == null)
+            message = "";
+        const isValid = validator.validateSickLeave(req.body);
+        if (isValid.error)
+            return res.status(400).send({ error: isValid.error.details[0].message });
+        if (extraUtils.getDifferenceInDays(Date.now(), requestedDate) > 3)
+            return res.status(400).send("You can't send sick leave requests for days more than three days before.")
+        const request = await Sick_Leave_Request.find();
+        const sick_leave_request = new Sick_Leave_Request({
+            ID: getMaxSlotID(request) + 1,
+            senderID: ID,
+            receiverID: hodID,
+            documents: documents,
+            submissionDate: Date.now(),
+            requestedDate: requestedDate,
+            status: "pending",
+            msg: message
+        });
+        await sick_leave_request.save();
+        return res.send("The request has been created successfully.")
 
-}
-//{requestedDate: Number, absenceDate : Number, msg : String}
-const sendCompensationLeaveRequest = async(req, res) =>{
-    const {ID, type} = req.header.user;
-    isValid = validator.validateCompensationRequest(req.body);
-    if(isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
-    const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
-    const department = await Department.findOne({ ID: departmentID });
-    const requestedDate = req.body.requestedDate;
-    const absenceDate = req.body.absenceDate;
-    if (department == null)
-        return res.status(403).send("The user does not belong to a department yet");
-    const hodID = department.hodID;
-    if (hodID == null)
-        return res.status(404).send("The department does not have a head yet, you can't send this request");
-    const user = await Staff_Member.findOne({ID : ID, type : type});
-    const dayOff = extraUtils.getCurDay(new Date(requestedDate));
-    if(dayOff != user.dayOff){
-        return res.send("You can't accept this request, since the compensation day is not the day off");
     }
-    const curDate=new Date(requestedDate);
-    console.log(curDate);
-    console.log(new Date(absenceDate))
-    const curYear=curDate.getFullYear();
-    const curMonth=curDate.getMonth();
-    const curDay=curDate.getDate();
-    const startOfMonth=new Date(curYear,curMonth,11,2,0,0,0);
-    const endOfMonth=new Date(curYear,curMonth+1,10,2,0,0,0);
-    
-    if(curDay <= 10){
-        startOfMonth.setMonth(curMonth-1);
-        endOfMonth.setMonth(curMonth);
+    //{requestedDate: Number, absenceDate : Number, msg : String}
+const sendCompensationLeaveRequest = async(req, res) => {
+        const { ID, type } = req.header.user;
+        isValid = validator.validateCompensationRequest(req.body);
+        if (isValid.error)
+            return res.status(400).send({ error: isValid.error.details[0].message });
+        const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
+        const department = await Department.findOne({ ID: departmentID });
+        const requestedDate = req.body.requestedDate;
+        const absenceDate = req.body.absenceDate;
+        if (department == null)
+            return res.status(403).send("The user does not belong to a department yet");
+        const hodID = department.hodID;
+        if (hodID == null)
+            return res.status(404).send("The department does not have a head yet, you can't send this request");
+        const user = await Staff_Member.findOne({ ID: ID, type: type });
+        const dayOff = extraUtils.getCurDay(new Date(requestedDate));
+        if (dayOff != user.dayOff) {
+            return res.send("You can't accept this request, since the compensation day is not the day off");
+        }
+        const curDate = new Date(requestedDate);
+        const curYear = curDate.getFullYear();
+        const curMonth = curDate.getMonth();
+        const curDay = curDate.getDate();
+        const startOfMonth = new Date(curYear, curMonth, 11, 2, 0, 0, 0);
+        const endOfMonth = new Date(curYear, curMonth + 1, 10, 2, 0, 0, 0);
+
+        if (curDay <= 10) {
+            startOfMonth.setMonth(curMonth - 1);
+            endOfMonth.setMonth(curMonth);
+        }
+        if (!(startOfMonth <= new Date(absenceDate) && new Date(absenceDate) <= endOfMonth)) {
+            return res.status(403).send("The requested compensation day is not in same month as the missed day");
+        }
+        const request = await Compensation_Leave_Request.find();
+        const compensation_leave_request = new Compensation_Leave_Request({
+            ID: getMaxSlotID(request) + 1,
+            senderID: ID,
+            receiverID: hodID,
+            submissionDate: Date.now(),
+            requestedDate: requestedDate,
+            msg: req.body.msg,
+            absenceDate: absenceDate,
+            status: "pending"
+        });
+        await compensation_leave_request.save();
+        return res.send("The compensation request is sent successfully");
     }
-    console.log(startOfMonth);
-    console.log(endOfMonth)
-    if(!(startOfMonth <= new Date(absenceDate) && new Date(absenceDate) <= endOfMonth)){
-        return res.status(403).send("The requested compensation day is not in same month as the missed day");
-    }
-    const request = await Compensation_Leave_Request.find();
-    const compensation_leave_request =  new Compensation_Leave_Request({
-    ID : getMaxSlotID(request) + 1,
-    senderID : ID,
-    receiverID : hodID,
-    submissionDate : Date.now(),
-    requestedDate : requestedDate,
-    msg : req.body.msg,
-    absenceDate : absenceDate,
-    status: "pending"
-    });
-    await compensation_leave_request.save();
-    return res.send("The compensation request is sent successfully");
-}
-//{requestedDate : Number, msg : String}
-const sendAccidentalLeaveRequest = async (req, res) =>{
-    const {ID, type} = req.header.user;
-    const user = await Staff_Member.findOne({ID : ID, type : type}); 
+    //{requestedDate : Number, msg : String}
+const sendAccidentalLeaveRequest = async(req, res) => {
+    const { ID, type } = req.header.user;
+    const user = await Staff_Member.findOne({ ID: ID, type: type });
     const accidentalLeave = user.accidentalLeaveBalance;
     const annualBalance = user.annualBalance;
-    console.log(accidentalLeave);
-    console.log(annualBalance);
-    if(accidentalLeave < 1 || annualBalance < 1)
+    if (accidentalLeave < 1 || annualBalance < 1)
         return res.status(400).send("You don't have enough anuual/accidental leave balance available.");
     isValid = validator.validateAccidentalRequest(req.body);
-    if(isValid.error)
+    if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
     const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
     const department = await Department.findOne({ ID: departmentID });
@@ -426,13 +417,13 @@ const sendAccidentalLeaveRequest = async (req, res) =>{
         return res.status(404).send("The department does not have a head yet, you can't send this request");
     const request = await Accidental_Leave_Request.find();
     const accidental_leave_request = new Accidental_Leave_Request({
-    ID : getMaxSlotID(request) + 1,
-    senderID : ID,
-    receiverID : hodID,
-    msg : message,
-    submissionDate : Date.now(),
-    requestedDate : requestedDate,
-    status: "pending",
+        ID: getMaxSlotID(request) + 1,
+        senderID: ID,
+        receiverID: hodID,
+        msg: message,
+        submissionDate: Date.now(),
+        requestedDate: requestedDate,
+        status: "pending",
     });
     await accidental_leave_request.save();
     return res.send("The accidental leave request created successfully");
@@ -505,6 +496,16 @@ const sendAnnualLeaveRequest = async(req, res) => {
     res.send("The annual leave request has already sucessfully created !");
 }
 
+const cancelSlotLinkingRequest = async(req, res) => {
+    const { ID, type } = req.header.user;
+    const requestID = parseInt(req.params.requestID);
+    const req = await Slot_Linking_Request.findOne({ ID: requestID });
+    if (req == null)
+        return res.status(400).send("Invalid request ID");
+    await Slot_Linking_Request.deleteOne({ ID: requestID });
+    res.send("Slot linking request deleted successfully");
+}
+
 module.exports = {
     sendReplacementRequest,
     viewSchedule,
@@ -518,5 +519,6 @@ module.exports = {
     respondToReplacementRequest,
     sendAnnualLeaveRequest,
     sendCompensationLeaveRequest,
-    sendAccidentalLeaveRequest
+    sendAccidentalLeaveRequest,
+    cancelSlotLinkingRequest
 }

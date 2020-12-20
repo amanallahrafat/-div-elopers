@@ -37,18 +37,11 @@ const isRequestInWeek = (RequestDate, date) => { // all dates are entered in nor
 }
 
 const getMissingHours = (curStaffMember) => {
-    // console.log(curStaffMember);
-    // console.log("*********");
     const curDate = new Date();
     const curYear = curDate.getFullYear();
     const curMonth = curDate.getMonth();
     const curDay = curDate.getDate();
-    // console.log(curDate);
-    // console.log(curYear);
-    // console.log(curMonth);
-    // console.log(curDay);
     const startOfMonth = new Date(curYear, curMonth, 11, 2, 0, 0, 0);
-    // console.log(startOfMonth);
     const endOfMonth = new Date(curYear, curMonth + 1, 10, 2, 0, 0, 0);
     if (curDay <= 10) {
         startOfMonth.setMonth(curMonth - 1);
@@ -57,7 +50,6 @@ const getMissingHours = (curStaffMember) => {
 
     const staff_member = curStaffMember;
     const attendanceArray = staff_member.attendanceRecord;
-    //console.log(attendanceArray);
     let attendedHours = 0;
     for (const record of attendanceArray) {
         if (record.signin && record.signout && startOfMonth.getTime() <= record.signin && record.signin <= endOfMonth.getTime()) {
@@ -65,8 +57,6 @@ const getMissingHours = (curStaffMember) => {
             const signinYear = signinDate.getFullYear();
             const signinMonth = signinDate.getMonth();
             const signinDay = signinDate.getDate();
-            //   console.log(new Date(record.signin));
-            //   console.log(new Date(record.signout));
             const startDate = new Date(signinYear, signinMonth, signinDay, 7, 0, 0, 0).getTime();
             const endDate = new Date(signinYear, signinMonth, signinDay, 19, 0, 0, 0).getTime();
             const startOfInterval = Math.max(startDate, record.signin);
@@ -75,10 +65,7 @@ const getMissingHours = (curStaffMember) => {
             attendedHours += Math.max(0, (endOfInterval - startOfInterval) / (1000 * 60 * 60));
         }
     }
-    // console.log(attendedHours+
-    //     "**");
     const noOfDaysTillToday = getDifferenceInDays(curDate.getTime(), startOfMonth.getTime());
-    // console.log(noOfDaysTillToday);
     return missingHours = noOfDaysTillToday * 8.4 - attendedHours;
 }
 
@@ -107,10 +94,6 @@ const getMissingDays = async(staffMem, accidentalLeaves, annualLeaves, compensat
         if (miss) {
             missingDays.push(startOfMonth);
         }
-        // console.log(startOfMonth);
-        // console.log("end is");
-        // console.log(endOfMonth);
-
         startDay = startDay + 1;
         startOfMonth = new Date(startYear, startMonth, startDay, 2, 0, 0, 0);
     }
