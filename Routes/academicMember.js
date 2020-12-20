@@ -23,4 +23,7 @@ academicMemberRouter.put('/respondToReplacementRequest', auth, academicMemberCon
 academicMemberRouter.post('/sendAnnualLeaveRequest', auth, academicMemberController.sendAnnualLeaveRequest);
 academicMemberRouter.delete('/cancelSlotLinkingRequest/:requestID', auth, academicMemberController.cancelSlotLinkingRequest);
 
+academicMemberRouter.delete('/cancelAccidentalLeaveRequest', auth, academicMemberController.cancelAccidentalLeaveRequest);
+academicMemberRouter.delete('/cancelAnnualLeaveRequest', auth, academicMemberController.cancelAnnualLeaveRequest);
+
 module.exports = academicMemberRouter;

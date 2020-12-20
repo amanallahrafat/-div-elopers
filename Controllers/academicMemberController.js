@@ -506,7 +506,73 @@ const cancelSlotLinkingRequest = async(req, res) => {
     res.send("Slot linking request deleted successfully");
 }
 
-module.exports = {
+
+
+const cancelAccidentalLeaveRequest=async(req,res)=>{
+    const {ID,type}=req.header.user;
+    if(!req.body.ID){
+        return res.status(400).send("please specify the ID of the request ");
+    }
+    const accidentalLeave=await Accidental_Leave_Request.findOne({ID:req.body.ID,senderID:ID});// ID of the accidental leave
+      if(!accidentalLeave)
+    return res.status(400).send("there is no accidental leave with this ID for this person ");
+    if(accidentalLeave.status=="pending")
+    {
+        await Accidental_Leave_Request.deleteOne({ID:req.body.ID});
+        return res.send("request has been deleted succuessfully ");
+    }
+    if(accidentalLeave.status=="rejected")
+    {
+        await Accidental_Leave_Request.deleteOne({ID:req.body.ID});
+        return res.send("request is already rejected ");
+    }
+    if(accidentalLeave.status=="accepted"){
+        if(new Date()<accidentalLeave.requestedDate){
+               const  staffMem= await Staff_Member.findOne({ID:ID,type:type});
+              staffMem.annualBalance=staffMem.annualBalance+1;
+               staffMem.accidentalLeaveBalance=staffMem.accidentalLeaveBalance+1;
+               await Staff_Member.updateOne({ID:ID,type:type},staffMem);
+               await Accidental_Leave_Request.deleteOne({ID:req.body.ID});
+               return res.send("request has been deleted succuessfully ");
+           
+        }else{
+            return res.status(400).send("this date has already passed");
+        }
+    }
+}
+
+const cancelAnnualLeaveRequest=async(req,res)=>{
+    const {ID,type}=req.header.user;
+    if(!req.body.ID){
+        return res.status(400).send("please specify the ID of the request ");
+    }
+    const annualLeave=await Annual_Leave_Request.findOne({ID:req.body.ID,senderID:ID});// ID of the accidental leave
+      if(!annualLeave)
+    return res.status(400).send("there is no annual leave with this ID for this person ");
+    if(annualLeave.status=="pending")
+    {
+        await Annual_Leave_Request.deleteOne({ID:req.body.ID});
+        return res.send("request has been deleted succuessfully ");
+    }
+    if(annualLeave.status=="rejected")
+    {
+        await Annual_Leave_Request.deleteOne({ID:req.body.ID});
+        return res.send("request is already rejected ");
+    }
+    if(annualLeave.status=="accepted"){
+        if(new Date()<annualLeave.requestedDate){
+               const  staffMem= await Staff_Member.findOne({ID:ID,type:type});
+               staffMem.accidentalLeaveBalance=staffMem.accidentalLeaveBalance+1;
+               await Staff_Member.updateOne({ID:ID,type:type},staffMem);
+               await Annual_Leave_Request.deleteOne({ID:req.body.ID});
+               return res.send("request has been deleted succuessfully ");
+           
+        }else{
+            return res.status(400).send("this date has already passed");
+        }
+    }
+}
+module.exports = {  
     sendReplacementRequest,
     viewSchedule,
     sendSlotLinkingRequest,
@@ -520,5 +586,7 @@ module.exports = {
     sendAnnualLeaveRequest,
     sendCompensationLeaveRequest,
     sendAccidentalLeaveRequest,
-    cancelSlotLinkingRequest
+    cancelSlotLinkingRequest,
+    cancelAccidentalLeaveRequest,
+    cancelAnnualLeaveRequest,
 }
