@@ -1453,7 +1453,7 @@ function generateDateFormat(addedOrsubtractedDays){
 ### <b>Functionality: </b> Respond to replacement request<br>	
 <b>Route: </b> /ac/respondToReplacementRequest <br>	
 <b>Request Type: </b> PUT <br>	
-<b>Request Body: </b> `{"request" : 3, "response" : 1}` <br>
+<b>Request Body: </b> `{"requestID" : 1, "response" : 1}` <br>
 <b> Note : </b> repsone == 1 == "accepted", repsone == 0 == "rejected"  <br>
 <b>Response: </b> "Responded to replacement request successfully" or an error message denoting the error.
 <br>
@@ -1538,7 +1538,7 @@ function generateDateFormat(addedOrsubtractedDays){
 ### <b>Functionality: </b> Send accidental leave request<br>	
 <b>Route: </b> /ac/sendAccidentalLeaveRequest <br>	
 <b>Request Type: </b> POST <br>	
-<b>Request Body: </b> `{"requestedDate" : 123 , "msg" : "Please accept my request"}
+<b>Request Body: </b> `{"requestedDate" : 1608324670255 , "msg" : "Please accept my request"}
 ` <br>
 <b> Note : </b> the requestedDate date must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : 
 ``` js
@@ -1593,7 +1593,7 @@ function generateDateFormat(addedOrsubtractedDays){
 <b>Route: </b> /ac/cancelSlotLinkingRequest/:ID <br>	
 <b>Request Type: </b> DELETE <br>
 <b>Request Parameters: </b> The ID of the slot linking request that the academic member wants to cancel. <br>
-<b>Example of how to call the route:</b> /ac/cancelSlotLinkingRequest/:ID
+<b>Example of how to call the route:</b> /ac/cancelSlotLinkingRequest/1
 <br>
 ### <b>Functionality: </b> Cancel Accidental Leave request<br>	
 <b> add 'auth-token' of academic member </b><br/>
