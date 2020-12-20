@@ -16,7 +16,7 @@ milestone-1-SarAhmed created by GitHub Classroom
 
 
 ### <b>Functionality: </b> Update a location <br>
-<b>Route: </b> hr/updateLocation/:ID <br>
+<b>Route: </b> /hr/updateLocation/:ID <br>
 <b>Request Type: </b> PUT <br>
 <b>Request Parameter: </b> The ID of the location to be updated<br>
 <b>Request body : </b> `
