@@ -2,17 +2,14 @@ const Staff_Member = require("./Models/Users/Staff_Member.js")
 
 const loop_month = (monthNum) => {
     setInterval(async() => {
-        setTimeout(async() => {
-            if (monthNum % 2 == 0) {
-                await setAccidentalLeaveBalance();
-            }
-            await setAnnualLeaveBalance();
-
-            monthNum++;
-            // console.log(monthNum);
-        }, 2629800000);
-        // }, 250); // For Testing
-    }, 10 * 1000);
+        if (monthNum % 12 == 0) {
+            await setAccidentalLeaveBalance();
+        }
+        await setAnnualLeaveBalance();
+        monthNum++;
+        //console.log(monthNum);
+    }, 2629800000);
+    //}, 10 * 1000); // Testing
 }
 
 const setAccidentalLeaveBalance = async() => {
@@ -32,5 +29,4 @@ const setAnnualLeaveBalance = async() => {
 
 module.exports = {
     loop_month,
-    setAnnualLeaveBalance,
 }
