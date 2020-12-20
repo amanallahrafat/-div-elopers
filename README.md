@@ -736,6 +736,401 @@ since it starts from the beginning of the academic month till the current day</b
 <br>
 <b>Example of how to call the route: </b> /hod/viewCourseCoverage/1  <br>
 
+### <b>Functionality: </b> View all requests <br>	
+<b>Route: </b> /hod/viewAllRequests <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> Array of all the requests that are sent to this head of department.<br>
+`
+[
+    {
+        "type": "accidental leave requests",
+        "requests": [
+            {
+                "_id": "5fdefc5983dc451970a8cdf3",
+                "ID": 6,
+                "senderID": 8,
+                "receiverID": 8,
+                "msg": "ali",
+                "submissionDate": "2020-12-20T07:25:13.024Z",
+                "requestedDate": "1970-01-01T00:00:00.123Z",
+                "status": "pending",
+                "__v": 0
+            }
+        ]
+    },
+    {
+        "type": "annual leave requests",
+        "requests": []
+    },
+    {
+        "type": "change day off requests",
+        "requests": [
+            {
+                "_id": "5fde58e1c78ef437c4425b93",
+                "ID": 3,
+                "senderID": 1,
+                "receiverID": 8,
+                "msg": "",
+                "targetDayOff": "monday",
+                "submissionDate": "2020-12-19T19:47:45.077Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde58e4c78ef437c4425b94",
+                "ID": 4,
+                "senderID": 1,
+                "receiverID": 8,
+                "msg": "",
+                "targetDayOff": "monday",
+                "submissionDate": "2020-12-19T19:47:48.452Z",
+                "status": "pending",
+                "__v": 0
+            }
+        ]
+    },
+    {
+        "type": "compensation leave requests",
+        "requests": [
+            {
+                "_id": "5fde6190ecabe139c4220514",
+                "ID": 1,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:24:48.822Z",
+                "requestedDate": "2020-12-13T20:14:22.436Z",
+                "absenceDate": "2020-12-12T20:14:51.516Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde61b6ecabe139c4220515",
+                "ID": 2,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:25:26.410Z",
+                "requestedDate": "2020-12-06T20:25:18.099Z",
+                "absenceDate": "2020-12-12T20:14:51.516Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde61caecabe139c4220516",
+                "ID": 3,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:25:46.172Z",
+                "requestedDate": "2020-12-06T20:25:18.099Z",
+                "absenceDate": "2020-12-06T20:25:18.099Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde61dfecabe139c4220517",
+                "ID": 4,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:26:07.983Z",
+                "requestedDate": "2020-12-06T20:25:18.099Z",
+                "absenceDate": "2020-12-12T20:14:51.516Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde6229ecabe139c4220518",
+                "ID": 5,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:27:21.913Z",
+                "requestedDate": "2020-12-13T20:14:22.436Z",
+                "absenceDate": "2020-12-12T20:14:51.516Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde6276ecabe139c4220519",
+                "ID": 6,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:28:38.203Z",
+                "requestedDate": "2020-12-13T20:14:22.436Z",
+                "absenceDate": "2020-12-23T20:28:29.192Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde6b3cecabe139c422051c",
+                "ID": 7,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T21:06:04.348Z",
+                "requestedDate": "2020-12-06T20:25:18.099Z",
+                "absenceDate": "2020-12-12T20:14:51.516Z",
+                "status": "pending",
+                "__v": 0
+            }
+        ]
+    },
+    {
+        "type": "maternity leave requests",
+        "requests": [
+            {
+                "_id": "5fde5876c78ef437c4425b8a",
+                "ID": 1,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "googl/ali",
+                "submissionDate": "2020-12-19T19:45:58.760Z",
+                "startDate": "2020-12-24T13:51:02.056Z",
+                "endDate": "2020-12-29T13:56:19.792Z",
+                "msg": "",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde5879c78ef437c4425b8b",
+                "ID": 2,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "googl/ali",
+                "submissionDate": "2020-12-19T19:46:01.066Z",
+                "startDate": "2020-12-24T13:51:02.056Z",
+                "endDate": "2020-12-29T13:56:19.792Z",
+                "msg": "",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde587cc78ef437c4425b8c",
+                "ID": 3,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "googl/ali",
+                "submissionDate": "2020-12-19T19:46:04.334Z",
+                "startDate": "2020-12-24T13:51:02.056Z",
+                "endDate": "2020-12-29T13:56:19.792Z",
+                "msg": "",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde587fc78ef437c4425b8d",
+                "ID": 4,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "googl/ali",
+                "submissionDate": "2020-12-19T19:46:07.478Z",
+                "startDate": "2020-12-24T13:51:02.056Z",
+                "endDate": "2020-12-29T13:56:19.792Z",
+                "msg": "",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde58a7c78ef437c4425b8e",
+                "ID": 5,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "googl/ali",
+                "submissionDate": "2020-12-19T19:46:47.988Z",
+                "startDate": "2020-12-24T13:51:02.056Z",
+                "endDate": "2020-12-29T13:56:19.792Z",
+                "msg": "",
+                "status": "pending",
+                "__v": 0
+            }
+        ]
+    },
+    {
+        "type": "sick leave requests",
+        "requests": [
+            {
+                "_id": "5fde42634cc4174148983990",
+                "ID": 1,
+                "senderID": 4,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-19T18:11:47.106Z",
+                "requestedDate": "2020-12-18T18:11:23.669Z",
+                "status": "pending",
+                "msg": "We won!",
+                "__v": 0
+            },
+            {
+                "_id": "5fde42b34cc4174148983991",
+                "ID": 2,
+                "senderID": 4,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-19T18:13:07.038Z",
+                "requestedDate": "2020-12-18T18:11:23.669Z",
+                "status": "pending",
+                "msg": "We won!",
+                "__v": 0
+            },
+            {
+                "_id": "5fde42b54cc4174148983992",
+                "ID": 3,
+                "senderID": 4,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-19T18:13:09.625Z",
+                "requestedDate": "2020-12-18T18:11:23.669Z",
+                "status": "pending",
+                "msg": "We won!",
+                "__v": 0
+            },
+            {
+                "_id": "5fde42bd4cc4174148983993",
+                "ID": 4,
+                "senderID": 4,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-19T18:13:17.976Z",
+                "requestedDate": "2020-12-18T18:11:23.669Z",
+                "status": "pending",
+                "msg": "",
+                "__v": 0
+            },
+            {
+                "_id": "5fde4a1c4cc4174148983994",
+                "ID": 5,
+                "senderID": 4,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-19T18:44:44.638Z",
+                "requestedDate": "2020-12-18T18:11:23.669Z",
+                "status": "pending",
+                "msg": "",
+                "__v": 0
+            },
+            {
+                "_id": "5fde4a204cc4174148983995",
+                "ID": 6,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-12T18:44:48.828Z",
+                "requestedDate": "2020-12-12T18:11:23.669Z",
+                "status": "accepted",
+                "msg": "",
+                "__v": 0
+            }
+        ]
+    }
+]
+`
+
+### <b>Functionality: </b> Respond to change day off request <br>	
+<b>Route: </b> /hod/respondToChangeDayOffRequest/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request accepted succefully <br>
+<b>Request body : </b>` 
+{"response":0, "msg":"You can't change it"}
+`
+<br>
+<b>Response: </b> Request rejected succefully <br>
+<b>Request Parameters : </b> The ID of the change day off request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToChangeDayOffRequest/3 <br>
+<b>Note: </b>1- To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
+### <b>Functionality: </b> Respond to annual leave request <br>	
+<b>Route: </b> /hod/respondToAnnualLeaveRequests/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request was accepted successfully <br>
+<b>Request body : </b>` 
+{"response": 0,"msg": "I don't want to"}
+`
+<br>
+<b>Response: </b> Request was rejected successfully <br>
+<b>Request Parameters : </b> The ID of the annual leave request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToAnnualLeaveRequests/1 <br>
+<b>Note: </b>1- To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
+
+### <b>Functionality: </b> Respond to accidental leave request <br>	
+<b>Route: </b> /hod/respondToAccidentalLeaveRequest/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request was accepted successfully <br>
+<b>Request body : </b>` 
+{"response": 0,"msg": "I don't want to"}
+`
+<br>
+<b>Response: </b> Request was rejected successfully <br>
+<b>Request Parameters : </b> The ID of the accidental leave request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToAccidentalLeaveRequest/3 <br>
+<b>Note: </b>1- To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
+
+### <b>Functionality: </b> Respond to sick leave request <br>	
+<b>Route: </b> /hod/respondToSickLeaveRequests/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request was accepted successfully <br>
+<b>Request body : </b>` 
+{"response": 0,"msg": "I don't want to"}
+`
+<br>
+<b>Response: </b> Request was rejected successfully <br>
+<b>Request Parameters : </b> The ID of the sick leave request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToSickLeaveRequests/9 <br>
+<b>Note: </b>- To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
+### <b>Functionality: </b> Respond to maternity leave request <br>	
+<b>Route: </b> /hod/respondToMaternityLeaveRequest/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request was accepted successfully <br>
+<b>Request body : </b>` 
+{"response": 0,"msg": "I don't want to"}
+`
+<br>
+<b>Response: </b> Request was rejected successfully <br>
+<b>Request Parameters : </b> The ID of the maternity leave request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToMaternityLeaveRequest/1 <br>
+<b>Note: </b>1-To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
+
+### <b>Functionality: </b> Respond to compensation leave request <br>	
+<b>Route: </b> /hod/respondToCompensationLeaveRequest/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request was accepted successfully <br>
+<b>Request body : </b>` 
+{"response": 0,"msg": "I don't want to"}
+`
+<br>
+<b>Response: </b> Request was rejected successfully <br>
+<b>Request Parameters : </b> The ID of the compensation leave request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToCompensationLeaveRequest/1 <br>
+<b>Note: </b>1-To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
 
 
 
