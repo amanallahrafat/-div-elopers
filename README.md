@@ -48,7 +48,6 @@ Location Updated Successfully!
 {"error": "\"name\" is not allowed to be empty}
 `
 <br>
-<b>Note: </b> The request body contains any of the attributes of the location except for the body
 
 
 
