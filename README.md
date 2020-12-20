@@ -1044,3 +1044,16 @@ since it starts from the beginning of the academic month till the current day</b
 <br>
 
 
+### <b>Functionality: </b> Send accidental leave request<br>	
+<b>Route: </b> /ac/sendAccidentalLeaveRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"requestedDate" : 123 , "msg" : "Please accept my request"}
+` <br>
+<b> Note : </b> the requestedDate date must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The accidental leave request created successfully" or an error message denoting the error.
+<br>
