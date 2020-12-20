@@ -76,9 +76,9 @@ Location Updated Successfully!
 <b>Resposne: </b>`Registeration Completed!` <br>
 
 
-<b>Notes: </b> 1- The officeID must be an ID of a location of type office (type = 2). </b><br>
-2- type denotes whether this staff member is an HR or an academic member (0-> academic member, 1-> hr) <br>
-3- memberType denotes whether this academic member is a HOD or an academic member (0 -> HOD, 3-> academic member)<br>
+<b>Notes: <br/> </b> 1- The officeID must be an ID of a location of type office (type = 2). </b><br>
+2- Type denotes whether this staff member is an HR or an academic member (0-> academic member, 1-> hr) <br>
+3- MemberType denotes whether this academic member is a HOD or an academic member (0 -> HOD, 3-> academic member)<br>
 ### <b>Functionality:</b> Update a staff member <br>
 <b>Route: </b> /hr/updateStaffMember/:ID/:type<br>
 <b>Request Type: </b> POST <br>
