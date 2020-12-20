@@ -83,7 +83,7 @@ const assignAcademicMemberToSlot = async(req, res) => {
     const academicMemberID = req.body.academicMemberID;
     // if (!await checkings.isAcademicMember(academicMemberID))
     //     res.status(400).send("The provided ID does not an acadmic memeber");
-    if (!await checkings.isTA(academicMemberID))
+    if (!await checkings.isAcademicMember(academicMemberID))
         return res.status(400).send("The provided ID is not an acadmic memeber");
     if (!await checkings.courseIDExists(courseID))
         return res.status(400).send("The provided ID does not belong to a valid course");
@@ -111,6 +111,9 @@ const assignAcademicMemberToSlot = async(req, res) => {
         }
     });
     await Course_Schedule.updateOne({ ID: course.scheduleID }, { slots: slots });
+    if(course.teachingStaff==null)course.teachingStaff=[];
+    if(!course.teachingStaff.includes(academicMemberID))course.teachingStaff.push(academicMemberID);
+    await  Course.updateOne({ID: courseID}, course);
     res.send("Academic memeber is assigned to the slot the successfuly");
 }
 
@@ -121,7 +124,7 @@ const removeAssignmentOfAcademicMemberToSlot = async(req, res) => {
     const academicMemberID = req.body.academicMemberID;
     // if (!await checkings.isAcademicMember(academicMemberID))
     //     res.status(400).send("The provided ID does not an acadmic memeber");
-    if (!await checkings.isTA(academicMemberID))
+    if (!await checkings.isAcademicMember(academicMemberID))
         return res.status(400).send("The provided ID does not an acadmic memeber");
     if (!await checkings.courseIDExists(courseID))
         return res.status(400).send("The provided ID does not belong to a valid course");
@@ -160,7 +163,7 @@ const updateAcademicMemberslotAssignment = async(req, res) => {
     const academicMemberID = req.body.academicMemberID;
     // if (!await checkings.isAcademicMember(academicMemberID))
     //     res.status(400).send("The provided ID does not an acadmic memeber");
-    if (!await checkings.isTA(academicMemberID))
+    if (!await checkings.isAcademicMember(academicMemberID))
         return res.status(400).send("The provided ID does not an acadmic memeber");
     if (!await checkings.courseIDExists(courseID))
         return res.status(400).send("The provided ID does not belong to a valid course");
@@ -212,7 +215,7 @@ const removeAcademicMemberFromCourse = async(req, res) => {
     const instructorID = req.header.user.ID;
     const courseID = req.body.courseID;
     const academicMemberID = req.body.academicMemberID;
-    if (!await checkings.isTA(academicMemberID))
+    if (!await checkings.isAcademicMember(academicMemberID))
         return res.status(400).send("The provided ID is not an acadmic memeber");
     if (!await checkings.courseIDExists(courseID))
         return res.status(400).send("The provided ID does not belong to a valid course");
@@ -308,14 +311,15 @@ const viewStaffProfilesInDepartment = async(req, res)=>{
     const staffInDep = await Academic_Member.find({departmentID: instructor.departmentID});
       for(const mem of staffInDep){
         const s = await Staff_Member.findOne({ID: mem.ID, type: 0});
+       const a = await Academic_Member.findOne({ID: mem.ID});
         staffProfiles.push({
           "name": s.name,
           "email": s.email,
           "ID": `ac-${s.ID}`,
-          "type": mem.type,
+          "type": a.type,
           "dayOff": s.dayOff,
           "gender": s.gender,
-          "officeID": s.Change_Day_Off_Request,
+          "officeID": s.officeID,
           "departmentID": mem.departmentID,
           "extra info": s.extraInfo
         });
@@ -341,15 +345,16 @@ const viewStaffProfilesInCourse = async(req, res)=>{
         const staff = (course.teachingStaff || [] ).concat(course.instructor || []);
         for(const mem of staff){
         const s = await Staff_Member.findOne({ID: mem, type:0});
+        const a = await Academic_Member.findOne({ID: mem});
         staffProfiles.push({
           "name": s.name,
           "email": s.email,
           "ID": `ac-${s.ID}`,
-          "type": mem.type,
+          "type": a.type,
           "dayOff": s.dayOff,
           "gender": s.gender,
-          "officeID": s.Change_Day_Off_Request,
-          "departmentID": mem.departmentID,
+          "officeID": s.officeID,
+          "departmentID": a.departmentID,
           "extra info": s.extraInfo
         });
       }
