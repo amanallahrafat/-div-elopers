@@ -32,7 +32,7 @@ const sendReplacementRequest = async(req, res) => {
     if (replacedCourse == null)
         return res.status(404).send("The requested course was not found");
     const replacedSlot = replacedCourse.slots.filter((elm) => elm.ID == slotID);
-    if (replacedSlot == null)
+    if (replacedSlot[0] == null)
         return res.status(404).send("The requested slot was not found");
     if ((await Academic_Member.findOne({ ID: replacementID })) == null)
         return res.status(404).send("The replacement member was not found");
@@ -368,11 +368,22 @@ const viewSchedule = async(req, res) => {
                     req.status == "accepted");
                 if (replReq.length) {
                     const req = replReq[0];
-                    const slot = courseSchdeduleTable.filter(sch =>
-                        sch.ID == req.courseID &&
-                        sch.slots != null &&
-                        sch.slots.filter(s => s.ID == req.slotID).length
-                    );
+                    // const slot = courseSchdeduleTable.filter(sch =>
+                    //     sch.ID == req.courseID &&
+                    //     sch.slots != null &&
+                    //     sch.slots.filter(s => s.ID == req.slotID).length&&
+                    //     sch
+                    // );
+                    const slot = [];
+                    for(const sch of courseSchdeduleTable){
+                        if(sch.ID && req.courseID && sch.slots != null){
+                            for(const s of sch.slots){
+                                if(s.ID==req.slotID){
+                                    slot.push(s);
+                                }
+                            }
+                        }
+                    }
                     if (slot.length)
                         schedule.push({ "courseID": req.courseID, "slot": slot[0] });
                     else
