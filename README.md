@@ -588,15 +588,15 @@ since it starts from the beginning of the academic month till the current day</b
  ### <b>Functionality: </b> Update course instructor <br>	
 <b>Route: </b> /hod/updateCourseInstructor/:ID <br>	
 <b>Request Type: </b> PUT <br>
-<b>Request Parameters: </b> The ID of the course <br>
+<b>Request Parameters: </b> The ID of the instructor that the HOD wants to update <br>
 <b>Request Body: </b> `
-{"newInstructorID": 2, "oldInstructorID":1}
+{"oldCourseID": 1, "newCourseID": 2}
 `
 <br>
 <b>Response: </b>Update was successfull
 <br>
-<b>Example of how to call the route: </b>/hod/updateCourseInstructor/1
-<b>Note: </b> newInstructorID is the ID of the instructor that you want to assign, oldInstructorID is the ID of the instructor you want to remove. <br>
+<b>Example of how to call the route: </b>/hod/updateCourseInstructor/2 <br>
+<b>Note: </b> newCourseID is the ID of the course that you want to assign the instructor to, oldCourseID is the ID of the course you want to remove the instructor from. <br>
 
 
  ### <b>Functionality: </b> View Staff member in department <br>	
