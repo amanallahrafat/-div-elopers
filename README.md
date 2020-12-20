@@ -1505,6 +1505,30 @@ since it starts from the beginning of the academic month till the current day</b
 <b>Request Parameters: </b> The ID of the slot linking request that the academic member wants to cancel. <br>
 <b>Example of how to call the route:</b> /ac/cancelSlotLinkingRequest/:ID
 <br>
+### <b>Functionality: </b> Cancel Accidental Leave request<br>	
+<b> add 'auth-token' of academic member </b><br/>
+<b>Route: </b> /ac/cancelAccidentalLeaveRequest <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Body: </b> ID of the request <br/>
+`
+{"ID":2}
+`
+<br>
+<b>Response:</b> request has been deleted succuessfully
+<br>
+
+### <b>Functionality: </b> Cancel Annual Leave request<br>	
+<b> add 'auth-token' of academic member </b><br/>
+<b>Route: </b> /ac/cancelAnnualLeaveRequest <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Body: </b> ID of the request <br/>
+`
+{"ID":2}
+`
+<br>
+<b>Response:</b> request has been deleted succuessfully
+<br>
+
 
 
 
