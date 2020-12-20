@@ -140,7 +140,7 @@ Location Updated Successfully!
 <br>
 <b>Note: </b> Departments array contains the ids of departments.  
 
-<b>Functionality: </b> Update a faculty <br>
+### <b>Functionality: </b> Update a faculty <br>
 <b>Route: </b> /hr/updateFaculty/:name <br>
 <b>Request Type: </b> PUT <br>
 <b>Request Parameter: </b> The name of the faculty to be updated<br>
