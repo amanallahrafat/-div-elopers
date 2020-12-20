@@ -499,8 +499,8 @@ const sendAnnualLeaveRequest = async(req, res) => {
 const cancelSlotLinkingRequest = async(req, res) => {
     const { ID, type } = req.header.user;
     const requestID = parseInt(req.params.requestID);
-    const req = await Slot_Linking_Request.findOne({ ID: requestID });
-    if (req == null)
+    const request = await Slot_Linking_Request.findOne({ ID: requestID });
+    if (request == null)
         return res.status(400).send("Invalid request ID");
     await Slot_Linking_Request.deleteOne({ ID: requestID });
     res.send("Slot linking request deleted successfully");
