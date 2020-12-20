@@ -510,6 +510,19 @@ since it starts from the beginning of the academic month till the current day</b
 <b>Request type: </b>POST<br> 
 <br>
 
+### <b>Functionality: </b> sign in <br>
+<b> add the 'auth-token' of a staff member</b><br/>
+
+<b>Route: </b>/signIn<br>
+<b>Request type: </b>POST<br> 
+<br>
+### <b>Functionality: </b> sign out <br>
+<b> add the 'auth-token' of a staff member</b><br/>
+
+<b>Route: </b>/signOut<br>
+<b>Request type: </b>POST<br> 
+<br>
+
 ### <b>Functionality: </b> View Profile <br>	
 <b>Route: </b> /viewProfile <br>	
 <b>Request Type: </b> GET <br>	
