@@ -1289,6 +1289,16 @@ since it starts from the beginning of the academic month till the current day</b
 <br>
 
 ## Academic member functionality  
+### <b>Functionality: </b>View Schedule<br>	
+<b>Route: </b> /ac/viewSchedule <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Body: </b> ` ` 
+<br>	
+<b>Response: </b> The current week schedule of the academic member (Putting in consideration the replacement requests)
+<b>Response Example: </b> `[{"courseID":2,"slot":{"ID":1,"slotNumber":1,"day":"sunday","locationID":1,"instructor":2}}]`
+
+<br>
+
 ### <b>Functionality: </b> Send slot linking request<br>	
 <b>Route: </b> /ac/sendSlotLinkingRequest <br>	
 <b>Request Type: </b> POST <br>	
