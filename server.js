@@ -7,7 +7,7 @@ mongoose.connect("mongodb+srv://team9:team9@cluster0.j2oep.mongodb.net/gucDB?ret
     .then(async() => {
         app.listen(3000);
         console.log("Server is UP");
-        periodic.loop_month(0);
+        //periodic.loop_month(0);
     })
     .catch((err) => {
         console.log(err);
