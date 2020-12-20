@@ -84,13 +84,6 @@ Location Updated Successfully!
 <b>Request Type: </b> PUT <br>
 <b>Request Body : </b>
 `
-{"salary": 10000}
-`
-<br>
-<b>Resposne: </b>`Staff member Updated Successfully!`
-
-<b>Request Body : </b>
-`
 {"memberType":0}
 `
 <br>
