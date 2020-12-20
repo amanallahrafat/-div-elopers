@@ -1390,6 +1390,22 @@ since it starts from the beginning of the academic month till the current day</b
 <b>Response: </b> "The replacement request has been sent sucessfully !" or an error message denoting the error.
 <br>
 
+### <b>Functionality: </b> View replacement request<br>	
+<b>Route: </b> /ac/viewReplacementRequests <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Body: </b> ` ` <br>
+<b>Response: </b> Array of the replacement requests.
+<br>
+
+### <b>Functionality: </b> Respond to replacement request<br>	
+<b>Route: </b> /ac/respondToReplacementRequest <br>	
+<b>Request Type: </b> PUT <br>	
+<b>Request Body: </b> `{"request" : 3, "response" : 1` <br>
+<b> Note : </b> repsone == 1 == "accepted", repsone == 0 == "rejected"  <br>
+<b>Response: </b> "Responded to replacement request successfully" or an error message denoting the error.
+<br>
+
+
 ### <b>Functionality: </b> Send maternity leave request<br>	
 <b>Route: </b> /ac/sendMaternityLeaveRequest <br>	
 <b>Request Type: </b> POST <br>	
