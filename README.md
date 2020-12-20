@@ -203,11 +203,13 @@ Location Updated Successfully!
 ### <b>Functionality: </b> Update a course <br>
 <b>Route: </b> /hr/updateCourse/:ID <br>
 <b> Request type : </b> PUT <br>
+<b> Request parameters : </b> ID of the course that the HR wants to update <br>
 <b> Request body : </b> `
 {"name":"COMPUTER PROGRAMMING"}
 `
 <br>
 <b>Response :</b> Course has been updated successfully <br>
+<b>Example of how to call the route : </b>/hr/updateCourse/2 <br>
 
 ### <b>Functionality: </b> Delete a course <br>
 <b>Route: </b> /hr/deleteCourse/:ID <br>
