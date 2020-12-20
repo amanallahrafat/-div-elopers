@@ -12,7 +12,12 @@ staffMemberRouter.post('/signOut',authorization.authStaffMember,staffMemberContr
 staffMemberRouter.get('/viewProfile', authorization.authStaffMember,staffMemberController.viewProfile);
 staffMemberRouter.post('/resetPassword', authorization.authStaffMember,staffMemberController.resetPassword);
 staffMemberRouter.get('/viewAttendance',authorization.authStaffMember,staffMemberController.viewAttendance);
+
 staffMemberRouter.get('/viewMissingHours',authorization.authStaffMember,staffMemberController.viewMissingHours);
+staffMemberRouter.get('/viewMissingDays',authorization.authStaffMember,staffMemberController.viewMissingDays);
+
+staffMemberRouter.post('/updateMyProfile',authorization.authStaffMember,staffMemberController.updateMyProfile);
+
 
 
 module.exports = staffMemberRouter;

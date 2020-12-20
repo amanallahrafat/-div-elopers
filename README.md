@@ -202,6 +202,276 @@ Location Updated Successfully!
 <b> Request type : </b> DELETE <br>
 <b>Response :</b> Course has been deleted successfully <br>
 
+### <b>Functionality: </b> add missing sign in/ sign out session <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/addMissingSignInOut <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> 
+`
+{"ID":1,"type":0,
+   "signinYear":2020,
+    "signinMonth":12,
+     "signinDay":1,
+     "signinHour":1,
+     "signinMinute":0,
+    "signinSec":0,
+     "signoutYear":2021,
+     "signoutMonth":12,
+    "signoutDay":2,
+     "signoutHour":1,
+     "signoutMinute":0,
+     "signoutSec":0}
+`
+<br>
+<b>Response :</b>  adding login/out has done successfully <br>
+
+
+### <b>Functionality: </b> view a Staff member attendance <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/viewStaffMemberAttendance/:ID/:type <br>
+<b> for example</b> /hr/viewStaffMemberAttendance/1/1<br>
+<b> Request type : </b> GET <br>
+<b>Response :</b>  
+`[
+    {
+        "status": "attedant",
+        "signin": "2020-12-17T12:49:25.810Z",
+        "signout": "2020-12-17T12:49:32.526Z"
+    }
+]
+`
+<br>
+
+### <b>Functionality: </b> update staff Member salary <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/updateStaffMemberSalary <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> 
+`
+{"ID":1,"type":1,"salary":4000}
+`
+<br>
+<b>Response :</b>  staff member salary has been updated successfully <br>
+
+
+### <b>Functionality: </b> view Staff members with missing hours <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/viewStaffMembersWithMissingHours <br>
+<b> Request type : </b> GET <br>
+<b>Response :</b>  
+`
+[
+    {
+        "attendanceRecord": [
+            {
+                "status": 1,
+                "signin": 1608209365810,
+                "signout": 1608209372526
+            }
+        ],
+        "extraInfo": [],
+        "name": "sarah",
+        "ID": 1,
+        "email": "sarah@guc.com",
+        "type": 1,
+        "dayOff": "saturday",
+        "gender": "female",
+        "salary": 4000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca1",
+        "ID": 1,
+        "email": "aca1@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6,
+        "officeID": 5
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aaaaaa",
+        "ID": 2,
+        "email": "aca2@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6,
+        "officeID": null
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "User3",
+        "ID": 3,
+        "email": "aca3@guc.com",
+        "type": 0,
+        "dayOff": "saturday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    }]  
+`
+<br> <b> note that the output depends on the data inside the database and the current day when the code runs </b>
+<br>
+
+### <b>Functionality: </b> view Staff members with missing days <br>
+<b> add 'auth-token' of HR in the header</b><br/>
+
+<b>Route: </b> /hr/viewStaffMembersWithMissingDays <br>
+<b> Request type : </b> GET <br>
+<b>Response :</b>  
+`
+[
+    {
+        "attendanceRecord": [
+            {
+                "status": 1,
+                "signin": "2020-12-17T12:49:25.810Z",
+                "signout": "2020-12-17T12:49:32.526Z"
+            }
+        ],
+        "extraInfo": [],
+        "name": "sarah",
+        "ID": 1,
+        "email": "ssarah@guc.edu.eg",
+        "type": 1,
+        "dayOff": "saturday",
+        "gender": "female",
+        "salary": 6000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6,
+        "officeID": null
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aaaaaa",
+        "ID": 2,
+        "email": "aca2@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6,
+        "officeID": null
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "User3",
+        "ID": 3,
+        "email": "aca3@guc.com",
+        "type": 0,
+        "dayOff": "saturday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca4",
+        "ID": 4,
+        "email": "aca4@guc.com",
+        "type": 0,
+        "dayOff": "saturday",
+        "gender": "female",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca5",
+        "ID": 5,
+        "email": "aca5@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "female",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca6",
+        "ID": 6,
+        "email": "aca6@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "aca7",
+        "ID": 7,
+        "email": "aca7@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "user99",
+        "ID": 8,
+        "email": "user99@guc.com",
+        "type": 0,
+        "dayOff": "sunday",
+        "gender": "male",
+        "officeID": 5,
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    },
+    {
+        "attendanceRecord": [],
+        "extraInfo": [],
+        "name": "user100",
+        "ID": 2,
+        "email": "user100@guc.com",
+        "type": 1,
+        "dayOff": "saturday",
+        "gender": "male",
+        "officeID": 5,
+        "salary": 8000,
+        "annualBalance": 2.5,
+        "accidentalLeaveBalance": 6
+    }
+]
+`
+<br> <b> note that the output depends on the data inside the database and the current day when the code runs <br>
+since it starts from the beginning of the academic month till the current day</b>
+<br>
+
+
+
 
 
 
@@ -238,9 +508,38 @@ Location Updated Successfully!
 
 ### <b>Functionality: </b> View Attendance <br>	
 <b>Route: </b> /viewAttendance <br>	
-<b>Request Type: </b> POST <br>	
+<b>Request Type: </b> GET <br>	
 <b>Request Body: </b> The Route has two options for the request body to view The whole Attendance Record or by month and the input requested body for the second should be like the following `{"month":12}`	
 <br>	
+
+### <b>Functionality: </b> update staff Member profile <br>
+<b> add 'auth-token' of the staff member in the header</b><br/>
+
+<b>Route: </b> /updateMyProfile <br>
+<b> Request type : </b> POST <br>
+<b> Request body : </b> 
+`
+{"email":"ssarah@guc.edu.eg"}
+`
+<br>
+<b>Response :</b> profile Updated Successfully! <br>
+
+### <b>Functionality: </b> View Missing Days <br>	
+<b> add 'auth-token' of the staff member in the header</b><br/>
+
+<b>Route: </b> /viewMissingDays <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> ` 
+[
+    "2020-12-13T00:00:00.000Z",
+    "2020-12-14T00:00:00.000Z",
+    "2020-12-15T00:00:00.000Z",
+    "2020-12-16T00:00:00.000Z"
+]`
+<br>	
+<br> <b> note that the output depends on the data inside the database and the current day when the code runs <br>
+since it starts from the beginning of the academic month till the current day</b>
+<br>
 
 
 ## HOD functionality 
@@ -256,14 +555,29 @@ Location Updated Successfully!
 <br>	
 
  ### <b>Functionality: </b> Delete course instructor <br>	
-<b>Route: </b> /hod/deleteCourseInstructor <br>	
-<b>Request Type: </b> DELETE <br>	
+<b>Route: </b> /hod/deleteCourseInstructor/:courseID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the course <br>
 <b>Request Body: </b> `
-{"courseID":3, "instructorID": 1}
+{"instructorID":1}
 `
 <br>
+<b>Example of how to call the route: </b> /hod/deleteCourseInstructor/1 <br>
 <b>Response: </b>Course instructor was deleted successfully
-<br>	
+<br>
+
+ ### <b>Functionality: </b> Update course instructor <br>	
+<b>Route: </b> /hod/updateCourseInstructor/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request Parameters: </b> The ID of the course <br>
+<b>Request Body: </b> `
+{"newInstructorID": 2, "oldInstructorID":1}
+`
+<br>
+<b>Response: </b>Update was successfull
+<br>
+<b>Example of how to call the route: </b>/hod/updateCourseInstructor/1
+<b>Note: </b> newInstructorID is the ID of the instructor that you want to assign, oldInstructorID is the ID of the instructor you want to remove. <br>
 
 
  ### <b>Functionality: </b> View Staff member in department <br>	
@@ -331,6 +645,7 @@ Location Updated Successfully!
 ]
 `
 <br>
+<b>Example of how to call the route: </b> /hod/viewDepartmentMembersByCourse/1
 	
  ### <b>Functionality: </b> View all staff day off <br>	
 <b>Route: </b> /hod/viewAllStaffDayOff <br>	
@@ -367,6 +682,7 @@ Location Updated Successfully!
 }
 `
 <br>	
+<b>Example of how to call the route: </b> /hod/viewSingleStaffDayOff/1  <br>
     
  ### <b>Functionality: </b> View course teaching assignments <br>	
 <b>Route: </b> /hod/viewCourseTeachingAssignments/:ID <br>	
@@ -410,6 +726,7 @@ Location Updated Successfully!
 }
 `
 <br>	
+<b>Example of how to call the route: </b> /hod/viewCourseTeachingAssignments/1  <br>
 
  ### <b>Functionality: </b> View course coverage <br>	
 <b>Route: </b> /hod/viewCourseCoverage/:ID <br>	
@@ -417,6 +734,404 @@ Location Updated Successfully!
 <b>Request parameters: </b> The ID of the course. <br>
 <b>Response: </b> The coverage of the course which has the ID specified in the request parameters(in decimal)
 <br>
+<b>Example of how to call the route: </b> /hod/viewCourseCoverage/1  <br>
+
+### <b>Functionality: </b> View all requests <br>	
+<b>Route: </b> /hod/viewAllRequests <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> Array of all the requests that are sent to this head of department.<br>
+`
+[
+    {
+        "type": "accidental leave requests",
+        "requests": [
+            {
+                "_id": "5fdefc5983dc451970a8cdf3",
+                "ID": 6,
+                "senderID": 8,
+                "receiverID": 8,
+                "msg": "ali",
+                "submissionDate": "2020-12-20T07:25:13.024Z",
+                "requestedDate": "1970-01-01T00:00:00.123Z",
+                "status": "pending",
+                "__v": 0
+            }
+        ]
+    },
+    {
+        "type": "annual leave requests",
+        "requests": []
+    },
+    {
+        "type": "change day off requests",
+        "requests": [
+            {
+                "_id": "5fde58e1c78ef437c4425b93",
+                "ID": 3,
+                "senderID": 1,
+                "receiverID": 8,
+                "msg": "",
+                "targetDayOff": "monday",
+                "submissionDate": "2020-12-19T19:47:45.077Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde58e4c78ef437c4425b94",
+                "ID": 4,
+                "senderID": 1,
+                "receiverID": 8,
+                "msg": "",
+                "targetDayOff": "monday",
+                "submissionDate": "2020-12-19T19:47:48.452Z",
+                "status": "pending",
+                "__v": 0
+            }
+        ]
+    },
+    {
+        "type": "compensation leave requests",
+        "requests": [
+            {
+                "_id": "5fde6190ecabe139c4220514",
+                "ID": 1,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:24:48.822Z",
+                "requestedDate": "2020-12-13T20:14:22.436Z",
+                "absenceDate": "2020-12-12T20:14:51.516Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde61b6ecabe139c4220515",
+                "ID": 2,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:25:26.410Z",
+                "requestedDate": "2020-12-06T20:25:18.099Z",
+                "absenceDate": "2020-12-12T20:14:51.516Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde61caecabe139c4220516",
+                "ID": 3,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:25:46.172Z",
+                "requestedDate": "2020-12-06T20:25:18.099Z",
+                "absenceDate": "2020-12-06T20:25:18.099Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde61dfecabe139c4220517",
+                "ID": 4,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:26:07.983Z",
+                "requestedDate": "2020-12-06T20:25:18.099Z",
+                "absenceDate": "2020-12-12T20:14:51.516Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde6229ecabe139c4220518",
+                "ID": 5,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:27:21.913Z",
+                "requestedDate": "2020-12-13T20:14:22.436Z",
+                "absenceDate": "2020-12-12T20:14:51.516Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde6276ecabe139c4220519",
+                "ID": 6,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T20:28:38.203Z",
+                "requestedDate": "2020-12-13T20:14:22.436Z",
+                "absenceDate": "2020-12-23T20:28:29.192Z",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde6b3cecabe139c422051c",
+                "ID": 7,
+                "senderID": 1,
+                "receiverID": 8,
+                "submissionDate": "2020-12-19T21:06:04.348Z",
+                "requestedDate": "2020-12-06T20:25:18.099Z",
+                "absenceDate": "2020-12-12T20:14:51.516Z",
+                "status": "pending",
+                "__v": 0
+            }
+        ]
+    },
+    {
+        "type": "maternity leave requests",
+        "requests": [
+            {
+                "_id": "5fde5876c78ef437c4425b8a",
+                "ID": 1,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "googl/ali",
+                "submissionDate": "2020-12-19T19:45:58.760Z",
+                "startDate": "2020-12-24T13:51:02.056Z",
+                "endDate": "2020-12-29T13:56:19.792Z",
+                "msg": "",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde5879c78ef437c4425b8b",
+                "ID": 2,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "googl/ali",
+                "submissionDate": "2020-12-19T19:46:01.066Z",
+                "startDate": "2020-12-24T13:51:02.056Z",
+                "endDate": "2020-12-29T13:56:19.792Z",
+                "msg": "",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde587cc78ef437c4425b8c",
+                "ID": 3,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "googl/ali",
+                "submissionDate": "2020-12-19T19:46:04.334Z",
+                "startDate": "2020-12-24T13:51:02.056Z",
+                "endDate": "2020-12-29T13:56:19.792Z",
+                "msg": "",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde587fc78ef437c4425b8d",
+                "ID": 4,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "googl/ali",
+                "submissionDate": "2020-12-19T19:46:07.478Z",
+                "startDate": "2020-12-24T13:51:02.056Z",
+                "endDate": "2020-12-29T13:56:19.792Z",
+                "msg": "",
+                "status": "pending",
+                "__v": 0
+            },
+            {
+                "_id": "5fde58a7c78ef437c4425b8e",
+                "ID": 5,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "googl/ali",
+                "submissionDate": "2020-12-19T19:46:47.988Z",
+                "startDate": "2020-12-24T13:51:02.056Z",
+                "endDate": "2020-12-29T13:56:19.792Z",
+                "msg": "",
+                "status": "pending",
+                "__v": 0
+            }
+        ]
+    },
+    {
+        "type": "sick leave requests",
+        "requests": [
+            {
+                "_id": "5fde42634cc4174148983990",
+                "ID": 1,
+                "senderID": 4,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-19T18:11:47.106Z",
+                "requestedDate": "2020-12-18T18:11:23.669Z",
+                "status": "pending",
+                "msg": "We won!",
+                "__v": 0
+            },
+            {
+                "_id": "5fde42b34cc4174148983991",
+                "ID": 2,
+                "senderID": 4,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-19T18:13:07.038Z",
+                "requestedDate": "2020-12-18T18:11:23.669Z",
+                "status": "pending",
+                "msg": "We won!",
+                "__v": 0
+            },
+            {
+                "_id": "5fde42b54cc4174148983992",
+                "ID": 3,
+                "senderID": 4,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-19T18:13:09.625Z",
+                "requestedDate": "2020-12-18T18:11:23.669Z",
+                "status": "pending",
+                "msg": "We won!",
+                "__v": 0
+            },
+            {
+                "_id": "5fde42bd4cc4174148983993",
+                "ID": 4,
+                "senderID": 4,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-19T18:13:17.976Z",
+                "requestedDate": "2020-12-18T18:11:23.669Z",
+                "status": "pending",
+                "msg": "",
+                "__v": 0
+            },
+            {
+                "_id": "5fde4a1c4cc4174148983994",
+                "ID": 5,
+                "senderID": 4,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-19T18:44:44.638Z",
+                "requestedDate": "2020-12-18T18:11:23.669Z",
+                "status": "pending",
+                "msg": "",
+                "__v": 0
+            },
+            {
+                "_id": "5fde4a204cc4174148983995",
+                "ID": 6,
+                "senderID": 1,
+                "receiverID": 8,
+                "documents": "jbdskjvbjas",
+                "submissionDate": "2020-12-12T18:44:48.828Z",
+                "requestedDate": "2020-12-12T18:11:23.669Z",
+                "status": "accepted",
+                "msg": "",
+                "__v": 0
+            }
+        ]
+    }
+]
+`
+
+### <b>Functionality: </b> Respond to change day off request <br>	
+<b>Route: </b> /hod/respondToChangeDayOffRequest/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request accepted succefully <br>
+<b>Request body : </b>` 
+{"response":0, "msg":"You can't change it"}
+`
+<br>
+<b>Response: </b> Request rejected succefully <br>
+<b>Request Parameters : </b> The ID of the change day off request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToChangeDayOffRequest/3 <br>
+<b>Note: </b>1- To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
+### <b>Functionality: </b> Respond to annual leave request <br>	
+<b>Route: </b> /hod/respondToAnnualLeaveRequests/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request was accepted successfully <br>
+<b>Request body : </b>` 
+{"response": 0,"msg": "I don't want to"}
+`
+<br>
+<b>Response: </b> Request was rejected successfully <br>
+<b>Request Parameters : </b> The ID of the annual leave request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToAnnualLeaveRequests/1 <br>
+<b>Note: </b>1- To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
+
+### <b>Functionality: </b> Respond to accidental leave request <br>	
+<b>Route: </b> /hod/respondToAccidentalLeaveRequest/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request was accepted successfully <br>
+<b>Request body : </b>` 
+{"response": 0,"msg": "I don't want to"}
+`
+<br>
+<b>Response: </b> Request was rejected successfully <br>
+<b>Request Parameters : </b> The ID of the accidental leave request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToAccidentalLeaveRequest/3 <br>
+<b>Note: </b>1- To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
+
+### <b>Functionality: </b> Respond to sick leave request <br>	
+<b>Route: </b> /hod/respondToSickLeaveRequests/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request was accepted successfully <br>
+<b>Request body : </b>` 
+{"response": 0,"msg": "I don't want to"}
+`
+<br>
+<b>Response: </b> Request was rejected successfully <br>
+<b>Request Parameters : </b> The ID of the sick leave request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToSickLeaveRequests/9 <br>
+<b>Note: </b>- To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
+### <b>Functionality: </b> Respond to maternity leave request <br>	
+<b>Route: </b> /hod/respondToMaternityLeaveRequest/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request was accepted successfully <br>
+<b>Request body : </b>` 
+{"response": 0,"msg": "I don't want to"}
+`
+<br>
+<b>Response: </b> Request was rejected successfully <br>
+<b>Request Parameters : </b> The ID of the maternity leave request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToMaternityLeaveRequest/1 <br>
+<b>Note: </b>1-To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
+
+### <b>Functionality: </b> Respond to compensation leave request <br>	
+<b>Route: </b> /hod/respondToCompensationLeaveRequest/:ID <br>	
+<b>Request Type: </b> PUT <br>
+<b>Request body : </b>` 
+{"response": 1}
+`
+<br>
+<b>Response: </b> Request was accepted successfully <br>
+<b>Request body : </b>` 
+{"response": 0,"msg": "I don't want to"}
+`
+<br>
+<b>Response: </b> Request was rejected successfully <br>
+<b>Request Parameters : </b> The ID of the compensation leave request that the HOD wants to respond to. <br>
+<b>Example of how to call the route: </b> /hod/respondToCompensationLeaveRequest/1 <br>
+<b>Note: </b>1-To accept the request response is 1, to reject the request response is 0. <br>
+2- "msg" is optional if the HOD wants to state the reason for rejecting the request.<br>
+
 
 
 ## Course Instructor Functionality
@@ -431,6 +1146,23 @@ Location Updated Successfully!
 <b>Route: </b> /ci/viewSlotAssignment <br>	
 <b>Request Type: </b> GET <br>	
 <b>Response: </b> Array of the course slots that the course instructor is assigned to.
+<br>
+
+### <b>Functionality: </b> Get profiles of staff members in his/her department<br>	
+<b>Route: </b> /ci/viewStaffProfilesInDepartment <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> 
+`
+[{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","type":0,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","type":1,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]},{"name":"user99","email":"user99@guc.com","ID":"ac-8","type":0,"dayOff":"sunday","gender":"male","departmentID":1,"extra info":[]}]
+`
+<br>
+### <b>Functionality: </b> Get profiles of staff members in a course under his/her department<br>	
+<b>Route: </b> /ci/viewStaffProfilesInCourse/1 <br>	
+<b>Request Type: </b> GET <br>	
+<b>Response: </b> 
+`
+[{"name":"User3","email":"aca3@guc.com","ID":"ac-3","dayOff":"saturday","gender":"male","extra info":[]},{"name":"aca4","email":"aca4@guc.com","ID":"ac-4","dayOff":"saturday","gender":"female","extra info":[]},{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aca4","email":"aca4@guc.com","ID":"ac-4","dayOff":"saturday","gender":"female","extra info":[]},{"name":"User3","email":"aca3@guc.com","ID":"ac-3","dayOff":"saturday","gender":"male","extra info":[]},{"name":"aaaaaa","email":"aca2@guc.com","ID":"ac-2","dayOff":"sunday","gender":"male","extra info":[]},{"name":"aca1","email":"aca1@guc.com","ID":"ac-1","dayOff":"sunday","gender":"male","extra info":[]}]
+`
 <br>
 
 ### <b>Functionality: </b> Assign academic member to a slot<br>	
@@ -556,7 +1288,17 @@ Location Updated Successfully!
 <b>Response: </b> The slot has been updated sucessfully !
 <br>
 
-## Academic member functionality functionality 
+## Academic member functionality  
+### <b>Functionality: </b>View Schedule<br>	
+<b>Route: </b> /ac/viewSchedule <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Body: </b> ` ` 
+<br>	
+<b>Response: </b> The current week schedule of the academic member (Putting in consideration the replacement requests)
+<b>Response Example: </b> `[{"courseID":2,"slot":{"ID":1,"slotNumber":1,"day":"sunday","locationID":1,"instructor":2}}]`
+
+<br>
+
 ### <b>Functionality: </b> Send slot linking request<br>	
 <b>Route: </b> /ac/sendSlotLinkingRequest <br>	
 <b>Request Type: </b> POST <br>	
@@ -634,3 +1376,182 @@ Location Updated Successfully!
 ]
 `
 <br>
+
+### <b>Functionality: </b> Send replacement request<br>	
+<b>Route: </b> /ac/sendReplacementRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"replacementID" : 3, "courseID" : 2 , "slotID" : 1 , "requestedDate" : 1608807967732}` <br>
+<b> Note : </b> the requested date must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The replacement request has been sent sucessfully !" or an error message denoting the error.
+<br>
+
+### <b>Functionality: </b> View replacement request<br>	
+<b>Route: </b> /ac/viewReplacementRequests <br>	
+<b>Request Type: </b> GET <br>	
+<b>Request Body: </b> ` ` <br>
+<b>Response: </b> Array of the replacement requests.
+<br>
+
+### <b>Functionality: </b> Respond to replacement request<br>	
+<b>Route: </b> /ac/respondToReplacementRequest <br>	
+<b>Request Type: </b> PUT <br>	
+<b>Request Body: </b> `{"request" : 3, "response" : 1` <br>
+<b> Note : </b> repsone == 1 == "accepted", repsone == 0 == "rejected"  <br>
+<b>Response: </b> "Responded to replacement request successfully" or an error message denoting the error.
+<br>
+
+
+### <b>Functionality: </b> Send maternity leave request<br>	
+<b>Route: </b> /ac/sendMaternityLeaveRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"documents" : "https://google.com/ali", "startDate" :1608817862056, "endDate" : 1609250179792, "msg" : "Ali"}
+` <br>
+<b> Note : </b> the start/end dates must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The request has been created successfully." or an error message denoting the error.
+<br>
+
+
+
+### <b>Functionality: </b> Send sick leave request<br>	
+<b>Route: </b> /ac/sendSickLeaveRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"documents": "https://kabeel.com/doc.html", "requestedDate": 1608315083669, "msg" : "We won!" }
+` <br>
+<b> Note : </b> the requestedDate date must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The request has been created successfully." or an error message denoting the error.
+<br>
+
+### <b>Functionality: </b> Send compensation leave request<br>	
+<b>Route: </b> /ac/sendCompensationLeaveRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"absenceDate" : 1607804091516, "requestedDate" : 1607286318099, "msg" : "Hi I am here"}
+` <br>
+<b> Note : </b> the absenceDate, requestedDate dates must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The compensation request is sent successfully." or an error message denoting the error.
+<br>
+
+### <b>Functionality: </b> Send Annual leave request<br>	
+<b>Route: </b> /ac/sendAnnualLeaveRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"requestedDate" : 1607286318099, "msg" : "Hi I am here"}
+` <br>
+<b> Note : </b>the requestedDate dates must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "the annual leave request has already sucessfully created !" or an error message denoting the error.
+<br>
+
+
+### <b>Functionality: </b> Send accidental leave request<br>	
+<b>Route: </b> /ac/sendAccidentalLeaveRequest <br>	
+<b>Request Type: </b> POST <br>	
+<b>Request Body: </b> `{"requestedDate" : 123 , "msg" : "Please accept my request"}
+` <br>
+<b> Note : </b> the requestedDate date must be in the same number format as the one returned from Data.now() in javascript and if you want to change the date to be in the future or the past you can doing the following code by adding the days you need to be added or subtracted from the cuurent day ,so the returned value from this function will be you input in the request body : `function generateDateFormat(addedOrsubtractedDays){
+  var date = new Date(Date.now());
+  var newDate = new Date();
+  newDate.setDate(date.getDate() + addedOrsubtractedDays);
+  return newDate.getTime();
+} `  <br>
+<b>Response: </b> "The accidental leave request created successfully" or an error message denoting the error.
+<br>
+
+### <b>Functionality: </b> Cancel compensation leave request<br>	
+<b>Route: </b> /ac/cancelCompensationLeaveRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the compensation leave request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelCompensationLeaveRequest/5 
+<br>
+
+### <b>Functionality: </b> Cancel sick leave request<br>	
+<b>Route: </b> /ac/cancelSickLeaveRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the sick leave request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelSickLeaveRequest/3 
+<br>
+
+### <b>Functionality: </b> Cancel maternity leave request<br>	
+<b>Route: </b> /ac/cancelMaternityLeaveRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the maternity leave request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelMaternityLeaveRequest/1
+<br>
+
+### <b>Functionality: </b> Cancel change day off request<br>	
+<b>Route: </b> /ac/cancelChangeDayOffRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the change day off leave request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelChangeDayOffRequest/1
+<br>
+
+### <b>Functionality: </b> Cancel replacement request<br>	
+<b>Route: </b> /ac/cancelReplacementRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the replacement request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelReplacementRequest/1
+<br>
+
+
+### <b>Functionality: </b> Cancel slot linking request<br>	
+<b>Route: </b> /ac/cancelSlotLinkingRequest/:ID <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Parameters: </b> The ID of the slot linking request that the academic member wants to cancel. <br>
+<b>Example of how to call the route:</b> /ac/cancelSlotLinkingRequest/:ID
+<br>
+### <b>Functionality: </b> Cancel Accidental Leave request<br>	
+<b> add 'auth-token' of academic member </b><br/>
+<b>Route: </b> /ac/cancelAccidentalLeaveRequest <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Body: </b> ID of the request <br/>
+`
+{"ID":2}
+`
+<br>
+<b>Response:</b> request has been deleted succuessfully
+<br>
+
+### <b>Functionality: </b> Cancel Annual Leave request<br>	
+<b> add 'auth-token' of academic member </b><br/>
+<b>Route: </b> /ac/cancelAnnualLeaveRequest <br>	
+<b>Request Type: </b> DELETE <br>
+<b>Request Body: </b> ID of the request <br/>
+`
+{"ID":2}
+`
+<br>
+<b>Response:</b> request has been deleted succuessfully
+<br>
+
+
+
+
+
+
+
+
+
+
+

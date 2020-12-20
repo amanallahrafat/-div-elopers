@@ -10,7 +10,7 @@ const { request } = require('express');
 const viewSlotLinkingRequests = async(req, res) => {
     const { ID, type } = req.header.user;
     const course = await Course.findOne({ coordinatorID: ID });
-    if( course == null )
+    if (course == null)
         return res.status(400).send("You are not a coordinator of any course");
     const requests = await Slot_Linking_Request.find({ courseID: course.ID });
     res.send(requests);
@@ -24,11 +24,11 @@ const hendleSlotLinkingRequest = async(req, res) => {
     if (request == null)
         return res.status(400).send("You can't handle unexisted request !");
 
-    if(request.status != "pending")
+    if (request.status != "pending")
         return res.status(400).send("The request is already handled");
     // handle rejection case
     if (decision == 0) {
-        const course = await Course.findOne({ID : request.courseID});
+        const course = await Course.findOne({ ID: request.courseID });
         const notification = new Notification({
             senderID: ID,
             receiverID: request.senderID,
@@ -37,16 +37,16 @@ const hendleSlotLinkingRequest = async(req, res) => {
             date: Date.now(),
         });
         await notification.save();
-        await Slot_Linking_Request.updateOne({ID : requestID} ,{status : "rejected"});
+        await Slot_Linking_Request.updateOne({ ID: requestID }, { status: "rejected" });
         res.send("The Request is rejected sucessfully !");
     }
     // handle acceptance case
     else {
         const course = await Course.findOne({ ID: request.courseID });
         const course_schedule = await Course_Schedule.findOne({ ID: request.courseID });
-        let slots = course_schedule.slots.filter((elm)=>elm.ID != request.slotID);
+        let slots = course_schedule.slots.filter((elm) => elm.ID != request.slotID);
         // Assign the instructor to a course slot
-        let slot = course_schedule.slots.filter((elm)=>elm.ID == request.slotID);
+        let slot = course_schedule.slots.filter((elm) => elm.ID == request.slotID);
         slot[0].instructor = request.senderID;
         slots.push(slot[0]);
         await Course_Schedule.updateOne({ ID: request.courseID }, { slots: slots });
@@ -55,12 +55,11 @@ const hendleSlotLinkingRequest = async(req, res) => {
             senderID: ID,
             receiverID: request.senderID,
             msg: "Your Slot Linking Request for the slot with ID " + request.slotID + " for the course " +
-                    course.code + " is accepted",
+                course.code + " is accepted",
             date: Date.now(),
         });
         await notification.save();
-        console.log(requestID)
-        await Slot_Linking_Request.updateOne({ID : requestID} ,{status : "accepted"});
+        await Slot_Linking_Request.updateOne({ ID: requestID }, { status: "accepted" });
         res.send("The Request is accepted sucessfully !");
     }
 }
@@ -122,16 +121,16 @@ const deleteSlot = async(req, res) => {
 }
 
 // body : slot fields to be updated
-const updateSlot = async(req,res) =>{
-    const{ID , type} = req.header.user;
-    const {courseID , slotID} = req.params;
-    if(!checkings.isCourseCoordinator(ID,courseID))
+const updateSlot = async(req, res) => {
+    const { ID, type } = req.header.user;
+    const { courseID, slotID } = req.params;
+    if (!checkings.isCourseCoordinator(ID, courseID))
         return res.status(400).send("You are not the coordinator of the requested course");
     const course_schedule = await Course_Schedule.findOne({ ID: courseID });
     let oldSlot = course_schedule.slots.filter((elem) => elem.ID == slotID);
     let slots = course_schedule.slots.filter((elm) => elm.ID != slotID);
-    if (req.body.slotNumber == null)  req.body.slotNumber = oldSlot[0].slotNumber;
-    if (req.body.day == null)  req.body.day = oldSlot[0].day;
+    if (req.body.slotNumber == null) req.body.slotNumber = oldSlot[0].slotNumber;
+    if (req.body.day == null) req.body.day = oldSlot[0].day;
     if (req.body.locationID == null) req.body.locationID = oldSlot[0].locationID;
     if (req.body.instructor != null)
         return res.status(400).send("you are not allowed to update the instructor field !");

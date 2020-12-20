@@ -9,6 +9,14 @@ const validator = require('../Validations/staffMemberValidations.js');
 const mongoValidator = require('mongoose-validator');
 const extraUtils = require('../utils/extraUtils');
 
+
+const Accidental_Leave_Request = require('../Models/Requests/Accidental_Leave_Request.js');
+const Annual_Leave_Request = require('../Models/Requests/Annual_Leave_Request.js');
+const Change_Day_Off_Request = require('../Models/Requests/Change_Day_Off_Request.js');
+const Compensation_Leave_Request = require('../Models/Requests/Compensation_Leave_Request.js');
+const Maternity_Leave_Request = require('../Models/Requests/Maternity_Leave_Request.js');
+const Sick_Leave_Request = require('../Models/Requests/Sick_Leave_Request.js');
+
 const signIn = async(req, res) => {
     const { ID, type } = req.header.user;
     const staff_member = await Staff_Member.findOne({ ID: ID, type: type });
@@ -70,6 +78,10 @@ const viewProfile = async(req, res) => {
     delete profile['_doc'].password;
     delete profile['_doc']['_id'];
     delete profile['_doc']['__v'];
+
+    profile.attendanceRecord= profile.attendanceRecord.filter((x)=>{return  (x.signin&&x.signout)}).map((x)=>{x.signin=new Date(x.signin);
+        x.signout=new Date(x.signout); return x;});
+        
     res.send(profile);
 }
 
@@ -122,13 +134,72 @@ const viewMissingHours = async(req, res) => {
 
 
 
+const updateMyProfile = async(req, res)=>{
+    const{ID,type}=req.header.user;
+    const member = await Staff_Member.findOne({ID: ID, type:type});
+  if(type==0){
+    if(req.body.salary!=undefined||req.body.officeID!=undefined){
+        return res.status(400).send("academic member can't update his/her salary or/and office")
+    }
+}
+ 
+ 
+    if(req.body.name!=undefined||req.body.ID!=undefined||req.body.type!=undefined||req.body.dayOff!=undefined||
+        req.body.attendanceRecord!=undefined||req.body.annualBalance!=undefined||req.body.accidentalLeaveBalance!=undefined){
+            return res.status(400).send("you can't update any of your name,ID,type,dayOff,attendance record,annualBalance,accidentalLeaveBlance");
+
+    } 
+    let obj={};
+
+    if(req.body.email==undefined){
+     obj.email = member.email;
+    }else{
+        const users = await Staff_Member.find({email: req.body.email});
+        if(users.length != 0&&users[0].ID!=ID&&users[0].type!= type){
+            return res.status(400).send("This email already exists. Emails have to be unique");
+        }
+        obj.email=req.body.email;
+    
+    } 
+    if(req.body.gender==undefined) obj.gender = member.gender;
+    else obj.gender=req.body.gender;
+
+    obj.officeID=(req.body.officeID==undefined)? member.officeID:req.body.officeID;
+    obj.extraInfo=(req.body.extraInfo==undefined)? member.extraInfo: req.body.extraInfo;
+   
+    obj.salary=(req.body.salary==undefined)? member.salary: req.body.salary;
+    const isValid = validator.validateUpdateProfile(obj);
+    if(isValid.error)
+        return res.status(400).send({error : isValid.error.details[0].message});
+    await Staff_Member.updateOne({ID :ID, type:type},obj);
+    res.send("profile Updated Successfully!");        
+}
+
+
+const viewMissingDays=async (req,res)=>{
+    const { ID, type } = req.header.user;
+    const staff_member = await Staff_Member.findOne({ ID: ID, type: type });
+    
+    
+    const accidentalLeaves= await Accidental_Leave_Request.find();
+const annualLeaves=await Annual_Leave_Request.find();
+
+const compensationLeaves=await Compensation_Leave_Request.find();
+
+const maternalityLeaves=await Maternity_Leave_Request.find();
+const sickLeaves=await Sick_Leave_Request.find();
+
+    const missingHours= await extraUtils.getMissingDays(staff_member,accidentalLeaves,annualLeaves,compensationLeaves,maternalityLeaves,sickLeaves);
+
+    
+    res.send(missingHours);
+}
+
+
 module.exports = {
-    login,
-    logout,
-    signIn,
-    signOut,
-    viewProfile,
-    resetPassword,
-    viewAttendance,
-    viewMissingHours,
+  
+    login,logout,
+    signIn,signOut,
+    viewProfile,resetPassword,
+    viewAttendance,viewMissingHours,updateMyProfile,viewMissingDays
 }

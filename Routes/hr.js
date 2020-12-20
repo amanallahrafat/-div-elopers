@@ -10,10 +10,6 @@ hrRouter.put('/updateLocation/:ID' ,hrController.updateLocation);
 hrRouter.delete('/deleteLocation/:ID' ,hrController.deleteLocation);
 
 
-hrRouter.post('/createLocation',auth,hrController.createLocation);
-hrRouter.put('/updateLocation/:ID',auth ,hrController.updateLocation);
-hrRouter.delete('/deleteLocation/:ID',auth ,hrController.deleteLocation);
-
 hrRouter.post('/createFaculty',auth ,hrController.createFaculty);
 hrRouter.put('/updateFaculty/:name',auth ,hrController.updateFaculty);
 hrRouter.delete('/deleteFaculty/:name',auth ,hrController.deleteFaculty);
@@ -35,5 +31,7 @@ hrRouter.post('/addMissingSignInOut',auth,hrController.addMissingSignInOut);
 hrRouter.get('/viewStaffMemberAttendance/:ID/:type',auth,hrController.viewStaffMemberAttendance);
 hrRouter.post('/updateStaffMemberSalary',auth,hrController.updateStaffMemberSalary);
 hrRouter.get('/viewStaffMembersWithMissingHours',auth,hrController.viewStaffMembersWithMissingHours);
+
+hrRouter.get('/viewStaffMembersWithMissingDays',auth,hrController.viewStaffMembersWithMissingDays);
 
 module.exports = hrRouter;
