@@ -81,10 +81,6 @@ const getMissingHours = (curStaffMember) => {
     // console.log(noOfDaysTillToday);
     return missingHours = noOfDaysTillToday * 8.4 - attendedHours;
 }
-const getCurDay=(date)=>{// date entered as normal date not miliseconds
-  const days=[ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday','friday','saturday'];
-  return days[date.getDay()];
-}
 
 const haveMissingDays = async(staffMem, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves) => {
     const allMissed = await getMissingDays(staffMem, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
@@ -221,44 +217,6 @@ module.exports = {
     twoDatesAreEqual,
     isRequestInWeek,
     getMissingDays,
-    haveMissingDays
-    ,getCurDay
+    haveMissingDays,
+    getCurDay
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
