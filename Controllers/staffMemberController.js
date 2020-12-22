@@ -26,7 +26,9 @@ const signIn = async(req, res) => {
             return res.status(400).send("you can't follow a sign in with a signin without signing out");
     }
     staff_member.attendanceRecord.push({ status: 1, signin: Date.now() });
-   // console.log(staff_member.attendanceRecord)
+
+    staff_member.attendanceRecord.push({ status: 1, signin: Date.now(), signout: "" });
+    //console.log(staff_member.attendanceRecord)
     await Staff_Member.updateOne({ ID: ID, type: type }, { attendanceRecord: staff_member.attendanceRecord });
     res.send("Sign in Sucessfully!");
 }
@@ -121,7 +123,16 @@ const viewAttendance = async(req, res) => {
 const viewMissingHours = async(req, res) => {
     const { ID, type } = req.header.user;
     const staff_member = await Staff_Member.findOne({ ID: ID, type: type });
-    const missingHours = extraUtils.getMissingHours(staff_member);
+    
+     const accidentalLeaves= await Accidental_Leave_Request.find();
+    const annualLeaves=await Annual_Leave_Request.find();
+
+    const compensationLeaves=await Compensation_Leave_Request.find();
+
+    const maternalityLeaves=await Maternity_Leave_Request.find();
+    const sickLeaves=await Sick_Leave_Request.find();
+
+    const missingHours = extraUtils.getMissingHours(staff_member,accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
     if (missingHours > 0) {
         res.send("the missing hours till today are ".concat(missingHours));
     } else {

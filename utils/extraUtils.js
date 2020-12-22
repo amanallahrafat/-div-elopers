@@ -36,25 +36,30 @@ const isRequestInWeek = (RequestDate, date) => { // all dates are entered in nor
 
 }
 
-const getMissingHours = (curStaffMember) => {
+const getMissingHours = (staffMem,accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves) => {
     const curDate = new Date();
     const curYear = curDate.getFullYear();
     const curMonth = curDate.getMonth();
     const curDay = curDate.getDate();
-    const startOfMonth = new Date(curYear, curMonth, 11, 2, 0, 0, 0);
+    let startOfMonth = new Date(curYear, curMonth, 11, 2, 0, 0, 0);
     const endOfMonth = new Date(curYear, curMonth + 1, 10, 2, 0, 0, 0);
     if (curDay <= 10) {
         startOfMonth.setMonth(curMonth - 1);
         endOfMonth.setMonth(curMonth);
     }
 
-    const staff_member = curStaffMember;
+    const staff_member = staffMem;
     const attendanceArray = staff_member.attendanceRecord;
     let attendedHours = 0;
     let totalHours=0;
     for (const record of attendanceArray) {
         if (record.signin && record.signout && startOfMonth.getTime() <= record.signin && record.signin <= endOfMonth.getTime()) {
-            if (curStaffMember.dayOff == getCurDay(new Date(record.signin)) || (getCurDay(new Date(record.signin)) == "friday")) continue;
+
+       //     console.log(new Date(record.signin)+" "+new Date(record.signout));
+            const isFree=isFreeDay(staffMem, new Date(record.signin), accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
+         //   console.log(isFree);
+            if(isFree)
+            continue;
 
             const signinDate = new Date(record.signin);
             const signinYear = signinDate.getFullYear();
@@ -68,9 +73,87 @@ const getMissingHours = (curStaffMember) => {
             attendedHours += Math.max(0, (endOfInterval - startOfInterval) / (1000 * 60 * 60));
         }
     }
-    const noOfDaysTillToday = getDifferenceInDays(curDate.getTime(), startOfMonth.getTime());
-    
+
+    let startDay = startOfMonth.getDate();
+    let startMonth = startOfMonth.getMonth();
+    let startYear = startOfMonth.getFullYear();
+    let noOfDaysTillToday=0;
+    while (startOfMonth.getTime() <= curDate.getTime()) {
+        if(!isFreeDay(staffMem,startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves))
+        {
+            noOfDaysTillToday=noOfDaysTillToday+1;
+        }
+        startDay = startDay + 1;
+        startOfMonth = new Date(startYear, startMonth, startDay, 2, 0, 0, 0);
+    }
+   
     return missingHours = noOfDaysTillToday * 8.4 - attendedHours;
+}
+const isFreeDay=(staffMem, date, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves)=>{
+   // console.log("begin free day with date "+date);
+    //console.log(staffMem.name+" "+staffMem.dayOff+" "+getCurDay(date));
+    if (staffMem.dayOff == getCurDay(date) || (getCurDay(date) == "friday")) return true;
+    if (staffMem.type == 1) return false; // if he is an HR i won't check leaves since HR can't submit leaves so for any leave sender ID he is Academic Mem
+    //console.log("passed dayOff friday");
+  
+    //handling accidental leave request
+    // const accidentalLeaves= await Accidental_Leave_Request.find({senderID:staffMem.ID,status:"accepted"});
+    if (accidentalLeaves)
+        for (const leave of accidentalLeaves) {
+            if (leave.senderID == staffMem.ID && twoDatesAreEqual(leave.requestedDate, date) && leave.status == "accepted")
+                return true;
+        }
+    //    console.log("passed accid");
+  
+    //handling anuual leave request
+    //  const annualLeaves=await Annual_Leave_Request.find({senderID:staffMem.ID,status:"accepted"});
+    if (annualLeaves)
+        for (const leave of annualLeaves) {
+            if (leave.senderID == staffMem.ID && twoDatesAreEqual(leave.requestedDate, date) && leave.status == "accepted")
+                return true;
+        }
+
+       // console.log("passed anuial");
+  
+    //handling compensation leave request
+    // const compensationLeaves=await Compensation_Leave_Request.find({senderID:staffMem.ID,status:"accepted"});
+    if (compensationLeaves)
+        for (const leave of compensationLeaves) {
+            if (leave.senderID == staffMem.ID && twoDatesAreEqual(leave.absenceDate, date) && leave.status == "accepted")
+                return true;
+        }
+       // console.log("passed comp");
+  
+
+
+    //handling maternality leave request
+    // const maternalityLeaves=await Maternity_Leave_Request.find({senderID:staffMem.ID,status:"accepted"});
+    if (maternalityLeaves)
+        for (const leave of maternalityLeaves) {
+            if (leave.senderID == staffMem.ID && (twoDatesAreEqual(leave.startDate, date) || twoDatesAreEqual(leave.endDate, date) || (leave.startDate.getTime() <= date.getTime() && date.getTime() <= leave.endDate.getTime())) && leave.status == "accepted")
+                return true;
+        }
+       // console.log("passed mater");
+  
+
+
+
+    //handling sick leave request
+    //  const sickLeaves=await Sick_Leave_Request.find({senderID:staffMem.ID,status:"accepted"});\c
+
+    if (sickLeaves)
+        for (const leave of sickLeaves) {
+
+            if (leave.senderID == staffMem.ID && twoDatesAreEqual(leave.requestedDate, date) && leave.status == "accepted")
+                return true;
+        }
+
+     //   console.log("passed sick");
+  
+
+
+
+    return false;
 }
 
 const haveMissingDays = async(staffMem, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves) => {
