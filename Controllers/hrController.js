@@ -656,10 +656,11 @@ const addMissingSignInOut = async(req, res) => {
     if (newSignSession.signin > newSignSession.signout) {
         return res.status(400).send("you can't make signout in a time before signin");
     }
+    
     staffMember.attendanceRecord.push(newSignSession);
 
     await Staff_Member.updateOne({ ID: staffMemberID, type: staffMemberType }, staffMember);
-    res.send("adding login/out has done successfully")
+    res.send("adding login/out has done successfully with signin date "+new Date(newSignSession.signin)+" and out at "+new Date(newSignSession.signout));
 }
 
 const viewStaffMemberAttendance = async(req, res) => {
@@ -706,12 +707,23 @@ const updateStaffMemberSalary = async(req, res) => {
 const viewStaffMembersWithMissingHours = async(req, res) => {
     const allStaffMembers = await Staff_Member.find();
     if (!allStaffMembers) return res.status(400).send("there aren't any academic members yet");
+    const accidentalLeaves= await Accidental_Leave_Request.find();
+    const annualLeaves=await Annual_Leave_Request.find();
+
+    const compensationLeaves=await Compensation_Leave_Request.find();
+
+    const maternalityLeaves=await Maternity_Leave_Request.find();
+    const sickLeaves=await Sick_Leave_Request.find();
+
     let allMissedMembers = [];
     for (const mem of allStaffMembers) {
 
-        const missingHours = extraUtils.getMissingHours(mem);
+        const missingHours = extraUtils.getMissingHours(mem,accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
         if (Number.isFinite(missingHours) && missingHours > 0) {
             const trimmedMem = extraUtils.trimMonogoObj(mem['_doc'], ["_id", "password", "__v"]);
+            trimmedMem.attendanceRecord= trimmedMem.attendanceRecord.filter((x)=>{return  (x.signin&&x.signout)}).map((x)=>{x.signin=new Date(x.signin);
+                x.signout=new Date(x.signout); return x;});
+           
             allMissedMembers.push(trimmedMem);
         }
     }
