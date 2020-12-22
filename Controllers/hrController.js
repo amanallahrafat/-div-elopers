@@ -278,7 +278,7 @@ const updateAcademicMember = async(req, res) => {
     if (req.body.departmentID != null) academic_member.departmentID = req.body.departmentID;
     if (req.body.memberType == null) req.body.memberType = academic_member.type;
     else { // If the HR is assigning the academic member to be a head of department 
-        if (!(parseInt(req.body.memberType) == 0)) {
+        if (!(parseInt(req.body.memberType) == 0) && !(parseInt(req.body.memberType) == 3)) {
             res.send("You are not allowed to do this action");
             return true;
         }
@@ -353,7 +353,7 @@ const deleteStaffMember = async(req, res) => {
         return res.status(400).send("This user doesn't exist");
     }
     if (req.params.type == 0) { // If it's an academic member
-        const academicMember = await Academic_Member.findOne({ ID: req.params.ID });
+        const academicMember = await Academic_Member.findOne({ ID: req.params.ID});
         const depID = academicMember.departmentID;
         const department = await Department.findOne({ ID: depID });
         //Remove the academic member from the department.
@@ -373,11 +373,11 @@ const deleteStaffMember = async(req, res) => {
             if (allCourses[i].teachingStaff.includes(parseInt(req.params.ID))) {
                 //Remove his ID from slots of this course
                 const courseSchedule = await Course_Schedule.findOne({ ID: courseID });
-                var courseSlots = courseSchedule.slots;
+                let courseSlots = courseSchedule.slots;
                 for (let j = 0; courseSlots != null && j < courseSlots.length; j++) {
-                    if (courseSlots[j].instructorID == parseInt(req.params.ID)) {
-                        courseSlots[j].instructorID = undefined;
-                        delete(courseSlots[j].instructorID);
+                    if (courseSlots[j].instructor == parseInt(req.params.ID)) {
+                        courseSlots[j].instructor = undefined;
+                        delete(courseSlots[j].instructor);
                     }
                 }
 
@@ -393,6 +393,11 @@ const deleteStaffMember = async(req, res) => {
                 allCourses[i].coordinatorID = undefined;
                 delete(allCourses[i].coordinatorID);
             }
+            //If this member was a course instructor 
+            if(allCourses[i].instructor.includes(parseInt(req.params.ID))){
+                allCourses[i].instructor = allCourses[i].instructor.filter(function(value){return value!=parseInt(req.params.ID)});
+            }
+
             await Course.replaceOne({ ID: courseID }, allCourses[i]);
         }
         await Department.replaceOne({ ID: depID }, department);
@@ -450,8 +455,8 @@ const updateDepartment = async(req, res) => {
     const department = await Department.findOne({ ID: req.params.ID });
     if (!department) return res.status(400).send("this department doesn't exist");
     if (req.body.name == null) req.body.name = department.name;
-    if (req.body.members == null) req.body.members = department.members;
-    if (req.body.hodID == null) req.body.hodID = department.hodID;
+    if (req.body.members == null && department.members!=null) req.body.members = department.members;
+    if (req.body.hodID == null && department.hodID!= null) req.body.hodID = department.hodID;
 
     const isValid = validator.validateDepartment(req.body);
     if (isValid.error)

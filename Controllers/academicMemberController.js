@@ -609,7 +609,7 @@ const sendAnnualLeaveRequest = async(req, res) => {
     const annual_leave_request = new Annual_Leave_Request({
         ID: getMaxSlotID(requests) + 1,
         senderID: ID,
-        receiverID: department.hodID,
+        receiverID: department.hodID,   
         msg: message,
         submissionDate: Date.now(),
         requestedDate: requestedDate,
