@@ -1,3 +1,5 @@
+const Staff_Member = require('./Models/Users/Staff_Member.js');
+
 const express = require('express');
 const hrRouter = require('./Routes/hr.js');
 const hodRouter = require('./Routes/hod.js');
@@ -17,6 +19,12 @@ app.use('/ci', courseInstructorRouter);
 app.use('/cc', courseCoordinatorRouter);
 app.use('/hod',hodRouter);
 app.use('/ac', academicMemberRouter);
+
+app.post('/init', async(req, res)=>{
+    const hr = new Staff_Member({name: "firstHR",ID:1, email: "HR@guc.com", type: 1, dayOff: "saturday", gender: "male", salary: 8000});
+    await hr.save();
+    return res.send("HR added successfully");
+})
 
 module.exports = app ;
 
