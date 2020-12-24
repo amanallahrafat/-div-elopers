@@ -21,7 +21,7 @@ app.use('/hod',hodRouter);
 app.use('/ac', academicMemberRouter);
 
 app.post('/init', async(req, res)=>{
-    const hr = new Staff_Member({name: "firstHR",ID:1, email: "HR@guc.com", type: 1, dayOff: "saturday", gender: "male", salary: 8000});
+    const hr = new Staff_Member({name: "firstHR",ID:0, email: "HR@guc.com", type: 1, dayOff: "saturday", gender: "male", salary: 8000});
     await hr.save();
     return res.send("HR added successfully");
 })
