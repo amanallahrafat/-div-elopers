@@ -1,4 +1,7 @@
 const Staff_Member = require('./Models/Users/Staff_Member.js');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const key = "jkanbvakljbefjkawkfew";
 
 const express = require('express');
 const hrRouter = require('./Routes/hr.js');
@@ -21,7 +24,9 @@ app.use('/hod',hodRouter);
 app.use('/ac', academicMemberRouter);
 
 app.post('/init', async(req, res)=>{
-    const hr = new Staff_Member({name: "firstHR",ID:0, email: "HR@guc.com", type: 1, dayOff: "saturday", gender: "male", salary: 8000});
+    const salt = await bcrypt.genSalt(10);
+    const hashedPass = await bcrypt.hash("123456", salt);
+    const hr = new Staff_Member({name: "firstHR", ID:0 , password: hashedPass, email: "HR@guc.com", type: 1, dayOff: "saturday", gender: "male", salary: 8000});
     await hr.save();
     return res.send("HR added successfully");
 })
