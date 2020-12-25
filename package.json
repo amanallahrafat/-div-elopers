@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/guc-met/milestone-1-team-9#readme",
   "dependencies": {
-    "@hapi/joi": "^15.0.3",
+    "@hapi/joi": "^15.1.1",
+    "@material-ui/core": "^4.11.2",
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
     "joi": "^17.3.0",
