@@ -19,11 +19,12 @@ const Sick_Leave_Request = require('../Models/Requests/Sick_Leave_Request.js');
 
 const signIn = async (req, res) => {
     const { ID, type } = req.header.user;
+    console.log(req.header);
     const staff_member = await Staff_Member.findOne({ ID: ID, type: type });
     if (staff_member.attendanceRecord.length != 0) {
         const lastRecord = staff_member.attendanceRecord[staff_member.attendanceRecord.length - 1];
         if (!lastRecord.signout)
-            return res.status(400).send("you can't follow a sign in with a signin without signing out");
+            return res.status(400).send("Please sign out before signning in.");
     }
     staff_member.attendanceRecord.push({ status: 1, signin: Date.now() });
 
@@ -37,12 +38,12 @@ const signOut = async (req, res) => {
     const { ID, type } = req.header.user;
     const staff_member = await Staff_Member.findOne({ ID: ID, type: type });
     if (staff_member.attendanceRecord.length == 0) {
-        return res.status(400).send("you can't signout without signing in");
+        return res.status(400).send("Please sign out before signning in.");
 
     }
     const lastRecord = staff_member.attendanceRecord[staff_member.attendanceRecord.length - 1];
     if ((lastRecord.signout || !lastRecord.signin))
-        return res.status(400).send("you can't signout multiple times or without signing in");
+        return res.status(400).send("Please sign in before signning in.");
     lastRecord.signout = Date.now();
     await Staff_Member.updateOne({ ID: ID, type: type }, { attendanceRecord: staff_member.attendanceRecord });
     res.send("Sign out Sucessfully!");
@@ -61,7 +62,16 @@ const login = async (req, res) => {
     // param1: payload (params needed for handeling the user requests)
     // param2 : secret Key (random string)
     const token = jwt.sign({ ID: u.ID, type: u.type }, key);
-    res.header('auth-token', token).send("Login Successfull!");
+    let academicMemberType = undefined;
+    if(u.type==0){
+        const academicMember = await Academic_Member.findOne({ID: u.ID});
+        academicMemberType = academicMember.type;
+    }
+    res.header('auth-token', token).send({
+        msg: "Login Successfull!",
+        type: u.type,
+        academicMemberType: academicMemberType,
+    });
 }
 
 const logout = async (req, res) => {
@@ -95,7 +105,7 @@ const resetPassword = async (req, res) => {
     if (!verify)
         return res.status(400).send("please enter the old password correctly");
     if (req.body.newPassword.length < 6)
-        return res.status(400).send("you password is less than 6 characters");
+        return res.status(400).send("your password is less than 6 characters");
 
     const salt = await bcrypt.genSalt(10);
     const hashedPass = await bcrypt.hash(req.body.newPassword, salt);

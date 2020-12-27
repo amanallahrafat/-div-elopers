@@ -3,6 +3,8 @@ const authorization = require('../Authorization/auth.js');
 const express = require('express');
 const staffMemberRouter = express.Router();
 
+staffMemberRouter.get('/authStaffMember',authorization.authStaffMember,(req,res)=>{res.send("You are logged in as staff member")});
+
 staffMemberRouter.post('/login', staffMemberController.login);
 staffMemberRouter.post('/logout', authorization.authStaffMember,staffMemberController.logout);
 
