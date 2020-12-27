@@ -15,7 +15,6 @@ export default function SimpleMenu() {
         setAnchorEl(event.currentTarget);
     };
 
-    // user = await axios.post('/login', userData);
     const handleClose = async (event) => {
         console.log(event.target.id);
         let res;
