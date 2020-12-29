@@ -16,7 +16,6 @@ export default function SimpleMenu() {
     };
 
     const handleClose = async (event) => {
-        console.log(event.target.id);
         let res;
         try {
             switch (event.target.id) {
@@ -45,13 +44,13 @@ export default function SimpleMenu() {
     if (isLoggedOut) {
         return <Redirect to='/' />;
     }
+
+    
     return (
         <div>
             <IconButton
                 aria-label="account of current user"
-                //   aria-controls={menuId}
                 aria-haspopup="true"
-                //   onClick={handleProfileMenuOpen}
                 color="inherit"
                 onClick={handleClick}
             >

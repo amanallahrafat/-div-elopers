@@ -75,7 +75,6 @@ class Login extends Component {
                 loginError: false,
                 isLoggedIn: true,
             });
-            console.log(this.state);
         } catch (error) {
             this.setState({ loginError: true })
         }
@@ -117,7 +116,7 @@ class Login extends Component {
 
     render() {
         const { classes } = this.props;
-        if (this.state.isLoggedIn) {
+        if (this.state.isLoggedIn ) {
             if (this.state.res.type === 1) {
                 return <Redirect to='/hr' />;
             } else {
@@ -197,7 +196,7 @@ class Login extends Component {
                                     this.state.emptyPassword ||
                                     this.state.emptyEmail
                                 }
-                                
+
                             >
                                 Login
             </Button>

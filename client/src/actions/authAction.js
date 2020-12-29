@@ -7,8 +7,9 @@ export const login = async userData => {
     if (user.headers['auth-token'])
         token = user.headers['auth-token'];
     if (!token)
-        throw new Error("Wrong Email or Password")
+        throw new Error("Wrong Email or Password");
     localStorage.setItem("auth-token", token);
+    localStorage.setItem("type",user.data.type);
     setAuthToken(token);
     return {
         type: user.data.type,

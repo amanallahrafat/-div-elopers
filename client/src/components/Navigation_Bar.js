@@ -1,3 +1,4 @@
+import { Collapse } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,12 +7,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import TodayIcon from '@material-ui/icons/Today';
 import React, { Component } from 'react';
 import DropdownList_NavBar from './DropdownList_NavBar';
-import { Redirect } from 'react-router-dom';
+import DropdownList_Notifications from './DropdownList_Notifications';
+
 
 const styles = (theme) => ({
     root: {
@@ -51,15 +51,18 @@ const styles = (theme) => ({
     },
 });
 
+
 class Navigation_Bar extends Component {
     state = {
-        dropDown: {
-            isExpanded: true
-        }
+        viewProfile: false,
     };
 
+    handleViewProfile = (event) => {
+        this.setState({ viewProfile: true });
+    };
     render() {
         const { classes } = this.props;
+        console.log(localStorage.getItem('type'));
         return (
             <div className={classes.grow}>
                 <AppBar position="static">
@@ -83,17 +86,15 @@ class Navigation_Bar extends Component {
                                     <TodayIcon />
                                 </Badge>
                             </IconButton>
-                            <IconButton aria-label="show 17 new notifications" color="inherit">
-                                <Badge badgeContent={0} color="secondary">
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
+                            <Collapse in = {localStorage.getItem('type') == 0}>
+                                <DropdownList_Notifications/>
+                            </Collapse>
                             <IconButton
                                 // edge="end"
                                 aria-label="account of current user"
                                 //   aria-controls={menuId}
                                 aria-haspopup="true"
-                                //   onClick={handleProfileMenuOpen}
+                                onClick={this.handleViewProfile}
                                 color="inherit"
                             >
                                 <AccountCircle />

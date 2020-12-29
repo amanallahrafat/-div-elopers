@@ -2,28 +2,34 @@ import { Component } from "react";
 import Navigation_Bar from '../Navigation_Bar';
 import { Redirect } from 'react-router-dom';
 import axios from "axios";
+import setAuthToken from "../../actions/setAuthToken";
 
 class HOD extends Component {
     state = {
-        // TODO
+        isLoggedIn: 0,
     }
 
-    async componentDidMount(){
-        if(!localStorage.getItem('auth-token'))
-            return <Redirect to='/' />;
-        try{
-            await axios.get('/authStaffMember');
+    async componentDidMount() {
+        if (!localStorage.getItem('auth-token')){
+            this.setState({ isLoggedIn: 1 });
+            return;
         }
-        catch(err){
-            alert("Please Login.");
-            return <Redirect to='/' />;
+        try {
+            setAuthToken(localStorage.getItem('auth-token'));
+            await axios.get('/authStaffMember');
+            this.setState({ isLoggedIn: 2 });
+        }
+        catch (err) {
+            this.setState({ isLoggedIn: 1 });
         }
     }
 
     render() {
-        console.log(localStorage.getItem('auth-token'));
-        if (!localStorage.getItem('auth-token')) {
-            alert("Please Login!");
+        console.log(this.props.location);
+        if (this.state.isLoggedIn === 0)
+            return <div />;
+        if (this.state.isLoggedIn === 1) {
+            //alert("Please Login!");
             return <Redirect to='/' />;
         }
         return (
@@ -33,4 +39,5 @@ class HOD extends Component {
         )
     }
 }
+
 export default HOD;

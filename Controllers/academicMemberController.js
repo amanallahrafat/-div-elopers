@@ -19,7 +19,7 @@ const Staff_Member = require('../Models/Users/Staff_Member.js');
 
 
 // body : {replacementID, courseID, slotID , requestedDate}
-const sendReplacementRequest = async(req, res) => {
+const sendReplacementRequest = async (req, res) => {
     const { ID, type } = req.header.user;
     const courseID = req.body.courseID;
     const replacementID = req.body.replacementID;
@@ -40,7 +40,7 @@ const sendReplacementRequest = async(req, res) => {
         return res.status(400).send("you cannot be replaced by a member does not belong to your department");
     const course = await Course.findOne({ ID: courseID });
     if (!((course.teachingStaff.includes(ID) ^ course.instructor.includes(ID)) &&
-            (course.teachingStaff.includes(replacementID) ^ course.instructor.includes(replacementID))))
+        (course.teachingStaff.includes(replacementID) ^ course.instructor.includes(replacementID))))
         return res.status(400).send("you canot be replaced by a member does not teach the same course");
     if (extraUtils.getDifferenceInDays(requestedDate, Date.now()) <= 0)
         return res.status(400).send("The requested date already passed !");
@@ -101,38 +101,38 @@ const getMaxChangeDayOffRequest = (req) => {
 }
 
 //{slotID , CourseID}
-const sendSlotLinkingRequest = async(req, res) => {
-        const { ID, type } = req.header.user;
-        const courseID = req.body.courseID;
-        const slotID = req.body.slotID;
-        const course = await Course.findOne({ ID: courseID });
-        if (course == null)
-            return res.status(404).send("The requested course was not found");
+const sendSlotLinkingRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
+    const courseID = req.body.courseID;
+    const slotID = req.body.slotID;
+    const course = await Course.findOne({ ID: courseID });
+    if (course == null)
+        return res.status(404).send("The requested course was not found");
     // if (!course.instructor.includes(ID) && !course.teachingStaff.includes(ID))
     //     res.status(403).send("You are not part of the course teaching staff")
-        const course_schedule = await Course_Schedule.findOne({ ID: courseID })
-        if (course_schedule == null)
-            res.status(404).send("The requested course does not exist");
-        const slot = course_schedule.slots.filter((elm) => elm.ID == slotID);
-        console.log(slot)
-        if (slot == null || slot.length == 0)
-            return res.status(404).send("The requested slot was not found");
-        if (slot.instructor != null)
-            return res.status(400).send("The requested slot is already assigned to another academic member");
-        const requests = await Slot_Linking_Request.find();
-        const slotLinkingRequest = new Slot_Linking_Request({
-            ID: getMaxSlotID(requests) + 1,
-            senderID: ID,
-            receiverID: course.coordinatorID,
-            courseID: courseID,
-            slotID: slotID,
-            status: "pending"
-        });
-        await slotLinkingRequest.save();
-        res.send("The request has been sent sucessfully");
-    }
-    // {newdayoff , msg}
-const sendChangeDayOffRequest = async(req, res) => {
+    const course_schedule = await Course_Schedule.findOne({ ID: courseID })
+    if (course_schedule == null)
+        res.status(404).send("The requested course does not exist");
+    const slot = course_schedule.slots.filter((elm) => elm.ID == slotID);
+    console.log(slot)
+    if (slot == null || slot.length == 0)
+        return res.status(404).send("The requested slot was not found");
+    if (slot.instructor != null)
+        return res.status(400).send("The requested slot is already assigned to another academic member");
+    const requests = await Slot_Linking_Request.find();
+    const slotLinkingRequest = new Slot_Linking_Request({
+        ID: getMaxSlotID(requests) + 1,
+        senderID: ID,
+        receiverID: course.coordinatorID,
+        courseID: courseID,
+        slotID: slotID,
+        status: "pending"
+    });
+    await slotLinkingRequest.save();
+    res.send("The request has been sent sucessfully");
+}
+// {newdayoff , msg}
+const sendChangeDayOffRequest = async (req, res) => {
     const { ID, type } = req.header.user;
     const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
     const department = await Department.findOne({ ID: departmentID });
@@ -161,13 +161,26 @@ const sendChangeDayOffRequest = async(req, res) => {
     await changeDayOffRequest.save();
     return res.send("The change day request is added successfully.");
 }
-const getAllNotifications = async(req, res) => {
-        const { ID, type } = req.header.user;
-        res.send(await Notification.find({ receiverID: ID }));
+const getAllNotifications = async (req, res) => {
+    const { ID, type } = req.header.user;
+    let notifications = await Notification.find({ receiverID: ID });
+    const newNotifications = [];
+    for(const not of notifications){
+        const n = not;
+        const user = await extraUtils.getAcademicMemberByID(n.senderID);
+        n['_doc']['senderName'] = user.name;
+        newNotifications.push(n);
     }
-    //{view : 0}
-    //all : 0 , accepted : 1, rejected : 2, pending : 3.
-const viewAllRequests = async(req, res) => {
+    console.log(newNotifications);
+
+    res.send(newNotifications);
+    console.log(newNotifications);
+
+}
+
+//{view : 0}
+//all : 0 , accepted : 1, rejected : 2, pending : 3.
+const viewAllRequests = async (req, res) => {
     const { ID, type } = req.header.user;
     let result = [];
     if (req.params.view == 0) {
@@ -219,119 +232,119 @@ const viewAllRequests = async(req, res) => {
 //This whole part was not tested
 //parameters of the request is the ID of the request to be cancelled
 //We only change if it's still pending 
-const cancelChangeDayOffRequest=async(req, res)=>{
-    const {ID,type} = req.header.user;
+const cancelChangeDayOffRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
     const reqID = parseInt(req.params.ID);
-    const request = await Change_Day_Off_Request.findOne({ID:reqID});
-    if(request == null)
+    const request = await Change_Day_Off_Request.findOne({ ID: reqID });
+    if (request == null)
         return res.status(400).send("This request doesn't exist");
-    if(ID != request.senderID){
+    if (ID != request.senderID) {
         return res.status(400).send("You didn't send this request");
-    }     
-    if(request.status != "pending"){
+    }
+    if (request.status != "pending") {
         return res.status(400).send("This request can't be cancelled");
     }
     //Delete from the database 
-    await Change_Day_Off_Request.deleteOne({ID:reqID});
+    await Change_Day_Off_Request.deleteOne({ ID: reqID });
     return res.send("The change day off request was cancelled successfully");
 }
-const cancelCompensationLeaveRequest = async(req, res)=>{
-    const {ID,type} = req.header.user;    
+const cancelCompensationLeaveRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
     const reqID = parseInt(req.params.ID);
-    const request = await Compensation_Leave_Request.findOne({ID:reqID});
-    if(request == null)
+    const request = await Compensation_Leave_Request.findOne({ ID: reqID });
+    if (request == null)
         return res.status(400).send("This request doesn't exist");
-    if(ID != request.senderID){
+    if (ID != request.senderID) {
         return res.status(400).send("You didn't send this request");
-    }    
-    if(request.status == "rejected"){
+    }
+    if (request.status == "rejected") {
         return res.send("This request was rejected");
     }
-    if(request.status == "pending"){
-        await Compensation_Leave_Request.deleteOne({ID:reqID});
+    if (request.status == "pending") {
+        await Compensation_Leave_Request.deleteOne({ ID: reqID });
         return res.send("Compensation leave was deleted successfully");
     }
     //request is still pending
-    if(new Date(Date.now()) > new Date(request.requestedDate)){
+    if (new Date(Date.now()) > new Date(request.requestedDate)) {
         return res.send("You can't cancel this request");
     }
-    await Compensation_Leave_Request.deleteOne({ID:reqID});
+    await Compensation_Leave_Request.deleteOne({ ID: reqID });
     return res.send("Compensation leave was deleted successfully");
-    
+
 }
-const cancelMaternityLeaveRequest = async(req, res)=>{
-    const {ID,type} = req.header.user;    
+const cancelMaternityLeaveRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
     const reqID = parseInt(req.params.ID);
-    const request = await Maternity_Leave_Request.findOne({ID:reqID});
-    if(request == null)
+    const request = await Maternity_Leave_Request.findOne({ ID: reqID });
+    if (request == null)
         return res.status(400).send("This request doesn't exist");
-    if(ID != request.senderID){
+    if (ID != request.senderID) {
         return res.status(400).send("You didn't send this request");
-    }    
-    if(request.status == "rejected"){
+    }
+    if (request.status == "rejected") {
         return res.send("This request was rejected");
     }
-    if(request.status == "pending"){
-        await Maternity_Leave_Request.deleteOne({ID:reqID});
+    if (request.status == "pending") {
+        await Maternity_Leave_Request.deleteOne({ ID: reqID });
         return res.send("Maternity leave was deleted successfully");
     }
     //request is still pending
-    if(new Date() > request.startDate){
+    if (new Date() > request.startDate) {
         return res.send("You can't cancel this request");
     }
-    await Maternity_Leave_Request.deleteOne({ID:reqID});
+    await Maternity_Leave_Request.deleteOne({ ID: reqID });
     return res.send("Maternity leave was deleted successfully");
 
 }
-const cancelSickLeaveRequest = async(req, res)=>{
-    const {ID,type} = req.header.user;    
+const cancelSickLeaveRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
     const reqID = parseInt(req.params.ID);
-    const request = await Sick_Leave_Request.findOne({ID:reqID});
-    if(request == null)
+    const request = await Sick_Leave_Request.findOne({ ID: reqID });
+    if (request == null)
         return res.status(400).send("This request doesn't exist");
-    if(ID != request.senderID){
+    if (ID != request.senderID) {
         return res.status(400).send("You didn't send this request");
-    }    
-    if(request.status == "rejected"){
+    }
+    if (request.status == "rejected") {
         return res.send("This request was rejected");
     }
-    if(request.status == "pending"){
-        await Sick_Leave_Request.deleteOne({ID:reqID});
+    if (request.status == "pending") {
+        await Sick_Leave_Request.deleteOne({ ID: reqID });
         return res.send("Sick leave was deleted successfully");
     }
     //request is still pending
-    if(new Date() > request.requestedDate){
+    if (new Date() > request.requestedDate) {
         return res.send("You can't cancel this request");
     }
-    await Sick_Leave_Request.deleteOne({ID:reqID});
+    await Sick_Leave_Request.deleteOne({ ID: reqID });
     return res.send("Sick leave was deleted successfully");
 }
-const cancelReplacementRequest = async(req, res)=>{
-    const {ID,type} = req.header.user;    
+const cancelReplacementRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
     const reqID = parseInt(req.params.ID);
-    const request = await Replacement_Request.findOne({ID:reqID});
-    if(request == null)
+    const request = await Replacement_Request.findOne({ ID: reqID });
+    if (request == null)
         return res.status(400).send("This request doesn't exist");
-    if(ID != request.senderID){
+    if (ID != request.senderID) {
         return res.status(400).send("You didn't send this request");
-    }    
-    if(request.status == "rejected"){
+    }
+    if (request.status == "rejected") {
         return res.send("This request was rejected");
     }
-    if(request.status == "pending"){
-        await Replacement_Request.deleteOne({ID:reqID});
+    if (request.status == "pending") {
+        await Replacement_Request.deleteOne({ ID: reqID });
         return res.send("Replacement request was deleted successfully");
     }
     //request is still pending
-    if(new Date() > request.requestedDate){
+    if (new Date() > request.requestedDate) {
         return res.send("You can't cancel this request");
     }
-    await Replacement_Request.deleteOne({ID:reqID});
-           return res.send("Replacement request was deleted successfully");
+    await Replacement_Request.deleteOne({ ID: reqID });
+    return res.send("Replacement request was deleted successfully");
 
 }
 
-const viewSchedule = async(req, res) => {
+const viewSchedule = async (req, res) => {
     const academicMemberID = req.header.user.ID;
     const courseSchdeduleTable = await Course_Schedule.find();
     const recievedReplacementReq = await Replacement_Request.find({ receiverID: academicMemberID, status: "accepted" });
@@ -376,10 +389,10 @@ const viewSchedule = async(req, res) => {
                     //     sch
                     // );
                     const slot = [];
-                    for(const sch of courseSchdeduleTable){
-                        if(sch.ID && req.courseID && sch.slots != null){
-                            for(const s of sch.slots){
-                                if(s.ID==req.slotID){
+                    for (const sch of courseSchdeduleTable) {
+                        if (sch.ID && req.courseID && sch.slots != null) {
+                            for (const s of sch.slots) {
+                                if (s.ID == req.slotID) {
                                     slot.push(s);
                                 }
                             }
@@ -398,127 +411,127 @@ const viewSchedule = async(req, res) => {
 }
 
 // {documents : String, startDate : Number, endDate : Number, msg : String}
-const sendMaternityLeaveRequest = async(req, res) => {
-        const { ID, type } = req.header.user;
-        const gender = (await Staff_Member.findOne({ ID: ID, type: type })).gender;
-        if (gender != "female")
-            return res.status(403).send("You must be a female to have birth");
-        const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
-        const department = await Department.findOne({ ID: departmentID });
-        let message = req.body.msg;
-        const startDate = req.body.startDate;
-        const endDate = req.body.endDate;
-        const documents = req.body.documents;
-        if (department == null)
-            return res.status(403).send("The user does not belong to a department yet");
-        const hodID = department.hodID;
-        if (hodID == null)
-            return res.status(404).send("The department does not have a head yet, you can't send this request");
-        if (message == null)
-            message = "";
-        const isValid = validator.validateMaternityLeave(req.body);
-        if (isValid.error)
-            return res.status(400).send({ error: isValid.error.details[0].message });
-        const request = await Maternity_Leave_Request.find();
-        const maternity_leave_request = new Maternity_Leave_Request({
-            ID: getMaxSlotID(request) + 1,
-            senderID: ID,
-            receiverID: hodID,
-            documents: documents,
-            submissionDate: Date.now(),
-            startDate: startDate,
-            endDate: endDate,
-            msg: message,
-            status: "pending"
-        });
-        await maternity_leave_request.save();
-        return res.send("The request has been created successfully.")
-    }
-    //{documents: String, requestedDate : Number, msg: String}
-const sendSickLeaveRequest = async(req, res) => {
-        const { ID, type } = req.header.user;
-        const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
-        const department = await Department.findOne({ ID: departmentID });
-        let message = req.body.msg;
-        const documents = req.body.documents;
-        const requestedDate = req.body.requestedDate;
-        if (department == null)
-            return res.status(403).send("The user does not belong to a department yet");
-        const hodID = department.hodID;
-        if (hodID == null)
-            return res.status(404).send("The department does not have a head yet, you can't send this request");
-        if (message == null)
-            message = "";
-        const isValid = validator.validateSickLeave(req.body);
-        if (isValid.error)
-            return res.status(400).send({ error: isValid.error.details[0].message });
-        if (extraUtils.getDifferenceInDays(Date.now(), requestedDate) > 3)
-            return res.status(400).send("You can't send sick leave requests for days more than three days before.")
-        const request = await Sick_Leave_Request.find();
-        const sick_leave_request = new Sick_Leave_Request({
-            ID: getMaxSlotID(request) + 1,
-            senderID: ID,
-            receiverID: hodID,
-            documents: documents,
-            submissionDate: Date.now(),
-            requestedDate: requestedDate,
-            status: "pending",
-            msg: message
-        });
-        await sick_leave_request.save();
-        return res.send("The request has been created successfully.")
+const sendMaternityLeaveRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
+    const gender = (await Staff_Member.findOne({ ID: ID, type: type })).gender;
+    if (gender != "female")
+        return res.status(403).send("You must be a female to have birth");
+    const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
+    const department = await Department.findOne({ ID: departmentID });
+    let message = req.body.msg;
+    const startDate = req.body.startDate;
+    const endDate = req.body.endDate;
+    const documents = req.body.documents;
+    if (department == null)
+        return res.status(403).send("The user does not belong to a department yet");
+    const hodID = department.hodID;
+    if (hodID == null)
+        return res.status(404).send("The department does not have a head yet, you can't send this request");
+    if (message == null)
+        message = "";
+    const isValid = validator.validateMaternityLeave(req.body);
+    if (isValid.error)
+        return res.status(400).send({ error: isValid.error.details[0].message });
+    const request = await Maternity_Leave_Request.find();
+    const maternity_leave_request = new Maternity_Leave_Request({
+        ID: getMaxSlotID(request) + 1,
+        senderID: ID,
+        receiverID: hodID,
+        documents: documents,
+        submissionDate: Date.now(),
+        startDate: startDate,
+        endDate: endDate,
+        msg: message,
+        status: "pending"
+    });
+    await maternity_leave_request.save();
+    return res.send("The request has been created successfully.")
+}
+//{documents: String, requestedDate : Number, msg: String}
+const sendSickLeaveRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
+    const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
+    const department = await Department.findOne({ ID: departmentID });
+    let message = req.body.msg;
+    const documents = req.body.documents;
+    const requestedDate = req.body.requestedDate;
+    if (department == null)
+        return res.status(403).send("The user does not belong to a department yet");
+    const hodID = department.hodID;
+    if (hodID == null)
+        return res.status(404).send("The department does not have a head yet, you can't send this request");
+    if (message == null)
+        message = "";
+    const isValid = validator.validateSickLeave(req.body);
+    if (isValid.error)
+        return res.status(400).send({ error: isValid.error.details[0].message });
+    if (extraUtils.getDifferenceInDays(Date.now(), requestedDate) > 3)
+        return res.status(400).send("You can't send sick leave requests for days more than three days before.")
+    const request = await Sick_Leave_Request.find();
+    const sick_leave_request = new Sick_Leave_Request({
+        ID: getMaxSlotID(request) + 1,
+        senderID: ID,
+        receiverID: hodID,
+        documents: documents,
+        submissionDate: Date.now(),
+        requestedDate: requestedDate,
+        status: "pending",
+        msg: message
+    });
+    await sick_leave_request.save();
+    return res.send("The request has been created successfully.")
 
+}
+//{requestedDate: Number, absenceDate : Number, msg : String}
+const sendCompensationLeaveRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
+    isValid = validator.validateCompensationRequest(req.body);
+    if (isValid.error)
+        return res.status(400).send({ error: isValid.error.details[0].message });
+    const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
+    const department = await Department.findOne({ ID: departmentID });
+    const requestedDate = req.body.requestedDate;
+    const absenceDate = req.body.absenceDate;
+    if (department == null)
+        return res.status(403).send("The user does not belong to a department yet");
+    const hodID = department.hodID;
+    if (hodID == null)
+        return res.status(404).send("The department does not have a head yet, you can't send this request");
+    const user = await Staff_Member.findOne({ ID: ID, type: type });
+    const dayOff = extraUtils.getCurDay(new Date(requestedDate));
+    if (dayOff != user.dayOff) {
+        return res.send("You can't accept this request, since the compensation day is not the day off");
     }
-    //{requestedDate: Number, absenceDate : Number, msg : String}
-const sendCompensationLeaveRequest = async(req, res) => {
-        const { ID, type } = req.header.user;
-        isValid = validator.validateCompensationRequest(req.body);
-        if (isValid.error)
-            return res.status(400).send({ error: isValid.error.details[0].message });
-        const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
-        const department = await Department.findOne({ ID: departmentID });
-        const requestedDate = req.body.requestedDate;
-        const absenceDate = req.body.absenceDate;
-        if (department == null)
-            return res.status(403).send("The user does not belong to a department yet");
-        const hodID = department.hodID;
-        if (hodID == null)
-            return res.status(404).send("The department does not have a head yet, you can't send this request");
-        const user = await Staff_Member.findOne({ ID: ID, type: type });
-        const dayOff = extraUtils.getCurDay(new Date(requestedDate));
-        if (dayOff != user.dayOff) {
-            return res.send("You can't accept this request, since the compensation day is not the day off");
-        }
-        const curDate = new Date(requestedDate);
-        const curYear = curDate.getFullYear();
-        const curMonth = curDate.getMonth();
-        const curDay = curDate.getDate();
-        const startOfMonth = new Date(curYear, curMonth, 11, 2, 0, 0, 0);
-        const endOfMonth = new Date(curYear, curMonth + 1, 10, 2, 0, 0, 0);
+    const curDate = new Date(requestedDate);
+    const curYear = curDate.getFullYear();
+    const curMonth = curDate.getMonth();
+    const curDay = curDate.getDate();
+    const startOfMonth = new Date(curYear, curMonth, 11, 2, 0, 0, 0);
+    const endOfMonth = new Date(curYear, curMonth + 1, 10, 2, 0, 0, 0);
 
-        if (curDay <= 10) {
-            startOfMonth.setMonth(curMonth - 1);
-            endOfMonth.setMonth(curMonth);
-        }
-        if (!(startOfMonth <= new Date(absenceDate) && new Date(absenceDate) <= endOfMonth)) {
-            return res.status(403).send("The requested compensation day is not in same month as the missed day");
-        }
-        const request = await Compensation_Leave_Request.find();
-        const compensation_leave_request = new Compensation_Leave_Request({
-            ID: getMaxSlotID(request) + 1,
-            senderID: ID,
-            receiverID: hodID,
-            submissionDate: Date.now(),
-            requestedDate: requestedDate,
-            msg: req.body.msg,
-            absenceDate: absenceDate,
-            status: "pending"
-        });
-        await compensation_leave_request.save();
-        return res.send("The compensation request is sent successfully");
+    if (curDay <= 10) {
+        startOfMonth.setMonth(curMonth - 1);
+        endOfMonth.setMonth(curMonth);
     }
-    //{requestedDate : Number, msg : String}
-const sendAccidentalLeaveRequest = async(req, res) => {
+    if (!(startOfMonth <= new Date(absenceDate) && new Date(absenceDate) <= endOfMonth)) {
+        return res.status(403).send("The requested compensation day is not in same month as the missed day");
+    }
+    const request = await Compensation_Leave_Request.find();
+    const compensation_leave_request = new Compensation_Leave_Request({
+        ID: getMaxSlotID(request) + 1,
+        senderID: ID,
+        receiverID: hodID,
+        submissionDate: Date.now(),
+        requestedDate: requestedDate,
+        msg: req.body.msg,
+        absenceDate: absenceDate,
+        status: "pending"
+    });
+    await compensation_leave_request.save();
+    return res.send("The compensation request is sent successfully");
+}
+//{requestedDate : Number, msg : String}
+const sendAccidentalLeaveRequest = async (req, res) => {
     const { ID, type } = req.header.user;
     const user = await Staff_Member.findOne({ ID: ID, type: type });
     const accidentalLeave = user.accidentalLeaveBalance;
@@ -553,39 +566,39 @@ const sendAccidentalLeaveRequest = async(req, res) => {
     return res.send("The accidental leave request created successfully");
 }
 
-const viewReplacementRequests = async(req, res) => {
+const viewReplacementRequests = async (req, res) => {
     const academicMemberID = req.header.user.ID;
     const sentReplacementReq = await Replacement_Request.find({ senderID: academicMemberID });
     const recievedReplacementReq = await Replacement_Request.find({ receiverID: academicMemberID });
     res.send(JSON.stringify(sentReplacementReq.concat(recievedReplacementReq)));
 }
 
-const respondToReplacementRequest = async(req, res) => {
-        const academicMemberID = req.header.user.ID;
-        const requestID = req.body.requestID;
-        const response = req.body.response;
-        const recievedReplacementReq = await Replacement_Request.findOne({ receiverID: academicMemberID, ID: requestID });
-        const replacementReqTable = await Replacement_Request.find();
-        if (recievedReplacementReq == null)
-            return res.status(400).send("You are trying to respond to an invalid request");
-        if (recievedReplacementReq.status != "pending")
-            return res.status(400).send(`You already responded ${recievedReplacementReq.status}.You can not respond multiple times!`);
-        if (replacementReqTable.filter(req =>
-                req.senderID == recievedReplacementReq.senderID &&
-                req.receiverID != recievedReplacementReq.receiverID &&
-                req.requestedDate == recievedReplacementReq.requestedDate &&
-                req.courseID == recievedReplacementReq.courseID &&
-                req.slotID == recievedReplacementReq.slotID &&
-                req.status == "accepted"
-            ).length) {
-            return res.status(400).send("Request is no longer availible. Another member accepted the request");
-        }
-        recievedReplacementReq.status = response ? "accepted" : "rejected";
-        await Replacement_Request.updateOne({ ID: requestID }, recievedReplacementReq);
-        return res.send("Responded to replacement request successfully");
+const respondToReplacementRequest = async (req, res) => {
+    const academicMemberID = req.header.user.ID;
+    const requestID = req.body.requestID;
+    const response = req.body.response;
+    const recievedReplacementReq = await Replacement_Request.findOne({ receiverID: academicMemberID, ID: requestID });
+    const replacementReqTable = await Replacement_Request.find();
+    if (recievedReplacementReq == null)
+        return res.status(400).send("You are trying to respond to an invalid request");
+    if (recievedReplacementReq.status != "pending")
+        return res.status(400).send(`You already responded ${recievedReplacementReq.status}.You can not respond multiple times!`);
+    if (replacementReqTable.filter(req =>
+        req.senderID == recievedReplacementReq.senderID &&
+        req.receiverID != recievedReplacementReq.receiverID &&
+        req.requestedDate == recievedReplacementReq.requestedDate &&
+        req.courseID == recievedReplacementReq.courseID &&
+        req.slotID == recievedReplacementReq.slotID &&
+        req.status == "accepted"
+    ).length) {
+        return res.status(400).send("Request is no longer availible. Another member accepted the request");
     }
-    // body : {"requestedDate" , "msg"}
-const sendAnnualLeaveRequest = async(req, res) => {
+    recievedReplacementReq.status = response ? "accepted" : "rejected";
+    await Replacement_Request.updateOne({ ID: requestID }, recievedReplacementReq);
+    return res.send("Responded to replacement request successfully");
+}
+// body : {"requestedDate" , "msg"}
+const sendAnnualLeaveRequest = async (req, res) => {
     const { ID, type } = req.header.user;
     const staff_member = await Staff_Member.findOne({ ID: ID });
     if (staff_member.accidentalLeaveBalance < 1)
@@ -609,7 +622,7 @@ const sendAnnualLeaveRequest = async(req, res) => {
     const annual_leave_request = new Annual_Leave_Request({
         ID: getMaxSlotID(requests) + 1,
         senderID: ID,
-        receiverID: department.hodID,   
+        receiverID: department.hodID,
         msg: message,
         submissionDate: Date.now(),
         requestedDate: requestedDate,
@@ -620,83 +633,79 @@ const sendAnnualLeaveRequest = async(req, res) => {
     res.send("The annual leave request has already sucessfully created !");
 }
 
-const cancelSlotLinkingRequest = async(req, res) => {
+const cancelSlotLinkingRequest = async (req, res) => {
     const { ID, type } = req.header.user;
     const requestID = parseInt(req.params.requestID);
     const request = await Slot_Linking_Request.findOne({ ID: requestID });
     if (request == null)
         return res.status(400).send("Invalid request ID");
-    if(request.status != "pending")
-        return  res.status(400).send("You can't cancel this request");    
+    if (request.status != "pending")
+        return res.status(400).send("You can't cancel this request");
     await Slot_Linking_Request.deleteOne({ ID: requestID });
     res.send("Slot linking request deleted successfully");
 }
 
-const cancelAccidentalLeaveRequest=async(req,res)=>{
-    const {ID,type}=req.header.user;
-    if(!req.body.ID){
+const cancelAccidentalLeaveRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
+    if (!req.body.ID) {
         return res.status(400).send("please specify the ID of the request ");
     }
-    const accidentalLeave=await Accidental_Leave_Request.findOne({ID:req.body.ID,senderID:ID});// ID of the accidental leave
-      if(!accidentalLeave)
-    return res.status(400).send("there is no accidental leave with this ID for this person ");
-    if(accidentalLeave.status=="pending")
-    {
-        await Accidental_Leave_Request.deleteOne({ID:req.body.ID});
+    const accidentalLeave = await Accidental_Leave_Request.findOne({ ID: req.body.ID, senderID: ID });// ID of the accidental leave
+    if (!accidentalLeave)
+        return res.status(400).send("there is no accidental leave with this ID for this person ");
+    if (accidentalLeave.status == "pending") {
+        await Accidental_Leave_Request.deleteOne({ ID: req.body.ID });
         return res.send("request has been deleted succuessfully ");
     }
-    if(accidentalLeave.status=="rejected")
-    {
-      //  await Accidental_Leave_Request.deleteOne({ID:req.body.ID});
+    if (accidentalLeave.status == "rejected") {
+        //  await Accidental_Leave_Request.deleteOne({ID:req.body.ID});
         return res.send("request is already rejected ");
     }
-    if(accidentalLeave.status=="accepted"){
-        if(new Date()<accidentalLeave.requestedDate){
-               const  staffMem= await Staff_Member.findOne({ID:ID,type:type});
-              staffMem.annualBalance=staffMem.annualBalance+1;
-               staffMem.accidentalLeaveBalance=staffMem.accidentalLeaveBalance+1;
-               await Staff_Member.updateOne({ID:ID,type:type},staffMem);
-               await Accidental_Leave_Request.deleteOne({ID:req.body.ID});
-               return res.send("request has been deleted succuessfully ");
-           
-        }else{
+    if (accidentalLeave.status == "accepted") {
+        if (new Date() < accidentalLeave.requestedDate) {
+            const staffMem = await Staff_Member.findOne({ ID: ID, type: type });
+            staffMem.annualBalance = staffMem.annualBalance + 1;
+            staffMem.accidentalLeaveBalance = staffMem.accidentalLeaveBalance + 1;
+            await Staff_Member.updateOne({ ID: ID, type: type }, staffMem);
+            await Accidental_Leave_Request.deleteOne({ ID: req.body.ID });
+            return res.send("request has been deleted succuessfully ");
+
+        } else {
             return res.status(400).send("this date has already passed");
         }
     }
 }
 
-const cancelAnnualLeaveRequest=async(req,res)=>{
-    const {ID,type}=req.header.user;
-    if(!req.body.ID){
+const cancelAnnualLeaveRequest = async (req, res) => {
+    const { ID, type } = req.header.user;
+    if (!req.body.ID) {
         return res.status(400).send("please specify the ID of the request ");
     }
-    const annualLeave=await Annual_Leave_Request.findOne({ID:req.body.ID,senderID:ID});// ID of the accidental leave
-      if(!annualLeave)
-    return res.status(400).send("there is no annual leave with this ID for this person ");
-    if(annualLeave.status=="pending")
-    {
-        await Annual_Leave_Request.deleteOne({ID:req.body.ID});
+    const annualLeave = await Annual_Leave_Request.findOne({ ID: req.body.ID, senderID: ID });// ID of the accidental leave
+    if (!annualLeave)
+        return res.status(400).send("there is no annual leave with this ID for this person ");
+    if (annualLeave.status == "pending") {
+        await Annual_Leave_Request.deleteOne({ ID: req.body.ID });
         return res.send("request has been deleted succuessfully ");
     }
-    if(annualLeave.status=="rejected")
-    {
-       // await Annual_Leave_Request.deleteOne({ID:req.body.ID});
+    if (annualLeave.status == "rejected") {
+        // await Annual_Leave_Request.deleteOne({ID:req.body.ID});
         return res.send("request is already rejected ");
     }
-    if(annualLeave.status=="accepted"){
-        if(new Date()<annualLeave.requestedDate){
-               const  staffMem= await Staff_Member.findOne({ID:ID,type:type});
-               staffMem.accidentalLeaveBalance=staffMem.accidentalLeaveBalance+1;
-               await Staff_Member.updateOne({ID:ID,type:type},staffMem);
-               await Annual_Leave_Request.deleteOne({ID:req.body.ID});
-               return res.send("request has been deleted succuessfully ");
-           
-        }else{
+    if (annualLeave.status == "accepted") {
+        if (new Date() < annualLeave.requestedDate) {
+            const staffMem = await Staff_Member.findOne({ ID: ID, type: type });
+            staffMem.accidentalLeaveBalance = staffMem.accidentalLeaveBalance + 1;
+            await Staff_Member.updateOne({ ID: ID, type: type }, staffMem);
+            await Annual_Leave_Request.deleteOne({ ID: req.body.ID });
+            return res.send("request has been deleted succuessfully ");
+
+        } else {
             return res.status(400).send("this date has already passed");
         }
     }
 }
-module.exports = {  
+module.exports = {
     sendReplacementRequest,
     viewSchedule,
     sendSlotLinkingRequest,
@@ -719,4 +728,3 @@ module.exports = {
     cancelSickLeaveRequest,
     cancelReplacementRequest
 }
-    
