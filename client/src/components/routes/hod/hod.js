@@ -1,8 +1,9 @@
 import { Component } from "react";
-import Navigation_Bar from '../Navigation_Bar';
+import Navigation_Bar from '../../Navigation_Bar.js';
 import { Redirect } from 'react-router-dom';
 import axios from "axios";
-import setAuthToken from "../../actions/setAuthToken";
+import setAuthToken from "../../../actions/setAuthToken";
+import Profile from '../../Profile';
 
 class HOD extends Component {
     state = {

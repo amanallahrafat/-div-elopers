@@ -6,18 +6,37 @@ import { withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MenuIcon from '@material-ui/icons/Menu';
 import TodayIcon from '@material-ui/icons/Today';
+import clsx from 'clsx';
 import React, { Component } from 'react';
 import DropdownList_NavBar from './DropdownList_NavBar';
 import DropdownList_Notifications from './DropdownList_Notifications';
+import Hod_SlideBar from './slideBars/Hod_SlideBar';
 
+const drawerWidth = 240;
 
 const styles = (theme) => ({
     root: {
         width: '100%',
         maxWidth: 360,
+        display: 'flex',
         // backgroundColor: theme.palette.background.paper,
+    },
+    appBar: {
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerWidth,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
     },
     nested: {
         paddingLeft: theme.spacing(4),
@@ -55,26 +74,33 @@ const styles = (theme) => ({
 class Navigation_Bar extends Component {
     state = {
         viewProfile: false,
+        isSlideBarOpen: false,
     };
 
     handleViewProfile = (event) => {
         this.setState({ viewProfile: true });
     };
+
+    handleSlideBarToggle = (event) => {
+        this.setState({ isSlideBarOpen: !this.state.isSlideBarOpen });
+    }
     render() {
         const { classes } = this.props;
         console.log(localStorage.getItem('type'));
         return (
             <div className={classes.grow}>
-                <AppBar position="static">
+                <AppBar position="static" className={clsx(classes.appBar, {
+                    [classes.appBarShift]: this.state.isSlideBarOpen,
+                })}>
                     <Toolbar>
                         <IconButton
                             aria-label="account of current user"
                             //   aria-controls={menuId}
                             aria-haspopup="true"
-                            //   onClick={handleProfileMenuOpen}
+                            onClick={this.handleSlideBarToggle}
                             color="inherit"
                         >
-                            <MenuIcon />
+                            {this.state.isSlideBarOpen ? <ChevronLeftIcon /> : <MenuIcon />}
                         </IconButton>
                         <Typography className={classes.title} variant="h6" noWrap>
                             GUC PORTAL
@@ -86,8 +112,8 @@ class Navigation_Bar extends Component {
                                     <TodayIcon />
                                 </Badge>
                             </IconButton>
-                            <Collapse in = {localStorage.getItem('type') == 0}>
-                                <DropdownList_Notifications/>
+                            <Collapse in={localStorage.getItem('type') == 0}>
+                                <DropdownList_Notifications />
                             </Collapse>
                             <IconButton
                                 // edge="end"
@@ -102,6 +128,7 @@ class Navigation_Bar extends Component {
                             <DropdownList_NavBar />
                         </div>
                     </Toolbar>
+                    <Hod_SlideBar open={this.state.isSlideBarOpen} />
                 </AppBar>
             </div>
         );
