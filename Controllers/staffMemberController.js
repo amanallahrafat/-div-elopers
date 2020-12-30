@@ -63,8 +63,8 @@ const login = async (req, res) => {
     // param2 : secret Key (random string)
     const token = jwt.sign({ ID: u.ID, type: u.type }, key);
     let academicMemberType = undefined;
-    if(u.type==0){
-        const academicMember = await Academic_Member.findOne({ID: u.ID});
+    if (u.type == 0) {
+        const academicMember = await Academic_Member.findOne({ ID: u.ID });
         academicMemberType = academicMember.type;
     }
     res.header('auth-token', token).send({
@@ -94,11 +94,7 @@ const viewProfile = async (req, res) => {
         x.signin = new Date(x.signin);
         x.signout = new Date(x.signout); return x;
     });
-
-    const office=await extraUtils.getOfficeByID(profile.officeID);
-    if(office)
-    profile['_doc'].officeID = (office).name;
-
+    profile['_doc'].officeID = (await extraUtils.getOfficeByID(profile.officeID))?.name;
     res.send(profile);
 }
 

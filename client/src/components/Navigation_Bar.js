@@ -14,6 +14,7 @@ import React, { Component } from 'react';
 import DropdownList_NavBar from './DropdownList_NavBar';
 import DropdownList_Notifications from './DropdownList_Notifications';
 import Hod_SlideBar from './slideBars/Hod_SlideBar';
+import HR_SlideBar from './slideBars/HR_SlideBar';
 
 
 
@@ -139,7 +140,16 @@ class Navigation_Bar extends Component {
                             <DropdownList_NavBar />
                         </div>
                     </Toolbar>
-                    <Hod_SlideBar open={this.state.isSlideBarOpen} />
+                    {
+                        (localStorage.getItem('type') == 1 ?
+                            <HR_SlideBar
+                                open={this.state.isSlideBarOpen}
+                                setComponentInMain={this.props.fromParent} /> :
+                            <Hod_SlideBar
+                                open={this.state.isSlideBarOpen}
+                                setComponentInMain={this.props.fromParent} />
+                        )
+                    }
                 </AppBar>
             </div>
         );

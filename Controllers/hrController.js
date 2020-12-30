@@ -25,10 +25,29 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const key = "jkanbvakljbefjkawkfew";
 
+//VIEWS
+const viewAllLocations = async (req, res) => {
+    res.send(await Location.find());
+}
 
+const viewAllFaculties = async (req, res) => {
+    res.send(await Faculty.find());
+}
+
+const viewAllDepartments = async (req, res) => {
+    res.send(await Department.find());
+}
+
+const viewAllStaffMembers = async (req, res) => {
+    res.send(await Staff_Member.find());
+}
+
+const viewAllCourses = async (req, res) => {
+    res.send(await Course.find());
+}
 
 // Start Location CRUD
-const createLocation = async(req, res) => {
+const createLocation = async (req, res) => {
     const isValid = validator.validateLocation(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
@@ -47,7 +66,7 @@ const createLocation = async(req, res) => {
     res.send("Location Added Successfully!");
 }
 
-const updateLocation = async(req, res) => {
+const updateLocation = async (req, res) => {
     const location = await Location.findOne({ ID: req.params.ID });
     if (!location)
         return res.status(404).send("Location Not Found");
@@ -64,19 +83,19 @@ const updateLocation = async(req, res) => {
     res.send("Location Updated Successfully!");
 }
 
-const deleteLocation = async(req, res) => {
-        const location = await Location.findOne({ ID: req.params.ID });
-        if (!location)
-            return res.status(404).send("Location ID Not Valid");
+const deleteLocation = async (req, res) => {
+    const location = await Location.findOne({ ID: req.params.ID });
+    if (!location)
+        return res.status(404).send("Location ID Not Valid");
 
-        await Location.deleteOne({ ID: req.params.ID });
-        await removeCascade.removeLocation(req.params.ID);
-        res.send("Location Deleted Successfully!");
-    }
-    // End Location CRUD
+    await Location.deleteOne({ ID: req.params.ID });
+    await removeCascade.removeLocation(req.params.ID);
+    res.send("Location Deleted Successfully!");
+}
+// End Location CRUD
 
 // Start Faculty CRUD
-const createFaculty = async(req, res) => {
+const createFaculty = async (req, res) => {
     const isValid = validator.validateFaculty(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
@@ -85,7 +104,7 @@ const createFaculty = async(req, res) => {
         return res.status(400).send("Faculty name should be unique");
 
     // Check that the departments exist.
-    if(req.body.departments!=null){
+    if (req.body.departments != null) {
         for (let i = 0; i < req.body.departments.length; i++) {
             let dep = await Department.find({ ID: req.body.departments[i] });
             if (dep.length == 0) return res.status(400).send("Department IDs are not valid");
@@ -95,7 +114,7 @@ const createFaculty = async(req, res) => {
     // Check that no department is shared with another faculty.
     const facArray = await Faculty.find();
     for (const f of facArray) {
-        if(req.body.departments != null){
+        if (req.body.departments != null) {
             for (const d of req.body.departments) {
                 if (f.departments.includes(d))
                     return res.status(400).send("Deparments can not be shared between different faculties");
@@ -111,7 +130,7 @@ const createFaculty = async(req, res) => {
     res.send("Faculty Added Successfully!");
 }
 
-const updateFaculty = async(req, res) => {
+const updateFaculty = async (req, res) => {
     const faculty = await Faculty.findOne({ name: req.params.name });
     if (!faculty)
         return res.status(404).send("Faculty Not Found");
@@ -176,17 +195,17 @@ const updateFaculty = async(req, res) => {
     res.send("Faculty Updated Successfully!");
 }
 
-const deleteFaculty = async(req, res) => {
-        const faculty = await Faculty.findOne({ name: req.params.name });
-        if (!faculty)
-            return res.status(404).send("Faculty name Not Valid");
+const deleteFaculty = async (req, res) => {
+    const faculty = await Faculty.findOne({ name: req.params.name });
+    if (!faculty)
+        return res.status(404).send("Faculty name Not Valid");
 
-        await Faculty.deleteOne({ name: req.params.name });
-        res.send("Faculty Deleted Successfully!");
-    }
-    // End Faculty CRUD
+    await Faculty.deleteOne({ name: req.params.name });
+    res.send("Faculty Deleted Successfully!");
+}
+// End Faculty CRUD
 
-const addStaffMember = async(req, res) => {
+const addStaffMember = async (req, res) => {
     const isValid = validator.validateAddStaffMember(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
@@ -215,7 +234,7 @@ const addStaffMember = async(req, res) => {
         if (req.body.memberType != null && req.body.memberType == 0) {
             department[0].hodID = max + 1
         }
-        else{
+        else {
             req.body.memberType = 3; // Set it as an academic member
         }
         await Department.updateOne({ ID: req.body.departmentID }, department[0]);
@@ -251,7 +270,7 @@ const addStaffMember = async(req, res) => {
     res.send("Registeration Completed!");
 }
 
-const updateAcademicMember = async(req, res) => {
+const updateAcademicMember = async (req, res) => {
     const academic_member = await Academic_Member.findOne({ ID: req.params.ID });
     if (!req.body.departmentID) req.body.departmentID = academic_member.departmentID;
     else {
@@ -261,11 +280,11 @@ const updateAcademicMember = async(req, res) => {
             return true;
         }
         var oldDepartment = await Department.findOne({ ID: academic_member.departmentID });
-        oldDepartment.members = oldDepartment.members.filter(function(value) { // Removing him from old department
-                return value != req.params.ID;
-            })
-            //Removing him from old department
-        await Department.updateOne({ID: academic_member.departmentID }, oldDepartment);
+        oldDepartment.members = oldDepartment.members.filter(function (value) { // Removing him from old department
+            return value != req.params.ID;
+        })
+        //Removing him from old department
+        await Department.updateOne({ ID: academic_member.departmentID }, oldDepartment);
         //Adding him to the new department
         var newDepartment = await Department.findOne({ ID: req.body.departmentID });
         if (!newDepartment) { // If this department doesn't exist
@@ -286,7 +305,7 @@ const updateAcademicMember = async(req, res) => {
         if (parseInt(req.body.memberType) === 0) {
             const deptID = academic_member.departmentID;
             const department = await Department.findOne({ ID: deptID })
-                //Assign this member to be head of the department 
+            //Assign this member to be head of the department 
             department.hodID = academic_member.ID;
             await Department.updateOne({ ID: deptID }, department)
         }
@@ -297,8 +316,8 @@ const updateAcademicMember = async(req, res) => {
     await Academic_Member.updateOne({ ID: req.params.ID }, req.body);
 }
 
-const updateStaffMember = async(req, res) => {
-    if(req.body.type!=null){
+const updateStaffMember = async (req, res) => {
+    if (req.body.type != null) {
         return res.status(400).send("You can't update the type of the staff member");
     }
     const member = await Staff_Member.find({ ID: req.params.ID, type: req.params.type });
@@ -339,7 +358,7 @@ const updateStaffMember = async(req, res) => {
     if (!req.body.officeID && member[0].officeID != undefined) req.body.officeID = member[0].officeID;
     if (!req.body.extraInfo) req.body.extraInfo = member[0].extraInfo;
     if (!req.body.salary) req.body.salary = member[0].salary;
-    req.body =  extraUtils.trimMonogoObj(req.body, ["memberType"]);
+    req.body = extraUtils.trimMonogoObj(req.body, ["memberType"]);
     const isValid = validator.validateAddStaffMember(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
@@ -347,23 +366,23 @@ const updateStaffMember = async(req, res) => {
     res.send("Staff member Updated Successfully!");
 }
 
-const deleteStaffMember = async(req, res) => {
+const deleteStaffMember = async (req, res) => {
     const member = await Staff_Member.findOne({ ID: req.params.ID, type: req.params.type });
     if (!member) {
         return res.status(400).send("This user doesn't exist");
     }
     if (req.params.type == 0) { // If it's an academic member
-        const academicMember = await Academic_Member.findOne({ ID: req.params.ID});
+        const academicMember = await Academic_Member.findOne({ ID: req.params.ID });
         const depID = academicMember.departmentID;
         const department = await Department.findOne({ ID: depID });
         //Remove the academic member from the department.
-        department.members = department.members.filter(function(value) {
-                return value != parseInt(req.params.ID);
-            })
-            //If this member was the head of the department remove him
+        department.members = department.members.filter(function (value) {
+            return value != parseInt(req.params.ID);
+        })
+        //If this member was the head of the department remove him
         if (department.hodID == parseInt(req.params.ID)) {
             department.hodID = undefined;
-            delete(department.hodID);
+            delete (department.hodID);
         }
         //Get all courses
         const allCourses = await Course.find();
@@ -377,7 +396,7 @@ const deleteStaffMember = async(req, res) => {
                 for (let j = 0; courseSlots != null && j < courseSlots.length; j++) {
                     if (courseSlots[j].instructor == parseInt(req.params.ID)) {
                         courseSlots[j].instructor = undefined;
-                        delete(courseSlots[j].instructor);
+                        delete (courseSlots[j].instructor);
                     }
                 }
 
@@ -386,16 +405,16 @@ const deleteStaffMember = async(req, res) => {
                 await Course_Schedule.update({ ID: courseID }, courseSchedule);
 
                 //Remove the member from the teaching staff of this course
-                allCourses[i].teachingStaff = allCourses[i].teachingStaff.filter(function(value) { return value != req.params.ID });
+                allCourses[i].teachingStaff = allCourses[i].teachingStaff.filter(function (value) { return value != req.params.ID });
             }
             //If this member was the course coordinator, remove him 
             if (allCourses[i].coordinatorID == parseInt(req.params.ID)) {
                 allCourses[i].coordinatorID = undefined;
-                delete(allCourses[i].coordinatorID);
+                delete (allCourses[i].coordinatorID);
             }
             //If this member was a course instructor 
-            if(allCourses[i].instructor.includes(parseInt(req.params.ID))){
-                allCourses[i].instructor = allCourses[i].instructor.filter(function(value){return value!=parseInt(req.params.ID)});
+            if (allCourses[i].instructor.includes(parseInt(req.params.ID))) {
+                allCourses[i].instructor = allCourses[i].instructor.filter(function (value) { return value != parseInt(req.params.ID) });
             }
 
             await Course.replaceOne({ ID: courseID }, allCourses[i]);
@@ -403,12 +422,12 @@ const deleteStaffMember = async(req, res) => {
         await Department.replaceOne({ ID: depID }, department);
         await Academic_Member.deleteOne({ ID: req.params.ID });
     }
-    await Staff_Member.deleteOne({ ID: req.params.ID , type:req.params.type});
+    await Staff_Member.deleteOne({ ID: req.params.ID, type: req.params.type });
     return res.send("Staff member deleted successfully");
 }
 
 // Start Department CRUD
-const createDepartment = async(req, res) => {
+const createDepartment = async (req, res) => {
     const isValid = validator.validateDepartment(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
@@ -449,14 +468,14 @@ const createDepartment = async(req, res) => {
     res.send("Department Added Successfully!");
 }
 
-const updateDepartment = async(req, res) => {
-    if(req.body.members!=null)
+const updateDepartment = async (req, res) => {
+    if (req.body.members != null)
         return res.status(400).send("You can't update the department member, you have to update the academic members themselves");
     const department = await Department.findOne({ ID: req.params.ID });
     if (!department) return res.status(400).send("this department doesn't exist");
     if (req.body.name == null) req.body.name = department.name;
-    if (req.body.members == null && department.members!=null) req.body.members = department.members;
-    if (req.body.hodID == null && department.hodID!= null) req.body.hodID = department.hodID;
+    if (req.body.members == null && department.members != null) req.body.members = department.members;
+    if (req.body.hodID == null && department.hodID != null) req.body.hodID = department.hodID;
 
     const isValid = validator.validateDepartment(req.body);
     if (isValid.error)
@@ -464,9 +483,9 @@ const updateDepartment = async(req, res) => {
 
     if (req.body.hodID != department.hodID) {
         if (!req.body.members.includes(req.body.hodID))
-            return res.status(400).send("The HOD must be a member of the Department !");    
+            return res.status(400).send("The HOD must be a member of the Department !");
     }
-    
+
     await Academic_Member.updateMany({ departmentID: req.params.ID }, { $unset: { departmentID: 1 } });
 
     // await Academic_Member.updateMany({departmentID : req.params.ID} , {departmentID : -1});
@@ -476,27 +495,27 @@ const updateDepartment = async(req, res) => {
             return res.status(400).send("The Members must be Academic member!");
         await Academic_Member.updateOne({ ID: member }, { departmentID: req.params.ID });
     }
-    if(req.body.hodID != null){
-        await Academic_Member.updateOne({ID:req.body.hodID}, {type : 0});
+    if (req.body.hodID != null) {
+        await Academic_Member.updateOne({ ID: req.body.hodID }, { type: 0 });
     }
     await Department.update({ ID: req.params.ID }, req.body);
     res.send("department has been updated successfully");
 
 }
 
-const deleteDepartment = async(req, res) => {
-        const department = await Department.findOne({ ID: req.params.ID });
-        if (!department)
-            return res.status(404).send("Department name Not Valid");
+const deleteDepartment = async (req, res) => {
+    const department = await Department.findOne({ ID: req.params.ID });
+    if (!department)
+        return res.status(404).send("Department name Not Valid");
 
-        await Department.deleteOne({ ID: req.params.ID });
-        await removeCascade.removeDepartment(req.params.ID);
-        res.send("Department Deleted Successfully!");
-    }
-    // End Department CRUD
+    await Department.deleteOne({ ID: req.params.ID });
+    await removeCascade.removeDepartment(req.params.ID);
+    res.send("Department Deleted Successfully!");
+}
+// End Department CRUD
 
 // Start Course CRUD
-const createCourse = async(req, res) => {
+const createCourse = async (req, res) => {
     const isValid = validator.validateCourse_hr(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
@@ -538,65 +557,65 @@ const createCourse = async(req, res) => {
     return res.send("Course has been added successfully");
 }
 
-const updateCourse = async(req, res) => {
-        const courseID = parseInt(req.params.ID);
-        const oldCourse = await Course.findOneAndDelete({ ID: courseID });
-        if (!oldCourse)
-            return res.status(400).send("Course does not exist");
-        if (!req.body.name) req.body.name = oldCourse.name;
-        if (!req.body.code) req.body.code = oldCourse.code;
-        if (!req.body.scheduleID) req.body.scheduleID = oldCourse.scheduleID;
-        if (!req.body.department) req.body.department = oldCourse.department;
-        if (!req.body.description) req.body.description = oldCourse.description;
+const updateCourse = async (req, res) => {
+    const courseID = parseInt(req.params.ID);
+    const oldCourse = await Course.findOneAndDelete({ ID: courseID });
+    if (!oldCourse)
+        return res.status(400).send("Course does not exist");
+    if (!req.body.name) req.body.name = oldCourse.name;
+    if (!req.body.code) req.body.code = oldCourse.code;
+    if (!req.body.scheduleID) req.body.scheduleID = oldCourse.scheduleID;
+    if (!req.body.department) req.body.department = oldCourse.department;
+    if (!req.body.description) req.body.description = oldCourse.description;
 
-        if (await checkings.courseCodeExists(req.body.code))
-            return res.status(400).send("Code must be unique");
+    if (await checkings.courseCodeExists(req.body.code))
+        return res.status(400).send("Code must be unique");
 
-        if (req.body.scheduleID) {
-            if (!await checkings.scheduleExists(req.body.scheduleID)) {
-                const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
-                course.save();
-                return res.status(400).send("Schedule with the given ID does not exist");
-            }
-
-            if (await checkings.scheduleTaken(req.body.scheduleID)) {
-                const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
-                course.save();
-                return res.status(400).send("Schedule belongs to another course");
-            }
-        }
-
-        if (req.body.department) {
-            if (!await checkings.departmentExists_arr(req.body.department)) {
-                const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
-                course.save();
-                return res.status(400).send("Department does not exist");
-            }
-        }
-
-        const isValid = validator.validateCourse_hr(req.body);
-        if (isValid.error) {
+    if (req.body.scheduleID) {
+        if (!await checkings.scheduleExists(req.body.scheduleID)) {
             const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
             course.save();
-            return res.status(400).send({ error: isValid.error.details[0].message });
+            return res.status(400).send("Schedule with the given ID does not exist");
         }
 
-        const course = new Course({
-            ID: oldCourse.ID,
-            name: req.body.name,
-            //coordinatorID : req.body.coordinatorID, // HR can not assign coordinator.
-            code: req.body.code,
-            scheduleID: req.body.scheduleID,
-            //teachingStaff : req.body.teachingStaff,
-            department: req.body.department,
-            description: req.body.description,
-        });
-
-        await course.save();
-        return res.send("Course has been updated successfully");
+        if (await checkings.scheduleTaken(req.body.scheduleID)) {
+            const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
+            course.save();
+            return res.status(400).send("Schedule belongs to another course");
+        }
     }
-    //delete the course schedule 
-const deleteCourse = async(req, res) => {
+
+    if (req.body.department) {
+        if (!await checkings.departmentExists_arr(req.body.department)) {
+            const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
+            course.save();
+            return res.status(400).send("Department does not exist");
+        }
+    }
+
+    const isValid = validator.validateCourse_hr(req.body);
+    if (isValid.error) {
+        const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
+        course.save();
+        return res.status(400).send({ error: isValid.error.details[0].message });
+    }
+
+    const course = new Course({
+        ID: oldCourse.ID,
+        name: req.body.name,
+        //coordinatorID : req.body.coordinatorID, // HR can not assign coordinator.
+        code: req.body.code,
+        scheduleID: req.body.scheduleID,
+        //teachingStaff : req.body.teachingStaff,
+        department: req.body.department,
+        description: req.body.description,
+    });
+
+    await course.save();
+    return res.send("Course has been updated successfully");
+}
+//delete the course schedule 
+const deleteCourse = async (req, res) => {
     const courseID = parseInt(req.params.ID);
     const course = await Course.findOneAndDelete({ ID: courseID });
     if (!course)
@@ -612,7 +631,7 @@ const deleteCourse = async(req, res) => {
 // End Course CRUD
 
 // Generate IDs
-const getMaxStaffID = async(type) => {
+const getMaxStaffID = async (type) => {
     const staffTable = await Staff_Member.find({ type: type });
     let max = 0;
     if (staffTable.length != 0) {
@@ -621,7 +640,7 @@ const getMaxStaffID = async(type) => {
     return max;
 }
 
-const getMaxCourseID = async() => {
+const getMaxCourseID = async () => {
     const courseTable = await Course.find();
     let max = 0;
     if (courseTable.length != 0) {
@@ -630,7 +649,7 @@ const getMaxCourseID = async() => {
     return max;
 }
 
-const addMissingSignInOut = async(req, res) => {
+const addMissingSignInOut = async (req, res) => {
     const { ID, type } = req.header.user;
     const signinYear = req.body.signinYear;
     const signinMonth = req.body.signinMonth;
@@ -645,7 +664,7 @@ const addMissingSignInOut = async(req, res) => {
     const signoutMinute = req.body.signoutMinute;
     const signoutSec = req.body.signoutSec;
     if (!(signinYear != undefined && signinMonth != undefined && signinDay != undefined && signinHour != undefined && signinMinute != undefined && signinSec != undefined &&
-            signoutYear != undefined && signoutMonth != undefined && signoutDay != undefined && signoutHour != undefined && signoutMinute != undefined && signoutSec != undefined))
+        signoutYear != undefined && signoutMonth != undefined && signoutDay != undefined && signoutHour != undefined && signoutMinute != undefined && signoutSec != undefined))
         return res.status(400).send("please enter all specified signin date info and signout info(year,month,day,hour,min,sec)");
     const staffMemberID = req.body.ID;
     const staffMemberType = req.body.type;
@@ -661,14 +680,14 @@ const addMissingSignInOut = async(req, res) => {
     if (newSignSession.signin > newSignSession.signout) {
         return res.status(400).send("you can't make signout in a time before signin");
     }
-    
+
     staffMember.attendanceRecord.push(newSignSession);
 
     await Staff_Member.updateOne({ ID: staffMemberID, type: staffMemberType }, staffMember);
-    res.send("adding login/out has done successfully with signin date "+new Date(newSignSession.signin)+" and out at "+new Date(newSignSession.signout));
+    res.send("adding login/out has done successfully with signin date " + new Date(newSignSession.signin) + " and out at " + new Date(newSignSession.signout));
 }
 
-const viewStaffMemberAttendance = async(req, res) => {
+const viewStaffMemberAttendance = async (req, res) => {
     const staffMemberID = req.params.ID;
     const staffMembertype = req.params.type;
     if (staffMembertype == undefined || staffMemberID == undefined)
@@ -691,7 +710,7 @@ const viewStaffMemberAttendance = async(req, res) => {
 
 }
 
-const updateStaffMemberSalary = async(req, res) => {
+const updateStaffMemberSalary = async (req, res) => {
     const staffMemberID = req.body.ID;
     const staffMembertype = req.body.type;
     const newSalary = req.body.salary;
@@ -709,26 +728,28 @@ const updateStaffMemberSalary = async(req, res) => {
 
 }
 
-const viewStaffMembersWithMissingHours = async(req, res) => {
+const viewStaffMembersWithMissingHours = async (req, res) => {
     const allStaffMembers = await Staff_Member.find();
     if (!allStaffMembers) return res.status(400).send("there aren't any academic members yet");
-    const accidentalLeaves= await Accidental_Leave_Request.find();
-    const annualLeaves=await Annual_Leave_Request.find();
+    const accidentalLeaves = await Accidental_Leave_Request.find();
+    const annualLeaves = await Annual_Leave_Request.find();
 
-    const compensationLeaves=await Compensation_Leave_Request.find();
+    const compensationLeaves = await Compensation_Leave_Request.find();
 
-    const maternalityLeaves=await Maternity_Leave_Request.find();
-    const sickLeaves=await Sick_Leave_Request.find();
+    const maternalityLeaves = await Maternity_Leave_Request.find();
+    const sickLeaves = await Sick_Leave_Request.find();
 
     let allMissedMembers = [];
     for (const mem of allStaffMembers) {
 
-        const missingHours = extraUtils.getMissingHours(mem,accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
+        const missingHours = extraUtils.getMissingHours(mem, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
         if (Number.isFinite(missingHours) && missingHours > 0) {
             const trimmedMem = extraUtils.trimMonogoObj(mem['_doc'], ["_id", "password", "__v"]);
-            trimmedMem.attendanceRecord= trimmedMem.attendanceRecord.filter((x)=>{return  (x.signin&&x.signout)}).map((x)=>{x.signin=new Date(x.signin);
-                x.signout=new Date(x.signout); return x;});
-           
+            trimmedMem.attendanceRecord = trimmedMem.attendanceRecord.filter((x) => { return (x.signin && x.signout) }).map((x) => {
+                x.signin = new Date(x.signin);
+                x.signout = new Date(x.signout); return x;
+            });
+
             allMissedMembers.push(trimmedMem);
         }
     }
@@ -737,7 +758,7 @@ const viewStaffMembersWithMissingHours = async(req, res) => {
 
 }
 
-const viewStaffMembersWithMissingDays = async(req, res) => {
+const viewStaffMembersWithMissingDays = async (req, res) => {
     const staffMembers = await Staff_Member.find({});
     if (!staffMembers) {
         return res.send("there is no staff members in the database yet");
@@ -789,5 +810,11 @@ module.exports = {
     viewStaffMemberAttendance,
     updateStaffMemberSalary,
     viewStaffMembersWithMissingHours,
-    viewStaffMembersWithMissingDays
+    viewStaffMembersWithMissingDays,
+    
+    viewAllLocations,
+    viewAllCourses,
+    viewAllFaculties,
+    viewAllStaffMembers,
+    viewAllDepartments,
 }
