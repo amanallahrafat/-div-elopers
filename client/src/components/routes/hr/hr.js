@@ -4,29 +4,40 @@ import { Redirect } from 'react-router-dom';
 import axios from "axios";
 import setAuthToken from "../../../actions/setAuthToken";
 import Profile from '../../Profile';
+import Location_Card from './Location_Card'
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
-    console.log(userProfile.data);
     return userProfile.data;
 }
 
-class HOD extends Component {
+const requestAllLocations = async () => {
+    const locations = await axios.get('/hr/viewAllLocations');
+    return locations.data;
+}
+
+class HR extends Component {
     state = {
         isLoggedIn: 0,
-        // componentInMain: (<button>Sarah</button>)
-        componentInMain: <div />
+        'componentInMain': <div />
     }
 
     setComponentInMain = async (event) => {
+        console.log("hello")
         if (event == "profile") {
             this.setState({
-                componentInMain: <Profile
+                'componentInMain': <Profile
                     profile={await requestUserProfile()}
                     setComponentInMain={this.setComponentInMain} />
             });
         }
-        // if (event == "location")
+        else if (event == "location") {
+            this.setState({
+                'componentInMain': <Location_Card
+                    locations={await requestAllLocations()}
+                    setComponentInMain={this.setComponentInMain} />
+            });
+        }
     }
 
     async componentDidMount() {
@@ -37,6 +48,8 @@ class HOD extends Component {
         try {
             setAuthToken(localStorage.getItem('auth-token'));
             await axios.get('/authStaffMember');
+            await axios.get('/authHr');
+
             this.setState({ isLoggedIn: 2 });
         }
         catch (err) {
@@ -49,7 +62,6 @@ class HOD extends Component {
         if (this.state.isLoggedIn === 0)
             return <div />;
         if (this.state.isLoggedIn === 1) {
-            //alert("Please Login!");
             return <Redirect to='/' />;
         }
         return (
@@ -61,4 +73,4 @@ class HOD extends Component {
     }
 }
 
-export default HOD;
+export default HR;
