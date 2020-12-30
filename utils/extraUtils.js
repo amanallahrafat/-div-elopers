@@ -4,10 +4,16 @@ const Compensation_Leave_Request = require("../Models/Requests/Compensation_Leav
 const Maternity_Leave_Request = require("../Models/Requests/Maternity_Leave_Request")
 const Sick_Leave_Request = require("../Models/Requests/Sick_Leave_Request")
 const Staff_Member = require("../Models/Users/Staff_Member")
+const Location = require("../Models/Others/Location")
 
 const getAcademicMemberByID = async (ID) => {
     const academicMem = await Staff_Member.findOne({ ID: ID, type: 0 });
     return academicMem;
+}
+
+const getOfficeByID = async (ID) => {
+    const office = await Location.findOne({ ID: ID});
+    return office;
 }
 
 const trimMonogoObj = (obj, deletedProperties) => {
@@ -285,4 +291,5 @@ module.exports = {
     haveMissingDays,
     getCurDay,
     getAcademicMemberByID,
+    getOfficeByID,
 }

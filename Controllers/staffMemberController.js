@@ -95,6 +95,8 @@ const viewProfile = async (req, res) => {
         x.signout = new Date(x.signout); return x;
     });
 
+    profile['_doc'].officeID = (await extraUtils.getOfficeByID(profile.officeID)).name;
+
     res.send(profile);
 }
 

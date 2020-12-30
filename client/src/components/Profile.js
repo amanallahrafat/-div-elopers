@@ -5,6 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   mainFeaturedPost: {
@@ -29,7 +30,8 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     padding: theme.spacing(3),
     [theme.breakpoints.up('md')]: {
-      padding: theme.spacing(6),
+      padding: theme.spacing(1),
+      paddingTop: theme.spacing(3),
       paddingRight: 0,
     },
   },
@@ -37,19 +39,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainFeaturedPost(props) {
   const classes = useStyles();
-  const { post } = props;
-
   return (
-    <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: `url(https://source.unsplash.com/random)` }}>
+    <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: `url(https://i.pinimg.com/originals/94/f6/41/94f641161d1d124c6bfa2463c7feb8d4.jpg)` }}>
       {/* Increase the priority of the hero background image */}
-      {<img style={{ display: 'none' }}   />}
+      {<img style={{ display: 'none' }} />}
       <div className={classes.overlay} />
       <Grid container>
         <Grid item md={6}>
           <div className={classes.mainFeaturedPostContent}>
             <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+              {props.profile.name}
             </Typography>
-            <Typography variant="h5" color="inherit" paragraph>
+            <Typography variant="h6" color="inherit" paragraph>
+              Office Number: {props.profile.officeID}
+            </Typography>
+            <Typography variant="h6" color="inherit" paragraph>
+              Email: {props.profile.email}
             </Typography>
             <Link variant="subtitle1" href="#">
             </Link>

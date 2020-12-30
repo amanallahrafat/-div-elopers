@@ -5,13 +5,27 @@ import axios from "axios";
 import setAuthToken from "../../../actions/setAuthToken";
 import Profile from '../../Profile';
 
+const requestUserProfile = async()=>{
+    const userProfile = await axios.get('/viewProfile');
+    console.log(userProfile.data);
+  return userProfile.data;
+}
+
 class HOD extends Component {
     state = {
         isLoggedIn: 0,
+        // componentInMain: (<button>Sarah</button>)
+        componentInMain: <div />
+    }
+
+    setComponentInMain = async (event)=>{
+        if(event=="profile"){
+            this.setState({componentInMain: <Profile profile = {await requestUserProfile()}/>});
+        }
     }
 
     async componentDidMount() {
-        if (!localStorage.getItem('auth-token')){
+        if (!localStorage.getItem('auth-token')) {
             this.setState({ isLoggedIn: 1 });
             return;
         }
@@ -34,8 +48,9 @@ class HOD extends Component {
             return <Redirect to='/' />;
         }
         return (
-            <div>
-                <Navigation_Bar />
+            <div >
+                <Navigation_Bar fromParent={this.setComponentInMain} />
+                {this.state.componentInMain}
             </div>
         )
     }

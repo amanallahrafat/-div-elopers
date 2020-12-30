@@ -79,6 +79,9 @@ class Navigation_Bar extends Component {
 
     handleViewProfile = (event) => {
         this.setState({ viewProfile: true });
+        this.props.fromParent("profile");
+        console.log(event.target);
+        console.log("sarah");
     };
 
     handleSlideBarToggle = (event) => {
@@ -86,7 +89,6 @@ class Navigation_Bar extends Component {
     }
     render() {
         const { classes } = this.props;
-        console.log(localStorage.getItem('type'));
         return (
             <div className={classes.grow}>
                 <AppBar position="static" className={clsx(classes.appBar, {
@@ -120,6 +122,7 @@ class Navigation_Bar extends Component {
                                 aria-label="account of current user"
                                 //   aria-controls={menuId}
                                 aria-haspopup="true"
+                                id="profile"
                                 onClick={this.handleViewProfile}
                                 color="inherit"
                             >

@@ -18,16 +18,16 @@ export default function SimpleMenu() {
         setNotifications(res.data.sort((a, b) => b.date > a.date));
     };
 
-    const periodic = (() => {
-        setInterval(async () => {
-            let res = await axios.get('ac/getAllNotifications');
-            res = res.data.sort((a, b) => b.date > a.date);
-            const resJSON = JSON.stringify(res);
-            if (resJSON != JSON.stringify(notifications))
-                setNotifications(res);
+    // const periodic = (() => {
+    //     setInterval(async () => {
+    //         let res = await axios.get('ac/getAllNotifications');
+    //         res = res.data.sort((a, b) => b.date > a.date);
+    //         const resJSON = JSON.stringify(res);
+    //         if (resJSON != JSON.stringify(notifications))
+    //             setNotifications(res);
 
-        }, 10_000)
-    })();
+    //     }, 10_000)
+    // })();
 
     const handleClose = async (event) => {
         setAnchorEl(null);
