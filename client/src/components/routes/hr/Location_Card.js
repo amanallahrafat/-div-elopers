@@ -7,11 +7,14 @@ import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import EditLocationForm from './Edit_Location_Form';
 import axios from 'axios';
 import React from 'react';
+import AddLocationForm from './Add_Location_Form';
+import EditLocationForm from './Edit_Location_Form';
+
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -63,6 +66,7 @@ export default function Location_Card(props) {
 
     const [openUpdateLocation, setOpenUpdateLocation] = React.useState(false);
     const [updatedLocation, setUpdatedLocation] = React.useState({});
+    const [openAddLocation, setOpenAddLocation] = React.useState(false);
 
 
     const handleOpenEdit = (event) => {
@@ -70,6 +74,14 @@ export default function Location_Card(props) {
     }
     const handleCloseEdit = () => {
         setOpenUpdateLocation(false);
+    }
+
+    const handleOpenAdd = () => {
+        setOpenAddLocation(true);
+    }
+
+    const handleCloseAdd = () => {
+        setOpenAddLocation(false);
     }
 
     // const handleOpenAddExtraInfo = () => {
@@ -103,6 +115,15 @@ export default function Location_Card(props) {
 
                 <Typography className={classes.title} variant="h5" component="div">
                     <b>Locations</b>
+                    <IconButton
+                        aria-label="account of current user"
+                        aria-haspopup="true"
+                        color='primary'
+                        onClick={handleOpenAdd}
+                    >
+                        <AddCircleIcon style={{ fontSize: 25, opacity: 0.8 }}
+                        />
+                    </IconButton>
                 </Typography>
 
                 <Grid container spacing={4} >
@@ -115,7 +136,7 @@ export default function Location_Card(props) {
                                             <CardContent>
                                                 <Typography variant="subtitle1" paragraph>
                                                     <b>Name:</b> {location.name}<br />
-                                                    <b>Capacity:</b> {location.capacity}<br/>
+                                                    <b>Capacity:</b> {location.capacity}<br />
                                                     <b>Type:</b> {location.type === 0 ?
                                                         "Hall" : location.type === 1 ? "Tutorial room" :
                                                             location.type === 2 ? "Office" : "Lab"}
@@ -155,6 +176,11 @@ export default function Location_Card(props) {
                 handleOpenEdit={handleOpenEdit}
                 handleCloseEdit={handleCloseEdit}
                 location={updatedLocation}
+                setComponentInMain={props.setComponentInMain} />
+            <AddLocationForm
+                open={openAddLocation}
+                handleOpenAdd={handleOpenAdd}
+                handleCloseAdd={handleCloseAdd}
                 setComponentInMain={props.setComponentInMain} />
         </div >
     );
