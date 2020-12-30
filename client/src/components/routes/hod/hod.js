@@ -20,7 +20,7 @@ class HOD extends Component {
 
     setComponentInMain = async (event)=>{
         if(event=="profile"){
-            this.setState({componentInMain: <Profile profile = {await requestUserProfile()}/>});
+            this.setState({componentInMain: <Profile profile = {await requestUserProfile()} setComponentInMain={this.setComponentInMain}/>});
         }
     }
 

@@ -80,8 +80,8 @@ class Navigation_Bar extends Component {
     handleViewProfile = (event) => {
         this.setState({ viewProfile: true });
         this.props.fromParent("profile");
-        console.log(event.target);
-        console.log("sarah");
+        //console.log(event.target);
+        console.log("handleView");
     };
 
     handleSlideBarToggle = (event) => {
@@ -94,7 +94,7 @@ class Navigation_Bar extends Component {
                 <AppBar position="static" className={clsx(classes.appBar, {
                     [classes.appBarShift]: this.state.isSlideBarOpen,
                 })}>
-                    <Toolbar>
+                    <Toolbar >
                         <IconButton
                             aria-label="account of current user"
                             //   aria-controls={menuId}
