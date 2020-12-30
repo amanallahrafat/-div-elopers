@@ -63,8 +63,8 @@ const login = async (req, res) => {
     // param2 : secret Key (random string)
     const token = jwt.sign({ ID: u.ID, type: u.type }, key);
     let academicMemberType = undefined;
-    if(u.type==0){
-        const academicMember = await Academic_Member.findOne({ID: u.ID});
+    if (u.type == 0) {
+        const academicMember = await Academic_Member.findOne({ ID: u.ID });
         academicMemberType = academicMember.type;
     }
     res.header('auth-token', token).send({
@@ -94,9 +94,7 @@ const viewProfile = async (req, res) => {
         x.signin = new Date(x.signin);
         x.signout = new Date(x.signout); return x;
     });
-
     profile['_doc'].officeID = (await extraUtils.getOfficeByID(profile.officeID))?.name;
-
     res.send(profile);
 }
 
@@ -122,7 +120,7 @@ const viewAttendance = async (req, res) => {
     const attendanceArray = staff_member.attendanceRecord;
     let responseArray = [];
     for (const record of attendanceArray) {
-        record.status = (record.status == 1) ? "attedant" : "absent";
+        record.status = (record.status == 1) ? "attended" : "absent";
         //   console.log((new Date(record.signin)).getMonth());
         if (record.signin && record.signout)
             if (!req.body.month || ((req.body.month - 1) == (new Date(record.signin)).getMonth())) {

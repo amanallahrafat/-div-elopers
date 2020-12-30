@@ -1,22 +1,29 @@
-import { Component } from "react";
-import Navigation_Bar from '../../Navigation_Bar.js';
-import { Redirect } from 'react-router-dom';
 import axios from "axios";
+import { Component } from "react";
+import { Redirect } from 'react-router-dom';
 import setAuthToken from "../../../actions/setAuthToken";
+import Attendance from '../../Attendance';
+import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
-    console.log(userProfile.data);
     return userProfile.data;
+}
+
+const requestAttendanceRecods = async () => {
+
+    const attendanceRecords = await axios.get('/viewAttendance');
+    console.log(attendanceRecords.data);
+    return attendanceRecords.data;
 }
 
 class HOD extends Component {
     state = {
         isLoggedIn: 0,
-        // componentInMain: (<button>Sarah</button>)
         componentInMain: <div />
     }
+
 
     setComponentInMain = async (event) => {
         if (event == "profile") {
@@ -25,8 +32,13 @@ class HOD extends Component {
                     profile={await requestUserProfile()}
                     setComponentInMain={this.setComponentInMain} />
             });
+        } else if (event == "attendance") {
+            this.setState({
+                componentInMain: <Attendance
+                    attendanceRecords={await requestAttendanceRecods()}
+                    setComponentInMain={this.setComponentInMain} />
+            });
         }
-        // if (event == "location")
     }
 
     async componentDidMount() {

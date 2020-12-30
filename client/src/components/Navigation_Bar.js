@@ -16,6 +16,8 @@ import DropdownList_Notifications from './DropdownList_Notifications';
 import Hod_SlideBar from './slideBars/Hod_SlideBar';
 import HR_SlideBar from './slideBars/HR_SlideBar';
 
+
+
 const drawerWidth = 240;
 
 const styles = (theme) => ({
@@ -84,6 +86,11 @@ class Navigation_Bar extends Component {
         //console.log(event.target);
         console.log("handleView");
     };
+    handleViewAttendance=(event)=>{
+        this.props.fromParent("attendance");
+        console.log( "handle attendance" );
+    }
+
 
     handleSlideBarToggle = (event) => {
         this.setState({ isSlideBarOpen: !this.state.isSlideBarOpen });
@@ -110,7 +117,7 @@ class Navigation_Bar extends Component {
                   </Typography>
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
-                            <IconButton aria-label="show 4 new mails" color="inherit">
+                            <IconButton aria-label="show 4 new mails" color="inherit" onClick={this.handleViewAttendance}>
                                 <Badge badgeContent={0} color="secondary">
                                     <TodayIcon />
                                 </Badge>
@@ -118,6 +125,7 @@ class Navigation_Bar extends Component {
                             <Collapse in={localStorage.getItem('type') == 0}>
                                 <DropdownList_Notifications />
                             </Collapse>
+                         
                             <IconButton
                                 // edge="end"
                                 aria-label="account of current user"
