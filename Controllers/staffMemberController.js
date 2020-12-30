@@ -94,7 +94,9 @@ const viewProfile = async (req, res) => {
         x.signin = new Date(x.signin);
         x.signout = new Date(x.signout); return x;
     });
-    profile['_doc'].officeID = (await extraUtils.getOfficeByID(profile.officeID))?.name;
+    const office=(await extraUtils.getOfficeByID(profile.officeID));
+    if(office)
+    profile['_doc'].officeID = office.name;
     res.send(profile);
 }
 
@@ -164,22 +166,24 @@ const updateMyProfile = async (req, res) => {
             return res.status(400).send("academic member can't update his/her salary or/and office")
         }
     }
-
-
+  
     if (req.body.name != undefined || req.body.ID != undefined || req.body.type != undefined || req.body.dayOff != undefined ||
         req.body.attendanceRecord != undefined || req.body.annualBalance != undefined || req.body.accidentalLeaveBalance != undefined) {
         return res.status(400).send("you can't update any of your name,ID,type,dayOff,attendance record,annualBalance,accidentalLeaveBlance");
 
     }
     let obj = {};
-
+  
     if (req.body.email == undefined) {
         obj.email = member.email;
+
     } else {
         const users = await Staff_Member.find({ email: req.body.email });
         if (users.length != 0 && users[0].ID != ID && users[0].type != type) {
             return res.status(400).send("This email already exists. Emails have to be unique");
         }
+
+
         obj.email = req.body.email;
 
     }
@@ -191,8 +195,11 @@ const updateMyProfile = async (req, res) => {
 
     obj.salary = (req.body.salary == undefined) ? member.salary : req.body.salary;
     const isValid = validator.validateUpdateProfile(obj);
-    if (isValid.error)
+
+    if (isValid.error){
         return res.status(400).send({ error: isValid.error.details[0].message });
+    }
+
     await Staff_Member.updateOne({ ID: ID, type: type }, obj);
     res.send("profile Updated Successfully!");
 }

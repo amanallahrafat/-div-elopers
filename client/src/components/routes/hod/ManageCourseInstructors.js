@@ -62,10 +62,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainFeaturedPost(props) {
   const [openEdit, setOpenEdit] = React.useState(false);
-
+ 
   const [openExtraInfo, setOpenExtraInfo] = React.useState(false);
-
-
+  
+  
   const handleOpenEdit = (event) => {
     setOpenEdit(true);
   }
@@ -73,17 +73,17 @@ export default function MainFeaturedPost(props) {
     setOpenEdit(false);
   }
 
-  const handleOpenAddExtraInfo = () => {
+  const handleOpenAddExtraInfo=()=>{
     setOpenExtraInfo(true);
   }
-  const handleCloseExtraInfo = () => {
+  const handleCloseExtraInfo=()=>{
     setOpenExtraInfo(false);
   }
 
 
 
   const handleDeleteExtraInfo = async (event) => {
-
+  
     const newInfo = props.profile.extraInfo.filter((info, idx) => {
       return idx != event.currentTarget.id;
     })
@@ -121,7 +121,7 @@ export default function MainFeaturedPost(props) {
                 </Link>
               </div>
             </Grid>
-
+           
             <Grid item md={6} style={{ textAlign: 'right' }}>
               <IconButton
                 // edge="end"
@@ -137,14 +137,14 @@ export default function MainFeaturedPost(props) {
                 <EditIcon style={{ fontSize: 30, opacity: 1 }}
                 />
               </IconButton>
-
-            </Grid>
+                     
+             </Grid>
 
           </Grid>
         </Paper>
         <Grid container spacing={4} >
           <Grid item xs={12} md={6}>
-            <CardActionArea component="a" href="#" disabled={false}>
+            <CardActionArea component="a" href="#" disabled={true}>
               <Card className={classes.card}>
                 <div className={classes.cardDetails}>
                   <CardContent>
@@ -170,36 +170,38 @@ export default function MainFeaturedPost(props) {
                 <div className={classes.cardDetails}>
                   <CardContent>
                     <Typography variant="subtitle1" paragraph>
-                      <b>Extra Information:</b>
+                      <b>Extra Information:</b> 
 
-                      <IconButton
-                        aria-label="account of current user"
-                        aria-haspopup="true"
-                        color='primary'
-
-                        onClick={handleOpenAddExtraInfo}
-                      >
-                        <AddCircleIcon style={{ fontSize: 25, opacity: 0.8 }}
-                        />
-                      </IconButton>
+                    <IconButton
+                aria-label="account of current user"
+                aria-haspopup="true"
+                color='primary'
+                
+                onClick={handleOpenAddExtraInfo}
+              >
+                <AddCircleIcon style={{ fontSize: 25, opacity: 0.8 }}
+                />
+              </IconButton>
+                   
                       <br />
+
                       {props.profile.extraInfo.map((i, idx) => {
                         return (
                           <div>
-                            {console.log(i, idx)}
-                            {i}
+                            {console.log(i,idx)}
+                              {i}
                             <IconButton
-                              disabled={false}
+                             disabled={false}
                               aria-label="account of current user"
                               aria-haspopup="true"
-                              id={"" + idx}
+                              id={""+idx}
                               color='primary'
                               onClick={handleDeleteExtraInfo}
                             >
                               <DeleteIcon style={{ fontSize: 25, opacity: 0.8 }}
                               />
                             </IconButton>
-                          </div>
+                         </div>
                         )
                       })}
                     </Typography>
@@ -214,7 +216,7 @@ export default function MainFeaturedPost(props) {
         </Grid>
       </Container>
       <AddExtraInfoForm open={openExtraInfo} handleOpenEdit={handleOpenAddExtraInfo} handleCloseEdit={handleCloseExtraInfo} profile={props.profile} setComponentInMain={props.setComponentInMain} />
-
+    
       <EditProfileForm open={openEdit} handleOpenEdit={handleOpenEdit} handleCloseEdit={handleCloseEdit} profile={props.profile} setComponentInMain={props.setComponentInMain} />
     </div >
   );

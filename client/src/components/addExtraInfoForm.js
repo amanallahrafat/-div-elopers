@@ -31,7 +31,7 @@ export default function addExtraInfoForm(props) {
             alert("please enter a valid info");
         }
         handleClose();
-    }
+}
     return (
         <div>
 
