@@ -94,7 +94,9 @@ const viewProfile = async (req, res) => {
         x.signin = new Date(x.signin);
         x.signout = new Date(x.signout); return x;
     });
-    profile['_doc'].officeID = (await extraUtils.getOfficeByID(profile.officeID))?.name;
+    const office=(await extraUtils.getOfficeByID(profile.officeID));
+    if(office)
+    profile['_doc'].officeID = office.name;
     res.send(profile);
 }
 
