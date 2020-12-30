@@ -95,7 +95,9 @@ const viewProfile = async (req, res) => {
         x.signout = new Date(x.signout); return x;
     });
 
-    profile['_doc'].officeID = (await extraUtils.getOfficeByID(profile.officeID)).name;
+    const office=await extraUtils.getOfficeByID(profile.officeID);
+    if(office)
+    profile['_doc'].officeID = (office).name;
 
     res.send(profile);
 }
@@ -122,7 +124,7 @@ const viewAttendance = async (req, res) => {
     const attendanceArray = staff_member.attendanceRecord;
     let responseArray = [];
     for (const record of attendanceArray) {
-        record.status = (record.status == 1) ? "attedant" : "absent";
+        record.status = (record.status == 1) ? "attended" : "absent";
         //   console.log((new Date(record.signin)).getMonth());
         if (record.signin && record.signout)
             if (!req.body.month || ((req.body.month - 1) == (new Date(record.signin)).getMonth())) {

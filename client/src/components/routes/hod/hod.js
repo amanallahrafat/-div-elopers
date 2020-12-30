@@ -4,23 +4,31 @@ import { Redirect } from 'react-router-dom';
 import axios from "axios";
 import setAuthToken from "../../../actions/setAuthToken";
 import Profile from '../../Profile';
+import Attendance from '../../Attendance';
 
 const requestUserProfile = async()=>{
     const userProfile = await axios.get('/viewProfile');
-    console.log(userProfile.data);
   return userProfile.data;
+}
+
+const requestAttendanceRecods = async()=>{
+    
+    const attendanceRecords = await axios.get('/viewAttendance');
+    console.log(attendanceRecords.data);
+  return attendanceRecords.data;
 }
 
 class HOD extends Component {
     state = {
         isLoggedIn: 0,
-        // componentInMain: (<button>Sarah</button>)
         componentInMain: <div />
     }
 
     setComponentInMain = async (event)=>{
         if(event=="profile"){
             this.setState({componentInMain: <Profile profile = {await requestUserProfile()} setComponentInMain={this.setComponentInMain}/>});
+        }else if(event=="attendance"){
+            this.setState({componentInMain: <Attendance attendanceRecords = {await requestAttendanceRecods()} setComponentInMain={this.setComponentInMain}/>});   
         }
     }
 
