@@ -1,14 +1,20 @@
-import { Component } from "react";
-import Navigation_Bar from '../../Navigation_Bar.js';
-import { Redirect } from 'react-router-dom';
 import axios from "axios";
+import { Component } from "react";
+import { Redirect } from 'react-router-dom';
 import setAuthToken from "../../../actions/setAuthToken";
+import Attendance from '../../Attendance';
+import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
-import Location_Card from './Location_Card'
+import Location_Card from './Location_Card';
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
     return userProfile.data;
+}
+
+const requestAttendanceRecods = async () => {
+    const attendanceRecords = await axios.get('/viewAttendance');
+    return attendanceRecords.data;
 }
 
 const requestAllLocations = async () => {
@@ -35,6 +41,13 @@ class HR extends Component {
             this.setState({
                 'componentInMain': <Location_Card
                     locations={await requestAllLocations()}
+                    setComponentInMain={this.setComponentInMain} />
+            });
+        }
+        else if (event == "attendance") {
+            this.setState({
+                componentInMain: <Attendance
+                    attendanceRecords={await requestAttendanceRecods()}
                     setComponentInMain={this.setComponentInMain} />
             });
         }
