@@ -28,6 +28,7 @@ const handleAddExtraInfo= async ()=>{
         console.log(res.data);
         props.setComponentInMain("profile");
     }catch (err){
+      console.log(err);
         alert("please enter a valid info");
     }
     handleClose();

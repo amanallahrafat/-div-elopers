@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import MailIcon from '@material-ui/icons/Mail';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import React from 'react';
 
 const drawerWidth = 240;
@@ -119,12 +120,16 @@ export default function PersistentDrawerLeft(props) {
         </div>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {/* {['Manage Course Instructors', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
-          ))}
+          ))} */}
+           <ListItem button key="Manage Course Instructors">
+              <ListItemIcon> <AssignmentIndIcon/></ListItemIcon>
+              <ListItemText primary={"Manage Course Instructors"} />
+            </ListItem>
         </List>
         <Divider />
         <List>

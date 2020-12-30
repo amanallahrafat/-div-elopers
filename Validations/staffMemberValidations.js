@@ -12,7 +12,7 @@ const validateUpdateProfile = (request)=>{
     const addSchema ={
         email :joi.string().email().required(),
         gender : joi.string().valid('male', 'female').required(),
-        officeID :joi.number().integer(),
+        officeID :joi,
         extraInfo : joi.array(),
         salary:joi.number().min(4000).required(),
     };

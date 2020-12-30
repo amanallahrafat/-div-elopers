@@ -11,11 +11,10 @@ const requestUserProfile = async()=>{
   return userProfile.data;
 }
 
-const requestAttendanceRecods = async()=>{
-    
+const requestAttendanceRecods = async()=>{    
     const attendanceRecords = await axios.get('/viewAttendance');
     console.log(attendanceRecords.data);
-  return attendanceRecords.data;
+    return attendanceRecords.data;
 }
 
 class HOD extends Component {
