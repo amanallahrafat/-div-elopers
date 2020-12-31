@@ -17,7 +17,6 @@ export default function addExtraInfoForm(props) {
     };
     const handleAddExtraInfo = async () => {
         const newInfo = document.getElementById("addExtraInfo").value;
-        console.log(newInfo);
         try {
             const req = {
                 extraInfo: [
@@ -25,7 +24,6 @@ export default function addExtraInfoForm(props) {
                 ]
             };
             const res = await axios.post('updateMyProfile', req);
-            console.log(res.data);
             props.setComponentInMain("profile");
         } catch (err) {
             alert("please enter a valid info");

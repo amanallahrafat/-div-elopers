@@ -5,7 +5,8 @@ import setAuthToken from "../../../actions/setAuthToken";
 import Attendance from '../../Attendance';
 import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
-import Location_Card from './Location_Card';
+import Location_Card from './Location_Handler/Location_Card';
+import Faculty_Card from './Faculty_Handler/Faculty_Card';
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
@@ -22,6 +23,19 @@ const requestAllLocations = async () => {
     return locations.data;
 }
 
+const requestAllFacutlies = async () => {
+    let faculties = (await axios.get('/hr/viewAllFaculties')).data;
+    faculties = faculties.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+    return faculties;
+}
+
+const requestAllDepartments = async () => {
+    const departments = await axios.get('/hr/viewAllDepartments');
+    return departments.data;
+}
+
+
+
 class HR extends Component {
     state = {
         isLoggedIn: 0,
@@ -29,7 +43,6 @@ class HR extends Component {
     }
 
     setComponentInMain = async (event) => {
-        console.log("hello")
         if (event == "profile") {
             this.setState({
                 'componentInMain': <Profile
@@ -49,6 +62,14 @@ class HR extends Component {
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods()}
                     setComponentInMain={this.setComponentInMain} />
+            });
+        }
+        else if (event == "faculty") {
+            this.setState({
+                componentInMain: <Faculty_Card
+                faculties={await requestAllFacutlies()}
+                departments = {await requestAllDepartments()}
+                setComponentInMain={this.setComponentInMain} />
             });
         }
     }
@@ -71,7 +92,6 @@ class HR extends Component {
     }
 
     render() {
-        console.log(this.props.location);
         if (this.state.isLoggedIn === 0)
             return <div />;
         if (this.state.isLoggedIn === 1) {

@@ -11,7 +11,7 @@ import axios from 'axios';
 import React from 'react';
 
 export default function EditLocationForm(props) {
-    const [newType, setNewType] = React.useState(-1);
+    const [newType, setNewType] = React.useState(0);
 
     const handleClickOpen = () => {
         props.handleOpenAdd();
@@ -31,11 +31,8 @@ export default function EditLocationForm(props) {
                 type: newType
             };
             const res = await axios.post(`/hr/createLocation`, req);
-            console.log(res);
-            console.log(res.data);
             props.setComponentInMain("location");
         } catch (err) {
-            console.log(err);
             alert("please enter valid data.");
         }
         handleClose();

@@ -14,7 +14,6 @@ const requestUserProfile = async () => {
 const requestAttendanceRecods = async () => {
 
     const attendanceRecords = await axios.get('/viewAttendance');
-    console.log(attendanceRecords.data);
     return attendanceRecords.data;
 }
 
@@ -57,7 +56,6 @@ class HOD extends Component {
     }
 
     render() {
-        console.log(this.props.location);
         if (this.state.isLoggedIn === 0)
             return <div />;
         if (this.state.isLoggedIn === 1) {

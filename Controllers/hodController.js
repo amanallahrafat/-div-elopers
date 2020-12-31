@@ -42,10 +42,6 @@ const assignCourseInstructor = async(req, res)=>{ // ADD check that the course d
     //Check that the course is in the department of this HOD 
     //Get the id of the HOD from the token
     const {ID, type} = req.header.user;
-    console.log("the ID is ")
-    console.log(ID);
-    console.log("the type is ")
-    console.log(type);
     if(!await checkings.isHOD(ID)){
         return res.status(400).send("You have to be a head of department to do this");
     }

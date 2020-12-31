@@ -91,6 +91,10 @@ export default function PersistentDrawerLeft(props) {
         props.setComponentInMain("location");
     }
 
+    const handleFaculties = ()=>{
+        props.setComponentInMain("faculty");
+    }
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -113,7 +117,7 @@ export default function PersistentDrawerLeft(props) {
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><SchoolIcon /></ListItemIcon>
-                        <ListItemText primary="Faculties" />
+                        <ListItemText primary="Faculties" onClick={handleFaculties}/>
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><LocalLibraryIcon /></ListItemIcon>

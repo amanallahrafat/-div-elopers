@@ -114,7 +114,6 @@ const sendSlotLinkingRequest = async (req, res) => {
     if (course_schedule == null)
         res.status(404).send("The requested course does not exist");
     const slot = course_schedule.slots.filter((elm) => elm.ID == slotID);
-    console.log(slot)
     if (slot == null || slot.length == 0)
         return res.status(404).send("The requested slot was not found");
     if (slot.instructor != null)
@@ -171,11 +170,8 @@ const getAllNotifications = async (req, res) => {
         n['_doc']['senderName'] = user.name;
         newNotifications.push(n);
     }
-    console.log(newNotifications);
 
     res.send(newNotifications);
-    console.log(newNotifications);
-
 }
 
 //{view : 0}

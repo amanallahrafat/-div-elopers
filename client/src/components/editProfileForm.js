@@ -20,7 +20,6 @@ export default function EditProfileForm(props) {
         try {
             const req = { email: newMail };
             const res = await axios.post('updateMyProfile', req);
-            console.log(res.data);
             props.setComponentInMain("profile");
         } catch (err) {
             alert("please enter a valid mail");

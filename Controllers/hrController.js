@@ -31,7 +31,18 @@ const viewAllLocations = async (req, res) => {
 }
 
 const viewAllFaculties = async (req, res) => {
-    res.send(await Faculty.find());
+    let faculties = await Faculty.find();
+    // faculties = faculties.map(async f => {
+    for (const f of faculties) {
+        const departments = [];
+        for (const dep of f.departments) {
+            const depName = await extraUtils.getDepartmentByID(dep);
+            departments.push(depName);
+        }
+
+        f['_doc'].departments = departments;
+    }
+    res.send(faculties);
 }
 
 const viewAllDepartments = async (req, res) => {
@@ -107,7 +118,7 @@ const createFaculty = async (req, res) => {
     if (req.body.departments != null) {
         for (let i = 0; i < req.body.departments.length; i++) {
             let dep = await Department.find({ ID: req.body.departments[i] });
-            if (dep.length == 0) return res.status(400).send("Department IDs are not valid");
+            if (dep.length == 0) return res.status(400).send("Department IDs are not valid.");
         }
     }
 
@@ -117,7 +128,7 @@ const createFaculty = async (req, res) => {
         if (req.body.departments != null) {
             for (const d of req.body.departments) {
                 if (f.departments.includes(d))
-                    return res.status(400).send("Deparments can not be shared between different faculties");
+                    return res.status(400).send("Deparments can not be shared between different faculties.");
             }
         }
     }
@@ -131,6 +142,7 @@ const createFaculty = async (req, res) => {
 }
 
 const updateFaculty = async (req, res) => {
+    console.log(req.body);
     const faculty = await Faculty.findOne({ name: req.params.name });
     if (!faculty)
         return res.status(404).send("Faculty Not Found");
@@ -154,7 +166,7 @@ const updateFaculty = async (req, res) => {
             departments: faculty.departments
         })
         await newFaculty.save();
-        return res.status(400).send("Faculty name should be unique");
+        return res.status(400).send("Faculty name should be unique.");
     }
 
     // Check that the departments exist.
@@ -167,7 +179,7 @@ const updateFaculty = async (req, res) => {
                 departments: faculty.departments
             })
             await newFaculty.save();
-            return res.status(400).send("Department IDs are not valid");
+            return res.status(400).send("Department IDs are not valid.");
         }
     }
 
@@ -182,7 +194,7 @@ const updateFaculty = async (req, res) => {
                     departments: faculty.departments
                 })
                 await newFaculty.save();
-                return res.status(400).send("Deparments can not be shared between different faculties");
+                return res.status(400).send("Departments can not be shared between different faculties.");
             }
         }
     }
@@ -811,7 +823,7 @@ module.exports = {
     updateStaffMemberSalary,
     viewStaffMembersWithMissingHours,
     viewStaffMembersWithMissingDays,
-    
+
     viewAllLocations,
     viewAllCourses,
     viewAllFaculties,

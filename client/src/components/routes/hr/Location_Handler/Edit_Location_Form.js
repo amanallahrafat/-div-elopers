@@ -28,10 +28,9 @@ export default function EditLocationForm(props) {
             const req = {
                 name: newName,
                 capacity: newCapacity,
-                type: newType
+                type: newType==-1? props.location.type: newType
             };
             const res = await axios.put(`hr/updateLocation/${props.location.ID}`, req);
-            console.log(res.data);
             props.setComponentInMain("location");
         } catch (err) {
             alert("please enter valid data.");
