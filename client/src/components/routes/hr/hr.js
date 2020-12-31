@@ -82,6 +82,7 @@ class HR extends Component {
             this.setState({
                 componentInMain: <Deparment_Card
                 departments={await requestAllDepartments()}
+                academicMembers = {await requestAllAcademicMembers()}
                 setComponentInMain={this.setComponentInMain} />
             });
         }

@@ -100,8 +100,16 @@ export default function Department_Card(props) {
         setOpenUpdateDepartment(true);
     }
 
+    const getHODName = (department , memberNames) =>{
+        const hod = memberNames.filter(elm => elm.ID == department.hodID );
+        console.log(hod);
+        if( hod.length == 1)
+            return hod[0].name;
+        else
+            return undefined;
+    }
+
     const classes = useStyles();
-    console.log(openUpdateDepartment)
     return (
         <div>
             <Container maxWidth="lg">
@@ -132,8 +140,9 @@ export default function Department_Card(props) {
                                             <CardContent>
                                                 <Typography variant="subtitle1" paragraph>
                                                     <b>Name:</b> {department.name}<br />
+                                                    <b>Head of Department:</b> {getHODName(department,department.memberNames)}<br />
                                                     <b>Members:</b> <br/> {
-                                                        department.memberNames?.map(m =>
+                                                        department.memberNames.map(m =>
                                                             <Chip key={m.ID} label={m.name} className={classes.chip} />
                                                         )
                                                     }<br />

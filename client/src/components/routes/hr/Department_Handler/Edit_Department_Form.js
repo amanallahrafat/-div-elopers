@@ -39,7 +39,6 @@ export default function EditDepartmentForm(props) {
         props.handleCloseEdit();
     };
     const handleUpdate = async () => {
-        console.log("here************")
         const newName = document.getElementById("editName").value;
         try {
             const req = {
@@ -48,7 +47,6 @@ export default function EditDepartmentForm(props) {
             if (newHOD != null) {
                 req.hodID = newHOD;
             }
-            console.log(req);
             const res = await axios.put(`hr/updateDepartment/${props.department.ID}`, req);
             props.setComponentInMain("department");
         } catch (err) {
@@ -63,7 +61,7 @@ export default function EditDepartmentForm(props) {
     return (
         <div>
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Upadate Department </DialogTitle>
+                <DialogTitle id="form-dialog-title">Update Department </DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
