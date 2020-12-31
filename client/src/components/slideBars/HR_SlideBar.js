@@ -87,12 +87,16 @@ export default function PersistentDrawerLeft(props) {
         setOpen(false);
     };
 
-    const handleLocation = ()=>{
+    const handleLocation = () => {
         props.setComponentInMain("location");
     }
 
-    const handleFaculties = ()=>{
+    const handleFaculties = () => {
         props.setComponentInMain("faculty");
+    }
+
+    const handleDepartments= () => {
+        props.setComponentInMain("department");
     }
 
     return (
@@ -113,15 +117,15 @@ export default function PersistentDrawerLeft(props) {
                 <List>
                     <ListItem button>
                         <ListItemIcon><AddLocationIcon /></ListItemIcon>
-                        <ListItemText primary="Locations" onClick={handleLocation}/>
+                        <ListItemText primary="Locations" onClick={handleLocation} />
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><SchoolIcon /></ListItemIcon>
-                        <ListItemText primary="Faculties" onClick={handleFaculties}/>
+                        <ListItemText primary="Faculties" onClick={handleFaculties} />
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><LocalLibraryIcon /></ListItemIcon>
-                        <ListItemText primary="Departments" />
+                        <ListItemText primary="Departments" onClick={handleDepartments} />
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><MenuBookIcon /></ListItemIcon>

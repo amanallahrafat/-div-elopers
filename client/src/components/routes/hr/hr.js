@@ -7,6 +7,7 @@ import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
 import Location_Card from './Location_Handler/Location_Card';
 import Faculty_Card from './Faculty_Handler/Faculty_Card';
+import Deparment_Card  from './Department_Handler/Department_Card';
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
@@ -34,7 +35,10 @@ const requestAllDepartments = async () => {
     return departments.data;
 }
 
-
+const requestAllAcademicMembers = async () =>{
+    const members = await axios.get('/hr/viewAllStaffMembers');
+    return members.data.filter(elm => elm.type == 0 );
+}
 
 class HR extends Component {
     state = {
@@ -43,6 +47,8 @@ class HR extends Component {
     }
 
     setComponentInMain = async (event) => {
+        console.log(event)
+
         if (event == "profile") {
             this.setState({
                 'componentInMain': <Profile
@@ -69,6 +75,13 @@ class HR extends Component {
                 componentInMain: <Faculty_Card
                 faculties={await requestAllFacutlies()}
                 departments = {await requestAllDepartments()}
+                setComponentInMain={this.setComponentInMain} />
+            });
+        }
+        else if( event == "department") {
+            this.setState({
+                componentInMain: <Deparment_Card
+                departments={await requestAllDepartments()}
                 setComponentInMain={this.setComponentInMain} />
             });
         }

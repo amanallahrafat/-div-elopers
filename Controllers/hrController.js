@@ -46,7 +46,18 @@ const viewAllFaculties = async (req, res) => {
 }
 
 const viewAllDepartments = async (req, res) => {
-    res.send(await Department.find());
+    const departments= await Department.find();
+    const depClone = [];
+    for(const dep of departments){
+        const memberNames = [];
+        for(const memID of dep.members){
+            const member = await Staff_Member.findOne({ID: memID, type:0});
+            memberNames.push(member);
+        }
+        dep['_doc'].memberNames = memberNames;
+        depClone.push(dep);
+    }
+    res.send(depClone);
 }
 
 const viewAllStaffMembers = async (req, res) => {
