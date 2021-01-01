@@ -15,20 +15,20 @@ import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
-      margin: theme.spacing(1),
-      minWidth: 200,
+        margin: theme.spacing(1),
+        minWidth: 200,
     },
     selectEmpty: {
-      marginTop: theme.spacing(2),
+        marginTop: theme.spacing(2),
     },
-  }));
+}));
 
 export default function AddDepartmentForm(props) {
     const classes = useStyles();
     const [newHOD, setNewHOD] = React.useState(null);
-    const [newMembers , setNewMembers] = React.useState([]);
+    const [newMembers, setNewMembers] = React.useState([]);
 
-    const handleChange = (event) =>{
+    const handleChange = (event) => {
         setNewHOD(event.target.value);
     }
 
@@ -38,6 +38,8 @@ export default function AddDepartmentForm(props) {
 
     const handleClose = () => {
         props.handleCloseAdd();
+        setNewHOD(null);
+        setNewMembers([]);
     };
 
     const handleAddDepartment = async () => {
@@ -46,8 +48,8 @@ export default function AddDepartmentForm(props) {
             const req = {
                 name: newName,
             };
-            if(newHOD != null) req.hodID = newHOD;
-            if( newMembers.length > 0) req.members = newMembers;
+            if (newHOD != null) req.hodID = newHOD;
+            if (newMembers.length > 0) req.members = newMembers;
             const res = await axios.post(`/hr/createDepartment`, req);
             props.setComponentInMain("department");
         } catch (err) {
@@ -55,7 +57,6 @@ export default function AddDepartmentForm(props) {
         }
         handleClose();
     }
-    console.log(props)
     return (
         <div>
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -79,32 +80,30 @@ export default function AddDepartmentForm(props) {
                         >
                             {
                                 props.academicMembers.map(
-                                    elm =>{ 
-                                        return <MenuItem value = {elm.ID}>{elm.name}</MenuItem>
+                                    elm => {
+                                        return <MenuItem value={elm.ID}>{elm.name}</MenuItem>
                                     }
                                 )
                             }
                         </Select>
+                        <Autocomplete
+                            multiple
+                            options={props.academicMembers}
+                            getOptionLabel={(option) => option.name}
+                            onChange={(event, value) => {
+                                value = value.map(elm => elm.ID);
+                                setNewMembers(value);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    variant="standard"
+                                    label="Members"
+                                />
+                            )}
+                        />
                     </FormControl>
-                    <Autocomplete
-                        multiple
-                        options={props.academicMembers}
-                        getOptionLabel={(option) => option.name}
-                        onChange={(event, value) => {
-                            value = value.map(elm => elm.ID);
-                            console.log("*****************")
-                            console.log(value)
-                            console.log("---------------------------")
-                            setNewMembers(value);
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                variant="standard"
-                                label="Departments"
-                            />
-                        )}
-                    />
+
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

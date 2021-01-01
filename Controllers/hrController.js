@@ -46,15 +46,16 @@ const viewAllFaculties = async (req, res) => {
 }
 
 const viewAllDepartments = async (req, res) => {
-    const departments= await Department.find();
+    const departments = await Department.find();
     const depClone = [];
-    for(const dep of departments){
+    for (const dep of departments) {
         const memberNames = [];
-        for(const memID of dep.members){
-            const member = await Staff_Member.findOne({ID: memID, type:0});
+        for (const memID of dep.members) {
+            const member = await Staff_Member.findOne({ ID: memID, type: 0 });
             memberNames.push(member);
         }
         dep['_doc'].memberNames = memberNames;
+        dep['_doc'].HODName = await Staff_Member.findOne({ ID: dep.hodID, type: 0 });
         depClone.push(dep);
     }
     res.send(depClone);
@@ -467,7 +468,76 @@ const createDepartment = async (req, res) => {
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
 
-    // TODO: Check the question on piazza
+    // Check that the department members are academic members.
+    if (req.body.members) {
+        for (const memID of req.body.members) {
+            const exist = await Academic_Member.find({ ID: memID });
+            if (exist.length == 0)
+                return res.status(400).send("Members must be academic members");
+        }
+    }
+
+    // Check that the HOD is an academic member.
+    if (req.body.hodID) {
+        const existHOD = await Academic_Member.find({ ID: req.body.hodID });
+        if (existHOD.length == 0)
+            return res.status(400).send("HOD must be an academic member");
+    }
+    
+    if (!req.body.members)
+        req.body.members = [];
+    if (!req.body.members.includes(req.body.hodID)) {
+        req.body.members.push(req.body.hodID);
+    }
+
+    const departmentTable = await Department.find();
+    let max = 0;
+    if (departmentTable.length != 0) {
+        max = Math.max.apply(Math, departmentTable.map(obj => obj.ID));
+    }
+    const department = new Department({
+        ID: max + 1,
+        name: req.body.name,
+        members: req.body.members, //Array[memberID]
+        hodID: req.body.hodID,
+    });
+    await createCascade.createDepartment(max + 1, req.body.members);
+    if (req.body.members) {
+        for (const mem of req.body.members) {
+            for (const dep of departmentTable) {
+                if (dep.members.includes(mem)) {
+                    const index = dep.members.indexOf(mem);
+                    dep.members.splice(index, 1);
+                    if (dep.hodID == mem) {
+                        await Department.updateOne({ ID: dep.ID }, { $unset: { hodID: 1 } })
+                    }
+                }
+                await Department.updateOne({ ID: dep.ID }, { members: dep.members })
+            }
+            await Academic_Member.updateOne({ ID: mem }, { type: 1 });
+        }
+    }
+    if (req.body.hodID) {
+        await Academic_Member.updateOne({ ID: req.body.hodID }, { type: 0 });
+    }
+    await department.save();
+    res.send("Department Added Successfully!");
+}
+
+const updateDepartment = async (req, res) => {
+    // if (req.body.members != null)
+    //     return res.status(400).send("You can't update the department member, you have to update the academic members themselves");
+
+    const department = await Department.findOne({ ID: req.params.ID });
+    if (!department) return res.status(400).send("This department doesn't exist");
+    if (req.body.name == null) req.body.name = department.name;
+    if (req.body.members == null && department.members != null) req.body.members = department.members;
+    if (req.body.hodID == null && department.hodID != null) req.body.hodID = department.hodID;
+
+    const isValid = validator.validateDepartment(req.body);
+    if (isValid.error)
+        return res.status(400).send({ error: isValid.error.details[0].message });
+
     // Check that the department members are academic members.
     if (req.body.members) {
         for (const memID of req.body.members) {
@@ -484,58 +554,39 @@ const createDepartment = async (req, res) => {
             return res.status(400).send("HOD must be an academic member");
     }
 
-    if (req.body.members && req.body.members.length && !req.body.members.includes(req.body.hodID))
-        return res.status(400).send("The HOD must be a member of the department first to be its head");
-
-    const departmentTable = await Department.find();
-    let max = 0;
-    if (departmentTable.length != 0) {
-        max = Math.max.apply(Math, departmentTable.map(obj => obj.ID));
-    }
-    const department = new Department({
-        ID: max + 1,
-        name: req.body.name,
-        members: req.body.members, //Array[memberID]
-        hodID: req.body.hodID,
-    });
-    await createCascade.createDepartment(max + 1, req.body.members);
-    await department.save();
-    res.send("Department Added Successfully!");
-}
-
-const updateDepartment = async (req, res) => {
-    if (req.body.members != null)
-        return res.status(400).send("You can't update the department member, you have to update the academic members themselves");
-    const department = await Department.findOne({ ID: req.params.ID });
-    if (!department) return res.status(400).send("this department doesn't exist");
-    if (req.body.name == null) req.body.name = department.name;
-    if (req.body.members == null && department.members != null) req.body.members = department.members;
-    if (req.body.hodID == null && department.hodID != null) req.body.hodID = department.hodID;
-
-    const isValid = validator.validateDepartment(req.body);
-    if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
-
-    if (req.body.hodID != department.hodID) {
-        if (!req.body.members.includes(req.body.hodID))
-            return res.status(400).send("The HOD must be a member of the Department !");
+    if (!req.body.members)
+        req.body.members = [];
+    if (!req.body.members.includes(req.body.hodID)) {
+        req.body.members.push(req.body.hodID);
     }
 
     await Academic_Member.updateMany({ departmentID: req.params.ID }, { $unset: { departmentID: 1 } });
 
-    // await Academic_Member.updateMany({departmentID : req.params.ID} , {departmentID : -1});
-    for (const member of req.body.members) {
-        const mem = await Academic_Member.findOne({ ID: member });
-        if (!mem)
-            return res.status(400).send("The Members must be Academic member!");
-        await Academic_Member.updateOne({ ID: member }, { departmentID: req.params.ID });
+    await createCascade.createDepartment(req.params.ID, req.body.members);
+
+    const departmentTable = await Department.find();
+    if (req.body.members) {
+        for (const mem of req.body.members) {
+            for (const dep of departmentTable) {
+                if (dep.members.includes(mem)) {
+                    const index = dep.members.indexOf(mem);
+                    dep.members.splice(index, 1);
+                    if (dep.hodID == mem) {
+                        await Department.updateOne({ ID: dep.ID }, { $unset: { hodID: 1 } })
+                    }
+                }
+                await Department.updateOne({ ID: dep.ID }, { members: dep.members })
+            }
+            await Academic_Member.updateOne({ ID: mem }, { type: 1 });
+        }
     }
-    if (req.body.hodID != null) {
+
+    if (req.body.hodID) {
         await Academic_Member.updateOne({ ID: req.body.hodID }, { type: 0 });
     }
-    await Department.update({ ID: req.params.ID }, req.body);
-    res.send("department has been updated successfully");
 
+    await Department.update({ ID: req.params.ID }, req.body);
+    res.send("Department has been updated successfully");
 }
 
 const deleteDepartment = async (req, res) => {

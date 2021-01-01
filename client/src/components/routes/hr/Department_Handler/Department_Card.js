@@ -95,14 +95,12 @@ export default function Department_Card(props) {
     const handleUpdateDepartment = async (event) => {
         const departmentID = event.currentTarget.id.split('_')[1];
         const department = props.departments.filter(l => l.ID == departmentID);
-        console.log(department[0]);
         setUpdatedDepartment(department[0]);
         setOpenUpdateDepartment(true);
     }
 
     const getHODName = (department , memberNames) =>{
         const hod = memberNames.filter(elm => elm.ID == department.hodID );
-        console.log(hod);
         if( hod.length == 1)
             return hod[0].name;
         else
@@ -180,6 +178,7 @@ export default function Department_Card(props) {
                 open={openUpdateDepartment}
                 handleCloseEdit={handleCloseEdit}
                 department={updatedDepartment}
+                academicMembers = {props.academicMembers}
                 setComponentInMain={props.setComponentInMain} />
             <AddDepartmentForm
                 open={openAddDepartment}
