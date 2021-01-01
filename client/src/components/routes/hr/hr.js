@@ -7,7 +7,8 @@ import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
 import Location_Card from './Location_Handler/Location_Card';
 import Faculty_Card from './Faculty_Handler/Faculty_Card';
-import Deparment_Card  from './Department_Handler/Department_Card';
+import Department_Card  from './Department_Handler/Department_Card';
+import Course_Card from './Course_Handler/Course_Card';
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
@@ -40,6 +41,12 @@ const requestAllAcademicMembers = async () =>{
     return members.data.filter(elm => elm.type == 0 );
 }
 
+const requestAllCourses = async () =>{
+    let courses = await axios.get('/hr/viewAllCourses');
+    courses = courses.data.sort((a,b) => a.ID - b.ID );
+    return courses;
+}
+
 class HR extends Component {
     state = {
         isLoggedIn: 0,
@@ -47,6 +54,7 @@ class HR extends Component {
     }
 
     setComponentInMain = async (event) => {
+        console.log("aman");
         console.log(event)
 
         if (event == "profile") {
@@ -80,11 +88,21 @@ class HR extends Component {
         }
         else if( event == "department") {
             this.setState({
-                componentInMain: <Deparment_Card
+                componentInMain: <Department_Card
                 departments={await requestAllDepartments()}
                 academicMembers = {await requestAllAcademicMembers()}
                 setComponentInMain={this.setComponentInMain} />
             });
+        }
+        else if( event == 'course'){
+            this.setState({
+                componentInMain : <Course_Card
+                courses = {await requestAllCourses()}
+                departments = {await requestAllDepartments()}
+                academicMembers = {await requestAllAcademicMembers()}
+                setComponentInMain = {this.setComponentInMain}
+                />
+            })
         }
     }
 

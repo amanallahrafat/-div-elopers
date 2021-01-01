@@ -33,10 +33,11 @@ export default function EditFacultyForm(props) {
         }
         handleClose();
     }
+
     return (
         <div>
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Upadte Faculty </DialogTitle>
+                <DialogTitle id="form-dialog-title">Update Faculty </DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
