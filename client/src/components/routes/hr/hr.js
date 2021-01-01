@@ -9,6 +9,7 @@ import Location_Card from './Location_Handler/Location_Card';
 import Faculty_Card from './Faculty_Handler/Faculty_Card';
 import Department_Card  from './Department_Handler/Department_Card';
 import Course_Card from './Course_Handler/Course_Card';
+import StaffMember_Card from './StaffMember_Handler/StaffMember_Card';
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
@@ -45,6 +46,18 @@ const requestAllCourses = async () =>{
     let courses = await axios.get('/hr/viewAllCourses');
     courses = courses.data.sort((a,b) => a.ID - b.ID );
     return courses;
+}
+
+const viewAllMembersProfiles = async () =>{
+    return (await axios.get('/hr/viewAllMembersProfiles')).data;
+}
+
+const requestAllOffices = async () =>{
+    console.log("aman allah is here");
+    let locations = await axios.get('/hr/viewAllLocations');
+    console.log(locations);
+    locations = locations.data.filter(elm => elm.type == 2);
+    return locations;
 }
 
 class HR extends Component {
@@ -100,6 +113,16 @@ class HR extends Component {
                 courses = {await requestAllCourses()}
                 departments = {await requestAllDepartments()}
                 academicMembers = {await requestAllAcademicMembers()}
+                setComponentInMain = {this.setComponentInMain}
+                />
+            })
+        }
+        else if( event == 'staffMember'){
+            this.setState({
+                componentInMain : <StaffMember_Card
+                departments = {await requestAllDepartments()}
+                staffMembers = {await viewAllMembersProfiles()}
+                offices = {await requestAllOffices()}
                 setComponentInMain = {this.setComponentInMain}
                 />
             })
