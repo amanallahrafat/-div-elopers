@@ -587,31 +587,30 @@ const updateCourse = async (req, res) => {
         return res.status(400).send("Course does not exist");
     if (!req.body.name) req.body.name = oldCourse.name;
     if (!req.body.code) req.body.code = oldCourse.code;
-    if (!req.body.scheduleID) req.body.scheduleID = oldCourse.scheduleID;
     if (!req.body.department) req.body.department = oldCourse.department;
     if (!req.body.description) req.body.description = oldCourse.description;
 
     if (await checkings.courseCodeExists(req.body.code))
         return res.status(400).send("Code must be unique");
 
-    if (req.body.scheduleID) {
-        if (!await checkings.scheduleExists(req.body.scheduleID)) {
-            const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
-            course.save();
-            return res.status(400).send("Schedule with the given ID does not exist");
-        }
+    // if (req.body.scheduleID) {
+    //     if (!await checkings.scheduleExists(req.body.scheduleID)) {
+    //         const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
+    //         await course.save();
+    //         return res.status(400).send("Schedule with the given ID does not exist");
+    //     }
 
-        if (await checkings.scheduleTaken(req.body.scheduleID)) {
-            const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
-            course.save();
-            return res.status(400).send("Schedule belongs to another course");
-        }
-    }
+    //     if (await checkings.scheduleTaken(req.body.scheduleID)) {
+    //         const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
+    //         await course.save();
+    //         return res.status(400).send("Schedule belongs to another course");
+    //     }
+    // }
 
     if (req.body.department) {
         if (!await checkings.departmentExists_arr(req.body.department)) {
             const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
-            course.save();
+            await course.save();
             return res.status(400).send("Department does not exist");
         }
     }
@@ -619,11 +618,11 @@ const updateCourse = async (req, res) => {
     const isValid = validator.validateCourse_hr(req.body);
     if (isValid.error) {
         const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
-        course.save();
+        await course.save();
         return res.status(400).send({ error: isValid.error.details[0].message });
     }
 
-    const course = new Course({
+    const courseObj = {
         ID: oldCourse.ID,
         name: req.body.name,
         //coordinatorID : req.body.coordinatorID, // HR can not assign coordinator.
@@ -632,7 +631,13 @@ const updateCourse = async (req, res) => {
         //teachingStaff : req.body.teachingStaff,
         department: req.body.department,
         description: req.body.description,
-    });
+    };
+
+    if(oldCourse.coordinatorID != null ) courseObj.coordinatorID = oldCourse.coordinatorID;
+    if(oldCourse.teachingStaff != null ) courseObj.teachingStaff = oldCourse.teachingStaff;
+    if(oldCourse.instructor != null ) courseObj.instructor = oldCourse.instructor;
+
+    const course  = new Course(JSON.parse(JSON.stringify(courseObj)));
 
     await course.save();
     return res.send("Course has been updated successfully");
