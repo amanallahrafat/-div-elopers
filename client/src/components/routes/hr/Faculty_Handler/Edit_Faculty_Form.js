@@ -20,7 +20,6 @@ export default function EditFacultyForm(props) {
         props.handleCloseEdit();
     };
     const handleUpdate = async () => {
-        console.log(props.faculty.departments)
         const newName = document.getElementById("editName").value;
         try {
             const req = {
@@ -55,9 +54,6 @@ export default function EditFacultyForm(props) {
                         defaultValue = {props.faculty.departments}
                         onChange={(event, value) => {
                             value = value.map(elm => elm.ID);
-                            console.log("*****************")
-                            console.log(value)
-                            console.log("---------------------------")
                             setNewDepartments(value);
                         }}
                         renderInput={(params) => (
