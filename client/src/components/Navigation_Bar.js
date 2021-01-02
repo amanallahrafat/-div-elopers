@@ -88,7 +88,6 @@ class Navigation_Bar extends Component {
         this.props.fromParent("attendance");
     }
 
-
     handleSlideBarToggle = (event) => {
         this.setState({ isSlideBarOpen: !this.state.isSlideBarOpen });
     }

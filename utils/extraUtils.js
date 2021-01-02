@@ -12,6 +12,15 @@ const getAcademicMemberByID = async (ID) => {
     return academicMem;
 }
 
+const getAcademicMemberByID_arr = async (ID_arr) => {
+    const academicMem = await Staff_Member.find();
+    const academicMemNames = [];
+    for(const id of ID_arr){
+        academicMemNames.push(academicMem.filter(elem => elem.ID == id)[0]);
+    }
+    return academicMemNames;
+}
+
 const getOfficeByID = async (ID) => {
     const office = await Location.findOne({ ID: ID});
     return office;
@@ -272,4 +281,5 @@ module.exports = {
     getAcademicMemberByID,
     getOfficeByID,
     getDepartmentByID,
+    getAcademicMemberByID_arr
 }

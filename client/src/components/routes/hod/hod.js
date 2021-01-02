@@ -5,6 +5,7 @@ import setAuthToken from "../../../actions/setAuthToken";
 import Attendance from '../../Attendance';
 import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
+import Schedule from '../ac/Schedule_Handler/Schedule'
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
@@ -12,9 +13,14 @@ const requestUserProfile = async () => {
 }
 
 const requestAttendanceRecods = async () => {
-
     const attendanceRecords = await axios.get('/viewAttendance');
     return attendanceRecords.data;
+}
+
+const requestSchedule = async () => {
+    const schedule = await axios.get('ac/viewSchedule');
+    console.log(schedule);
+    return schedule.data;
 }
 
 class HOD extends Component {
@@ -22,7 +28,6 @@ class HOD extends Component {
         isLoggedIn: 0,
         componentInMain: <div />
     }
-
 
     setComponentInMain = async (event) => {
         if (event == "profile") {
@@ -36,6 +41,13 @@ class HOD extends Component {
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods()}
                     setComponentInMain={this.setComponentInMain} />
+            });
+        } else if (event == "schedule") {
+            console.log("schedule")
+            this.setState({
+                componentInMain: <Schedule
+                    schedule={await requestSchedule()}
+                />
             });
         }
     }
@@ -59,7 +71,6 @@ class HOD extends Component {
         if (this.state.isLoggedIn === 0)
             return <div />;
         if (this.state.isLoggedIn === 1) {
-            //alert("Please Login!");
             return <Redirect to='/' />;
         }
         return (

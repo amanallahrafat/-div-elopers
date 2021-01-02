@@ -9,6 +9,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import MailIcon from '@material-ui/icons/Mail';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import Academic_Member_List from '../routes/ac/ac.js'
 import React from 'react';
 
 const drawerWidth = 240;
@@ -126,10 +127,10 @@ export default function PersistentDrawerLeft(props) {
               <ListItemText primary={text} />
             </ListItem>
           ))} */}
-           <ListItem button key="Manage Course Instructors">
-              <ListItemIcon> <AssignmentIndIcon/></ListItemIcon>
-              <ListItemText primary={"Manage Course Instructors"} />
-            </ListItem>
+          <ListItem button key="Manage Course Instructors">
+            <ListItemIcon> <AssignmentIndIcon /></ListItemIcon>
+            <ListItemText primary={"Manage Course Instructors"} />
+          </ListItem>
         </List>
         <Divider />
         <List>
@@ -140,6 +141,8 @@ export default function PersistentDrawerLeft(props) {
             </ListItem>
           ))}
         </List>
+        <Divider />
+        <Academic_Member_List setComponentInMain={props.setComponentInMain}/>
       </Drawer>
     </div>
   );

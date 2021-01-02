@@ -90,7 +90,7 @@ const assignAcademicMemberToSlot = async(req, res) => {
     if (!await checkings.isInstructorOfCourse(instructorID, courseID))
         return res.status(400).send("You are not an instructor of the given course");
     const course = await Course.findOne({ ID: courseID });
-    const schedule = await Course_Schedule.findOne({ ID: course.scheduleID });
+    const schedule = await Course_Schedule.findOne({ ID: courseID });
     if (schedule.slots == null || schedule.slots.length == 0) {
         return res.status(400).send("No slots are assigned for the given course yet");
     }

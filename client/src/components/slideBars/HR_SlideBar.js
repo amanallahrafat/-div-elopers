@@ -14,6 +14,7 @@ import SchoolIcon from '@material-ui/icons/School';
 import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import Academic_Member_List from '../routes/ac/ac.js'
 
 const drawerWidth = 240;
 
