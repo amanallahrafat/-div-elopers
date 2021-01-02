@@ -1,222 +1,247 @@
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import EditIcon from '@material-ui/icons/Edit';
-import React from 'react';
-import EditProfileForm from './editProfileForm';
-import AddExtraInfoForm from './addExtraInfoForm';
-
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Tooltip from '@material-ui/core/Tooltip';
+
 import axios from 'axios';
+import React from 'react';
+
+import AssignInstructorForm from './assignInstructorForm.js';
+import DeleteInstructorForm from './deleteInstructorForm.js';
+import UpdateInstructorForm from './updateInstructorForm.js';
+
+
 
 const useStyles = makeStyles((theme) => ({
-  mainFeaturedPost: {
-    position: 'relative',
-    backgroundColor: theme.palette.grey[800],
-    color: theme.palette.common.white,
-    marginBottom: theme.spacing(4),
-    backgroundImage: 'url(https://source.unsplash.com/random)',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    backgroundColor: 'rgba(0,0,0,.3)',
-  },
-  mainFeaturedPostContent: {
-    position: 'relative',
-    padding: theme.spacing(3),
-    [theme.breakpoints.up('md')]: {
-      padding: theme.spacing(1),
-      paddingTop: theme.spacing(3),
-      paddingRight: 0,
+    title: {
+        flex: '1 1 100%',
+        paddingBottom: '20px'
     },
-  },
-  card: {
-    display: 'flex',
-  },
-  cardDetails: {
-    flex: 1,
-    textAlign: 'left',
+    mainFeaturedPost: {
+        position: 'relative',
+        backgroundColor: theme.palette.grey[800],
+        color: theme.palette.common.white,
+        marginBottom: theme.spacing(4),
+        backgroundImage: 'url(https://source.unsplash.com/random)',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        backgroundColor: 'rgba(0,0,0,.3)',
+    },
+    mainFeaturedPostContent: {
+        position: 'relative',
+        padding: theme.spacing(3),
+        [theme.breakpoints.up('md')]: {
+            padding: theme.spacing(1),
+            paddingTop: theme.spacing(3),
+            paddingRight: 0,
+        },
+    },
+    card: {
+        display: 'flex',
+    },
+    cardDetails: {
+        flex: 1,
+        textAlign: 'left',
 
-  },
-  cardMedia: {
-    width: 160,
-  },
+    },
+    cardMedia: {
+        width: 160,
+    },
 }));
 
-export default function MainFeaturedPost(props) {
-  const [openEdit, setOpenEdit] = React.useState(false);
- 
-  const [openExtraInfo, setOpenExtraInfo] = React.useState(false);
-  
-  
-  const handleOpenEdit = (event) => {
-    setOpenEdit(true);
-  }
-  const handleCloseEdit = () => {
-    setOpenEdit(false);
-  }
+export default function CourseInstructor_Card(props) {
 
-  const handleOpenAddExtraInfo=()=>{
-    setOpenExtraInfo(true);
-  }
-  const handleCloseExtraInfo=()=>{
-    setOpenExtraInfo(false);
-  }
+    const [openAddCourseInstructor, setAddCourseInstructor] = React.useState(false);
+    const [currentCourse, setCurrentCourse] = React.useState();
+    const [openDeleteCourseInstructor, setOpenDeleteCourseInstructor] = React.useState(false);
+    const [openUpdateCourseInstructor, setOpenUpdateCourseInstructor] = React.useState(false);
 
 
+    //const [academicMemebers, setAcademicMembers] = React.useState();
 
-  const handleDeleteExtraInfo = async (event) => {
-  
-    const newInfo = props.profile.extraInfo.filter((info, idx) => {
-      return idx != event.currentTarget.id;
-    })
 
-    const req = { extraInfo: newInfo };
-    const res = await axios.post('updateMyProfile', req);
-    props.setComponentInMain("profile");
-  }
+    // const handleOpenEdit = (event) => {
+    //     setOpenUpdateLocation(true);
+    // }
+    // const getAllAcademicMembers = async()=>{
+    //     const res = await axios.get('/hod/getAllAcademicMembers');
+    //     return res.data;
+    // }
+    // React.useEffect(async()=>{
+    //     if(!academicMemebers){
+    //         async function getAllAcademicMembers(){
+    //             const res = await axios.get('/hod/getAllAcademicMembers');
+    //             return res.data;
+    //         }
+    //     setAcademicMembers(await getAllAcademicMembers());
+    //      }
+    // })
 
-  const classes = useStyles();
-  return (
-    <div>
-      <Container maxWidth="lg">
 
-        <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: `url(https://i.pinimg.com/originals/94/f6/41/94f641161d1d124c6bfa2463c7feb8d4.jpg)` }}>
-          {/* Increase the priority of the hero background image */}
-          {<img style={{ display: 'none' }} />}
-          <div className={classes.overlay} />
-          <Grid container>
-            <Grid item md={6}>
-              <div className={classes.mainFeaturedPostContent}>
-                <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-                  {props.profile.name}
-                </Typography>
-                <Typography variant="h5" color="inherit" paragraph>
-                  ID: {(props.profile.type == 1 ? 'hr-' : 'ac-') + props.profile.ID}
-                </Typography>
-                <Typography variant="h6" color="inherit" paragraph>
-                  Office Number: {props.profile.officeID}
-                </Typography>
-                <Typography variant="h6" color="inherit" paragraph>
-                  Email: {props.profile.email}
-                </Typography>
-                <Link variant="subtitle1" href="#">
-                </Link>
-              </div>
-            </Grid>
-           
-            <Grid item md={6} style={{ textAlign: 'right' }}>
-              <IconButton
-                // edge="end"
-                aria-label="account of current user"
-                //   aria-controls={menuId}
-                aria-haspopup="true"
-                id='profile'
-                // onClick={this.handleViewProfile}
-                color='primary'
-                //style={{color:'black'}}
-                onClick={handleOpenEdit}
-              >
-                <EditIcon style={{ fontSize: 30, opacity: 1 }}
-                />
-              </IconButton>
-                     
-             </Grid>
+    const handleCloseAddCourseInstructor = () => {
+        setAddCourseInstructor(false);
+    }
 
-          </Grid>
-        </Paper>
-        <Grid container spacing={4} >
-          <Grid item xs={12} md={6}>
-            <CardActionArea component="a" href="#" disabled={true}>
-              <Card className={classes.card}>
-                <div className={classes.cardDetails}>
-                  <CardContent>
-                    <Typography variant="subtitle1" paragraph>
-                      <b>Gender:</b> {props.profile.gender}<br />
-                      <b>Day off:</b> {props.profile.dayOff}<br />
-                      <b>Salary:</b> {props.profile.salary}<br />
-                      <b>Annual Balance:</b> {props.profile.annualBalance}<br />
-                      <b>Accidental Leave Balance:</b> {props.profile.accidentalLeaveBalance}<br />
+    const handleCloseDeleteCourseInstructor = () => {
+        setOpenDeleteCourseInstructor(false);
+    }
 
-                    </Typography>
-                  </CardContent>
-                </div>
-                <Hidden xsDown>
-                  <CardMedia className={classes.cardMedia} title={"SARAH"} />
-                </Hidden>
-              </Card>
-            </CardActionArea>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            {/* <CardActionArea component="a" href="#" disabled={false}> */}
-              <Card className={classes.card}>
-                <div className={classes.cardDetails}>
-                  <CardContent>
-                    <Typography variant="subtitle1" paragraph>
-                      <b>Extra Information:</b> 
-
-                    <IconButton
-                aria-label="account of current user"
-                aria-haspopup="true"
-                color='primary'
-                
-                onClick={handleOpenAddExtraInfo}
-              >
-                <AddCircleIcon style={{ fontSize: 25, opacity: 0.8 }}
-                />
-              </IconButton>
-                   
-                      <br />
-
-                      {props.profile.extraInfo.map((i, idx) => {
-                        return (
-                          <div>
-                              {i}
-                            <IconButton
-                             disabled={false}
-                              aria-label="account of current user"
-                              aria-haspopup="true"
-                              id={""+idx}
-                              color='primary'
-                              onClick={handleDeleteExtraInfo}
-                            >
-                              <DeleteIcon style={{ fontSize: 25, opacity: 0.8 }}
-                              />
-                            </IconButton>
-                         </div>
-                        )
-                      })}
-                    </Typography>
-                  </CardContent>
-                </div>
-                <Hidden xsDown>
-                  <CardMedia className={classes.cardMedia} title={"SARAH"} />
-                </Hidden>
-              </Card>
-            {/* </CardActionArea> */}
-          </Grid>
-        </Grid>
-      </Container>
-      <AddExtraInfoForm open={openExtraInfo} handleOpenEdit={handleOpenAddExtraInfo} handleCloseEdit={handleCloseExtraInfo} profile={props.profile} setComponentInMain={props.setComponentInMain} />
+    const handleCloseUpdateCourseInstructor = ()=>{
+        setOpenUpdateCourseInstructor(false);
+    }
     
-      <EditProfileForm open={openEdit} handleOpenEdit={handleOpenEdit} handleCloseEdit={handleCloseEdit} profile={props.profile} setComponentInMain={props.setComponentInMain} />
-    </div >
-  );
+    const handleDeleteCourseInstructor = async (event) => {
+        const courseID = event.currentTarget.id.split('_')[1];
+        const course = props.courses.filter(l => l.ID == courseID);
+        setCurrentCourse(course[0]);
+        setOpenDeleteCourseInstructor(true);
+    }
+
+    // const handleUpdateLocation = async (event) => {
+    //     const locationID = event.currentTarget.id.split('_')[1];
+    //     const location = props.locations.filter(l => l.ID == locationID);
+    //     setUpdatedLocation(location[0]);
+    //     setOpenUpdateLocation(true);
+    // }
+
+    const handleOpenAddCourseInstructor = async (event) => {
+        const courseID = event.currentTarget.id.split('_')[1];
+        const course = props.courses.filter(l => l.ID == courseID);
+        setCurrentCourse(course[0]);
+        setAddCourseInstructor(true);
+    }
+
+    const handleOpenUpdateCourseInstructor = async(event)=>{
+        const courseID = event.currentTarget.id.split('_')[1];
+        const course = props.courses.filter(l => l.ID == courseID);
+        setCurrentCourse(course[0]);
+        setOpenUpdateCourseInstructor(true);
+    }
+
+
+
+    const classes = useStyles();
+    return (
+        <div>
+            <Container maxWidth="lg">
+
+                <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: `url(https://i.pinimg.com/originals/94/f6/41/94f641161d1d124c6bfa2463c7feb8d4.jpg)` }}>
+                    <div className={classes.overlay} />
+
+                </Paper>
+
+                <Typography className={classes.title} variant="h5" component="div">
+                    <b>Courses</b>
+                </Typography>
+
+                <Grid container spacing={4} >
+                    {
+                        props.courses.map(course =>
+                            <Grid item xs={12} md={4}>
+                                    <Card className={classes.card}>
+                                        <div className={classes.cardDetails}>
+                                            <CardContent>
+                                                <Typography variant="subtitle1" paragraph>
+                                                    <b>Name:</b> {course.name}<br />
+                                                    <b>Code:</b> {course.code}<br />
+                                                    <b>Instructors:</b><br/> 
+                                                    {course.instructor.map((inst=>{
+                                                        return (<div> <b>Name:</b> {inst.name} <span style={{textAlign :"right"}}><b>ID:</b> {inst.ID}</span></div>);
+                                                    }))}<br/>                                               
+                                                </Typography>
+                                            </CardContent>
+                                            <Tooltip title = "Delete instructor from course">
+                                            <IconButton
+                                                aria-label="account of current user"
+                                                aria-haspopup="true"
+                                                id={"DELETECOURSEINSTRUCTOR_" + course.ID}
+                                                color='primary'
+                                                onClick={handleDeleteCourseInstructor}
+                                            >
+                                                <DeleteIcon style={{ fontSize: 25, opacity: 0.8 }}
+                                                />
+                                            </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title = "Update course instructor">
+                                            <IconButton
+                                                aria-label="account of current user"
+                                                aria-haspopup="true"
+                                                id={"UPDATECOURSEINSTRUCTOR_" + course.ID}
+                                                color='primary'
+                                                onClick={handleOpenUpdateCourseInstructor}
+                                            >
+                                                <EditIcon style={{ fontSize: 30, opacity: 1 }}
+                                                />
+                                            </IconButton>
+                                            </Tooltip>
+
+                                            <Tooltip title="Add course instructor">
+                                            <IconButton
+                                                aria-label="account of current user"
+                                                aria-haspopup="true"
+                                                color='primary'
+                                                id={"ADDCOURSEINSTRUCTOR_" + course.ID}       
+                                                onClick={handleOpenAddCourseInstructor}
+                                            >
+                                            <AddCircleIcon style={{ fontSize: 25, opacity: 0.8 }}                                                                                                />
+                                            </IconButton>
+                                            </Tooltip>
+                                        </div>
+                                    </Card>
+                            </Grid>
+                        )
+                    }
+                </Grid>
+            </Container>
+            <AssignInstructorForm
+                open={openAddCourseInstructor}
+                //handleOpenEdit={handleOpenEdit}
+                handleClose={handleCloseAddCourseInstructor}
+                course={currentCourse}
+                academicMembers = {props.academicMembers}
+                setComponentInMain={props.setComponentInMain}
+                
+                />
+
+            <DeleteInstructorForm
+            open={openDeleteCourseInstructor}
+            //handleOpenEdit={handleOpenEdit}
+            handleClose={handleCloseDeleteCourseInstructor}
+            course={currentCourse}
+            academicMembers = {props.academicMembers}
+            setComponentInMain={props.setComponentInMain}
+            />
+
+            <UpdateInstructorForm
+            open={openUpdateCourseInstructor}
+            //handleOpenEdit={handleOpenEdit}
+            handleClose={handleCloseUpdateCourseInstructor}
+            course={currentCourse}
+            allCourses = {props.courses}
+            academicMembers = {props.academicMembers}
+            setComponentInMain={props.setComponentInMain}
+            />
+
+
+
+        </div >
+    );
+
 }

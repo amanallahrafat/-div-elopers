@@ -5,12 +5,25 @@ const Maternity_Leave_Request = require("../Models/Requests/Maternity_Leave_Requ
 const Sick_Leave_Request = require("../Models/Requests/Sick_Leave_Request")
 const Staff_Member = require("../Models/Users/Staff_Member")
 const Location = require("../Models/Others/Location")
+const Academic_Member = require("../Models/Users/Academic_Member")
 const Department = require("../Models/Academic/Department")
 
 const getAcademicMemberByID = async (ID) => {
     const academicMem = await Staff_Member.findOne({ ID: ID, type: 0 });
     return academicMem;
 }
+
+const getAcademicMembersByID_arr = async(ID_arr)=>{
+    let allMembers = await Staff_Member.find({type:0});
+    let result =[];
+    allMembers = allMembers.filter(function(value){return ID_arr.includes(value.ID)});
+    for(const curMem of allMembers){
+        result.push({ID:curMem.ID, name:curMem.name})
+    }
+    return result;
+
+}
+
 
 const getAcademicMemberByID_arr = async (ID_arr) => {
     const academicMem = await Staff_Member.find({type : 0});
@@ -20,6 +33,7 @@ const getAcademicMemberByID_arr = async (ID_arr) => {
     }
     return academicMemNames;
 }
+
 
 const getOfficeByID = async (ID) => {
     const office = await Location.findOne({ ID: ID});
@@ -280,6 +294,7 @@ module.exports = {
     getCurDay,
     getAcademicMemberByID,
     getOfficeByID,
+   getAcademicMembersByID_arr,
     getDepartmentByID,
     getAcademicMemberByID_arr
 }

@@ -8,8 +8,10 @@ const assignInstructorValidator = (request) =>{
 }
 
 const requestResponseValidation = (request)=>{
+    console.log(typeof request.response, request.response)
     const updateSchema = {
-        response:joi.number().integer().min(0).max(1).required(),
+        response:joi.number().integer().min(0).max(1).required()
+        ,
         msg:joi.string()
     }
     return joi.validate(request, updateSchema);

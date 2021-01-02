@@ -24,6 +24,12 @@ hodRouter.put('/respondToCompensationLeaveRequest/:ID', auth, hodController.resp
 hodRouter.put('/respondToAccidentalLeaveRequest/:ID', auth, hodController.respondToAccidentalLeaveRequest);
 
 
+//added for front-end
+hodRouter.get('/getDepartmentCourses', auth, hodController.getDepartmentCourses);
+hodRouter.get('/getAllAcademicMembers', auth, hodController.getAllAcademicMembers);
+hodRouter.get('/getAcademicMembersTable', auth, hodController.getAcademicMembersTable);
+
+
 
 
 

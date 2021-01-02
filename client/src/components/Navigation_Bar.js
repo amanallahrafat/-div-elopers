@@ -143,6 +143,8 @@ class Navigation_Bar extends Component {
                                 setComponentInMain={this.props.fromParent} /> :
                             <Hod_SlideBar
                                 open={this.state.isSlideBarOpen}
+                                updateRequestStaffProfile={this.props.updateRequestStaffProfile}
+                                updateRequests={this.props.updateRequests}
                                 setComponentInMain={this.props.fromParent} />
                         )
                     }
