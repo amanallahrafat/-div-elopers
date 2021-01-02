@@ -18,6 +18,8 @@ import Box from '@material-ui/core/Box';
 import Badge from '@material-ui/core/Badge';
 import TodayIcon from '@material-ui/icons/Today';
 import { deepPurple } from '@material-ui/core/colors';
+import Tooltip from '@material-ui/core/Tooltip';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddStaffMemberForm from './Add_StaffMember_Form';
 import EditStaffMemberForm from './Edit_StaffMember_Form';
 import AttendanceRecordForm from './AttendanceRecord_Form';
@@ -77,12 +79,14 @@ const useStyles = makeStyles((theme) => ({
       },
 }));
 
-export default function Location_Card(props) {
+export default function Edit_StaffMember_Card(props) {
     const [openEdit, setOpenEdit] = React.useState(false);
 
     const [openUpdate, setOpenUpdate] = React.useState(false);
     const [updatedStaffMember, setUpdatedStaffMember] = React.useState({});
+    const [attendanceView , setAttendanceView] = React.useState(null);
     const [openAdd, setOpenAdd] = React.useState(false);
+    const [openAttendance , setOpenAttendance] = React.useState(false);
 
 
     const handleOpenEdit = (event) => {
@@ -100,21 +104,52 @@ export default function Location_Card(props) {
         setOpenAdd(false);
     }
 
+    const handleOpenAttendance = () => {
+        setOpenAttendance(true);
+    }
+
+    const handleCloseAttendance = () => {
+        setOpenAttendance(false);
+    }
+
 
     const handleDelete = async (event) => {
-        const res = await axios.delete(`/hr/deleteStaffMember/${event.currentTarget.id.split('_')[1]}`);
+        try{
+            const memberID = event.currentTarget.id.split('_')[2];
+            const type = event.currentTarget.id.split('_')[1];
+            const res = await axios.delete(`/hr/deleteStaffMember/${memberID}/${type}`);
+        }
+        catch(err){
+            alert(err.response.data);
+        }
         props.setComponentInMain("staffMember");
     }
 
     const handleUpdate = async (event) => {
-        const locationID = event.currentTarget.id.split('_')[1];
-        const location = props.locations.filter(l => l.ID == locationID);
-        setUpdatedStaffMember(location[0]);
+        const memberID = event.currentTarget.id.split('_')[2];
+        const type = event.currentTarget.id.split('_')[1];
+        const member = props.staffMembers.filter(l => l.ID == memberID && l.type == type );
+        setUpdatedStaffMember(member[0]);
         setOpenUpdate(true);
     }
 
+    const handleAttendance = async (event) =>{
+        const member = event.currentTarget.id.split('_')[2];
+        const type = event.currentTarget.id.split('_')[1];
+        const staffMember = props.staffMembers.filter(elm => elm.ID == member && elm.type == type);
+        setAttendanceView(staffMember[0].attendanceRecord);
+        console.log(staffMember[0].attendanceRecord);
+        setOpenAttendance(true);
+    }
+
+    const handleAddMissingSessions = async (event) =>{
+        const member = event.currentTarget.id.split('_')[2];
+        const type = event.currentTarget.id.split('_')[1];
+        console.log("Add Missing Sign In and Out");
+    }
+
+
     const getOfficeName = (ID) =>{
-        console.log(props.offices)
         const office = props.offices.filter(elm => elm.ID == ID);
         return office.length > 0 ? office[0].name : undefined;
     }
@@ -125,6 +160,7 @@ export default function Location_Card(props) {
     }
 
     const classes = useStyles();
+
     return (
         <div>
             <Container maxWidth="lg">
@@ -151,12 +187,12 @@ export default function Location_Card(props) {
                     {
                         props.staffMembers.map(staffMember =>
                             <Grid item xs={12} md={6}>
-                                <CardActionArea component="a" href="#" disabled={false}>
+                                <CardActionArea component="a" disabled={false}>
                                     <Card className={classes.card}>
                                         <div className={classes.cardDetails}>
                                             <CardContent style={{paddingBottom:"0px",paddingLeft:"0px"}}>
                                                 <Typography variant="subtitle1" paragraph style={{marginBottom:"0px"}}>
-                                                    <Box display="flex" flexDirection="row">
+                                                    <Box display="flex" flexDirection="row" >
                                                         <Box width="30%" style={{margin:"auto",textAlign:"center"}}>
                                                             <Avatar src="/broken-image.jpg" className={classes.Avatar}>{staffMember.name.substring(0, 2)}</Avatar>
                                                             <b> {staffMember.name}</b><br />
@@ -166,7 +202,8 @@ export default function Location_Card(props) {
                                                             <b>Day Off: </b> {staffMember.dayOff}<br />
                                                             <b>Gender: </b> {staffMember.gender}<br />
                                                             <b>Office: </b> {getOfficeName(staffMember.officeID)}<br />
-                                                            <Collapse in = {staffMember.type == 1} >
+                                                            <b>Salary: </b> {staffMember.salary}<br />
+                                                            <Collapse in = {staffMember.type == 0} >
                                                                 <b>Department: </b> {getDepartmentName(staffMember.departmentID)}<br />
                                                             </Collapse>
                                                         </Box>
@@ -181,35 +218,52 @@ export default function Location_Card(props) {
                                                     </Box>
                                                 </Typography>
                                             </CardContent>
+                                            <Tooltip title="Delete">
+                                                <IconButton
+                                                    aria-label="account of current user"
+                                                    aria-haspopup="true"
+                                                    id={"DELETE_"+staffMember.type+"_" + staffMember.ID}
+                                                    color='primary'
+                                                    onClick={handleDelete}
+                                                >
+                                                    <DeleteIcon style={{ fontSize: 25, opacity: 0.8,padding:"0px" }}
+                                                    />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Update">
                                             <IconButton
                                                 aria-label="account of current user"
                                                 aria-haspopup="true"
-                                                id={"DELETE_" + staffMember.ID}
-                                                color='primary'
-                                                onClick={handleDelete}
-                                            >
-                                                <DeleteIcon style={{ fontSize: 25, opacity: 0.8,paddingTop:"0px" }}
-                                                />
-                                            </IconButton>
-                                            <IconButton
-                                                aria-label="account of current user"
-                                                aria-haspopup="true"
-                                                id={"UPDATE_" + staffMember.ID}
-                                                color='primary'
-                                                onClick={handleUpdate}
-                                            >
-                                                <EditIcon style={{ fontSize: 30, opacity: 1 ,paddingTop:"0px"}}
-                                                />
-                                            </IconButton>
-                                            <IconButton
-                                                aria-label="account of current user"
-                                                aria-haspopup="true"
-                                                id={"viewAttendance_" + staffMember.ID}
+                                                id={"UPDATE_"+staffMember.type+"_" + staffMember.ID}
                                                 color='primary'
                                                 onClick={handleUpdate}
                                             >
-                                                <Badge badgeContent={0} color="secondary"><TodayIcon /></Badge>
+                                                <EditIcon style={{ fontSize: 30, opacity: 1 ,padding:"0px"}}
+                                                />
                                             </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="view Attendance Record">
+                                            <IconButton
+                                                aria-label="account of current user"
+                                                aria-haspopup="true"
+                                                id={"viewAttendance_"+staffMember.type+"_" + staffMember.ID}
+                                                color='primary'
+                                                onClick={handleAttendance}
+                                            >
+                                                <TodayIcon style={{ fontSize: 30, opacity: 1 ,padding:"0px"}} />
+                                            </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Add Missing Sessions">
+                                            <IconButton
+                                                aria-label="account of current user"
+                                                aria-haspopup="true"
+                                                id={"viewAttendance_"+staffMember.type+"_" + staffMember.ID}
+                                                color='primary'
+                                                onClick={handleAddMissingSessions}
+                                            >
+                                                <ExitToAppIcon style={{ fontSize: 30, opacity: 1 ,padding:"0px"}} />
+                                            </IconButton>
+                                            </Tooltip>
                                         </div>
                                     </Card>
                                 </CardActionArea>
@@ -218,23 +272,28 @@ export default function Location_Card(props) {
                     }
                 </Grid>
             </Container>
-            {/* <EditStaffMemberForm
-                open={openUpdateLocation}
-                handleOpenEdit={handleOpenEdit}
+            <EditStaffMemberForm
+                open={openUpdate}
                 handleCloseEdit={handleCloseEdit}
-                location={updatedLocation}
+                staffMember={updatedStaffMember}
+                offices = {props.offices}
+                departments = {props.departments}
                 setComponentInMain={props.setComponentInMain} />
             <AddStaffMemberForm
-                open={openAddLocation}
+                open={openAdd}
+                handleOpenEdit={handleOpenEdit}
                 handleOpenAdd={handleOpenAdd}
                 handleCloseAdd={handleCloseAdd}
+                offices = {props.offices}
+                departments = {props.departments}
                 setComponentInMain={props.setComponentInMain} />
-            <AddStaffMemberForm
-                open={openAddLocation}
-                handleOpenAdd={handleOpenAdd}
-                handleCloseAdd={handleCloseAdd}
-                setComponentInMain={props.setComponentInMain} />
-                 */}
+            <AttendanceRecordForm
+                open={openAttendance}
+                handleOpenAttendance={handleOpenAttendance}
+                handleCloseAttendance={handleCloseAttendance}
+                attendanceRecords = {attendanceView}
+                setComponentInMain={props.setComponentInMain} /> 
+            {/* <AddMissingSignInOutForm/>   */}
         </div >
     );
 }

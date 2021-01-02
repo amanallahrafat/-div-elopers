@@ -43,10 +43,12 @@ export default function AddCourseForm(props) {
             const req = {
                 name: newName,
                 code : newCode,
-                description : newDescription,
             };
             if (newDepartments != null) {
                 req.department = newDepartments;
+            }
+            if(newDescription.length > 0){
+                req.description = newDescription;
             }
             const res = await axios.post(`/hr/createCourse`, req);
             props.setComponentInMain("course");
