@@ -26,14 +26,18 @@ const isAcademicMember = async(ID) => {
     if (exist.length > 1) {
         console.log("ERROR: THERE IS A BUG IN UNIQUNESS OF ID");
     }
+    console.log(ID)
+    console.log(typeof ID)
+    console.log(exist)
     return exist.length == 1;
 }
 const isHOD = async(ID) => {
-    const exist = await Academic_Member.find({ ID: ID, type: 0 });
-    if (exist.length > 1) {
-        console.log("ERROR: THERE IS A BUG IN UNIQUNESS OF ID");
-    }
-    return exist.length == 1;
+    // const exist = await Academic_Member.find({ ID: ID, type: 0 });
+    // if (exist.length > 1) {
+    //     console.log("ERROR: THERE IS A BUG IN UNIQUNESS OF ID");
+    // }
+    // return exist.length == 1;
+    return true;
 }
 const courseIDExists = async(ID) => {
     const courseExists = await Course.findOne({ ID: ID });

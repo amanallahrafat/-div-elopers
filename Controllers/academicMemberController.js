@@ -11,7 +11,7 @@ const Academic_Member = require('../Models/Users/Academic_Member.js');
 const Course = require('../Models/Academic/Course.js');
 const Department = require('../Models/Academic/Department.js');
 const validator = require('../Validations/academicMemberValidations');
-
+const Location = require('../Models/Others/Location')
 const extraUtils = require('../utils/extraUtils.js');
 const Notification = require('../Models/Others/Notification.js');
 const Staff_Member = require('../Models/Users/Staff_Member.js');
@@ -402,9 +402,18 @@ const viewSchedule = async (req, res) => {
             }
         }
     }
+    const locationsTable = await Location.find();
+    const coursesTable = await Course.find();
+    for(const entry of schedule){
+        const slot = entry.slot;
+        slot.locationName = locationsTable.filter(elem => elem.ID == slot.locationID)[0].name;
+        const course = entry.courseID;
+        entry.courseName = coursesTable.filter(elem => elem.ID == entry.courseID)[0].code;
+    }
 
     return res.send(JSON.stringify(schedule));
 }
+
 
 // {documents : String, startDate : Number, endDate : Number, msg : String}
 const sendMaternityLeaveRequest = async (req, res) => {
@@ -701,6 +710,19 @@ const cancelAnnualLeaveRequest = async (req, res) => {
         }
     }
 }
+const viewCourseMembers = async(req, res) =>{
+    console.log(req.body)
+    const course = await Course.findOne({ID : req.body.courseID});
+    const courseMembers = course.instructor.concat(course.teachingStaff);
+    const courseMembersUnique = [];
+    for(const mem of courseMembers){
+        if(!courseMembersUnique.includes(mem))
+            courseMembersUnique.push(mem);
+    }
+    const acMemNames = await extraUtils.getAcademicMemberByID_arr(courseMembersUnique);
+    return res.send(acMemNames);
+
+}
 module.exports = {
     sendReplacementRequest,
     viewSchedule,
@@ -722,5 +744,6 @@ module.exports = {
     cancelCompensationLeaveRequest,
     cancelMaternityLeaveRequest,
     cancelSickLeaveRequest,
-    cancelReplacementRequest
+    cancelReplacementRequest,
+    viewCourseMembers,
 }
