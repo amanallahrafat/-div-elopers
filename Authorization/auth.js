@@ -49,7 +49,9 @@ const authHOD = async (req,res,next) =>{
     const token = req.header("auth-token");
     if(!token)
         return res.status(403).send("You need to login to continue");
-    const {ID , type} = req.header.user;
+       
+    
+        const {ID , type} = req.header.user;
     const academic_member = await Academic_Member.findOne({ID : ID});
     if(academic_member==null)
         return res.status(401).send("Please register first");
