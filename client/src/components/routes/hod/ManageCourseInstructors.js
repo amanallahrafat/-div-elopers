@@ -219,6 +219,7 @@ export default function CourseInstructor_Card(props) {
                 setComponentInMain={props.setComponentInMain}
                 
                 />
+
             <DeleteInstructorForm
             open={openDeleteCourseInstructor}
             //handleOpenEdit={handleOpenEdit}
@@ -242,4 +243,5 @@ export default function CourseInstructor_Card(props) {
 
         </div >
     );
+
 }

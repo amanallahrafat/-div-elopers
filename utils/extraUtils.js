@@ -6,6 +6,7 @@ const Sick_Leave_Request = require("../Models/Requests/Sick_Leave_Request")
 const Staff_Member = require("../Models/Users/Staff_Member")
 const Location = require("../Models/Others/Location")
 const Academic_Member = require("../Models/Users/Academic_Member")
+const Department = require("../Models/Academic/Department")
 
 const getAcademicMemberByID = async (ID) => {
     const academicMem = await Staff_Member.findOne({ ID: ID, type: 0 });
@@ -24,9 +25,24 @@ const getAcademicMembersByID_arr = async(ID_arr)=>{
 }
 
 
+const getAcademicMemberByID_arr = async (ID_arr) => {
+    const academicMem = await Staff_Member.find();
+    const academicMemNames = [];
+    for(const id of ID_arr){
+        academicMemNames.push(academicMem.filter(elem => elem.ID == id)[0]);
+    }
+    return academicMemNames;
+}
+
+
 const getOfficeByID = async (ID) => {
     const office = await Location.findOne({ ID: ID});
     return office;
+}
+
+const getDepartmentByID = async (ID) => {
+    const dep = await Department.findOne({ ID: ID});
+    return dep;
 }
 
 const trimMonogoObj = (obj, deletedProperties) => {
@@ -78,10 +94,7 @@ const getMissingHours = (staffMem, accidentalLeaves, annualLeaves, compensationL
     let totalHours = 0;
     for (const record of attendanceArray) {
         if (record.signin && record.signout && startOfMonth.getTime() <= record.signin && record.signin <= endOfMonth.getTime()) {
-
-            //     console.log(new Date(record.signin)+" "+new Date(record.signout));
             const isFree = isFreeDay(staffMem, new Date(record.signin), accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
-            //   console.log(isFree);
             if (isFree)
                 continue;
 
@@ -113,68 +126,44 @@ const getMissingHours = (staffMem, accidentalLeaves, annualLeaves, compensationL
     return missingHours = noOfDaysTillToday * 8.4 - attendedHours;
 }
 const isFreeDay = (staffMem, date, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves) => {
-    // console.log("begin free day with date "+date);
-    //console.log(staffMem.name+" "+staffMem.dayOff+" "+getCurDay(date));
     if (staffMem.dayOff == getCurDay(date) || (getCurDay(date) == "friday")) return true;
     if (staffMem.type == 1) return false; // if he is an HR i won't check leaves since HR can't submit leaves so for any leave sender ID he is Academic Mem
-    //console.log("passed dayOff friday");
 
     //handling accidental leave request
-    // const accidentalLeaves= await Accidental_Leave_Request.find({senderID:staffMem.ID,status:"accepted"});
     if (accidentalLeaves)
         for (const leave of accidentalLeaves) {
             if (leave.senderID == staffMem.ID && twoDatesAreEqual(leave.requestedDate, date) && leave.status == "accepted")
                 return true;
         }
-    //    console.log("passed accid");
 
     //handling anuual leave request
-    //  const annualLeaves=await Annual_Leave_Request.find({senderID:staffMem.ID,status:"accepted"});
     if (annualLeaves)
         for (const leave of annualLeaves) {
             if (leave.senderID == staffMem.ID && twoDatesAreEqual(leave.requestedDate, date) && leave.status == "accepted")
                 return true;
         }
 
-    // console.log("passed anuial");
-
     //handling compensation leave request
-    // const compensationLeaves=await Compensation_Leave_Request.find({senderID:staffMem.ID,status:"accepted"});
     if (compensationLeaves)
         for (const leave of compensationLeaves) {
             if (leave.senderID == staffMem.ID && twoDatesAreEqual(leave.absenceDate, date) && leave.status == "accepted")
                 return true;
         }
-    // console.log("passed comp");
-
-
 
     //handling maternality leave request
-    // const maternalityLeaves=await Maternity_Leave_Request.find({senderID:staffMem.ID,status:"accepted"});
     if (maternalityLeaves)
         for (const leave of maternalityLeaves) {
             if (leave.senderID == staffMem.ID && (twoDatesAreEqual(leave.startDate, date) || twoDatesAreEqual(leave.endDate, date) || (leave.startDate.getTime() <= date.getTime() && date.getTime() <= leave.endDate.getTime())) && leave.status == "accepted")
                 return true;
         }
-    // console.log("passed mater");
-
-
-
 
     //handling sick leave request
-    //  const sickLeaves=await Sick_Leave_Request.find({senderID:staffMem.ID,status:"accepted"});\c
-
     if (sickLeaves)
         for (const leave of sickLeaves) {
 
             if (leave.senderID == staffMem.ID && twoDatesAreEqual(leave.requestedDate, date) && leave.status == "accepted")
                 return true;
         }
-
-    //   console.log("passed sick");
-
-
-
 
     return false;
 }
@@ -305,5 +294,7 @@ module.exports = {
     getCurDay,
     getAcademicMemberByID,
     getOfficeByID,
-    getAcademicMembersByID_arr
+   getAcademicMembersByID_arr,
+    getDepartmentByID,
+    getAcademicMemberByID_arr
 }

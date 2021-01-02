@@ -14,6 +14,7 @@ import SchoolIcon from '@material-ui/icons/School';
 import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import Academic_Member_List from '../routes/ac/ac.js'
 
 const drawerWidth = 240;
 
@@ -87,8 +88,24 @@ export default function PersistentDrawerLeft(props) {
         setOpen(false);
     };
 
-    const handleLocation = ()=>{
+    const handleLocation = () => {
         props.setComponentInMain("location");
+    }
+
+    const handleFaculties = () => {
+        props.setComponentInMain("faculty");
+    }
+
+    const handleDepartments= () => {
+        props.setComponentInMain("department");
+    }
+
+    const handleCourses= () => {
+        props.setComponentInMain("course");
+    }
+
+    const handleStaffMembers = () =>{
+        props.setComponentInMain("staffMember");
     }
 
     return (
@@ -109,23 +126,23 @@ export default function PersistentDrawerLeft(props) {
                 <List>
                     <ListItem button>
                         <ListItemIcon><AddLocationIcon /></ListItemIcon>
-                        <ListItemText primary="Locations" onClick={handleLocation}/>
+                        <ListItemText primary="Locations" onClick={handleLocation} />
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><SchoolIcon /></ListItemIcon>
-                        <ListItemText primary="Faculties" />
+                        <ListItemText primary="Faculties" onClick={handleFaculties} />
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><LocalLibraryIcon /></ListItemIcon>
-                        <ListItemText primary="Departments" />
+                        <ListItemText primary="Departments" onClick={handleDepartments} />
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><MenuBookIcon /></ListItemIcon>
-                        <ListItemText primary="Courses" />
+                        <ListItemText primary="Courses" onClick={handleCourses} />
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><PeopleAltIcon /></ListItemIcon>
-                        <ListItemText primary="Staff Memebers" />
+                        <ListItemText primary="Staff Members" onClick={handleStaffMembers} />
                     </ListItem>
                 </List>
             </Drawer>

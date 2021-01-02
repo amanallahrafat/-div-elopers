@@ -186,7 +186,6 @@ export default function MainFeaturedPost(props) {
                       {props.profile.extraInfo.map((i, idx) => {
                         return (
                           <div>
-                            {console.log(i, idx)}
                             {i}
                             <IconButton
                               disabled={false}

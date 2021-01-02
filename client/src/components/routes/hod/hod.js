@@ -8,6 +8,7 @@ import Profile from '../../Profile';
 import ManageCourseInstructors from './ManageCourseInstructors.js';
 import ViewStaffProfiles from './viewStaffProfiles.js';
 import ChangeDayOffRequest from './changeDayOffRequest.js'
+import Schedule from '../ac/Schedule_Handler/Schedule'
 
 import AnnualLeaveRequest from './annualLeaveRequest.js'
 import AccidentalLeaveRequest from './accidentalLeaveRequest.js'
@@ -22,7 +23,6 @@ const requestUserProfile = async () => {
 
 
 const requestAttendanceRecods = async () => {
-
     const attendanceRecords = await axios.get('/viewAttendance');
     return attendanceRecords.data;
 }
@@ -76,6 +76,12 @@ const requestAllRequests = async ()=>{
 //     const res = await axios.get('/hod/getAllAcademicMembers');
 //     return res.data;
 // }
+
+const requestSchedule = async () => {
+    const schedule = await axios.get('ac/viewSchedule');
+    console.log(schedule);
+    return schedule.data;
+}
 
 class HOD extends Component {
     state = {
@@ -142,6 +148,13 @@ class HOD extends Component {
                     attendanceRecords={await requestAttendanceRecods()}
                     setComponentInMain={this.setComponentInMain}
                      />
+            });
+        } else if (event == "schedule") {
+            console.log("schedule")
+            this.setState({
+                componentInMain: <Schedule
+                    schedule={await requestSchedule()}
+                />
             });
         }
         else if (event == "manageCourseInstructors"){
@@ -250,11 +263,9 @@ class HOD extends Component {
     }
 
     render() {
-        console.log(this.props.location);
         if (this.state.isLoggedIn === 0)
             return <div />;
         if (this.state.isLoggedIn === 1) {
-            //alert("Please Login!");
             return <Redirect to='/' />;
         }
         return (

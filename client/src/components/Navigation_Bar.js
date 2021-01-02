@@ -83,14 +83,10 @@ class Navigation_Bar extends Component {
     handleViewProfile = (event) => {
         this.setState({ viewProfile: true });
         this.props.fromParent("profile");
-        //console.log(event.target);
-        console.log("handleView");
     };
     handleViewAttendance=(event)=>{
         this.props.fromParent("attendance");
-        console.log( "handle attendance" );
     }
-
 
     handleSlideBarToggle = (event) => {
         this.setState({ isSlideBarOpen: !this.state.isSlideBarOpen });

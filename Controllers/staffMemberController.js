@@ -19,7 +19,6 @@ const Sick_Leave_Request = require('../Models/Requests/Sick_Leave_Request.js');
 
 const signIn = async (req, res) => {
     const { ID, type } = req.header.user;
-    console.log(req.header);
     const staff_member = await Staff_Member.findOne({ ID: ID, type: type });
     if (staff_member.attendanceRecord.length != 0) {
         const lastRecord = staff_member.attendanceRecord[staff_member.attendanceRecord.length - 1];
@@ -29,7 +28,6 @@ const signIn = async (req, res) => {
     staff_member.attendanceRecord.push({ status: 1, signin: Date.now() });
 
     staff_member.attendanceRecord.push({ status: 1, signin: Date.now(), signout: "" });
-    //console.log(staff_member.attendanceRecord)
     await Staff_Member.updateOne({ ID: ID, type: type }, { attendanceRecord: staff_member.attendanceRecord });
     res.send("Sign in Sucessfully!");
 }
@@ -123,7 +121,6 @@ const viewAttendance = async (req, res) => {
     let responseArray = [];
     for (const record of attendanceArray) {
         record.status = (record.status == 1) ? "attended" : "absent";
-        //   console.log((new Date(record.signin)).getMonth());
         if (record.signin && record.signout)
             if (!req.body.month || ((req.body.month - 1) == (new Date(record.signin)).getMonth())) {
                 record.signin = new Date(record.signin);

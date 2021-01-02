@@ -5,6 +5,8 @@ const hrRouter = express.Router();
 
 auth = [authStaffMember , authHr];
 
+hrRouter.get('/viewAllMembersProfiles',authHr,hrController.viewAllMembersProfiles);
+
 hrRouter.get('/viewAllLocations' ,auth,hrController.viewAllLocations);
 hrRouter.post('/createLocation' ,auth,hrController.createLocation);
 hrRouter.put('/updateLocation/:ID' ,auth,hrController.updateLocation);

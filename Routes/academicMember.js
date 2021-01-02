@@ -3,8 +3,6 @@ const { authStaffMember, authAcademicMember } = require('../Authorization/auth.j
 
 const express = require('express');
 const academicMemberRouter = express.Router();
-
-
 auth = [authStaffMember, authAcademicMember];
 
 academicMemberRouter.post('/sendSlotLinkingRequest', auth, academicMemberController.sendSlotLinkingRequest);
@@ -32,4 +30,8 @@ academicMemberRouter.delete('/cancelReplacementRequest/:ID', auth, academicMembe
 academicMemberRouter.delete('/cancelAccidentalLeaveRequest', auth, academicMemberController.cancelAccidentalLeaveRequest);
 academicMemberRouter.delete('/cancelAnnualLeaveRequest', auth, academicMemberController.cancelAnnualLeaveRequest);
 
+
+// EXTRA
+//post cause it works that way. sam7yny ya HTTP1.1 standards.
+academicMemberRouter.post('/viewCourseMembers', auth, academicMemberController.viewCourseMembers);
 module.exports = academicMemberRouter;

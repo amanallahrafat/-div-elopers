@@ -484,7 +484,6 @@ var sendChangeDayOffRequest = function sendChangeDayOffRequest(req, res) {
         case 14:
           if (message == null) message = "";
           isValid = validator.validateDayOff(req.body);
-          console.log(req.body);
 
           if (!isValid.error) {
             _context3.next = 19;
@@ -1569,7 +1568,6 @@ var sendAnnualLeaveRequest = function sendAnnualLeaveRequest(req, res) {
         case 4:
           msg = req.body.msg;
           if (msg == null) req.body.msg = "";
-          console.log(req.body.msg);
           isValid = validator.validateAnnualLeaveRequest(req.body);
 
           if (!isValid.error) {

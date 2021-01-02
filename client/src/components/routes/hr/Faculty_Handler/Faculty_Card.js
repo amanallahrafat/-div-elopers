@@ -1,22 +1,28 @@
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
+import Chip from '@material-ui/core/Chip';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import EditLocationForm from './Edit_Location_Form';
 import axios from 'axios';
 import React from 'react';
+import AddFacultyForm from './Add_Faculty_Form';
+import EditFacultyForm from './Edit_Faculty_Form';
 
 const useStyles = makeStyles((theme) => ({
     title: {
         flex: '1 1 100%',
         paddingBottom: '20px'
+    },
+    chip: {
+        margin: 2,
     },
     mainFeaturedPost: {
         position: 'relative',
@@ -58,18 +64,27 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Location_Card(props) {
+export default function Faculty_Card(props) {
     const [openEdit, setOpenEdit] = React.useState(false);
 
-    const [openUpdateLocation, setOpenUpdateLocation] = React.useState(false);
-    const [updatedLocation, setUpdatedLocation] = React.useState({});
+    const [openUpdateFaculty, setOpenUpdateFaculty] = React.useState(false);
+    const [updatedFaculty, setUpdatedFaculty] = React.useState({});
+    const [openAddFaculty, setOpenAddFaculty] = React.useState(false);
 
 
     const handleOpenEdit = (event) => {
-        setOpenUpdateLocation(true);
+        setOpenUpdateFaculty(true);
     }
     const handleCloseEdit = () => {
-        setOpenUpdateLocation(false);
+        setOpenUpdateFaculty(false);
+    }
+
+    const handleOpenAdd = () => {
+        setOpenAddFaculty(true);
+    }
+
+    const handleCloseAdd = () => {
+        setOpenAddFaculty(false);
     }
 
     // const handleOpenAddExtraInfo = () => {
@@ -79,16 +94,17 @@ export default function Location_Card(props) {
     //     setOpenExtraInfo(false);
     // }
 
-    const handleDeleteLocation = async (event) => {
-        const res = await axios.delete(`/hr/deleteLocation/${event.currentTarget.id.split('_')[1]}`);
-        props.setComponentInMain("location");
+    const handleDeleteFaculty = async (event) => {
+        const res = await axios.delete(`/hr/deleteFaculty/${event.currentTarget.id.split('_')[1]}`);
+        console.log(res);
+        props.setComponentInMain("faculty");
     }
 
-    const handleUpdateLocation = async (event) => {
-        const locationID = event.currentTarget.id.split('_')[1];
-        const location = props.locations.filter(l => l.ID == locationID);
-        setUpdatedLocation(location[0]);
-        setOpenUpdateLocation(true);
+    const handleUpdateFaculty = async (event) => {
+        const facultyName = event.currentTarget.id.split('_')[1];
+        const faculty = props.faculties.filter(l => l.name == facultyName);
+        setUpdatedFaculty(faculty[0]);
+        setOpenUpdateFaculty(true);
     }
 
     const classes = useStyles();
@@ -102,32 +118,41 @@ export default function Location_Card(props) {
                 </Paper>
 
                 <Typography className={classes.title} variant="h5" component="div">
-                    <b>Locations</b>
+                    <b>Faculties</b>
+                    <IconButton
+                        aria-label="account of current user"
+                        aria-haspopup="true"
+                        color='primary'
+                        onClick={handleOpenAdd}
+                    >
+                        <AddCircleIcon style={{ fontSize: 25, opacity: 0.8 }}
+                        />
+                    </IconButton>
                 </Typography>
 
                 <Grid container spacing={4} >
                     {
-                        props.locations.map(location =>
+                        props.faculties.map(faculty =>
                             <Grid item xs={12} md={4}>
                                 <CardActionArea component="a" href="#" disabled={false}>
                                     <Card className={classes.card}>
                                         <div className={classes.cardDetails}>
                                             <CardContent>
                                                 <Typography variant="subtitle1" paragraph>
-                                                    <b>Name:</b> {location.name}<br />
-                                                    <b>Capacity:</b> {location.capacity}<br/>
-                                                    <b>Type:</b> {location.type === 0 ?
-                                                        "Hall" : location.type === 1 ? "Tutorial room" :
-                                                            location.type === 2 ? "Office" : "Lab"}
-
+                                                    <b>Name:</b> {faculty.name}<br />
+                                                    <b>Departments:</b> {
+                                                        faculty.departments?.map(d =>
+                                                            <Chip key={d.ID} label={d.name} className={classes.chip} />
+                                                        )
+                                                    }<br />
                                                 </Typography>
                                             </CardContent>
                                             <IconButton
                                                 aria-label="account of current user"
                                                 aria-haspopup="true"
-                                                id={"DELETE_" + location.ID}
+                                                id={"DELETE_" + faculty.name}
                                                 color='primary'
-                                                onClick={handleDeleteLocation}
+                                                onClick={handleDeleteFaculty}
                                             >
                                                 <DeleteIcon style={{ fontSize: 25, opacity: 0.8 }}
                                                 />
@@ -135,9 +160,9 @@ export default function Location_Card(props) {
                                             <IconButton
                                                 aria-label="account of current user"
                                                 aria-haspopup="true"
-                                                id={"UPDATE_" + location.ID}
+                                                id={"UPDATE_" + faculty.name}
                                                 color='primary'
-                                                onClick={handleUpdateLocation}
+                                                onClick={handleUpdateFaculty}
                                             >
                                                 <EditIcon style={{ fontSize: 30, opacity: 1 }}
                                                 />
@@ -150,11 +175,18 @@ export default function Location_Card(props) {
                     }
                 </Grid>
             </Container>
-            <EditLocationForm
-                open={openUpdateLocation}
+            <EditFacultyForm
+                open={openUpdateFaculty}
                 handleOpenEdit={handleOpenEdit}
                 handleCloseEdit={handleCloseEdit}
-                location={updatedLocation}
+                faculty={updatedFaculty}
+                departments={props.departments}
+                setComponentInMain={props.setComponentInMain} />
+            <AddFacultyForm
+                open={openAddFaculty}
+                handleOpenAdd={handleOpenAdd}
+                handleCloseAdd={handleCloseAdd}
+                departments = {props.departments}
                 setComponentInMain={props.setComponentInMain} />
         </div >
     );

@@ -2,7 +2,6 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
@@ -12,16 +11,17 @@ import axios from 'axios';
 import React from 'react';
 
 export default function EditLocationForm(props) {
-    const [newType, setNewType] = React.useState(-1);
+    const [newType, setNewType] = React.useState(0);
 
     const handleClickOpen = () => {
-        props.handleOpenEdit();
+        props.handleOpenAdd();
     };
 
     const handleClose = () => {
-        props.handleCloseEdit();
+        props.handleCloseAdd();
     };
-    const handleUpdate = async () => {
+
+    const handleAddLocation = async () => {
         const newName = document.getElementById("editName").value;
         const newCapacity = document.getElementById("editCapacity").value;
         try {
@@ -30,9 +30,8 @@ export default function EditLocationForm(props) {
                 capacity: newCapacity,
                 type: newType
             };
-            const res = await axios.put(`hr/updateLocation/${props.location.ID}`, req);
-            console.log(res.data);
-            props.setComponentInMain("location");
+            const res = await axios.post(`/hr/createLocation`, req);
+            props.setComponentInMain("staffMember");
         } catch (err) {
             alert("please enter valid data.");
         }
@@ -42,7 +41,7 @@ export default function EditLocationForm(props) {
         <div>
 
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Edit Location </DialogTitle>
+                <DialogTitle id="form-dialog-title">Add Location </DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -50,7 +49,6 @@ export default function EditLocationForm(props) {
                         id="editName"
                         label="Name"
                         type="text"
-                        defaultValue={props.location.name}
                         fullWidth
                     />
                     <TextField
@@ -58,14 +56,13 @@ export default function EditLocationForm(props) {
                         id="editCapacity"
                         label="Capacity"
                         type="number"
-                        defaultValue={props.location.capacity}
                         InputProps={{
                             inputProps: {
                                 min: 0
                             }
                         }} fullWidth
                     />
-                    <RadioGroup name="locationType" id="editType" defaultValue={props.location.type + ""}>
+                    <RadioGroup name="locationType" id="editType" defaultValue="0">
                         <FormControlLabel onClick={() => { setNewType(0) }}
                             value="0" control={<Radio />} label="Hall" />
                         <FormControlLabel onClick={() => { setNewType(1) }}
@@ -80,8 +77,8 @@ export default function EditLocationForm(props) {
                     <Button onClick={handleClose} color="primary">
                         Cancel
           </Button>
-                    <Button onClick={handleUpdate} color="primary">
-                        Update
+                    <Button onClick={handleAddLocation} color="primary">
+                        Add
           </Button>
                 </DialogActions>
             </Dialog>
