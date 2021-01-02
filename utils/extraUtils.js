@@ -13,7 +13,7 @@ const getAcademicMemberByID = async (ID) => {
 }
 
 const getAcademicMemberByID_arr = async (ID_arr) => {
-    const academicMem = await Staff_Member.find();
+    const academicMem = await Staff_Member.find({type : 0});
     const academicMemNames = [];
     for(const id of ID_arr){
         academicMemNames.push(academicMem.filter(elem => elem.ID == id)[0]);

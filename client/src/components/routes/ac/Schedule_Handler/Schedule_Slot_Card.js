@@ -7,13 +7,14 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import FindReplaceIcon from '@material-ui/icons/FindReplace';
 import Replacement_Request_Card from './Replacement_Request_Card';
+import { Box, Tooltip } from '@material-ui/core';
 const useStyles = makeStyles({
     root: {
     },
     bullet: {
         display: 'inline-block',
-        margin: '0 1px',
-        transform: 'scale(0.8)',
+        // margin: '0 1px',
+       // transform: 'scale(0.8)',
     },
     title: {
     },
@@ -35,15 +36,23 @@ export default function SimpleCard(props) {
         <div>
             <Card className={classes.root}>
                 <CardContent>
+                    <Box display = "flex" flexDirection = "row">
+                    <Box width = "70%">
                     <Typography className={classes.pos} >
                         <b>{props.courseName}</b>
                     </Typography>
                     <Typography className={classes.pos} color="textSecondary">
                         {props.locationName}
                     </Typography>
+                    </Box>
+                    <Box >
                     <CardActions>
-                        <Button size="small" color="primary" onClick={handleOpenReplacementRequest}><FindReplaceIcon /></Button>
+                        <Tooltip title = "Send Replacement Request">
+                        <Button  size="small" color="primary" onClick={handleOpenReplacementRequest}><FindReplaceIcon /></Button>
+                        </Tooltip>
                     </CardActions>
+                    </Box>
+                    </Box>
                 </CardContent>
                 <Replacement_Request_Card
                     open={openReplacementRequestCard}
@@ -51,6 +60,7 @@ export default function SimpleCard(props) {
                     courseID={props.courseID}
                     slotNumber={props.slotNumber}
                     slotDay={props.slotDay}
+                    slotID = {props.slotID}
                 />
             </Card>
         </div>
