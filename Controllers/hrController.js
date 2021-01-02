@@ -65,6 +65,18 @@ const viewAllStaffMembers = async (req, res) => {
     res.send(await Staff_Member.find());
 }
 
+const viewAllMembersProfiles = async (req,res) =>{
+    const staffMembers = await Staff_Member.find();
+    for(const staff of staffMembers){
+        if(staff.type == 0){
+            const ac = await Academic_Member.findOne({ID : staff.ID});
+            staff.departmentID = ac.departmentID;
+            staff.memberType = ac.memberType;
+        }
+    }
+    res.send(staffMembers);
+}
+
 const viewAllCourses = async (req, res) => {
     res.send(await Course.find());
 }
@@ -896,4 +908,5 @@ module.exports = {
     viewAllFaculties,
     viewAllStaffMembers,
     viewAllDepartments,
+    viewAllMembersProfiles,
 }
