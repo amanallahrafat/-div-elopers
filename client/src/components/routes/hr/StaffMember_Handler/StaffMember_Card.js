@@ -134,16 +134,18 @@ export default function Edit_StaffMember_Card(props) {
     }
 
     const handleAttendance = async (event) =>{
-        const member = event.currentTarget.id.split('_')[2];
+        const memberID = event.currentTarget.id.split('_')[2];
         const type = event.currentTarget.id.split('_')[1];
-        const staffMember = props.staffMembers.filter(elm => elm.ID == member && elm.type == type);
-        setAttendanceView(staffMember[0].attendanceRecord);
-        console.log(staffMember[0].attendanceRecord);
+        //const staffMember = props.staffMembers.filter(elm => elm.ID == member && elm.type == type);
+        const attendanceRecords = await axios.get(`/hr/viewStaffMemberAttendance/${memberID}/${type}`);
+        console.log(attendanceRecords.data);
+        setAttendanceView(attendanceRecords.data);
+        //console.log(staffMember[0].attendanceRecord);
         setOpenAttendance(true);
     }
 
     const handleAddMissingSessions = async (event) =>{
-        const member = event.currentTarget.id.split('_')[2];
+        const memberID = event.currentTarget.id.split('_')[2];
         const type = event.currentTarget.id.split('_')[1];
         console.log("Add Missing Sign In and Out");
     }
@@ -194,7 +196,7 @@ export default function Edit_StaffMember_Card(props) {
                                                 <Typography variant="subtitle1" paragraph style={{marginBottom:"0px"}}>
                                                     <Box display="flex" flexDirection="row" >
                                                         <Box width="30%" style={{margin:"auto",textAlign:"center"}}>
-                                                            <Avatar src="/broken-image.jpg" className={classes.Avatar}>{staffMember.name.substring(0, 2)}</Avatar>
+                                                            <Avatar src="/broken-image.jpg" className={classes.Avatar}>{staffMember.name.substring(0, 2).toUpperCase()}</Avatar>
                                                             <b> {staffMember.name}</b><br />
                                                         </Box>
                                                         <Box width="35%">
@@ -225,6 +227,7 @@ export default function Edit_StaffMember_Card(props) {
                                                     id={"DELETE_"+staffMember.type+"_" + staffMember.ID}
                                                     color='primary'
                                                     onClick={handleDelete}
+                                                    style={{paddingRight : "0px"}}
                                                 >
                                                     <DeleteIcon style={{ fontSize: 25, opacity: 0.8,padding:"0px" }}
                                                     />
@@ -237,6 +240,7 @@ export default function Edit_StaffMember_Card(props) {
                                                 id={"UPDATE_"+staffMember.type+"_" + staffMember.ID}
                                                 color='primary'
                                                 onClick={handleUpdate}
+                                                style={{paddingRight : "0px"}}
                                             >
                                                 <EditIcon style={{ fontSize: 30, opacity: 1 ,padding:"0px"}}
                                                 />
@@ -249,6 +253,7 @@ export default function Edit_StaffMember_Card(props) {
                                                 id={"viewAttendance_"+staffMember.type+"_" + staffMember.ID}
                                                 color='primary'
                                                 onClick={handleAttendance}
+                                                style={{paddingRight : "0px"}}
                                             >
                                                 <TodayIcon style={{ fontSize: 30, opacity: 1 ,padding:"0px"}} />
                                             </IconButton>
@@ -260,6 +265,7 @@ export default function Edit_StaffMember_Card(props) {
                                                 id={"viewAttendance_"+staffMember.type+"_" + staffMember.ID}
                                                 color='primary'
                                                 onClick={handleAddMissingSessions}
+                                                style={{paddingRight : "0px"}}
                                             >
                                                 <ExitToAppIcon style={{ fontSize: 30, opacity: 1 ,padding:"0px"}} />
                                             </IconButton>
