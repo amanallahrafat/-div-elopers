@@ -193,7 +193,7 @@ export default function StaffMember_Card(props) {
     }
 
     const classes = useStyles();
-    console.log(localStorage.getItem("ID"))
+    console.log(localStorage.getItem("type"))
     console.log(localStorage.getItem('ID'))
     return (
         <div>
@@ -239,17 +239,16 @@ export default function StaffMember_Card(props) {
                     {
                         getViewedMembers().map(staffMember =>
                             <Grid item xs={12} md={6}>
-                                <CardActionArea component="a" disabled={false}>
                                     <Card className={classes.card}>
                                         <div className={classes.cardDetails}>
                                             <CardContent style={{paddingBottom:"0px",paddingLeft:"0px"}}>
                                                 <Typography variant="subtitle1" paragraph style={{marginBottom:"0px"}}>
                                                     <Box display="flex" flexDirection="row" >
-                                                        <Box width="30%" style={{margin:"auto",textAlign:"center"}}>
+                                                        <Box width="40%" style={{margin:"auto",textAlign:"center"}}>
                                                             <Avatar src="/broken-image.jpg" className={classes.Avatar}>{staffMember.name.substring(0, 2).toUpperCase()}</Avatar>
                                                             <b> {staffMember.name}</b><br />
                                                         </Box>
-                                                        <Box width="35%">
+                                                        <Box width="30%">
                                                             <b>Email: </b><a href={"mailto:"+staffMember.email}>{staffMember.email}</a> <br />
                                                             <b>Day Off: </b> {staffMember.dayOff}<br />
                                                             <b>Gender: </b> {staffMember.gender}<br />
@@ -259,7 +258,7 @@ export default function StaffMember_Card(props) {
                                                                 <b>Department: </b> {getDepartmentName(staffMember.departmentID)}<br />
                                                             </Collapse>
                                                         </Box>
-                                                        <Box width="35%">
+                                                        <Box width="30%">
                                                         <b>Extra Info:</b><br />
                                                         {staffMember.extraInfo.map(elm =>{
                                                             return(
@@ -308,7 +307,9 @@ export default function StaffMember_Card(props) {
                                                 <TodayIcon style={{ fontSize: 30, opacity: 1 ,padding:"0px"}} />
                                             </IconButton>
                                             </Tooltip>
-                                            <Collapse in = {staffMember.ID == localStorage.getItem("ID") && staffMember.type == localStorage.getItem("type")}>
+                                            <Collapse 
+                                            style = {{display : "inline-block"}}
+                                            in = {!(staffMember.ID == localStorage.getItem("ID") && staffMember.type == localStorage.getItem("type"))}>
                                                 <Tooltip title="Add Missing Sessions">
                                                 <IconButton
                                                     aria-label="account of current user"
@@ -324,7 +325,6 @@ export default function StaffMember_Card(props) {
                                             </Collapse>
                                         </div>
                                     </Card>
-                                </CardActionArea>
                             </Grid>
                         )
                     }

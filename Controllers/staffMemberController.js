@@ -66,8 +66,9 @@ const login = async (req, res) => {
         academicMemberType = academicMember.type;
     }
     res.header('auth-token', token).send({
-        msg: "Login Successfull!",
+        msg: "Login Successfully!",
         type: u.type,
+        ID : u.ID,
         academicMemberType: academicMemberType,
     });
 }

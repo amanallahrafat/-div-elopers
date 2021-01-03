@@ -93,22 +93,115 @@ const styles = (theme) => ({
 class HR extends Component {
   state = {
     isLoggedIn: 0,
+    locations : [],
+    faculties : [],
+    departments : [],
+    courses : [],
+    staffMembers : [],
+    firstTimeLocations : true,
+    firstTimeFaculties : true,
+    firstTimeDepartments : true,
+    firstTimeCourses : true,
+    firstTimeStaffMembers : true,
     componentInMain: <div />,
-    // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
     isAppBarShift: false,
-    //*************
   };
 
-  // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
   handleAppBarShift = (event) => {
     this.setState({ isAppBarShift: event });
     console.log(this.state.isAppBarShift);
   };
-  //**************************
+
+  // decision => 0 for add , 1 for update, 2 for delete
+  handleLocations = async (obj, decision) => {
+    if(this.state.firstTimeLocations){
+      console.log("first time location",obj,decision);
+      this.setState({firstTimeLocations : false});
+      const locations = await requestAllLocations();
+      locations.sort((a,b) => a.ID - b.ID);
+      this.setState({locations : locations});
+      return locations;
+    }
+    else if( decision == 0){
+      const locations = this.state.locations;
+      locations.push(obj);
+      locations.sort((a,b) => a.ID - b.ID);
+      this.setState({locations : locations});
+    }
+    else if( decision == 1){
+      const newLocations = this.state.locations.filter(elm => elm.ID != obj.ID);
+      newLocations.push(obj);
+      newLocations.sort((a,b) => a.ID - b.ID);
+      this.setState({locations : newLocations});
+    }
+    else if( decision == 2){
+      const newLocations = this.state.locations.filter(elm => elm.ID != obj.ID);
+      this.setState({locations : newLocations});
+    }
+  };
+
+  handleFaculties = async (obj,decision) => {
+    if(this.state.firstTimeFaculties){
+      console.log("first time faculty",obj,decision);
+      this.setState({firstTimeFaculties : false});
+      const faculties = await requestAllFacutlies();
+      faculties.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+      this.setState({faculties : faculties});
+      return faculties;
+    }
+    else if( decision == 0){
+      const faculties = this.state.faculties;
+      faculties.push(obj);
+      faculties.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+      this.setState({faculties : faculties});
+    }
+    else if( decision == 1){
+      const newFaculties = this.state.faculties.filter(elm => elm.name != obj.name);
+      newFaculties.push(obj);
+      newFaculties.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+      this.setState({faculties : newFaculties});
+    }
+    else if( decision == 2){
+      const newFaculties = this.state.faculties.filter(elm => elm.name != obj.name);
+      this.setState({faculties : newFaculties});
+    }
+  }
+
+  handleDepartments = async (obj,decision) => {
+    if(this.state.firstTimeDepartments){
+      console.log("first time department",obj,decision);
+      this.setState({firstTimeDepartments : false});
+      const departments = await requestAllDepartments();
+      departments.sort((a,b) => a.ID - b.ID);
+      this.setState({departments : departments});
+      return departments;
+    }
+    else if( decision == 0){
+      const departments = this.state.departments;
+      departments.push(obj);
+      departments.sort((a,b) => a.ID - b.ID);
+      this.setState({departments : departments});
+    }
+    else if( decision == 1){
+      const newDepartments = this.state.departments.filter(elm => elm.ID != obj.ID);
+      newDepartments.push(obj);
+      newDepartments.sort((a,b) => a.ID - b.ID);
+      this.setState({departments : newDepartments});
+    }
+    else if( decision == 2){
+      const newDepartments = this.state.departments.filter(elm => elm.ID != obj.ID);
+      this.setState({departments : newDepartments});
+    }
+  }
+  
 
   setComponentInMain = async (event) => {
     console.log("aman");
     console.log(event);
+    
+    await this.handleLocations();
+    await this.handleFaculties();
+    await this.handleDepartments();
 
     if (event == "profile") {
       this.setState({
@@ -123,7 +216,8 @@ class HR extends Component {
       this.setState({
         componentInMain: (
           <Location_Card
-            locations={await requestAllLocations()}
+            locations = {this.state.locations}
+            handleLocations = {this.handleLocations}
             setComponentInMain={this.setComponentInMain}
           />
         ),
@@ -137,12 +231,15 @@ class HR extends Component {
           />
         ),
       });
+      // TODO : if you to decide to deal with states you should handle update department as in the backend
+      // if not -> you must use the slow method to get all departments every time.
     } else if (event == "faculty") {
       this.setState({
         componentInMain: (
           <Faculty_Card
-            faculties={await requestAllFacutlies()}
+            faculties={this.state.faculties}
             departments={await requestAllDepartments()}
+            handleFaculties = {this.handleFaculties}
             setComponentInMain={this.setComponentInMain}
           />
         ),
