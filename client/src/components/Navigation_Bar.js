@@ -16,17 +16,9 @@ import DropdownList_Notifications from './DropdownList_Notifications';
 import Hod_SlideBar from './slideBars/Hod_SlideBar';
 import HR_SlideBar from './slideBars/HR_SlideBar';
 
-
-
 const drawerWidth = 240;
 
 const styles = (theme) => ({
-    root: {
-        width: '100%',
-        maxWidth: 360,
-        display: 'flex',
-        // backgroundColor: theme.palette.background.paper,
-    },
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.sharp,
@@ -73,7 +65,6 @@ const styles = (theme) => ({
     },
 });
 
-
 class Navigation_Bar extends Component {
     state = {
         viewProfile: false,
@@ -84,13 +75,20 @@ class Navigation_Bar extends Component {
         this.setState({ viewProfile: true });
         this.props.fromParent("profile");
     };
-    handleViewAttendance=(event)=>{
+
+    handleViewAttendance = (event) => {
         this.props.fromParent("attendance");
     }
 
-    handleSlideBarToggle = (event) => {
-        this.setState({ isSlideBarOpen: !this.state.isSlideBarOpen });
+    handleSlideBarToggle = async (event) => {
+        await this.setState({ isSlideBarOpen: !this.state.isSlideBarOpen });
+        this.props.handleAppBarShift(this.state.isSlideBarOpen);
     }
+
+    componentDidMount() {
+        this.handleViewProfile();
+    }
+
     render() {
         const { classes } = this.props;
         return (
@@ -101,7 +99,6 @@ class Navigation_Bar extends Component {
                     <Toolbar >
                         <IconButton
                             aria-label="account of current user"
-                            //   aria-controls={menuId}
                             aria-haspopup="true"
                             onClick={this.handleSlideBarToggle}
                             color="inherit"
@@ -121,11 +118,9 @@ class Navigation_Bar extends Component {
                             <Collapse in={localStorage.getItem('type') == 0}>
                                 <DropdownList_Notifications />
                             </Collapse>
-                         
+
                             <IconButton
-                                // edge="end"
                                 aria-label="account of current user"
-                                //   aria-controls={menuId}
                                 aria-haspopup="true"
                                 id="profile"
                                 onClick={this.handleViewProfile}
@@ -156,4 +151,5 @@ class Navigation_Bar extends Component {
         );
     }
 }
+
 export default withStyles(styles)(Navigation_Bar);

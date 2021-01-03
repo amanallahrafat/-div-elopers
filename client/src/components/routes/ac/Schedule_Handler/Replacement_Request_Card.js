@@ -9,8 +9,18 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { useEffect } from 'react';
+//Test
+import DateFnsUtils from '@date-io/date-fns'; // choose your lib
+import {
+  DatePicker,
+  TimePicker,
+  DateTimePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -26,12 +36,26 @@ const useStyles = makeStyles((theme) => ({
   formControlLabel: {
     marginTop: theme.spacing(1),
   },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200,
+  },
 }));
 
+const getCurDay = (date) => { // date entered as normal date not miliseconds
+  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  return days[date.getDay()];
+}
 export default function MaxWidthDialog(props) {
   const classes = useStyles();
   const [academicMembers, setAcademicMembers] = React.useState([]);
   const [selectedMem, setSelectedMem] = React.useState(null);
+  const [selectedDate, handleDateChange] = React.useState(new Date());
 
   useEffect(async () => {
     if (academicMembers.length == 0) {
@@ -41,6 +65,9 @@ export default function MaxWidthDialog(props) {
     }
   });
 
+  function disableNonSlotDays(date) {
+    return getCurDay(date) != props.slotDay || date.getTime() < new Date(Date.now());
+  }
   const handleClickOpen = () => {
     // setOpen(true);
   };
@@ -49,8 +76,18 @@ export default function MaxWidthDialog(props) {
     props.onClose();
   };
 
-  const handleSubmit = (event) => {
-    // await axios.post('ac/sendReplacementRequest', )
+  const handleSubmit = async (event) => {
+    try{
+      await axios.post('ac/sendReplacementRequest',{replacementID : selectedMem, courseID : props.courseID,
+        slotID : props.slotID, requestedDate : selectedDate.getTime()});
+    }catch(err){
+      alert(err.response.data);
+      console.log(err.response.data);
+    }
+    
+    handleClose();
+
+   
   }
 
   const handleMaxWidthChange = (event) => {
@@ -60,7 +97,7 @@ export default function MaxWidthDialog(props) {
   const handleFullWidthChange = (event) => {
     // setFullWidth(event.target.checked);
   };
-
+  console.log(props.slotDay)
   return (
     <React.Fragment>
       <Dialog
@@ -95,6 +132,26 @@ export default function MaxWidthDialog(props) {
               </Select>
             </FormControl>
           </form>
+          {/* <form className={classes.container} noValidate>
+            <TextField
+              id="date"
+              label="Birthday"
+              type="date"
+              // defaultValue="2017-05-24"
+              shouldDisableDate={false}
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </form> */}
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <DatePicker 
+            value={selectedDate} 
+            shouldDisableDate = {disableNonSlotDays}  
+            onChange={handleDateChange} />
+
+          </MuiPickersUtilsProvider>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

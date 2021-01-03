@@ -31,7 +31,7 @@ export default function EditLocationForm(props) {
                 type: newType
             };
             const res = await axios.post(`/hr/createLocation`, req);
-            props.setComponentInMain("staffMember");
+            props.setComponentInMain("faculty");
         } catch (err) {
             alert("please enter valid data.");
         }

@@ -67,14 +67,17 @@ const viewAllStaffMembers = async (req, res) => {
 
 const viewAllMembersProfiles = async (req,res) =>{
     const staffMembers = await Staff_Member.find();
+    let data = []
     for(const staff of staffMembers){
         if(staff.type == 0){
             const ac = await Academic_Member.findOne({ID : staff.ID});
-            staff.departmentID = ac.departmentID;
-            staff.memberType = ac.memberType;
+            //console.log(ac)
+            staff['_doc'].departmentID = ac.departmentID;
+            staff['_doc'].memberType = ac.type;
         }
+        data.push(staff);
     }
-    res.send(staffMembers);
+    res.send(data);
 }
 
 const viewAllCourses = async (req, res) => {
@@ -242,9 +245,12 @@ const deleteFaculty = async (req, res) => {
 // End Faculty CRUD
 
 const addStaffMember = async (req, res) => {
+    console.log(req.body);
     const isValid = validator.validateAddStaffMember(req.body);
-    if (isValid.error)
+    if (isValid.error){
+        console.log(isValid.error.details[0].message);
         return res.status(400).send({ error: isValid.error.details[0].message });
+    }
     if (req.body.officeID) {
         const office = await Location.find({ ID: req.body.officeID, type: 2 });
         if (office.length == 0) {
@@ -396,8 +402,10 @@ const updateStaffMember = async (req, res) => {
     if (!req.body.salary) req.body.salary = member[0].salary;
     req.body = extraUtils.trimMonogoObj(req.body, ["memberType"]);
     const isValid = validator.validateAddStaffMember(req.body);
-    if (isValid.error)
+    if (isValid.error){
+        console.log(isValid.error.details[0].message);
         return res.status(400).send({ error: isValid.error.details[0].message });
+    }
     await Staff_Member.updateOne({ ID: req.params.ID, type: req.params.type }, req.body);
     res.send("Staff member Updated Successfully!");
 }
@@ -603,8 +611,10 @@ const deleteDepartment = async (req, res) => {
 // Start Course CRUD
 const createCourse = async (req, res) => {
     const isValid = validator.validateCourse_hr(req.body);
-    if (isValid.error)
+    if (isValid.error){
+        console.log(isValid.error.details[0].message)
         return res.status(400).send({ error: isValid.error.details[0].message });
+    }
 
     if (await checkings.courseCodeExists(req.body.code))
         return res.status(400).send("Code must be unique");

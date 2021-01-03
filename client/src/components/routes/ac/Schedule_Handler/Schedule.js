@@ -1,3 +1,4 @@
+import { Container } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -12,7 +13,7 @@ import Schedule_Slot_Card from "./Schedule_Slot_Card";
 const StyledTableCell = withStyles((theme) => ({
     head: {
         backgroundColor: theme.palette.primary.light,
-        color: theme.palette.common.black
+        color: theme.palette.common.black,
     },
     body: {
         "&:first-child ": {
@@ -48,7 +49,8 @@ function mapToScheduleObj(courseSchedule) {
                 courseID={entry.courseID}
                 slotNumer={entry.slot.slotNumber}
                 slotDay={entry.slot.day}
-            />
+                slotID = {entry.slot.ID}
+           />
     }
     for (const entry in scheduleObj) {
         console.log(entry);
@@ -73,6 +75,7 @@ export default function CustomizedTables(props) {
     const classes = useStyles();
     mapToScheduleObj(props.schedule);
     return (
+        <Container maxWidth = "lg"  style={{marginTop:"30px"}} >
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="customized table">
                 <TableHead>
@@ -101,5 +104,6 @@ export default function CustomizedTables(props) {
                 </TableBody>
             </Table>
         </TableContainer>
+        </Container>
     );
 }

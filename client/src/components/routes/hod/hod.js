@@ -1,3 +1,4 @@
+import { Container } from "@material-ui/core";
 import axios from "axios";
 import { Component } from "react";
 import { Redirect } from 'react-router-dom';
@@ -5,19 +6,22 @@ import setAuthToken from "../../../actions/setAuthToken";
 import Attendance from '../../Attendance';
 import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
+import Schedule from '../ac/Schedule_Handler/Schedule';
+import AccidentalLeaveRequest from './accidentalLeaveRequest.js';
+import AnnualLeaveRequest from './annualLeaveRequest.js';
+import ChangeDayOffRequest from './changeDayOffRequest.js';
+import CompensationLeaveRequest from './compensationLeaveRequest.js';
 import ManageCourseInstructors from './ManageCourseInstructors.js';
+import MaternityLeaveRequest from './maternityLeaveRequest.js';
+import SickLeaveRequest from './sickLeaveRequest.js';
 import ViewStaffProfiles from './viewStaffProfiles.js';
-import ChangeDayOffRequest from './changeDayOffRequest.js'
-import Schedule from '../ac/Schedule_Handler/Schedule'
 
-import AnnualLeaveRequest from './annualLeaveRequest.js'
-import AccidentalLeaveRequest from './accidentalLeaveRequest.js'
-import SickLeaveRequest from './sickLeaveRequest.js'
-import MaternityLeaveRequest from './maternityLeaveRequest.js'
-import CompensationLeaveRequest from './compensationLeaveRequest.js'
-   
+
 
 import DepartmentCourses from'./departmentCourses.js';
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import clsx from 'clsx';
+
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
     return userProfile.data;
@@ -29,45 +33,42 @@ const requestAttendanceRecods = async () => {
     return attendanceRecords.data;
 }
 
-const requestDepartmentCourses = async()=>{
+const requestDepartmentCourses = async () => {
     const departmentCourses = await axios.get('/hod/getDepartmentCourses');
     return departmentCourses.data;
 }
 
-const getAllAcademicMembers =  async ()=>{
+const getAllAcademicMembers = async () => {
     const res = await axios.get('/hod/getAllAcademicMembers');
     return res.data;
 }
 
 
-const getAcademicMembersTable =  async ()=>{
+const getAcademicMembersTable = async () => {
     const res = await axios.get('/hod/getAcademicMembersTable');
     return res.data;
 }
 
-const requestStaffProfiles = async(filter = "none",obj={} )=>{
-    console.log("I am in request staff profiles")
-    console.log("***",filter,obj)
-if(filter=="none"){
-    const res = await axios.get('/hod/viewDepartmentMembers');
-    return res.data;
-    
-}else if(filter=="course"){
-    const res = await axios.get(`/hod/viewDepartmentMembersByCourse/${obj.courseID}`);
-    console.log("out from course filter",res.data);
-    return res.data;
- 
-}else if(filter=="staffMember"){
-    const res = await axios.get('/hod/viewDepartmentMembers');
-    const out =res.data.filter((mem)=>{return mem.ID.split("-")[1]==obj.ID});
-    console.log("out form staff member",out)
-    return out;
-  
-}
+const requestStaffProfiles = async (filter = "none", obj = {}) => {
+    if (filter == "none") {
+        const res = await axios.get('/hod/viewDepartmentMembers');
+        return res.data;
+
+    } else if (filter == "course") {
+        const res = await axios.get(`/hod/viewDepartmentMembersByCourse/${obj.courseID}`);
+        return res.data;
+
+    } else if (filter == "staffMember") {
+        const res = await axios.get('/hod/viewDepartmentMembers');
+        const out = res.data.filter((mem) => { return mem.ID.split("-")[1] == obj.ID });
+        return out;
+
+    }
 }
 
+const drawerWidth = 240;
 
-const requestAllRequests = async ()=>{
+const requestAllRequests = async () => {
     const res = await axios.get('/hod/viewAllRequests');
     return res.data;
 
@@ -88,65 +89,73 @@ const requestAllDepartmentCourses = async ()=>{
 //     return res.data;
 // }
 
+
 const requestSchedule = async () => {
     const schedule = await axios.get('ac/viewSchedule');
-    console.log(schedule);
     return schedule.data;
 }
+
+const styles = (theme) => ({
+    appBar: {
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerWidth,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+});
 
 class HOD extends Component {
     state = {
         isLoggedIn: 0,
-        componentInMain: <div /> ,
+        componentInMain: <div />,
         staffProfiles: [],
-        hodProfile:{},
+        hodProfile: {},
         requests: [],
-        requestsFirstTime:true
 
+        requestsFirstTime: true,
+        isAppBarShift: false,
     }
-     updateRequestStaffProfile=async (filter = "none",obj={})=>{
-         console.log("I am updating the staff profiles");
-         console.log("The request state is ********", this.state.requests);
-         
-         const profiles=await requestStaffProfiles(filter,obj);
-         console.log("I finished updating the staff profiles")
-        this.setState({staffProfiles:profiles});
+    updateRequestStaffProfile = async (filter = "none", obj = {}) => {
+        const profiles = await requestStaffProfiles(filter, obj);
+        this.setState({ staffProfiles: profiles });
         return profiles;
     }
 
-    updateRequests=async (type="",requestID=-1,newStatus="")=>{
-        console.log("I am in updating requests requests requests")
-        if(this.state.requestsFirstTime||requestID==-1){
-        console.log("in update requests from database");
-       const requests =await requestAllRequests();
-       this.setState({requests:requests});
-       
-       console.log("after exec update requests ",requests);
-       this.setState({requestsFirstTime:false})
-       return requests;
-        }else{
-            console.log("in update requests on front end ",newStatus)
-            const allRequests=this.state.requests;
-            if(!allRequests.find((req)=>{return req.type == type}))return[];
-            let typeRequests=allRequests.find((req)=>{return req.type == type}).requests;
-            for(const request of typeRequests){
-                if(request.ID==requestID){
-                    request.status=newStatus;
+    updateRequests = async (type = "", requestID = -1, newStatus = "") => {
+        if (this.state.requestsFirstTime || requestID == -1) {
+            const requests = await requestAllRequests();
+            this.setState({ requests: requests });
+
+            this.setState({ requestsFirstTime: false })
+            return requests;
+        } else {
+            const allRequests = this.state.requests;
+            if (!allRequests.find((req) => { return req.type == type })) return [];
+            let typeRequests = allRequests.find((req) => { return req.type == type }).requests;
+            for (const request of typeRequests) {
+                if (request.ID == requestID) {
+                    request.status = newStatus;
                 }
-                
+
             }
-            this.setState({requests:allRequests});
+            this.setState({ requests: allRequests });
             return allRequests;
         }
 
-   }
-
-    updateHODProfile= async ()=>{
-        console.log("I am in update hod profile")
-        this.setState({hodProfile:await requestUserProfile()});
-        console.log("I finished update hod profile")
-
     }
+
+    updateHODProfile = async () => {
+        this.setState({ hodProfile: await requestUserProfile() });
+    }
+
     setComponentInMain = async (event) => {
         if (event == "profile") {
             this.setState({
@@ -159,7 +168,7 @@ class HOD extends Component {
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods()}
                     setComponentInMain={this.setComponentInMain}
-                     />
+                />
             });
         } else if (event == "schedule") {
             console.log("schedule")
@@ -169,87 +178,86 @@ class HOD extends Component {
                 />
             });
         }
-        else if (event == "manageCourseInstructors"){
+        else if (event == "manageCourseInstructors") {
             console.log("I am in event course")
 
             this.setState({
                 componentInMain: <ManageCourseInstructors
                     courses={await requestDepartmentCourses()}
-                    setComponentInMain={this.setComponentInMain} 
-                    academicMembers = {await getAllAcademicMembers()}
-                    />
+                    setComponentInMain={this.setComponentInMain}
+                    academicMembers={await getAllAcademicMembers()}
+                />
             });
-        
+
         }
-        else if(event == "viewStaffProfiles"){
+        else if (event == "viewStaffProfiles") {
             console.log("I am in event profiles")
             this.setState({
                 componentInMain: <ViewStaffProfiles
                     allCourses={await requestDepartmentCourses()}
-                    setComponentInMain={this.setComponentInMain} 
-                    academicMembers = {await getAcademicMembersTable()}
+                    setComponentInMain={this.setComponentInMain}
+                    academicMembers={await getAcademicMembersTable()}
                     staffProfiles={this.state.staffProfiles}
                     hodProfile={this.state.hodProfile}
                     updateProfiles={this.updateRequestStaffProfile}
-                    />
+                />
             });
-        } else if(event=="changeDayOffRequest"){
-            
+        } else if (event == "changeDayOffRequest") {
             console.log(this.state.requests);
             this.setState({
                 componentInMain: <ChangeDayOffRequest
-                    setComponentInMain={this.setComponentInMain} 
+                    setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
-                    requests={this.state.requests.find((req)=>{return req.type == "change day off requests"}).requests}
-                    />
+                    requests={this.state.requests.find((req) => { return req.type == "change day off requests" }).requests}
+                />
             });
-     
-        }else if (event=="annualLeaveRequest"){
+
+        } else if (event == "annualLeaveRequest") {
             this.setState({
                 componentInMain: <AnnualLeaveRequest
-                    setComponentInMain={this.setComponentInMain} 
+                    setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
-                    requests={this.state.requests.find((req)=>{return req.type == "annual leave requests"}).requests}
-                    />
+                    requests={this.state.requests.find((req) => { return req.type == "annual leave requests" }).requests}
+                />
             });
-     
-        }else if(event=="accidentalLeaveRequest"){
+
+        } else if (event == "accidentalLeaveRequest") {
             this.setState({
                 componentInMain: <AccidentalLeaveRequest
-                    setComponentInMain={this.setComponentInMain} 
+                    setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
-                    requests={this.state.requests.find((req)=>{return req.type == "accidental leave requests"}).requests}
-                    />
+                    requests={this.state.requests.find((req) => { return req.type == "accidental leave requests" }).requests}
+                />
             });
-     
-            
-        }else if(event=="sickLeaveRequest"){
+
+
+        } else if (event == "sickLeaveRequest") {
             this.setState({
                 componentInMain: <SickLeaveRequest
-                    setComponentInMain={this.setComponentInMain} 
+                    setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
-                    requests={this.state.requests.find((req)=>{return req.type == "sick leave requests"}).requests}
-                    />
+                    requests={this.state.requests.find((req) => { return req.type == "sick leave requests" }).requests}
+                />
             });
-     
-        }else if(event=="maternityLeaveRequest"){
+
+        } else if (event == "maternityLeaveRequest") {
             this.setState({
                 componentInMain: <MaternityLeaveRequest
-                    setComponentInMain={this.setComponentInMain} 
+                    setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
-                    requests={this.state.requests.find((req)=>{return req.type == "maternity leave requests"}).requests}
-                    />
+                    requests={this.state.requests.find((req) => { return req.type == "maternity leave requests" }).requests}
+                />
             });
-            
-        }else if(event=="compensationLeaveRequest"){
+
+        } else if (event == "compensationLeaveRequest") {
             this.setState({
                 componentInMain: <CompensationLeaveRequest
-                    setComponentInMain={this.setComponentInMain} 
+                    setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
-                    requests={this.state.requests.find((req)=>{return req.type == "compensation leave requests"}).requests}
-                    />
+                    requests={this.state.requests.find((req) => { return req.type == "compensation leave requests" }).requests}
+                />
             });
-         
+        
         }else if (event=="departmentCourses"){
             this.setState({
                 componentInMain: <DepartmentCourses
@@ -260,11 +268,15 @@ class HOD extends Component {
                     />
             });
             
-        }
+       }
+    }
+
+    handleAppBarShift = (event) => {
+        this.setState({ isAppBarShift: event });
+        console.log(this.state.isAppBarShift)
     }
 
     async componentDidMount() {
-        
         if (!localStorage.getItem('auth-token')) {
             this.setState({ isLoggedIn: 1 });
             return;
@@ -273,7 +285,7 @@ class HOD extends Component {
             setAuthToken(localStorage.getItem('auth-token'));
             await axios.get('/authStaffMember');
             this.setState({ isLoggedIn: 2 });
-            
+
         }
         catch (err) {
             this.setState({ isLoggedIn: 1 });
@@ -281,10 +293,11 @@ class HOD extends Component {
 
         await this.updateRequestStaffProfile();
         await this.updateHODProfile();
-
     }
 
     render() {
+        const { classes } = this.props;
+
         if (this.state.isLoggedIn === 0)
             return <div />;
         if (this.state.isLoggedIn === 1) {
@@ -292,15 +305,22 @@ class HOD extends Component {
         }
         return (
             <div >
-                <Navigation_Bar fromParent={this.setComponentInMain} 
-                updateRequestStaffProfile={this.updateRequestStaffProfile} 
-                updateRequests={this.updateRequests}
-                requestAllDepartmentCourses={requestAllDepartmentCourses}
+
+                <Navigation_Bar fromParent={this.setComponentInMain}
+                    updateRequestStaffProfile={this.updateRequestStaffProfile}
+                    updateRequests={this.updateRequests}
+                    requestAllDepartmentCourses={requestAllDepartmentCourses}
+                    handleAppBarShift={this.handleAppBarShift}
                 />
-                {this.state.componentInMain}
+                <Container maxWidth="lg" style={{ marginTop: "30px" }} className={clsx({
+                    [classes.appBarShift]: this.state.isAppBarShift,
+                })}>
+                    {this.state.componentInMain}
+                </Container>
+
             </div>
         )
     }
 }
 
-export default HOD;
+export default withStyles(styles)(HOD);
