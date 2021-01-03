@@ -62,12 +62,18 @@ const requestStaffProfiles = async (filter = "none", obj = {}) => {
     }
 }
 
+const getReplacementRequests = async () => {
+    let res = (await axios.get('ac/viewReplacementRequests')).data;
+    const userID = localStorage.getItem('ID');
+    res = res.filter(r => r.senderID != userID && new Date(r.requestedDate).getTime()>=new Date(Date.now()).getTime());
+    return res;
+}
+
 const drawerWidth = 240;
 
 const requestAllRequests = async () => {
     const res = await axios.get('/hod/viewAllRequests');
     return res.data;
-
 }
 
 const requestSchedule = async () => {
@@ -102,6 +108,7 @@ class HOD extends Component {
         requestsFirstTime: true,
         isAppBarShift: false,
     }
+
     updateRequestStaffProfile = async (filter = "none", obj = {}) => {
         const profiles = await requestStaffProfiles(filter, obj);
         this.setState({ staffProfiles: profiles });
@@ -154,6 +161,7 @@ class HOD extends Component {
             this.setState({
                 componentInMain: <Schedule
                     schedule={await requestSchedule()}
+                    replacementRequests={await getReplacementRequests()}
                 />
             });
         }

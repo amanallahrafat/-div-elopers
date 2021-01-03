@@ -69,6 +69,7 @@ const login = async (req, res) => {
         msg: "Login Successfull!",
         type: u.type,
         academicMemberType: academicMemberType,
+        ID: u.ID,
     });
 }
 
