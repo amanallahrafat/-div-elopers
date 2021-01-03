@@ -855,8 +855,6 @@ const viewStaffMembersWithMissingHours = async (req, res) => {
         }
     }
     res.send(allMissedMembers);
-
-
 }
 
 const viewStaffMembersWithMissingDays = async (req, res) => {
@@ -887,7 +885,6 @@ const viewStaffMembersWithMissingDays = async (req, res) => {
 
         }
     }
-
     return res.send(membersWithMissingDays);
 }
 
