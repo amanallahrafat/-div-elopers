@@ -70,6 +70,7 @@ const login = async (req, res) => {
         type: u.type,
         ID : u.ID,
         academicMemberType: academicMemberType,
+        ID: u.ID,
     });
 }
 

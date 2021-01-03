@@ -70,10 +70,8 @@ const isRequestInWeek = (RequestDate, date) => { // all dates are entered in nor
 
     const dateDayInWeek = date.getDay();
     const startDayOfWeek = new Date(dateYear, dateMonth, dateDay - ((dateDayInWeek + 1) % 7), 2, 0, 0, 0);
-    const endDayOfWeek = new Date(dateYear, dateMonth, dateDay, dateDay - ((dateDayInWeek + 1) % 7) + 6, 2, 0, 0, 0);
+    const endDayOfWeek = new Date(dateYear, dateMonth,  dateDay - ((dateDayInWeek + 1) % 7) + 6, 2, 0, 0, 0);
     return (startDayOfWeek <= RequestDate && RequestDate <= endDayOfWeek);
-
-
 }
 
 const getMissingHours = (staffMem, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves) => {

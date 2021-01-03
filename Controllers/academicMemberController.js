@@ -164,7 +164,7 @@ const getAllNotifications = async (req, res) => {
     const { ID, type } = req.header.user;
     let notifications = await Notification.find({ receiverID: ID });
     const newNotifications = [];
-    for(const not of notifications){
+    for (const not of notifications) {
         const n = not;
         const user = await extraUtils.getAcademicMemberByID(n.senderID);
         n['_doc']['senderName'] = user.name;
@@ -373,17 +373,16 @@ const viewSchedule = async (req, res) => {
     for (const annualReq of annualLeaveReqTable) {
         if (annualReq.replacementRequestsID) {
             for (const replReqID of annualReq.replacementRequestsID) {
-                const replReq = recievedReplacementReq.filter(req =>
-                    req.ID == replReqID &&
-                    req.status == "accepted");
+                const replReq = recievedReplacementReq.filter(req => {
+                    return req.ID == replReqID &&
+                        req.status == "accepted" 
+                        &&
+                        extraUtils.isRequestInWeek(new Date(req.requestedDate), new Date(Date.now())
+                        );
+                });
+                
                 if (replReq.length) {
                     const req = replReq[0];
-                    // const slot = courseSchdeduleTable.filter(sch =>
-                    //     sch.ID == req.courseID &&
-                    //     sch.slots != null &&
-                    //     sch.slots.filter(s => s.ID == req.slotID).length&&
-                    //     sch
-                    // );
                     const slot = [];
                     for (const sch of courseSchdeduleTable) {
                         if (sch.ID && req.courseID && sch.slots != null) {
@@ -404,7 +403,7 @@ const viewSchedule = async (req, res) => {
     }
     const locationsTable = await Location.find();
     const coursesTable = await Course.find();
-    for(const entry of schedule){
+    for (const entry of schedule) {
         const slot = entry.slot;
         slot.locationName = locationsTable.filter(elem => elem.ID == slot.locationID)[0].name;
         const course = entry.courseID;
@@ -507,6 +506,7 @@ const sendCompensationLeaveRequest = async (req, res) => {
     if (dayOff != user.dayOff) {
         return res.send("You can't accept this request, since the compensation day is not the day off");
     }
+    
     const curDate = new Date(requestedDate);
     const curYear = curDate.getFullYear();
     const curMonth = curDate.getMonth();
@@ -575,7 +575,28 @@ const viewReplacementRequests = async (req, res) => {
     const academicMemberID = req.header.user.ID;
     const sentReplacementReq = await Replacement_Request.find({ senderID: academicMemberID });
     const recievedReplacementReq = await Replacement_Request.find({ receiverID: academicMemberID });
-    res.send(JSON.stringify(sentReplacementReq.concat(recievedReplacementReq)));
+    const replacementRequests = sentReplacementReq.concat(recievedReplacementReq);
+    const courseScheduleTable = await Course_Schedule.find();
+    const courseTable = await Course.find();
+    const locationTable = await Location.find();
+    const staffMemberTable = await Staff_Member.find({ type: 0 });
+
+    for (const request of replacementRequests) {
+        const courseSchedule = courseScheduleTable.filter((elem) => elem.ID == request.courseID)[0];
+        const slot = courseSchedule.slots.filter(s => s.ID == request.slotID)[0];
+        const courseName = courseTable.filter(c => c.ID == request.courseID)[0].name;
+        const locationName = locationTable.filter(l => l.ID == slot.locationID)[0].name;
+        const senderName = staffMemberTable.filter(s => s.ID == request.senderID)[0];
+        const recieverName = staffMemberTable.filter(s => s.ID == request.receiverID)[0];
+        request['_doc'].slot = slot;
+        request['_doc'].courseName = courseName;
+        request['_doc'].locationName = locationName;
+        request['_doc'].senderName = senderName;
+        request['_doc'].receiverID = recieverName;
+
+    }
+    console.log(replacementRequests);
+    res.send(replacementRequests);
 }
 
 const respondToReplacementRequest = async (req, res) => {
@@ -710,13 +731,13 @@ const cancelAnnualLeaveRequest = async (req, res) => {
         }
     }
 }
-const viewCourseMembers = async(req, res) =>{
+const viewCourseMembers = async (req, res) => {
     console.log(req.body)
-    const course = await Course.findOne({ID : req.body.courseID});
+    const course = await Course.findOne({ ID: req.body.courseID });
     const courseMembers = course.instructor.concat(course.teachingStaff);
     const courseMembersUnique = [];
-    for(const mem of courseMembers){
-        if(!courseMembersUnique.includes(mem))
+    for (const mem of courseMembers) {
+        if (!courseMembersUnique.includes(mem))
             courseMembersUnique.push(mem);
     }
     const acMemNames = await extraUtils.getAcademicMemberByID_arr(courseMembersUnique);
