@@ -50,7 +50,7 @@ function mapToScheduleObj(courseSchedule) {
                 slotNumer={entry.slot.slotNumber}
                 slotDay={entry.slot.day}
                 slotID = {entry.slot.ID}
-            />
+           />
     }
     for (const entry in scheduleObj) {
         console.log(entry);

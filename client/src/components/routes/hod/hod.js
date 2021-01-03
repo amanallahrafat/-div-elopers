@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { Component } from "react";
 import { Redirect } from "react-router-dom";
 import setAuthToken from "../../../actions/setAuthToken";
+<<<<<<< HEAD
 import Attendance from "../../Attendance";
 import Navigation_Bar from "../../Navigation_Bar.js";
 import Profile from "../../Profile";
@@ -17,6 +18,26 @@ import ManageCourseInstructors from "./ManageCourseInstructors.js";
 import MaternityLeaveRequest from "./maternityLeaveRequest.js";
 import SickLeaveRequest from "./sickLeaveRequest.js";
 import ViewStaffProfiles from "./viewStaffProfiles.js";
+=======
+import Attendance from '../../Attendance';
+import Navigation_Bar from '../../Navigation_Bar.js';
+import Profile from '../../Profile';
+import Schedule from '../ac/Schedule_Handler/Schedule';
+import AccidentalLeaveRequest from './accidentalLeaveRequest.js';
+import AnnualLeaveRequest from './annualLeaveRequest.js';
+import ChangeDayOffRequest from './changeDayOffRequest.js';
+import CompensationLeaveRequest from './compensationLeaveRequest.js';
+import ManageCourseInstructors from './ManageCourseInstructors.js';
+import MaternityLeaveRequest from './maternityLeaveRequest.js';
+import SickLeaveRequest from './sickLeaveRequest.js';
+import ViewStaffProfiles from './viewStaffProfiles.js';
+
+
+
+import DepartmentCourses from'./departmentCourses.js';
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import clsx from 'clsx';
+>>>>>>> 9255e070dcb56f1cb2b4523741061016f9a6cd76
 
 const requestUserProfile = async () => {
   const userProfile = await axios.get("/viewProfile");
@@ -65,9 +86,32 @@ const drawerWidth = 240;
 // *********************************************
 
 const requestAllRequests = async () => {
+<<<<<<< HEAD
   const res = await axios.get("/hod/viewAllRequests");
   return res.data;
 };
+=======
+    const res = await axios.get('/hod/viewAllRequests');
+    return res.data;
+
+} 
+
+
+const requestAllDepartmentCourses = async ()=>{
+    console.log("begin in request all department courses");
+    const res = await axios.get('/hod/viewCourseTeachingAssignmentsLocal');
+   
+    console.log("end of  request all department courses" ,res.data);
+    return res.data;
+
+} 
+
+// const getAllAcademicMembers = async()=>{
+//     const res = await axios.get('/hod/getAllAcademicMembers');
+//     return res.data;
+// }
+
+>>>>>>> 9255e070dcb56f1cb2b4523741061016f9a6cd76
 
 const requestSchedule = async () => {
   const schedule = await axios.get("ac/viewSchedule");
@@ -92,6 +136,7 @@ const styles = (theme) => ({
 });
 
 class HOD extends Component {
+<<<<<<< HEAD
   state = {
     isLoggedIn: 0,
     componentInMain: <div />,
@@ -130,11 +175,49 @@ class HOD extends Component {
       for (const request of typeRequests) {
         if (request.ID == requestID) {
           request.status = newStatus;
+=======
+    state = {
+        isLoggedIn: 0,
+        componentInMain: <div />,
+        staffProfiles: [],
+        hodProfile: {},
+        requests: [],
+
+        requestsFirstTime: true,
+        isAppBarShift: false,
+    }
+    updateRequestStaffProfile = async (filter = "none", obj = {}) => {
+        const profiles = await requestStaffProfiles(filter, obj);
+        this.setState({ staffProfiles: profiles });
+        return profiles;
+    }
+
+    updateRequests = async (type = "", requestID = -1, newStatus = "") => {
+        if (this.state.requestsFirstTime || requestID == -1) {
+            const requests = await requestAllRequests();
+            this.setState({ requests: requests });
+
+            this.setState({ requestsFirstTime: false })
+            return requests;
+        } else {
+            const allRequests = this.state.requests;
+            if (!allRequests.find((req) => { return req.type == type })) return [];
+            let typeRequests = allRequests.find((req) => { return req.type == type }).requests;
+            for (const request of typeRequests) {
+                if (request.ID == requestID) {
+                    request.status = newStatus;
+                }
+
+            }
+            this.setState({ requests: allRequests });
+            return allRequests;
+>>>>>>> 9255e070dcb56f1cb2b4523741061016f9a6cd76
         }
       }
       this.setState({ requests: allRequests });
       return allRequests;
     }
+<<<<<<< HEAD
   };
 
   updateHODProfile = async () => {
@@ -276,6 +359,122 @@ class HOD extends Component {
           />
         ),
       });
+=======
+
+    setComponentInMain = async (event) => {
+        if (event == "profile") {
+            this.setState({
+                componentInMain: <Profile
+                    profile={await requestUserProfile()}
+                    setComponentInMain={this.setComponentInMain} />
+            });
+        } else if (event == "attendance") {
+            this.setState({
+                componentInMain: <Attendance
+                    attendanceRecords={await requestAttendanceRecods()}
+                    setComponentInMain={this.setComponentInMain}
+                />
+            });
+        } else if (event == "schedule") {
+            console.log("schedule")
+            this.setState({
+                componentInMain: <Schedule
+                    schedule={await requestSchedule()}
+                />
+            });
+        }
+        else if (event == "manageCourseInstructors") {
+            console.log("I am in event course")
+
+            this.setState({
+                componentInMain: <ManageCourseInstructors
+                    courses={await requestDepartmentCourses()}
+                    setComponentInMain={this.setComponentInMain}
+                    academicMembers={await getAllAcademicMembers()}
+                />
+            });
+
+        }
+        else if (event == "viewStaffProfiles") {
+            console.log("I am in event profiles")
+            this.setState({
+                componentInMain: <ViewStaffProfiles
+                    allCourses={await requestDepartmentCourses()}
+                    setComponentInMain={this.setComponentInMain}
+                    academicMembers={await getAcademicMembersTable()}
+                    staffProfiles={this.state.staffProfiles}
+                    hodProfile={this.state.hodProfile}
+                    updateProfiles={this.updateRequestStaffProfile}
+                />
+            });
+        } else if (event == "changeDayOffRequest") {
+            console.log(this.state.requests);
+            this.setState({
+                componentInMain: <ChangeDayOffRequest
+                    setComponentInMain={this.setComponentInMain}
+                    updateRequests={this.updateRequests}
+                    requests={this.state.requests.find((req) => { return req.type == "change day off requests" }).requests}
+                />
+            });
+
+        } else if (event == "annualLeaveRequest") {
+            this.setState({
+                componentInMain: <AnnualLeaveRequest
+                    setComponentInMain={this.setComponentInMain}
+                    updateRequests={this.updateRequests}
+                    requests={this.state.requests.find((req) => { return req.type == "annual leave requests" }).requests}
+                />
+            });
+
+        } else if (event == "accidentalLeaveRequest") {
+            this.setState({
+                componentInMain: <AccidentalLeaveRequest
+                    setComponentInMain={this.setComponentInMain}
+                    updateRequests={this.updateRequests}
+                    requests={this.state.requests.find((req) => { return req.type == "accidental leave requests" }).requests}
+                />
+            });
+
+
+        } else if (event == "sickLeaveRequest") {
+            this.setState({
+                componentInMain: <SickLeaveRequest
+                    setComponentInMain={this.setComponentInMain}
+                    updateRequests={this.updateRequests}
+                    requests={this.state.requests.find((req) => { return req.type == "sick leave requests" }).requests}
+                />
+            });
+
+        } else if (event == "maternityLeaveRequest") {
+            this.setState({
+                componentInMain: <MaternityLeaveRequest
+                    setComponentInMain={this.setComponentInMain}
+                    updateRequests={this.updateRequests}
+                    requests={this.state.requests.find((req) => { return req.type == "maternity leave requests" }).requests}
+                />
+            });
+
+        } else if (event == "compensationLeaveRequest") {
+            this.setState({
+                componentInMain: <CompensationLeaveRequest
+                    setComponentInMain={this.setComponentInMain}
+                    updateRequests={this.updateRequests}
+                    requests={this.state.requests.find((req) => { return req.type == "compensation leave requests" }).requests}
+                />
+            });
+        
+        }else if (event=="departmentCourses"){
+            this.setState({
+                componentInMain: <DepartmentCourses
+                    setComponentInMain={this.setComponentInMain} 
+                    departmentCourses={await requestAllDepartmentCourses()}
+                    allCourses={await requestDepartmentCourses()}
+                  
+                    />
+            });
+            
+       }
+>>>>>>> 9255e070dcb56f1cb2b4523741061016f9a6cd76
     }
   };
   // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
@@ -297,6 +496,7 @@ class HOD extends Component {
       this.setState({ isLoggedIn: 1 });
     }
 
+<<<<<<< HEAD
     await this.updateRequestStaffProfile();
     await this.updateHODProfile();
   }
@@ -308,6 +508,33 @@ class HOD extends Component {
     if (this.state.isLoggedIn === 0) return <div />;
     if (this.state.isLoggedIn === 1) {
       return <Redirect to="/" />;
+=======
+    render() {
+        const { classes } = this.props;
+
+        if (this.state.isLoggedIn === 0)
+            return <div />;
+        if (this.state.isLoggedIn === 1) {
+            return <Redirect to='/' />;
+        }
+        return (
+            <div >
+
+                <Navigation_Bar fromParent={this.setComponentInMain}
+                    updateRequestStaffProfile={this.updateRequestStaffProfile}
+                    updateRequests={this.updateRequests}
+                    requestAllDepartmentCourses={requestAllDepartmentCourses}
+                    handleAppBarShift={this.handleAppBarShift}
+                />
+                <Container maxWidth="lg" style={{ marginTop: "30px" }} className={clsx({
+                    [classes.appBarShift]: this.state.isAppBarShift,
+                })}>
+                    {this.state.componentInMain}
+                </Container>
+
+            </div>
+        )
+>>>>>>> 9255e070dcb56f1cb2b4523741061016f9a6cd76
     }
     return (
       <div>
