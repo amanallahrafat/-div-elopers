@@ -30,6 +30,10 @@ hodRouter.get('/getAllAcademicMembers', auth, hodController.getAllAcademicMember
 hodRouter.get('/getAcademicMembersTable', auth, hodController.getAcademicMembersTable);
 
 
+hodRouter.get('/viewCourseTeachingAssignmentsLocal', auth, hodController.viewCourseTeachingAssignmentsLocal);
+
+
+
 
 
 

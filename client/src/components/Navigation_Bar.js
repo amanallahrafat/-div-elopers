@@ -145,7 +145,10 @@ class Navigation_Bar extends Component {
                                 open={this.state.isSlideBarOpen}
                                 updateRequestStaffProfile={this.props.updateRequestStaffProfile}
                                 updateRequests={this.props.updateRequests}
-                                setComponentInMain={this.props.fromParent} />
+                                setComponentInMain={this.props.fromParent} 
+                                requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}
+                
+                                />
                         )
                     }
                 </AppBar>

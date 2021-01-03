@@ -145,6 +145,12 @@ export default function PersistentDrawerLeft(props) {
     await (props.updateRequests());
     props.setComponentInMain("compensationLeaveRequest");
   }
+  const handleDepartmentCourses=async ()=>{
+    console.log("cliked on handle department courses")
+    await (props.requestAllDepartmentCourses());
+    props.setComponentInMain("departmentCourses");
+    console.log("passed set comp in main")
+  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -172,7 +178,7 @@ export default function PersistentDrawerLeft(props) {
           </ListItem>
           <ListItem button key="Department courses">
             <ListItemIcon> <MenuBookIcon /></ListItemIcon>
-            <ListItemText primary={"Department courses"} onClick={handleViewStaffProfiles} />
+            <ListItemText primary={"Department courses"} onClick={handleDepartmentCourses} />
           </ListItem>
         </List>
         <Accordion className={classes.accordionStyle}>

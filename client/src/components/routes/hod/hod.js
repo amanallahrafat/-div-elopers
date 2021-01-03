@@ -15,7 +15,9 @@ import AccidentalLeaveRequest from './accidentalLeaveRequest.js'
 import SickLeaveRequest from './sickLeaveRequest.js'
 import MaternityLeaveRequest from './maternityLeaveRequest.js'
 import CompensationLeaveRequest from './compensationLeaveRequest.js'
-    
+   
+
+import DepartmentCourses from'./departmentCourses.js';
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
     return userProfile.data;
@@ -72,6 +74,15 @@ const requestAllRequests = async ()=>{
 } 
 
 
+const requestAllDepartmentCourses = async ()=>{
+    console.log("begin in request all department courses");
+    const res = await axios.get('/hod/viewCourseTeachingAssignmentsLocal');
+   
+    console.log("end of  request all department courses" ,res.data);
+    return res.data;
+
+} 
+
 // const getAllAcademicMembers = async()=>{
 //     const res = await axios.get('/hod/getAllAcademicMembers');
 //     return res.data;
@@ -91,6 +102,7 @@ class HOD extends Component {
         hodProfile:{},
         requests: [],
         requestsFirstTime:true
+
     }
      updateRequestStaffProfile=async (filter = "none",obj={})=>{
          console.log("I am updating the staff profiles");
@@ -238,6 +250,16 @@ class HOD extends Component {
                     />
             });
          
+        }else if (event=="departmentCourses"){
+            this.setState({
+                componentInMain: <DepartmentCourses
+                    setComponentInMain={this.setComponentInMain} 
+                    departmentCourses={await requestAllDepartmentCourses()}
+                    allCourses={await requestDepartmentCourses()}
+                  
+                    />
+            });
+            
         }
     }
 
@@ -273,6 +295,7 @@ class HOD extends Component {
                 <Navigation_Bar fromParent={this.setComponentInMain} 
                 updateRequestStaffProfile={this.updateRequestStaffProfile} 
                 updateRequests={this.updateRequests}
+                requestAllDepartmentCourses={requestAllDepartmentCourses}
                 />
                 {this.state.componentInMain}
             </div>
