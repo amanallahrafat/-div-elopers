@@ -5,21 +5,21 @@ import clsx from "clsx";
 import { Component } from "react";
 import { Redirect } from "react-router-dom";
 import setAuthToken from "../../../actions/setAuthToken";
-import Attendance from "../../Attendance";
-import Navigation_Bar from "../../Navigation_Bar.js";
-import Profile from "../../Profile";
-import Schedule from "../ac/Schedule_Handler/Schedule";
-import AccidentalLeaveRequest from "./accidentalLeaveRequest.js";
-import AnnualLeaveRequest from "./annualLeaveRequest.js";
-import ChangeDayOffRequest from "./changeDayOffRequest.js";
-import CompensationLeaveRequest from "./compensationLeaveRequest.js";
+import Attendance from '../../Attendance';
+import Navigation_Bar from '../../Navigation_Bar.js';
+import Profile from '../../Profile';
+import Change_Day_Off_Request from "../ac/Academic_Requests/Change_Day_Off/Change_Day_Off_List";
+import Course_Schedule from "../ac/All_Course_Schedule/Course_Schedule";
+import Schedule from '../ac/Schedule_Handler/Schedule';
+import AccidentalLeaveRequest from './accidentalLeaveRequest.js';
+import AnnualLeaveRequest from './annualLeaveRequest.js';
+import ChangeDayOffRequest from './changeDayOffRequest.js';
+import CompensationLeaveRequest from './compensationLeaveRequest.js';
 import DepartmentCourses from './departmentCourses.js';
 import ManageCourseInstructors from "./ManageCourseInstructors.js";
 import MaternityLeaveRequest from "./maternityLeaveRequest.js";
 import SickLeaveRequest from "./sickLeaveRequest.js";
 import ViewStaffProfiles from "./viewStaffProfiles.js";
-import Course_Schedule from "../ac/All_Course_Schedule/Course_Schedule";
-import Change_Day_Off_Request from "../ac/Academic_Requests/Change_Day_Off/Change_Day_Off_List";
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get("/viewProfile");
@@ -106,7 +106,6 @@ const requestAllDepartmentCourses = async () => {
 //     return res.data;
 // }
 
-
 const requestSchedule = async () => {
     const schedule = await axios.get("ac/viewSchedule");
     return schedule.data;
@@ -139,7 +138,7 @@ class HOD extends Component {
         requestsFirstTime: true,
         // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
         isAppBarShift: false,
-        sentRequests: [],        
+        sentRequests: [],
         //*************
     };
 
@@ -178,32 +177,31 @@ class HOD extends Component {
         }
     }
 
-    getAllSentRequests = async() =>{
-        try{
+    getAllSentRequests = async () => {
+        try {
             const res = (await axios.get("/ac/viewAllRequests/0")).data;
-            this.setState({sentRequests: res});
+            this.setState({ sentRequests: res });
             return res;
-        }catch(err){
+        } catch (err) {
             console.log(err.response.data);
         }
     }
-    
+
     cancelRecievedRequests = async (requestType, requestID) => {
         const requests = this.sentRequests;
-        requests[requestType] = requests[requestType].filter(r=>r.ID!=requestID)
-        this.setState({sentRequests: requests});
+        requests[requestType] = requests[requestType].filter(r => r.ID != requestID)
+        this.setState({ sentRequests: requests });
     }
 
     addRecievedRequests = async (requestType, request) => {
         const requests = this.sentRequests;
         requests[requestType] = requests[requestType].push(request);
-        this.setState({sentRequests: requests});
+        this.setState({ sentRequests: requests });
     }
 
     updateHODProfile = async () => {
         this.setState({ hodProfile: await requestUserProfile() });
     };
-
     setComponentInMain = async (event) => {
         if (event == "profile") {
             this.setState({
@@ -326,9 +324,9 @@ class HOD extends Component {
         }
         else if (event == "ac_changeDayOffRequest") {
             console.log("ac_changeDayOffRequest")
-            if(!this.state.sentRequests.length)
+            if (!this.state.sentRequests.length)
                 await this.getAllSentRequests();
-                console.log("ac_changeDayOffRequestkkkkk")
+            console.log("ac_changeDayOffRequestkkkkk")
             this.setState({
                 componentInMain: <Change_Day_Off_Request
                     setComponentInMain={this.setComponentInMain}
@@ -388,8 +386,6 @@ class HOD extends Component {
 
             </div>
         )
-
-
     }
 }
 

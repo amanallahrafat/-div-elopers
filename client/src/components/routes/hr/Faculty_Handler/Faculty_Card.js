@@ -87,16 +87,11 @@ export default function Faculty_Card(props) {
         setOpenAddFaculty(false);
     }
 
-    // const handleOpenAddExtraInfo = () => {
-    //     setOpenExtraInfo(true);
-    // }
-    // const handleCloseExtraInfo = () => {
-    //     setOpenExtraInfo(false);
-    // }
 
     const handleDeleteFaculty = async (event) => {
-        const res = await axios.delete(`/hr/deleteFaculty/${event.currentTarget.id.split('_')[1]}`);
-        console.log(res);
+        const deletedName = event.currentTarget.id.split('_')[1];
+        const res = await axios.delete(`/hr/deleteFaculty/${deletedName}`);
+        props.handleFaculties({name : deletedName },2);
         props.setComponentInMain("faculty");
     }
 
@@ -181,12 +176,14 @@ export default function Faculty_Card(props) {
                 handleCloseEdit={handleCloseEdit}
                 faculty={updatedFaculty}
                 departments={props.departments}
+                handleFaculties = {props.handleFaculties}
                 setComponentInMain={props.setComponentInMain} />
             <AddFacultyForm
                 open={openAddFaculty}
                 handleOpenAdd={handleOpenAdd}
                 handleCloseAdd={handleCloseAdd}
                 departments = {props.departments}
+                handleFaculties = {props.handleFaculties}
                 setComponentInMain={props.setComponentInMain} />
         </div >
     );

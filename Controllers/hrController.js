@@ -101,7 +101,7 @@ const createLocation = async (req, res) => {
         type: req.body.type
     })
     await location.save();
-    res.send("Location Added Successfully!");
+    res.send(location);
 }
 
 const updateLocation = async (req, res) => {
@@ -118,7 +118,11 @@ const updateLocation = async (req, res) => {
         return res.status(400).send({ error: isValid.error.details[0].message });
 
     await Location.updateOne({ ID: req.params.ID }, req.body);
-    res.send("Location Updated Successfully!");
+    const newLocation = await Location.findOne({ID : req.params.ID});
+    res.send({
+        newLocation : newLocation,
+        msg :"Location Updated Successfully!"
+    });
 }
 
 const deleteLocation = async (req, res) => {
@@ -165,7 +169,7 @@ const createFaculty = async (req, res) => {
         departments: req.body.departments
     })
     await faculty.save();
-    res.send("Faculty Added Successfully!");
+    res.send(faculty);
 }
 
 const updateFaculty = async (req, res) => {
@@ -231,7 +235,17 @@ const updateFaculty = async (req, res) => {
         departments: body.departments
     })
     await newFaculty.save();
-    res.send("Faculty Updated Successfully!");
+    const updatedFaculty = await Faculty.findOne({name : body.name});
+    const deps = [];
+    for (const dep of updatedFaculty.departments) {
+        const depName = await extraUtils.getDepartmentByID(dep);
+        deps.push(depName);
+    }
+    updatedFaculty['_doc'].departments = deps;
+    res.send({
+        newFaculty : updatedFaculty,
+        msg : "Faculty Updated Successfully!"
+    });
 }
 
 const deleteFaculty = async (req, res) => {
@@ -529,7 +543,7 @@ const createDepartment = async (req, res) => {
         await Academic_Member.updateOne({ ID: req.body.hodID }, { type: 0 });
     }
     await department.save();
-    res.send("Department Added Successfully!");
+    res.send(department);
 }
 
 const updateDepartment = async (req, res) => {
