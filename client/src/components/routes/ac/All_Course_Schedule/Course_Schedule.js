@@ -7,9 +7,10 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import React from "react";
-import DepartmentCoursesCard from "./departmentCoursesCard";
+import DepartmentCoursesCard from "../../hod/departmentCoursesCard";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Course_Schedule_Card from './Course_Schedule_Card';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -43,8 +44,7 @@ let scheduleObj = {
     'friday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
 }
 
-
-function mapToScheduleObj(courseSchedule) {
+function mapToScheduleObj(courseSchedule, courseObj) {
     scheduleObj = {
         'saturday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
         'sunday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
@@ -58,37 +58,34 @@ function mapToScheduleObj(courseSchedule) {
     if (!courseSchedule || !scheduleObj) return;
     rows = [];
     for (const entry of courseSchedule) {
+        console.log(entry);
         scheduleObj[entry.day][entry.slotNumber - 1].push(
-            <DepartmentCoursesCard
+            <Course_Schedule_Card
                 instructorName={entry.instructor}
                 instructorID={entry.instructorID}
                 locationName={entry.locationName}
+                courseID= {courseObj.courseID}
+                slotID={entry.slotID}
             />
         )
     }
 
     for (const entry in scheduleObj) {
-        // rows.push(createData(entry, scheduleObj[entry][0], scheduleObj[entry][1],
-        //     scheduleObj[entry][2], scheduleObj[entry][3], scheduleObj[entry][4],
-        //     scheduleObj[entry][5], scheduleObj[entry][6]));
-        // console.log(entry,scheduleObj[entry][0],entry[2],entry[3]);
         rows.push(createData(entry, makeCard(scheduleObj[entry][0]), makeCard(scheduleObj[entry][1]),
             makeCard(scheduleObj[entry][2]), makeCard(scheduleObj[entry][3]), makeCard(scheduleObj[entry][4]),
             makeCard(scheduleObj[entry][5]), makeCard(scheduleObj[entry][6])));
-
     }
 }
+
 const makeCard = (arrayOfCards) => {
     if (!arrayOfCards) return (<Box></Box>)
     return (<Grid container display="flex" direction="column" justifyContent="space-between">
         {arrayOfCards.map((card) => (
-            <Grid item>{card}<br/></Grid>)
+            <Grid item>{card}<br /></Grid>)
         )
         }
     </Grid>)
 }
-
-
 
 function createData(day, first, second, third, fourth, fifth) {
     return { day, first, second, third, fourth, fifth };
@@ -102,8 +99,11 @@ const useStyles = makeStyles({
     }, root: {
         flexGrow: 1,
     },
-    tableRightBorder : { borderWidth: 1, borderColor: 'rgba(128,128,128,0.2)',borderStyle: 'solid' }
-
+    tableRightBorder: {
+        borderWidth: 1,
+        borderColor: 'rgba(128,128,128,0.2)',
+        borderStyle: 'solid'
+    }
 });
 
 export default function CustomizedTables(props) {
@@ -113,32 +113,23 @@ export default function CustomizedTables(props) {
         courseName: "select a course first",
         courseCode: "select a course first",
         courseSlots: [],
-        courseCoverage: "select a course first"
-
     })
-    // React.useEffect(() => {
-    //     mapToScheduleObj(selectedCourse.courseSlots);
-    //   }, [selectedCourse]);
-    // mapToScheduleObj(selectedCourse?.courseSlots);
-    console.log("props.allCourses", props.allCourses);
-    console.log("props.departmentCourses", props.departmentCourses)
+
     return (
-        <TableContainer component={Paper} style={{border:'1px'}}>
+        <TableContainer component={Paper} style={{ border: '1px' }}>
             <Grid container
                 className={classes.root}
                 direction="column"
                 justify="center"
                 alignItems="center"
             >
-                <br/>
+                <br />
                 <Grid item >
+                    <h2>All Course Schedules</h2>
                     <b>Course name: </b>{selectedCourse.courseName}<br />
-                   <b>Course code: </b>{selectedCourse.courseCode}<br />
-                    <b>Course coverage: </b>{selectedCourse.courseCoverage}<br />
-
-
+                    <b>Course code: </b>{selectedCourse.courseCode}<br />
                 </Grid>
-                <br/>
+                <br />
                 <Grid item>
                     <Autocomplete
                         id="filterDepartmentCourses"
@@ -154,16 +145,14 @@ export default function CustomizedTables(props) {
                                 const sc = props.departmentCourses.find((c) => {
                                     return c.courseID == newValue.ID
                                 });
-                                mapToScheduleObj(sc?.courseSlots);
+                                mapToScheduleObj(sc?.courseSlots, sc);
                                 setSelectedCourse(sc);
                                 console.log("selected course from list ", newValue.ID, " selected from props", sc)
-
-
                             }
                         }}
                     />
                 </Grid>
-                <br/>
+                <br />
             </Grid>
 
             <Table className={classes.table} aria-label="customized table">

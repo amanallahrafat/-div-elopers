@@ -106,6 +106,13 @@ const sendSlotLinkingRequest = async (req, res) => {
     const courseID = req.body.courseID;
     const slotID = req.body.slotID;
     const course = await Course.findOne({ ID: courseID });
+    const SlotLinkingRequest = await Slot_Linking_Request.findOne(
+        {slotID : req.body.slotID,
+        courseID : req.body.courseID,
+        senderID : ID,
+        status : "pending"});
+    if(SlotLinkingRequest != null)
+            return res.status(401).send("You already sent a slot linking request on this slot and it is still pending.");
     if (course == null)
         return res.status(404).send("The requested course was not found");
     // if (!course.instructor.includes(ID) && !course.teachingStaff.includes(ID))
@@ -178,17 +185,18 @@ const getAllNotifications = async (req, res) => {
 //all : 0 , accepted : 1, rejected : 2, pending : 3.
 const viewAllRequests = async (req, res) => {
     const { ID, type } = req.header.user;
+    const StaffMemberTable = await Staff_Member.find({type : 0});
     let result = [];
     if (req.params.view == 0) {
-        result.push(await Accidental_Leave_Request.find({ senderID: ID }));
-        result.push(await Annual_Leave_Request.find({ senderID: ID }));
-        result.push(await Change_Day_Off_Request.find({ senderID: ID }));
+        result.push(await Accidental_Leave_Request.find({ senderID: ID }));//0
+        result.push(await Annual_Leave_Request.find({ senderID: ID }));//1
+        result.push(await Change_Day_Off_Request.find({ senderID: ID }));//2
         result.push(await Compensation_Leave_Request.find({ senderID: ID }));
         result.push(await Maternity_Leave_Request.find({ senderID: ID }));
         result.push(await Replacement_Request.find({ senderID: ID }));
         result.push(await Sick_Leave_Request.find({ senderID: ID }));
         result.push(await Slot_Linking_Request.find({ senderID: ID }));
-        return res.send(result);
+       // return res.send(result);
     } else if (req.params.view == 1) {
         result.push(await Accidental_Leave_Request.find({ senderID: ID, status: "accepted" }));
         result.push(await Annual_Leave_Request.find({ senderID: ID, status: "accepted" }));
@@ -198,7 +206,7 @@ const viewAllRequests = async (req, res) => {
         result.push(await Replacement_Request.find({ senderID: ID, status: "accepted" }));
         result.push(await Sick_Leave_Request.find({ senderID: ID, status: "accepted" }));
         result.push(await Slot_Linking_Request.find({ senderID: ID, status: "accepted" }));
-        return res.send(result);
+        //return res.send(result);
     } else if (req.params.view == 2) {
         result.push(await Accidental_Leave_Request.find({ senderID: ID, status: "rejected" }));
         result.push(await Annual_Leave_Request.find({ senderID: ID, status: "rejected" }));
@@ -208,7 +216,7 @@ const viewAllRequests = async (req, res) => {
         result.push(await Replacement_Request.find({ senderID: ID, status: "rejected" }));
         result.push(await Sick_Leave_Request.find({ senderID: ID, status: "rejected" }));
         result.push(await Slot_Linking_Request.find({ senderID: ID, status: "rejected" }));
-        return res.send(result);
+        //return res.send(result);
     } else if (req.params.view == 3) {
         result.push(await Accidental_Leave_Request.find({ senderID: ID, status: "pending" }));
         result.push(await Annual_Leave_Request.find({ senderID: ID, status: "pending" }));
@@ -218,9 +226,19 @@ const viewAllRequests = async (req, res) => {
         result.push(await Replacement_Request.find({ senderID: ID, status: "pending" }));
         result.push(await Sick_Leave_Request.find({ senderID: ID, status: "pending" }));
         result.push(await Slot_Linking_Request.find({ senderID: ID, status: "pending" }));
-        return res.send(result);
+        //return res.send(result);
     }
-    res.status(403).send("The required filer is not a valid one");
+    if(result == [])
+        res.status(403).send("The required filer is not a valid one");
+    else{
+        for(const arr of result){
+            for(const req of arr){
+                req["_doc"].senderObj = StaffMemberTable.filter((elem) => elem.ID == req.senderID)[0]; 
+            }
+        }
+        console.log(result);
+        res.send(result);
+    }
 }
 
 
@@ -375,12 +393,12 @@ const viewSchedule = async (req, res) => {
             for (const replReqID of annualReq.replacementRequestsID) {
                 const replReq = recievedReplacementReq.filter(req => {
                     return req.ID == replReqID &&
-                        req.status == "accepted" 
+                        req.status == "accepted"
                         &&
                         extraUtils.isRequestInWeek(new Date(req.requestedDate), new Date(Date.now())
                         );
                 });
-                
+
                 if (replReq.length) {
                     const req = replReq[0];
                     const slot = [];
@@ -506,7 +524,7 @@ const sendCompensationLeaveRequest = async (req, res) => {
     if (dayOff != user.dayOff) {
         return res.send("You can't accept this request, since the compensation day is not the day off");
     }
-    
+
     const curDate = new Date(requestedDate);
     const curYear = curDate.getFullYear();
     const curMonth = curDate.getMonth();
@@ -744,6 +762,73 @@ const viewCourseMembers = async (req, res) => {
     return res.send(acMemNames);
 
 }
+const viewAllCourseSchedules = async (req, res) => {
+    const staffMembers = await Staff_Member.find({ type: 0 });
+    const courses = await Course.find();
+    const course_schedules = await Course_Schedule.find();
+    const allCourseSlots = []
+    for (const curCourse of courses) {
+        curEntry = {
+            courseID: curCourse.ID,
+            courseName: curCourse.name,
+            courseCode: curCourse.code,
+            courseSlots: [],
+        }
+
+        const scheduleID = curCourse.scheduleID;
+        const curSchedule = course_schedules.find((cs) => { return (cs.ID == scheduleID) });
+        if (!scheduleID) {
+            allCourseSlots.push(curEntry);
+            continue;
+        }
+        if (!curSchedule.slots) {
+            allCourseSlots.push(curEntry);
+            continue;
+        }
+        let slotsArray = [];
+        const locations = await Location.find();
+        for (const curSlot of curSchedule.slots) {
+            const slotEntry = {
+                instructor: "Not yet assigned",
+                instructorID: "",
+                locationName: "",
+                slotNumber: 0,
+                slotID : 0,
+                day: 0
+            }
+            let slotInst = "Not yet assigned";
+            if (curSlot.instructor) {
+                const curInst = staffMembers.find((mem) => { return (mem.ID == curSlot.instructor) });
+                slotInst = curInst.name
+                slotEntry.instructor = slotInst;
+                slotEntry.instructorID = "ac-" + curSlot.instructor;
+            }
+            if (curSlot.locationID) {
+                const loc = locations.find((loc) => { return (loc.ID == curSlot.locationID) });
+                if (loc.name)
+                    slotEntry.locationName = loc.name;
+            }
+
+
+            slotEntry.slotNumber = curSlot.slotNumber;
+            slotEntry.slotID =  curSlot.ID;
+            slotEntry.day = curSlot.day;
+            slotsArray.push(slotEntry);
+        }
+        curEntry.courseSlots = slotsArray;
+        allCourseSlots.push(curEntry);
+    }
+    return res.send(allCourseSlots);
+}
+const getAllCoursesInstructorsNames = async (req, res) => {
+    let allCourses = await Course.find();
+    const ans = [];
+    for (const course of allCourses) {
+        course.instructor = await extraUtils.getAcademicMembersByID_arr(course.instructor)
+        ans.push(course);
+    }
+    res.send(ans);
+}
 module.exports = {
     sendReplacementRequest,
     viewSchedule,
@@ -767,4 +852,6 @@ module.exports = {
     cancelSickLeaveRequest,
     cancelReplacementRequest,
     viewCourseMembers,
+    viewAllCourseSchedules,
+    getAllCoursesInstructorsNames,
 }

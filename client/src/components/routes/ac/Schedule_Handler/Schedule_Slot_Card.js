@@ -40,7 +40,7 @@ export default function SimpleCard(props) {
     const [requestStatus, setRequestStatus] = React.useState('-');
 
     useEffect(() => {
-        if (props.cardType == "replacement" && requestStatus=="-")
+        if (props.cardType == "replacement" && requestStatus == "-")
             setRequestStatus(props.requestStatus)
         console.log("mohamed")
     })
@@ -98,14 +98,14 @@ export default function SimpleCard(props) {
                                     <b>{props.courseName}</b>
                                 </Typography>
                                 <Typography className={classes.pos} color="textSecondary">
-                                    {props.locationName}
+                                    <b>Location:&nbsp;</b>{props.locationName}
                                 </Typography>
                                 <Collapse in={props.cardType == "replacement"}>
                                     <Typography className={classes.pos} color="textSecondary">
-                                        Instructor:&nbsp;{props.courseInstructor ? props.courseInstructor.name : ""}
+                                        <b>Instructor:&nbsp;</b>{props.courseInstructor ? props.courseInstructor.name : ""}
                                     </Typography>
                                     <Typography className={classes.pos} color="textSecondary">
-                                        Email:&nbsp;{props.courseInstructor ? props.courseInstructor.email : ""}
+                                        <b>Email:&nbsp;</b>{props.courseInstructor ? props.courseInstructor.email : ""}
                                     </Typography>
                                     <Typography className={classes.pos} color="textSecondary">
                                         {props.courseInstructor ? (new Date(props.requestedDate)).toLocaleDateString('en-US') : ""}
@@ -113,16 +113,17 @@ export default function SimpleCard(props) {
                                 </Collapse>
                             </Box>
                             <Box >
-                                <Collapse in={props.cardType == "regularSlot"}>
-                                    <CardActions>
+                                {
+                                    props.cardType == "regularSlot" ? <CardActions>
                                         <Tooltip title="Send Replacement Request">
                                             <Button size="small" color="primary" onClick={handleOpenReplacementRequest}><FindReplaceIcon /></Button>
                                         </Tooltip>
-                                    </CardActions>
-                                </Collapse>
+                                    </CardActions> : <div />
+                                }
 
-                                <Collapse in={props.cardType == "replacement" && requestStatus == "pending"}>
-                                    <CardActions>
+
+                                {
+                                    (props.cardType == "replacement" && requestStatus == "pending") ? (<div><CardActions>
                                         <Tooltip title="Accept Replacement Request">
                                             <Button
                                                 size="small"
@@ -133,18 +134,17 @@ export default function SimpleCard(props) {
                                             </Button>
                                         </Tooltip>
                                     </CardActions>
-                                    <CardActions>
-                                        <Tooltip title="Reject Replacement Request">
-                                            <Button
-                                                size="small"
-                                                style={{ color: "red" }}
-                                                onClick={handleRejectReplacementRequest}
-                                            ><CloseIcon />
-                                            </Button>
-                                        </Tooltip>
-                                    </CardActions>
-                                </Collapse>
-
+                                        <CardActions>
+                                            <Tooltip title="Reject Replacement Request">
+                                                <Button
+                                                    size="small"
+                                                    style={{ color: "red" }}
+                                                    onClick={handleRejectReplacementRequest}
+                                                ><CloseIcon />
+                                                </Button>
+                                            </Tooltip>
+                                        </CardActions></div>) : <div />
+                                }
                             </Box>
                         </Box>
                     </CardContent>
