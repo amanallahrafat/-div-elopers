@@ -89,7 +89,7 @@ const hendleSlotLinkingRequest = async(req, res) => {
         });
         await notification.save();
         await Slot_Linking_Request.updateOne({ ID: requestID }, { status: "accepted" });
-        res.send("The Request is accepted sucessfully !");
+        res.send("The Request is accepted successfully !");
     }
 }
 
@@ -186,9 +186,11 @@ const updateSlot = async(req, res) => {
     const isValid = validator.validateSlot(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
+    if(oldSlot[0].instructor != null ) req.body.instructor = oldSlot[0].instructor;
     req.body.ID = oldSlot[0].ID;
     slots.push(req.body);
     await Course_Schedule.updateOne({ ID: courseID }, { slots: slots });
+    console.log(req.body);
     res.send(req.body);
 }
 
