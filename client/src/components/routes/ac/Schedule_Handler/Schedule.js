@@ -42,7 +42,7 @@ let scheduleObj = {
     'monday': [<div />, <div />, <div />, <div />, <div />],
     'tuesday': [<div />, <div />, <div />, <div />, <div />],
     'wednesday': [<div />, <div />, <div />, <div />, <div />],
-    'thurseday': [<div />, <div />, <div />, <div />, <div />],
+    'thursday': [<div />, <div />, <div />, <div />, <div />],
     'friday': [<div />, <div />, <div />, <div />, <div />],
 }
 
@@ -52,7 +52,7 @@ let scheduleObjWithReplacement = {
     'monday': [[], [], [], [], []],
     'tuesday': [[], [], [], [], []],
     'wednesday': [[], [], [], [], []],
-    'thurseday': [[], [], [], [], []],
+    'thursday': [[], [], [], [], []],
     'friday': [[], [], [], [], []],
 }
 
@@ -77,7 +77,7 @@ function mapToScheduleObj(courseSchedule, replacementRequests) {
         'monday': [<div />, <div />, <div />, <div />, <div />],
         'tuesday': [<div />, <div />, <div />, <div />, <div />],
         'wednesday': [<div />, <div />, <div />, <div />, <div />],
-        'thurseday': [<div />, <div />, <div />, <div />, <div />],
+        'thursday': [<div />, <div />, <div />, <div />, <div />],
         'friday': [<div />, <div />, <div />, <div />, <div />],
     }
 
@@ -87,7 +87,7 @@ function mapToScheduleObj(courseSchedule, replacementRequests) {
         'monday': [[], [], [], [], []],
         'tuesday': [[], [], [], [], []],
         'wednesday': [[], [], [], [], []],
-        'thurseday': [[], [], [], [], []],
+        'thursday': [[], [], [], [], []],
         'friday': [[], [], [], [], []],
     }
 
