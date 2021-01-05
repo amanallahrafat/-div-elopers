@@ -10,6 +10,7 @@ import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
 import Schedule from '../ac/Schedule_Handler/Schedule';
 import Slot_Card from './Slot_Handler/Slot_Card.js';
+import Schedule_Requests_Card from './Slot_Linking_Request/Schedule_Requests_Card.js';
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get("/viewProfile");
@@ -47,6 +48,10 @@ const requestAllAcademicMembers = async () =>{
     return (await axios.get('cc/viewAllMembersProfiles')).data;
 }
 
+const requestAllSlotLinkingRequests = async () => {
+    return (await axios.get('/cc/viewSlotLinkingRequests')).data;
+}
+
 const styles = (theme) => ({
     appBar: {
         transition: theme.transitions.create(["margin", "width"], {
@@ -69,22 +74,59 @@ class CC extends Component {
         isLoggedIn: 0,
         componentInMain: <div />,
         firstTime : true,
+        firstTimeRequests : true,
         locations : [],
         academicMembers : [],
         slots : [],
+        slotLinkingRequests : [],
         isAppBarShift: false,
     };
+
+    // decision 0 for rejected, 1 for accepted
+    handleSlotLinkingRequest = async (requestID,decision) => {
+        if(this.state.firstTimeRequests){
+            const requests = await requestAllSlotLinkingRequests();
+            this.setState({
+                firstTimeRequests : false,
+                slotLinkingRequests : requests
+            })
+        }
+        else if(decision == 0){
+            const requests = this.state.slotLinkingRequests.filter(elm => elm.ID != requestID);
+            const request = (this.state.slotLinkingRequests.filter(elm => elm.ID == requestID))[0];
+            request.status = "rejected";
+            console.log(request);
+            requests.push(request);
+            this.setState({slotLinkingRequests : requests});
+        }
+        else if(decision == 1){
+            const requests = this.state.slotLinkingRequests.filter(elm => elm.ID != requestID);
+            const request = (this.state.slotLinkingRequests.filter(elm => elm.ID == requestID))[0];
+            request.status = "accepted";
+            requests.push(request);
+            const slots = this.state.slots.filter(elm => elm.ID != request.slotID);
+            const updatedSlot = (this.state.slots.filter(elm => elm.ID == request.slotID))[0];
+            updatedSlot.instructor = request.senderID;
+            slots.push(updatedSlot);
+            console.log(updatedSlot);
+            console.log(request);
+            this.setState({
+                slots : slots,
+                slotLinkingRequests : requests
+            });
+        }
+    }
 
     // decision 0 for add , 1 for update, 2 for delete
     handleSlots = async (obj , decision) =>{
         if(this.state.firstTime){
-            this.setState({firstTime : false});
             let locations = await requestAllLocations();
             locations = locations.filter(elm => elm.type != 2);
             console.log("first time slots");
             const academicMembers = await requestAllAcademicMembers();
             const res = await requestAllSlots();
             this.setState({
+                firstTime : false,
                 courseID : res.ID,
                 slots : res.slots,
                 locations : locations,
@@ -110,16 +152,19 @@ class CC extends Component {
 
     setComponentInMain = async (event) => {
 
-        this.handleSlots();
+        await this.handleSlots();
+        await this.handleSlotLinkingRequest();
 
 
         if (event == "profile") {
+            console.log("profile")
             this.setState({
                 componentInMain: <Profile
                     profile={await requestUserProfile()}
                     setComponentInMain={this.setComponentInMain} />
             });
         } else if (event == "attendance") {
+            console.log("attendance")
             this.setState({
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods()}
@@ -127,6 +172,7 @@ class CC extends Component {
                 />
             });
         } else if (event == "schedule") {
+            this.setState({firstTime : true});
             console.log("schedule")
             this.setState({
                 componentInMain: <Schedule
@@ -137,8 +183,7 @@ class CC extends Component {
             });
         }
         else if(event == "slot"){
-            console.log("slot");
-            console.log(this.state.slots);
+            console.log("slot")
             this.setState({
                 componentInMain: <Slot_Card
                     schedule={this.state.slots}
@@ -150,8 +195,22 @@ class CC extends Component {
                 />
             });
         }
+        // props-to-be-send => requests,slots,setInMain,handleSlots,handleSlotLinkingRequests,academicMembers,locations
         else if(event == "slotLinkingRequest"){
-
+            console.log("slotLinkingRequests");
+            console.log(this.state.slots);
+            this.setState({
+                componentInMain: <Schedule_Requests_Card
+                    requests = {this.state.slotLinkingRequests}
+                    slots = {this.state.slots}
+                    courseID = {this.state.courseID}
+                    locations = {this.state.locations}
+                    academicMembers = {this.state.academicMembers}
+                    handleSlotLinkingRequest = {this.handleSlotLinkingRequest}
+                    handleSlots = {this.handleSlots}
+                    setComponentInMain={this.setComponentInMain}
+                />
+            });
         }
     }
     handleAppBarShift = (event) => {
@@ -169,7 +228,6 @@ class CC extends Component {
         } catch (err) {
             this.setState({ isLoggedIn: 1 });
         }
-
     }
 
     render() {
