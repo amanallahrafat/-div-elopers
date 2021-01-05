@@ -68,43 +68,23 @@ const useStyles = makeStyles((theme) => ({
 export default function ChangeDayOffRequest(props) {
     const [showForm, setShowForm] = React.useState(false);
     const [selection, setSelection] = React.useState("all");
+    const [max_ID, setMax_ID] = React.useState(1);
+
     const handleCloseForm = () => {
         setShowForm(false);
     }
+
     const handleOpenForm = (event) => {
         setShowForm(true);
     }
-    const handleAcceptRequest = async (event) => {
-        const requestID = event.currentTarget.id.split('_')[1];
+
+    const handleCancelForm = async (reqID) => {
         try {
-            const req = {
-                response: 1
-            };
-            props.updateRequests("change day off requests", requestID, "accepted");
-            const res = await axios.put(`/hod/respondToChangeDayOffRequest/${requestID}`, req);
-            props.setComponentInMain("changeDayOffRequest");
+            const res = await axios.delete(`/ac/cancelChangeDayOffRequest/${reqID}`);
+            await props.setComponentInMain("ac_changeDayOffRequest");
+            alert("Request has been cancelled successfully.")
         } catch (err) {
-            props.updateRequests("change day off requests", requestID, "pending");
-            alert(err.response.data);
         }
-    }
-
-    const handleRejectRequest = async (requestID, msg) => {
-        try {
-            const req = {
-                response: 0,
-                msg: msg
-            };
-            props.updateRequests("change day off requests", requestID, "rejected");
-            const res = await axios.put(`/hod/respondToChangeDayOffRequest/${requestID}`, req);
-            props.setComponentInMain("changeDayOffRequest");
-        } catch (err) {
-            props.updateRequests("change day off requests", requestID, "pending");
-
-            alert(err.response.data);
-
-        }
-
     }
 
     const handleOpenAddReplacementRequest = async () => {
@@ -112,16 +92,12 @@ export default function ChangeDayOffRequest(props) {
     }
 
     const classes = useStyles();
-    console.log("I am here")
     return (
         <div>
             <Container maxWidth="lg">
-
                 <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: `url(https://i.pinimg.com/originals/94/f6/41/94f641161d1d124c6bfa2463c7feb8d4.jpg)` }}>
                     <div className={classes.overlay} />
-
                 </Paper>
-
                 <Typography className={classes.title} variant="h5" component="div">
                     <b>Change Day Off Requests</b>
                     <IconButton
@@ -134,7 +110,6 @@ export default function ChangeDayOffRequest(props) {
                         />
                     </IconButton>
                 </Typography>
-
                 <Grid
                     container
                     className={classes.root}
@@ -147,11 +122,9 @@ export default function ChangeDayOffRequest(props) {
                         <Autocomplete
                             id="filterChangeDayOff"
                             options={["all", "accepted", "rejected", "pending"]}
-
                             getOptionLabel={(option) => option}
                             style={{ width: 300 }}
                             renderInput={(params) => <TextField {...params} label="Filter by request status" variant="outlined" />}
-
                             onChange={(event, newValue) => {
                                 if (newValue) {
                                     setSelection(newValue);
@@ -180,23 +153,25 @@ export default function ChangeDayOffRequest(props) {
                                                         <b>Message:</b> {req.msg}<br />
                                                         <b>Requested day off :</b> {req.targetDayOff}<br />
                                                         <b>Current day off:</b> {req.senderObj.dayOff}<br />
-                                                        <b>Submission date:</b> {req.submissionDate}<br />
+                                                        <b>Submission date:</b> {(new Date(req.submissionDate)).toLocaleDateString('en-US')}<br />
                                                         <b>Status:</b> {req.status}<br />
                                                     </Typography>
                                                 </Box>
-
                                                 <Box  >
-
                                                     <Tooltip title="Submit the request">
                                                         <IconButton
                                                             aria-label="account of current user"
                                                             aria-haspopup="true"
-                                                            id={"REJECTDAYOFFREQUEST_" + req.ID}
                                                             color='primary'
                                                             style={(req.status != "pending") ? { display: 'none' } : {}}
-                                                            onClick={handleOpenForm}
+                                                            onClick={() => { handleCancelForm(req.ID) }}
                                                         >
-                                                            <CloseIcon style={{ color: "#cc0000", fontSize: 25, opacity: 1 }}
+                                                            <CloseIcon
+                                                                onClick={(event) => {
+                                                                    event.stopPropagation();
+                                                                    handleCancelForm(req.ID)
+                                                                }}
+                                                                style={{ color: "#cc0000", fontSize: 25, opacity: 1 }}
                                                             />
                                                         </IconButton>
                                                     </Tooltip>
@@ -208,19 +183,16 @@ export default function ChangeDayOffRequest(props) {
                                             open={showForm}
                                             dayOff={req.senderObj.dayOff}
                                             handleCloseForm={handleCloseForm}
-                                            addRecievedRequests={props.addRecievedRequests}
+                                            senderObj={req.senderObj}
+                                            setComponentInMain={props.setComponentInMain}
                                         />
                                     </div>
                                 </Card>
                             </Grid>
-
                         )
                     }
                 </Grid>
             </Container>
-
-
-
         </div >
     );
 }

@@ -56,8 +56,6 @@ const getAllCoursesInstructorsNames = async () => {
     return coursesInstructorName.data;
 };
 
-
-
 const requestStaffProfiles = async (filter = "none", obj = {}) => {
     if (filter == "none") {
         const res = await axios.get("/hod/viewDepartmentMembers");
@@ -138,7 +136,6 @@ class HOD extends Component {
         requestsFirstTime: true,
         // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
         isAppBarShift: false,
-        sentRequests: [],
         //*************
     };
 
@@ -180,23 +177,10 @@ class HOD extends Component {
     getAllSentRequests = async () => {
         try {
             const res = (await axios.get("/ac/viewAllRequests/0")).data;
-            this.setState({ sentRequests: res });
             return res;
         } catch (err) {
             console.log(err.response.data);
         }
-    }
-
-    cancelRecievedRequests = async (requestType, requestID) => {
-        const requests = this.sentRequests;
-        requests[requestType] = requests[requestType].filter(r => r.ID != requestID)
-        this.setState({ sentRequests: requests });
-    }
-
-    addRecievedRequests = async (requestType, request) => {
-        const requests = this.sentRequests;
-        requests[requestType] = requests[requestType].push(request);
-        this.setState({ sentRequests: requests });
     }
 
     updateHODProfile = async () => {
@@ -324,15 +308,10 @@ class HOD extends Component {
         }
         else if (event == "ac_changeDayOffRequest") {
             console.log("ac_changeDayOffRequest")
-            if (!this.state.sentRequests.length)
-                await this.getAllSentRequests();
-            console.log("ac_changeDayOffRequestkkkkk")
             this.setState({
                 componentInMain: <Change_Day_Off_Request
                     setComponentInMain={this.setComponentInMain}
-                    cancelRecievedRequests={this.cancelRecievedRequests}
-                    addRecievedRequests={this.addRecievedRequests}
-                    requests={this.state.sentRequests[2]}
+                    requests={(await this.getAllSentRequests())[2]}
                 />
             });
         }
