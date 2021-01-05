@@ -15,6 +15,7 @@ import DropdownList_NavBar from './DropdownList_NavBar';
 import DropdownList_Notifications from './DropdownList_Notifications';
 import Hod_SlideBar from './slideBars/Hod_SlideBar';
 import HR_SlideBar from './slideBars/HR_SlideBar';
+import CC_SlideBar from './slideBars/CC_SlideBar';
 
 const drawerWidth = 240;
 
@@ -132,19 +133,34 @@ class Navigation_Bar extends Component {
                         </div>
                     </Toolbar>
                     {
-                        (localStorage.getItem('type') == 1 ?
+                        (localStorage.getItem('type') == 1 ) ?
                             <HR_SlideBar
                                 open={this.state.isSlideBarOpen}
                                 setComponentInMain={this.props.fromParent} /> :
+                            (localStorage.getItem("academicMemberType") == 0) ?
                             <Hod_SlideBar
                                 open={this.state.isSlideBarOpen}
                                 updateRequestStaffProfile={this.props.updateRequestStaffProfile}
                                 updateRequests={this.props.updateRequests}
                                 setComponentInMain={this.props.fromParent} 
-                                requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}
-                
-                                />
-                        )
+                                requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}/>:
+                            (localStorage.getItem("academicMemberType") == 1) ? 
+                            <Hod_SlideBar
+                                open={this.state.isSlideBarOpen}
+                                updateRequestStaffProfile={this.props.updateRequestStaffProfile}
+                                updateRequests={this.props.updateRequests}
+                                setComponentInMain={this.props.fromParent} 
+                                requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}/>:
+                            (localStorage.getItem("academicMemberType") == 2) ?
+                            <CC_SlideBar
+                            open={this.state.isSlideBarOpen}
+                            setComponentInMain={this.props.fromParent}/> :
+                            <Hod_SlideBar
+                            open={this.state.isSlideBarOpen}
+                            updateRequestStaffProfile={this.props.updateRequestStaffProfile}
+                            updateRequests={this.props.updateRequests}
+                            setComponentInMain={this.props.fromParent} 
+                            requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}/>
                     }
                 </AppBar>
             </div>
