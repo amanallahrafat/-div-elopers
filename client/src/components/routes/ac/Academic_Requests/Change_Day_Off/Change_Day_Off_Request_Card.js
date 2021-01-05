@@ -30,6 +30,7 @@ export default function RequestForm(props) {
     const handleSubmitRequest = async () => {
         try {
             const res = await axios.post("ac/sendChangeDayOffRequest", { "newDayOff": dayOff, "msg": msg });
+            props.setComponentInMain("ac_changeDayOffRequest");
             handleClose();
         } catch (err) {
             console.log(err.response.data);
@@ -40,9 +41,7 @@ export default function RequestForm(props) {
 
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Write an optional message </DialogTitle>
-
                 <DialogContent>
-
                     <TextField
                         autoFocus
                         margin="dense"
