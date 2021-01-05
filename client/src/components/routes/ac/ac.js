@@ -87,6 +87,14 @@ class Academic_Member_List extends Component {
     handleChangeDayOffRequest = async (event) => {
         this.props.setComponentInMain("ac_changeDayOffRequest");
     }
+    
+    handleAnnualLeaveRequest = async(event)=>{
+        this.props.setComponentInMain("ac_annualLeaveRequest");
+    }
+
+    handleAccidentalLeaveRequest = async(event)=>{
+        this.props.setComponentInMain("ac_accidentalLeaveRequest");
+    }
 
     async componentDidMount() {
         if (!localStorage.getItem('auth-token')) {
@@ -140,10 +148,10 @@ class Academic_Member_List extends Component {
                                 <ListItemText primary={"Change day off"} onClick={this.handleChangeDayOffRequest} />
                             </ListItem>
                             <ListItem button >
-                                <ListItemText primary={"Annual leaves"} />
+                                <ListItemText primary={"Annual leaves"} onClick={this.handleAnnualLeaveRequest}/>
                             </ListItem>
                             <ListItem button >
-                                <ListItemText primary={"Accidental leaves"} />
+                                <ListItemText primary={"Accidental leaves" } onClick={this.handleAccidentalLeaveRequest}/>
                             </ListItem>
                             <ListItem button >
                                 <ListItemText primary={"Sick leaves"} />

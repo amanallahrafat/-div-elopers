@@ -107,12 +107,14 @@ const sendSlotLinkingRequest = async (req, res) => {
     const slotID = req.body.slotID;
     const course = await Course.findOne({ ID: courseID });
     const SlotLinkingRequest = await Slot_Linking_Request.findOne(
-        {slotID : req.body.slotID,
-        courseID : req.body.courseID,
-        senderID : ID,
-        status : "pending"});
-    if(SlotLinkingRequest != null)
-            return res.status(401).send("You already sent a slot linking request on this slot and it is still pending.");
+        {
+            slotID: req.body.slotID,
+            courseID: req.body.courseID,
+            senderID: ID,
+            status: "pending"
+        });
+    if (SlotLinkingRequest != null)
+        return res.status(401).send("You already sent a slot linking request on this slot and it is still pending.");
     if (course == null)
         return res.status(404).send("The requested course was not found");
     // if (!course.instructor.includes(ID) && !course.teachingStaff.includes(ID))
@@ -185,7 +187,11 @@ const getAllNotifications = async (req, res) => {
 //all : 0 , accepted : 1, rejected : 2, pending : 3.
 const viewAllRequests = async (req, res) => {
     const { ID, type } = req.header.user;
-    const StaffMemberTable = await Staff_Member.find({type : 0});
+    const StaffMemberTable = await Staff_Member.find({ type: 0 });
+    const return_result= {
+        senderObj :{},
+        requests:[],
+    }
     let result = [];
     if (req.params.view == 0) {
         result.push(await Accidental_Leave_Request.find({ senderID: ID }));//0
@@ -196,7 +202,7 @@ const viewAllRequests = async (req, res) => {
         result.push(await Replacement_Request.find({ senderID: ID }));
         result.push(await Sick_Leave_Request.find({ senderID: ID }));
         result.push(await Slot_Linking_Request.find({ senderID: ID }));
-       // return res.send(result);
+        // return res.send(result);
     } else if (req.params.view == 1) {
         result.push(await Accidental_Leave_Request.find({ senderID: ID, status: "accepted" }));
         result.push(await Annual_Leave_Request.find({ senderID: ID, status: "accepted" }));
@@ -228,16 +234,13 @@ const viewAllRequests = async (req, res) => {
         result.push(await Slot_Linking_Request.find({ senderID: ID, status: "pending" }));
         //return res.send(result);
     }
-    if(result == [])
+    if (result == [])
         res.status(403).send("The required filer is not a valid one");
-    else{
-        for(const arr of result){
-            for(const req of arr){
-                req["_doc"].senderObj = StaffMemberTable.filter((elem) => elem.ID == req.senderID)[0]; 
-            }
-        }
-        console.log(result);
-        res.send(result);
+    else {
+        return_result.senderObj = StaffMemberTable.filter((elem) => elem.ID == ID)[0];
+        return_result.requests = result;
+        console.log(return_result);
+        res.send(return_result);
     }
 }
 
@@ -602,6 +605,7 @@ const viewReplacementRequests = async (req, res) => {
     for (const request of replacementRequests) {
         const courseSchedule = courseScheduleTable.filter((elem) => elem.ID == request.courseID)[0];
         const slot = courseSchedule.slots.filter(s => s.ID == request.slotID)[0];
+        if (slot==null) continue;
         const courseName = courseTable.filter(c => c.ID == request.courseID)[0].name;
         const locationName = locationTable.filter(l => l.ID == slot.locationID)[0].name;
         const senderName = staffMemberTable.filter(s => s.ID == request.senderID)[0];
@@ -645,8 +649,8 @@ const respondToReplacementRequest = async (req, res) => {
 const sendAnnualLeaveRequest = async (req, res) => {
     const { ID, type } = req.header.user;
     const staff_member = await Staff_Member.findOne({ ID: ID });
-    if (staff_member.accidentalLeaveBalance < 1)
-        return res.status(400).send("you don't have enough leave balance");
+    if (staff_member.annualBalance < 1)
+        return res.status(400).send("You don't have enough leave balance.");
     const requestedDate = req.body.requestedDate;
     if (extraUtils.getDifferenceInDays(requestedDate, Date.now()) <= 0)
         return res.status(400).send("The requested date already passed !");
@@ -658,7 +662,7 @@ const sendAnnualLeaveRequest = async (req, res) => {
     const user = await Academic_Member.findOne({ ID: ID });
     const department = await Department.findOne({ ID: user.departmentID });
     if (department == null)
-        return res.status(400).send("your department has no head !");
+        return res.status(400).send("Your department has no head !");
     let replacementsRequests = await Replacement_Request.find({ senderID: ID });
     replacementsRequests = replacementsRequests.filter((elm) => extraUtils.twoDatesAreEqual(new Date(elm.requestedDate), new Date(requestedDate)));
     replacementsRequests = replacementsRequests.map((elm) => elm.ID);
@@ -691,14 +695,14 @@ const cancelSlotLinkingRequest = async (req, res) => {
 
 const cancelAccidentalLeaveRequest = async (req, res) => {
     const { ID, type } = req.header.user;
-    if (!req.body.ID) {
+    if (!req.params.ID) {
         return res.status(400).send("please specify the ID of the request ");
     }
-    const accidentalLeave = await Accidental_Leave_Request.findOne({ ID: req.body.ID, senderID: ID });// ID of the accidental leave
+    const accidentalLeave = await Accidental_Leave_Request.findOne({ ID: req.params.ID, senderID: ID });// ID of the accidental leave
     if (!accidentalLeave)
         return res.status(400).send("there is no accidental leave with this ID for this person ");
     if (accidentalLeave.status == "pending") {
-        await Accidental_Leave_Request.deleteOne({ ID: req.body.ID });
+        await Accidental_Leave_Request.deleteOne({ ID: req.params.ID });
         return res.send("request has been deleted succuessfully ");
     }
     if (accidentalLeave.status == "rejected") {
@@ -711,7 +715,7 @@ const cancelAccidentalLeaveRequest = async (req, res) => {
             staffMem.annualBalance = staffMem.annualBalance + 1;
             staffMem.accidentalLeaveBalance = staffMem.accidentalLeaveBalance + 1;
             await Staff_Member.updateOne({ ID: ID, type: type }, staffMem);
-            await Accidental_Leave_Request.deleteOne({ ID: req.body.ID });
+            await Accidental_Leave_Request.deleteOne({ ID: req.params.ID });
             return res.send("request has been deleted succuessfully ");
 
         } else {
@@ -722,14 +726,14 @@ const cancelAccidentalLeaveRequest = async (req, res) => {
 
 const cancelAnnualLeaveRequest = async (req, res) => {
     const { ID, type } = req.header.user;
-    if (!req.body.ID) {
+    if (!req.params.ID) {
         return res.status(400).send("please specify the ID of the request ");
     }
-    const annualLeave = await Annual_Leave_Request.findOne({ ID: req.body.ID, senderID: ID });// ID of the accidental leave
+    const annualLeave = await Annual_Leave_Request.findOne({ ID: req.params.ID, senderID: ID });// ID of the accidental leave
     if (!annualLeave)
         return res.status(400).send("there is no annual leave with this ID for this person ");
     if (annualLeave.status == "pending") {
-        await Annual_Leave_Request.deleteOne({ ID: req.body.ID });
+        await Annual_Leave_Request.deleteOne({ ID: req.params.ID });
         return res.send("request has been deleted succuessfully ");
     }
     if (annualLeave.status == "rejected") {
@@ -741,7 +745,7 @@ const cancelAnnualLeaveRequest = async (req, res) => {
             const staffMem = await Staff_Member.findOne({ ID: ID, type: type });
             staffMem.accidentalLeaveBalance = staffMem.accidentalLeaveBalance + 1;
             await Staff_Member.updateOne({ ID: ID, type: type }, staffMem);
-            await Annual_Leave_Request.deleteOne({ ID: req.body.ID });
+            await Annual_Leave_Request.deleteOne({ ID: req.params.ID });
             return res.send("request has been deleted succuessfully ");
 
         } else {
@@ -793,7 +797,7 @@ const viewAllCourseSchedules = async (req, res) => {
                 instructorID: "",
                 locationName: "",
                 slotNumber: 0,
-                slotID : 0,
+                slotID: 0,
                 day: 0
             }
             let slotInst = "Not yet assigned";
@@ -809,9 +813,8 @@ const viewAllCourseSchedules = async (req, res) => {
                     slotEntry.locationName = loc.name;
             }
 
-
             slotEntry.slotNumber = curSlot.slotNumber;
-            slotEntry.slotID =  curSlot.ID;
+            slotEntry.slotID = curSlot.ID;
             slotEntry.day = curSlot.day;
             slotsArray.push(slotEntry);
         }
