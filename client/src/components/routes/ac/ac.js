@@ -96,6 +96,11 @@ class Academic_Member_List extends Component {
         this.props.setComponentInMain("ac_accidentalLeaveRequest");
     }
 
+    handleMaternityLeaveRequest = async(event)=>{
+        console.log("HEEEY")
+        this.props.setComponentInMain("ac_maternityLeaveRequest");
+    }
+
     async componentDidMount() {
         if (!localStorage.getItem('auth-token')) {
             this.setState({ isLoggedIn: 1 });
@@ -157,7 +162,7 @@ class Academic_Member_List extends Component {
                                 <ListItemText primary={"Sick leaves"} />
                             </ListItem>
                             <ListItem button >
-                                <ListItemText primary={"Maternity leaves"} />
+                                <ListItemText primary={"Maternity leaves"} onClick={this.handleMaternityLeaveRequest}/>
                             </ListItem>
                             <ListItem button >
                                 <ListItemText primary={"Compensation leaves"} />

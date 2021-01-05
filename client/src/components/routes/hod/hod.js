@@ -11,6 +11,7 @@ import Profile from '../../Profile';
 import Change_Day_Off_Request from "../ac/Academic_Requests/Change_Day_Off/Change_Day_Off_List";
 import Annual_Leave_Request from "../ac/Academic_Requests/Annual_Leave/Annual_Leave_List";
 import Accidental_Leave_Request from "../ac/Academic_Requests/Accidental_Leave/Accidental_Leave_List";
+import Maternity_Leave_Request from "../ac/Academic_Requests/Maternity_leave/Maternity_Leave_List";
 import Course_Schedule from "../ac/All_Course_Schedule/Course_Schedule";
 import Schedule from '../ac/Schedule_Handler/Schedule';
 import AccidentalLeaveRequest from './accidentalLeaveRequest.js';
@@ -339,6 +340,18 @@ class HOD extends Component {
                 componentInMain: <Accidental_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[0]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_maternityLeaveRequest") {
+            console.log("ac_maternityLeaveRequest")
+            const requestsArr = (await this.getAllSentRequests());
+            console.log(requestsArr);
+            this.setState({
+                componentInMain: <Maternity_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[4]}
                     senderObj={requestsArr.senderObj}
                 />
             });
