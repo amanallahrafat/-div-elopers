@@ -34,4 +34,6 @@ academicMemberRouter.delete('/cancelAnnualLeaveRequest', auth, academicMemberCon
 // EXTRA
 //post cause it works that way. sam7yny ya HTTP1.1 standards.
 academicMemberRouter.post('/viewCourseMembers', auth, academicMemberController.viewCourseMembers);
+academicMemberRouter.get('/viewAllCourseSchedules', auth, academicMemberController.viewAllCourseSchedules);
+academicMemberRouter.get('/getAllCoursesInstructorsNames', auth, academicMemberController.getAllCoursesInstructorsNames)
 module.exports = academicMemberRouter;

@@ -8,16 +8,18 @@ import setAuthToken from "../../../actions/setAuthToken";
 import Attendance from '../../Attendance';
 import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
+import Change_Day_Off_Request from "../ac/Academic_Requests/Change_Day_Off/Change_Day_Off_List";
+import Course_Schedule from "../ac/All_Course_Schedule/Course_Schedule";
 import Schedule from '../ac/Schedule_Handler/Schedule';
 import AccidentalLeaveRequest from './accidentalLeaveRequest.js';
 import AnnualLeaveRequest from './annualLeaveRequest.js';
 import ChangeDayOffRequest from './changeDayOffRequest.js';
 import CompensationLeaveRequest from './compensationLeaveRequest.js';
 import DepartmentCourses from './departmentCourses.js';
-import ManageCourseInstructors from './ManageCourseInstructors.js';
-import MaternityLeaveRequest from './maternityLeaveRequest.js';
-import SickLeaveRequest from './sickLeaveRequest.js';
-import ViewStaffProfiles from './viewStaffProfiles.js';
+import ManageCourseInstructors from "./ManageCourseInstructors.js";
+import MaternityLeaveRequest from "./maternityLeaveRequest.js";
+import SickLeaveRequest from "./sickLeaveRequest.js";
+import ViewStaffProfiles from "./viewStaffProfiles.js";
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get("/viewProfile");
@@ -43,6 +45,18 @@ const getAcademicMembersTable = async () => {
     const res = await axios.get("/hod/getAcademicMembersTable");
     return res.data;
 };
+
+const viewAllCourseSchedules = async () => {
+    const courseSchedules = await axios.get("/ac/viewAllCourseSchedules");
+    return courseSchedules.data;
+};
+
+const getAllCoursesInstructorsNames = async () => {
+    const coursesInstructorName = await axios.get("/ac/getAllCoursesInstructorsNames");
+    return coursesInstructorName.data;
+};
+
+
 
 const requestStaffProfiles = async (filter = "none", obj = {}) => {
     if (filter == "none") {
@@ -83,10 +97,8 @@ const requestAllRequests = async () => {
 const requestAllDepartmentCourses = async () => {
     console.log("begin in request all department courses");
     const res = await axios.get('/hod/viewCourseTeachingAssignmentsLocal');
-
     console.log("end of  request all department courses", res.data);
     return res.data;
-
 }
 
 // const getAllAcademicMembers = async()=>{
@@ -126,8 +138,10 @@ class HOD extends Component {
         requestsFirstTime: true,
         // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
         isAppBarShift: false,
+        sentRequests: [],
         //*************
     };
+
     updateRequestStaffProfile = async (filter = "none", obj = {}) => {
         const profiles = await requestStaffProfiles(filter, obj);
         this.setState({ staffProfiles: profiles });
@@ -135,6 +149,7 @@ class HOD extends Component {
     };
 
     updateRequests = async (type = "", requestID = -1, newStatus = "") => {
+        console.log("2na hna")
         if (this.state.requestsFirstTime || requestID == -1) {
             const requests = await requestAllRequests();
             this.setState({ requests: requests });
@@ -160,12 +175,33 @@ class HOD extends Component {
             this.setState({ requests: allRequests });
             return allRequests;
         }
-      };
+    }
 
-  updateHODProfile = async () => {
-    this.setState({ hodProfile: await requestUserProfile() });
-  };
+    getAllSentRequests = async () => {
+        try {
+            const res = (await axios.get("/ac/viewAllRequests/0")).data;
+            this.setState({ sentRequests: res });
+            return res;
+        } catch (err) {
+            console.log(err.response.data);
+        }
+    }
 
+    cancelRecievedRequests = async (requestType, requestID) => {
+        const requests = this.sentRequests;
+        requests[requestType] = requests[requestType].filter(r => r.ID != requestID)
+        this.setState({ sentRequests: requests });
+    }
+
+    addRecievedRequests = async (requestType, request) => {
+        const requests = this.sentRequests;
+        requests[requestType] = requests[requestType].push(request);
+        this.setState({ sentRequests: requests });
+    }
+
+    updateHODProfile = async () => {
+        this.setState({ hodProfile: await requestUserProfile() });
+    };
     setComponentInMain = async (event) => {
         if (event == "profile") {
             this.setState({
@@ -180,8 +216,8 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                 />
             });
-        } else if (event == "schedule") {
-            console.log("schedule")
+        } else if (event == "personalSchedule") {
+            console.log("personalSchedule")
             this.setState({
                 componentInMain: <Schedule
                     schedule={await requestSchedule()}
@@ -191,7 +227,6 @@ class HOD extends Component {
         }
         else if (event == "manageCourseInstructors") {
             console.log("I am in event course")
-
             this.setState({
                 componentInMain: <ManageCourseInstructors
                     courses={await requestDepartmentCourses()}
@@ -275,7 +310,29 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                     departmentCourses={await requestAllDepartmentCourses()}
                     allCourses={await requestDepartmentCourses()}
-
+                />
+            });
+        }
+        else if (event == "allCourseSchedule") {
+            console.log("allCourseSchedule")
+            this.setState({
+                componentInMain: <Course_Schedule
+                    departmentCourses={await viewAllCourseSchedules()}
+                    allCourses={await getAllCoursesInstructorsNames()}
+                />
+            });
+        }
+        else if (event == "ac_changeDayOffRequest") {
+            console.log("ac_changeDayOffRequest")
+            if (!this.state.sentRequests.length)
+                await this.getAllSentRequests();
+            console.log("ac_changeDayOffRequestkkkkk")
+            this.setState({
+                componentInMain: <Change_Day_Off_Request
+                    setComponentInMain={this.setComponentInMain}
+                    cancelRecievedRequests={this.cancelRecievedRequests}
+                    addRecievedRequests={this.addRecievedRequests}
+                    requests={this.state.sentRequests[2]}
                 />
             });
         }
@@ -330,6 +387,6 @@ class HOD extends Component {
             </div>
         )
     }
-  }
-  
+}
+
 export default withStyles(styles)(HOD);

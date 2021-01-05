@@ -18,26 +18,37 @@ const useStyles = makeStyles({
     },
     pos: {
     },
+    pendingCard: {
+        backgroundColor: "#ffffcc",
+    },
+    acceptedCard: {
+        backgroundColor: "#ccffcc",
+    },
+    rejectedCard: {
+        backgroundColor: "#ffcccc",
+    }
 });
 export default function SimpleCard(props) {
     const classes = useStyles();
-  
+
     return (
         <div>
-            <Card className={classes.root}>
+            <Card className={classes.root} className={
+                props.instructorName == "Not yet assigned" ? classes.pendingCard : ""}>
                 <CardContent>
                     <Typography className={classes.pos} >
-                        <b>{props.instructorName}</b>
+                        <b>Instructor:&nbsp;</b>{props.instructorName}
                     </Typography>
-                    
-                    <Typography className={classes.pos} >
-                        <b>{props.instructorID}</b>
-                    </Typography>
+                    {
+                        props.instructorID ? (<Typography className={classes.pos} >
+                            <b>ID:&nbsp;</b>{props.instructorID}
+                        </Typography>) : <div />
+                    }
                     <Typography className={classes.pos} color="textSecondary">
-                        {props.locationName}
+                        <b>Location:&nbsp;</b>{props.locationName}
                     </Typography>
-                    
-              </CardContent>
+
+                </CardContent>
             </Card>
         </div>
     );

@@ -51,6 +51,7 @@ const getCurDay = (date) => { // date entered as normal date not miliseconds
   const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   return days[date.getDay()];
 }
+
 export default function MaxWidthDialog(props) {
   const classes = useStyles();
   const [academicMembers, setAcademicMembers] = React.useState([]);
@@ -90,8 +91,6 @@ export default function MaxWidthDialog(props) {
     }
 
     handleClose();
-
-
   }
 
   const handleMaxWidthChange = (event) => {
@@ -138,8 +137,8 @@ export default function MaxWidthDialog(props) {
             <DatePicker
               value={selectedDate}
               shouldDisableDate={disableNonSlotDays}
-              onChange={handleDateChange} />
-
+              onChange={handleDateChange}
+            />
           </MuiPickersUtilsProvider>
         </DialogContent>
         <DialogActions>
