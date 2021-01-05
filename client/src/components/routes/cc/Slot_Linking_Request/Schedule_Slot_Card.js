@@ -83,8 +83,8 @@ export default function SimpleCard(props) {
         <div>
             <Tooltip title={
                 props.cardType == "replacement" ?
-                    (requestStatus == "pending" ? "Pending Replacement Request" :
-                        (requestStatus == "accepted" ? "Accepted Replacement Request" : "Rejected Replacement Request")) : "Regular Slot"}>
+                    (requestStatus == "pending" ? "Pending Slot Linking Request" :
+                        (requestStatus == "accepted" ? "Accepted Slot Linking Request" : "Rejected Slot Linking Request")) : "Regular Slot"}>
 
                 <Card className={classes.root} className={
                     props.cardType == "replacement" ?
