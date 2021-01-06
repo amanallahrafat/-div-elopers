@@ -14,7 +14,7 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 
-import Academic_Member_List from '../routes/ac/ac.js'
+import Academic_Member_List from '../routes/ac/ac_List.js'
 import React from 'react';
 
 import Accordion from '@material-ui/core/Accordion';

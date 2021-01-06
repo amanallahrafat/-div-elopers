@@ -8,9 +8,24 @@ import setAuthToken from "../../../actions/setAuthToken";
 import Attendance from '../../Attendance';
 import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
+import Accidental_Leave_Request from "../ac/Academic_Requests/Accidental_Leave/Accidental_Leave_List";
+import Annual_Leave_Request from "../ac/Academic_Requests/Annual_Leave/Annual_Leave_List";
+import Change_Day_Off_Request from "../ac/Academic_Requests/Change_Day_Off/Change_Day_Off_List";
+import Compensation_Leave_Request from "../ac/Academic_Requests/Compensation_Leave/Compensation_Leave_List";
+import Maternity_Leave_Request from "../ac/Academic_Requests/Maternity_leave/Maternity_Leave_List";
+import Sick_Leave_Request from "../ac/Academic_Requests/Sick_Leave/Sick_Leave_List";
+import {
+    getAllCoursesInstructorsNames,
+    getAllMissingDays, getAllSentRequests,
+    getReplacementRequests, requestSchedule,
+    viewAllCourseSchedules
+} from '../ac/ac_helper.js';
+import Course_Schedule from "../ac/All_Course_Schedule/Course_Schedule";
 import Schedule from '../ac/Schedule_Handler/Schedule';
 import Slot_Card from './Slot_Handler/Slot_Card.js';
 import Schedule_Requests_Card from './Slot_Linking_Request/Schedule_Requests_Card.js';
+import ViewMissingDaysForm from '../../ViewMissingDaysForm.js';
+
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get("/viewProfile");
@@ -24,17 +39,17 @@ const requestAttendanceRecods = async () => {
 
 const drawerWidth = 240;
 
-const requestSchedule = async () => {
-    const schedule = await axios.get("ac/viewSchedule");
-    return schedule.data;
-};
+// const requestSchedule = async () => {
+//     const schedule = await axios.get("ac/viewSchedule");
+//     return schedule.data;
+// };
 
-const getReplacementRequests = async () => {
-    let res = (await axios.get('ac/viewReplacementRequests')).data;
-    const userID = localStorage.getItem('ID');
-    res = res.filter(r => r.senderID != userID && new Date(r.requestedDate).getTime() >= new Date(Date.now()).getTime());
-    return res;
-}
+// const getReplacementRequests = async () => {
+//     let res = (await axios.get('ac/viewReplacementRequests')).data;
+//     const userID = localStorage.getItem('ID');
+//     res = res.filter(r => r.senderID != userID && new Date(r.requestedDate).getTime() >= new Date(Date.now()).getTime());
+//     return res;
+// }
 
 const requestAllSlots = async () =>{
     return (await axios.get("cc/viewAllSlots")).data;
@@ -51,6 +66,18 @@ const requestAllAcademicMembers = async () =>{
 const requestAllSlotLinkingRequests = async () => {
     return (await axios.get('/cc/viewSlotLinkingRequests')).data;
 }
+
+const requestMissingDays = async () => {
+    const res = await axios.get('/viewMissingDays');
+    const dates = res.data;
+    const mappedDates = [];
+    for (const date of dates) {
+        mappedDates.push({ date: (new Date(date)).toLocaleString() + "" })
+    }
+    console.log(mappedDates);
+    return mappedDates;
+}
+
 
 const styles = (theme) => ({
     appBar: {
@@ -151,7 +178,8 @@ class CC extends Component {
     }
 
     setComponentInMain = async (event) => {
-
+        console.log("Triggered");
+        console.log(event);
         await this.handleSlots();
         await this.handleSlotLinkingRequest();
 
@@ -171,16 +199,15 @@ class CC extends Component {
                     setComponentInMain={this.setComponentInMain}
                 />
             });
-        } else if (event == "schedule") {
-            this.setState({firstTime : true});
-            console.log("schedule")
+         } 
+         if (event == "viewMissingDays") {
             this.setState({
-                componentInMain: <Schedule
-                    schedule={await requestSchedule()}
-                    replacementRequests={await getReplacementRequests()}
-                    setComponentInMain={this.setComponentInMain}
-                />
-            });
+                componentInMain: (
+                    <ViewMissingDaysForm
+                        missedDays={await requestMissingDays()}
+                    />
+                )
+            })
         }
         else if(event == "slot"){
             console.log("slot")
@@ -209,6 +236,99 @@ class CC extends Component {
                     handleSlotLinkingRequest = {this.handleSlotLinkingRequest}
                     handleSlots = {this.handleSlots}
                     setComponentInMain={this.setComponentInMain}
+                />
+            });
+        }
+        else if (event == "personalSchedule") {
+            console.log("personalSchedule")
+            const requestsArr = (await getAllSentRequests());
+            console.log(requestsArr)
+            this.setState({
+                componentInMain: <Schedule
+                    schedule={await requestSchedule()}
+                    replacementRequests={await getReplacementRequests()}
+                    sentReplacementRequests={requestsArr.requests[5]}
+                    senderObj={requestsArr.senderObj}
+                    setComponentInMain={this.setComponentInMain}
+
+                />
+            });
+        }
+        else if (event == "allCourseSchedule") {
+            console.log("allCourseSchedule")
+            this.setState({
+                componentInMain: <Course_Schedule
+                    departmentCourses={await viewAllCourseSchedules()}
+                    allCourses={await getAllCoursesInstructorsNames()}
+                />
+            });
+        }
+        else if (event == "ac_changeDayOffRequest") {
+            console.log("ac_changeDayOffRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Change_Day_Off_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[2]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_annualLeaveRequest") {
+            console.log("ac_annualLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            console.log(requestsArr);
+            this.setState({
+                componentInMain: <Annual_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[1]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_accidentalLeaveRequest") {
+            console.log("ac_accidentalLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            console.log(requestsArr);
+            this.setState({
+                componentInMain: <Accidental_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[0]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_maternityLeaveRequest") {
+            console.log("ac_maternityLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Maternity_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[4]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_sickLeaveRequest") {
+            console.log("ac_sickLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Sick_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[6]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_compensationLeaveRequest") {
+            console.log("ac_compensationLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Compensation_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[3]}
+                    senderObj={requestsArr.senderObj}
+                    missingDays={await getAllMissingDays()}
                 />
             });
         }

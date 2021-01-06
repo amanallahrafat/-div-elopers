@@ -105,7 +105,7 @@ class Academic_Member_List extends Component {
     }
 
     handleCompensationLeaveRequest=async(event)=>{
-        console.log("2na hnaa")
+        console.log("2na hnaa?")
         this.props.setComponentInMain("ac_compensationLeaveRequest");
     }
 

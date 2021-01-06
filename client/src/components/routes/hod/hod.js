@@ -19,9 +19,7 @@ import Sick_Leave_Request from "../ac/Academic_Requests/Sick_Leave/Sick_Leave_Li
 import {
     getAllCoursesInstructorsNames,
     getAllMissingDays, getAllSentRequests,
-
     getReplacementRequests, requestSchedule,
-
     viewAllCourseSchedules
 } from '../ac/ac_helper.js';
 import Course_Schedule from "../ac/All_Course_Schedule/Course_Schedule";
@@ -36,14 +34,11 @@ import MaternityLeaveRequest from './maternityLeaveRequest.js';
 import SickLeaveRequest from './sickLeaveRequest.js';
 import ViewStaffProfiles from './viewStaffProfiles.js';
 
-
-
-
 const requestUserProfile = async (openAlert) => {
-    try{
-    const userProfile = await axios.get('/viewProfile');
-    return userProfile.data;
-    }catch(err){
+    try {
+        const userProfile = await axios.get('/viewProfile');
+        return userProfile.data;
+    } catch (err) {
         openAlert(err.response.data);
         return {}
     }
@@ -51,30 +46,30 @@ const requestUserProfile = async (openAlert) => {
 
 
 const requestAttendanceRecods = async (openAlert) => {
-    try{
-    const attendanceRecords = await axios.get('/viewAttendance');
-    return attendanceRecords.data;
-    }catch(err){
+    try {
+        const attendanceRecords = await axios.get('/viewAttendance');
+        return attendanceRecords.data;
+    } catch (err) {
         openAlert(err.response.data);
         return []
     }
 }
 
 const requestDepartmentCourses = async (openAlert) => {
-    try{
-    const departmentCourses = await axios.get('/hod/getDepartmentCourses');
-    return departmentCourses.data;
-    }catch(err){
+    try {
+        const departmentCourses = await axios.get('/hod/getDepartmentCourses');
+        return departmentCourses.data;
+    } catch (err) {
         openAlert(err.response.data);
         return []
     }
 }
 
 const getAllAcademicMembers = async (openAlert) => {
-    try{
-    const res = await axios.get('/hod/getAllAcademicMembers');
-    return res.data;
-    }catch(err){
+    try {
+        const res = await axios.get('/hod/getAllAcademicMembers');
+        return res.data;
+    } catch (err) {
         openAlert(err.response.data);
         return []
     }
@@ -82,37 +77,37 @@ const getAllAcademicMembers = async (openAlert) => {
 
 
 const getAcademicMembersTable = async (openAlert) => {
-    try{
-    const res = await axios.get('/hod/getAcademicMembersTable');
-    return res.data;
-    }catch(err){
+    try {
+        const res = await axios.get('/hod/getAcademicMembersTable');
+        return res.data;
+    } catch (err) {
         openAlert(err.response.data);
         return []
     }
 }
 
-const requestStaffProfiles = async (filter = "none", obj = {},openAlert) => {
-    try{
-    if (filter == "none") {
-        const res = await axios.get("/hod/viewDepartmentMembers");
-        return res.data;
-    } else if (filter == "course") {
-        const res = await axios.get(
-            `/hod/viewDepartmentMembersByCourse/${obj.courseID}`
-        );
-        return res.data;
-    } else if (filter == "staffMember") {
-        const res = await axios.get("/hod/viewDepartmentMembers");
-        const out = res.data.filter((mem) => {
-            return mem.ID.split("-")[1] == obj.ID;
-        });
-        return out;
-    }
+const requestStaffProfiles = async (filter = "none", obj = {}, openAlert) => {
+    try {
+        if (filter == "none") {
+            const res = await axios.get("/hod/viewDepartmentMembers");
+            return res.data;
+        } else if (filter == "course") {
+            const res = await axios.get(
+                `/hod/viewDepartmentMembersByCourse/${obj.courseID}`
+            );
+            return res.data;
+        } else if (filter == "staffMember") {
+            const res = await axios.get("/hod/viewDepartmentMembers");
+            const out = res.data.filter((mem) => {
+                return mem.ID.split("-")[1] == obj.ID;
+            });
+            return out;
+        }
 
-}catch(err){
-    openAlert(err.response.data);
-    return []
-}
+    } catch (err) {
+        openAlert(err.response.data);
+        return []
+    }
 }
 
 // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
@@ -120,57 +115,42 @@ const drawerWidth = 240;
 // *********************************************
 
 const requestAllRequests = async (openAlert) => {
-    try{
-    const res = await axios.get('/hod/viewAllRequests');
-    return res.data;
-    }catch(err){
+    try {
+        const res = await axios.get('/hod/viewAllRequests');
+        return res.data;
+    } catch (err) {
         openAlert(err.response.data);
         return []
     }
 
-} 
-
-
-const requestAllDepartmentCourses = async (openAlert)=>{
-    try{
-   console.log("begin in request all department courses");
-    const res = await axios.get('/hod/viewCourseTeachingAssignmentsLocal');
-    console.log("end of  request all department courses", res.data);
-    return res.data;
-
-    }catch(err){
-        openAlert(err.response.data);
-        return []
-    }
-
-} 
-
-// const getAllAcademicMembers = async()=>{
-//     const res = await axios.get('/hod/getAllAcademicMembers');
-//     return res.data;
-// }
-
-
-const requestSchedule = async (openAlert) => {
-    try{
-    const schedule = await axios.get('ac/viewSchedule');
-    return schedule.data;
-    }catch(err){
-        openAlert(err.response.data);
- 
-    }
 }
+
+
+const requestAllDepartmentCourses = async (openAlert) => {
+    try {
+        console.log("begin in request all department courses");
+        const res = await axios.get('/hod/viewCourseTeachingAssignmentsLocal');
+        console.log("end of  request all department courses", res.data);
+        return res.data;
+
+    } catch (err) {
+        openAlert(err.response.data);
+        return []
+    }
+
+}
+
 
 const requestMissingDays = async () => {
     const res = await axios.get('/viewMissingDays');
     const dates = res.data;
     const mappedDates = [];
-    for(const date of dates){
-        mappedDates.push({date : (new Date(date)).toLocaleString()+""})
+    for (const date of dates) {
+        mappedDates.push({ date: (new Date(date)).toLocaleString() + "" })
     }
     console.log(mappedDates);
     return mappedDates;
-  }
+}
 
 const styles = (theme) => ({
     appBar: {
@@ -199,17 +179,17 @@ class HOD extends Component {
         requestsFirstTime: true,
         // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
         isAppBarShift: false,
-     showAlert:false,
-        alertMessage:"testing"
-   
+        showAlert: false,
+        alertMessage: "testing"
+
     }
-    openAlert=(message)=>{
-        this.setState({showAlert:true,alertMessage:message})
+    openAlert = (message) => {
+        this.setState({ showAlert: true, alertMessage: message })
     }
 
     uniqBy(a, key) {
         var seen = {};
-        return a.filter(function(item) {
+        return a.filter(function (item) {
             var k = key(item);
             return seen.hasOwnProperty(k) ? false : (seen[k] = true);
         })
@@ -217,15 +197,15 @@ class HOD extends Component {
 
 
     updateRequestStaffProfile = async (filter = "none", obj = {}) => {
-        const profiles = await requestStaffProfiles(filter, obj,this.openAlert);
+        const profiles = await requestStaffProfiles(filter, obj, this.openAlert);
         let uniqueProfiles = this.uniqBy(profiles, JSON.stringify)
 
         this.setState({ staffProfiles: uniqueProfiles });
         return uniqueProfiles;
     }
-//*************
-   
-   
+    //*************
+
+
     updateRequests = async (type = "", requestID = -1, newStatus = "") => {
         console.log("2na hna")
         if (this.state.requestsFirstTime || requestID == -1) {
@@ -259,23 +239,23 @@ class HOD extends Component {
         this.setState({ hodProfile: await requestUserProfile(this.openAlert) });
     }
 
-   setComponentInMain = async (event) => {
-        if( event == "viewMissingDays"){
+    setComponentInMain = async (event) => {
+        if (event == "viewMissingDays") {
             this.setState({
-              componentInMain :(
-                <ViewMissingDaysForm
-                  missedDays = {await requestMissingDays()}
-                />
-              )
+                componentInMain: (
+                    <ViewMissingDaysForm
+                        missedDays={await requestMissingDays()}
+                    />
+                )
             })
-          }
+        }
         else if (event == "profile") {
             this.setState({
                 componentInMain: <Profile
                     profile={await requestUserProfile(this.openAlert)}
-                    setComponentInMain={this.setComponentInMain} 
+                    setComponentInMain={this.setComponentInMain}
                     openAlert={this.openAlert}
-                    />
+                />
             });
         } else if (event == "attendance") {
             this.setState({
@@ -285,15 +265,7 @@ class HOD extends Component {
                     openAlert={this.openAlert}
                 />
             });
-        } else if (event == "schedule") {
-            console.log("schedule")
-            this.setState({
-                componentInMain: <Schedule
-                    schedule={await requestSchedule(this.openAlert)}
-                    openAlert={this.openAlert}
-                />
-            });
-       }
+        }
         else if (event == "manageCourseInstructors") {
             console.log("I am in event course")
             this.setState({
@@ -347,8 +319,8 @@ class HOD extends Component {
                     updateRequests={this.updateRequests}
                     requests={this.state.requests.find((req) => { return req.type == "accidental leave requests" }).requests}
                     openAlert={this.openAlert}
-         
-                    />
+
+                />
             });
 
 
@@ -359,8 +331,8 @@ class HOD extends Component {
                     updateRequests={this.updateRequests}
                     requests={this.state.requests.find((req) => { return req.type == "sick leave requests" }).requests}
                     openAlert={this.openAlert}
-         
-                    />
+
+                />
             });
 
         } else if (event == "maternityLeaveRequest") {
@@ -370,8 +342,8 @@ class HOD extends Component {
                     updateRequests={this.updateRequests}
                     requests={this.state.requests.find((req) => { return req.type == "maternity leave requests" }).requests}
                     openAlert={this.openAlert}
-         
-                    />
+
+                />
             });
 
         } else if (event == "compensationLeaveRequest") {
@@ -381,19 +353,19 @@ class HOD extends Component {
                     updateRequests={this.updateRequests}
                     requests={this.state.requests.find((req) => { return req.type == "compensation leave requests" }).requests}
                     openAlert={this.openAlert}
-         
-                    />
+
+                />
             });
 
         } else if (event == "departmentCourses") {
             this.setState({
                 componentInMain: <DepartmentCourses
-                    setComponentInMain={this.setComponentInMain} 
+                    setComponentInMain={this.setComponentInMain}
                     departmentCourses={await requestAllDepartmentCourses(this.openAlert)}
                     allCourses={await requestDepartmentCourses(this.openAlert)}
                     openAlert={this.openAlert}
-         
-                    />
+
+                />
             });
         }
         else if (event == "personalSchedule") {
@@ -531,9 +503,9 @@ class HOD extends Component {
                     requestAllDepartmentCourses={requestAllDepartmentCourses}
                     handleAppBarShift={this.handleAppBarShift}
                 />
-                 <Alert style={(!this.state.showAlert)?{display:'none'}:{}} severity="error"  onClose={()=> {this.setState({showAlert:false})}}>
+                <Alert style={(!this.state.showAlert) ? { display: 'none' } : {}} severity="error" onClose={() => { this.setState({ showAlert: false }) }}>
                     <AlertTitle>Error</AlertTitle>
-                  <strong>{this.state.alertMessage}</strong>
+                    <strong>{this.state.alertMessage}</strong>
                 </Alert>
 
                 <Container maxWidth="lg" style={{ marginTop: "30px" }} className={clsx({

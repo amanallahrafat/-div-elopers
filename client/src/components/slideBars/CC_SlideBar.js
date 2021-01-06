@@ -6,25 +6,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import MailIcon from '@material-ui/icons/Mail';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import LocalHotelIcon from '@material-ui/icons/LocalHotel';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-
-import Academic_Member_List from '../routes/ac/ac.js'
 import React from 'react';
-
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-
-
+import Academic_Member_List from '../routes/ac/ac_List.js';
 
 const drawerWidth = 240;
 
@@ -101,13 +86,13 @@ export default function PersistentDrawerLeft(props) {
     setOpen(false);
   };
 
-  const handleSlots= () => {
+  const handleSlots = () => {
     props.setComponentInMain("slot");
-}
+  }
 
-const handleSlotLinkingRequests = () =>{
+  const handleSlotLinkingRequests = () => {
     props.setComponentInMain("slotLinkingRequest");
-}
+  }
 
   return (
     <div className={classes.root}>
@@ -135,7 +120,7 @@ const handleSlotLinkingRequests = () =>{
             <ListItemText primary={"Slot Linking Requests"} onClick={handleSlotLinkingRequests} />
           </ListItem>
         </List>
-        <Academic_Member_List setComponentInMain={props.setComponentInMain}/>
+        <Academic_Member_List setComponentInMain={props.setComponentInMain} />
       </Drawer>
     </div>
   );
