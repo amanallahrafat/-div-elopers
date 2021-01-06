@@ -188,9 +188,9 @@ const getAllNotifications = async (req, res) => {
 const viewAllRequests = async (req, res) => {
     const { ID, type } = req.header.user;
     const StaffMemberTable = await Staff_Member.find({ type: 0 });
-    const return_result= {
-        senderObj :{},
-        requests:[],
+    const return_result = {
+        senderObj: {},
+        requests: [],
     }
     let result = [];
     if (req.params.view == 0) {
@@ -237,6 +237,27 @@ const viewAllRequests = async (req, res) => {
     if (result == [])
         res.status(403).send("The required filer is not a valid one");
     else {
+        const courseScheduleTable = await Course_Schedule.find();
+        const courseTable = await Course.find();
+        const locationTable = await Location.find();
+        for (const request of result[5]) {
+            const courseSchedule = courseScheduleTable.filter((elem) => elem.ID == request.courseID)[0];
+            if(courseSchedule==null){
+                console.log(request.courseID)
+            }
+            const slot = courseSchedule.slots.filter(s => s.ID == request.slotID)[0];
+            if (slot == null) continue;
+            const courseName = courseTable.filter(c => c.ID == request.courseID)[0].name;
+            const locationName = locationTable.filter(l => l.ID == slot.locationID)[0].name;
+            // const senderName = staffMemberTable.filter(s => s.ID == request.senderID)[0];
+            // const recieverName = staffMemberTable.filter(s => s.ID == request.receiverID)[0];
+            request['_doc'].slot = slot;
+            request['_doc'].courseName = courseName;
+            request['_doc'].locationName = locationName;
+            // request['_doc'].senderName = senderName;
+            // request['_doc'].receiverID = recieverName;
+        }
+
         return_result.senderObj = StaffMemberTable.filter((elem) => elem.ID == ID)[0];
         return_result.requests = result;
         console.log(return_result);
@@ -339,6 +360,7 @@ const cancelSickLeaveRequest = async (req, res) => {
 const cancelReplacementRequest = async (req, res) => {
     const { ID, type } = req.header.user;
     const reqID = parseInt(req.params.ID);
+    console.log(reqID);
     const request = await Replacement_Request.findOne({ ID: reqID });
     if (request == null)
         return res.status(400).send("This request doesn't exist");
@@ -605,7 +627,7 @@ const viewReplacementRequests = async (req, res) => {
     for (const request of replacementRequests) {
         const courseSchedule = courseScheduleTable.filter((elem) => elem.ID == request.courseID)[0];
         const slot = courseSchedule.slots.filter(s => s.ID == request.slotID)[0];
-        if (slot==null) continue;
+        if (slot == null) continue;
         const courseName = courseTable.filter(c => c.ID == request.courseID)[0].name;
         const locationName = locationTable.filter(l => l.ID == slot.locationID)[0].name;
         const senderName = staffMemberTable.filter(s => s.ID == request.senderID)[0];

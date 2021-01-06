@@ -8,9 +8,9 @@ import setAuthToken from "../../../actions/setAuthToken";
 import Attendance from '../../Attendance';
 import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
-import Change_Day_Off_Request from "../ac/Academic_Requests/Change_Day_Off/Change_Day_Off_List";
-import Annual_Leave_Request from "../ac/Academic_Requests/Annual_Leave/Annual_Leave_List";
 import Accidental_Leave_Request from "../ac/Academic_Requests/Accidental_Leave/Accidental_Leave_List";
+import Annual_Leave_Request from "../ac/Academic_Requests/Annual_Leave/Annual_Leave_List";
+import Change_Day_Off_Request from "../ac/Academic_Requests/Change_Day_Off/Change_Day_Off_List";
 import Maternity_Leave_Request from "../ac/Academic_Requests/Maternity_leave/Maternity_Leave_List";
 import Sick_Leave_Request from "../ac/Academic_Requests/Sick_Leave/Sick_Leave_List";
 import Course_Schedule from "../ac/All_Course_Schedule/Course_Schedule";
@@ -204,14 +204,6 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                 />
             });
-        } else if (event == "personalSchedule") {
-            console.log("personalSchedule")
-            this.setState({
-                componentInMain: <Schedule
-                    schedule={await requestSchedule()}
-                    replacementRequests={await getReplacementRequests()}
-                />
-            });
         }
         else if (event == "manageCourseInstructors") {
             console.log("I am in event course")
@@ -298,6 +290,21 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                     departmentCourses={await requestAllDepartmentCourses()}
                     allCourses={await requestDepartmentCourses()}
+                />
+            });
+        }
+        else if (event == "personalSchedule") {
+            console.log("personalSchedule")
+            const requestsArr = (await this.getAllSentRequests());
+            console.log(requestsArr)
+            this.setState({
+                componentInMain: <Schedule
+                    schedule={await requestSchedule()}
+                    replacementRequests={await getReplacementRequests()}
+                    sentReplacementRequests={requestsArr.requests[5]}
+                    senderObj={requestsArr.senderObj}
+                    setComponentInMain={this.setComponentInMain}
+
                 />
             });
         }

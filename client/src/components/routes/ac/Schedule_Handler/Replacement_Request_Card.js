@@ -71,10 +71,6 @@ export default function MaxWidthDialog(props) {
     return getCurDay(date) != props.slotDay || date.getTime() < new Date(Date.now());
   }
 
-  const handleClickOpen = () => {
-    // setOpen(true);
-  };
-
   const handleClose = () => {
     props.onClose();
   };
@@ -85,21 +81,15 @@ export default function MaxWidthDialog(props) {
         replacementID: selectedMem, courseID: props.courseID,
         slotID: props.slotID, requestedDate: selectedDate.getTime()
       });
+      await props.setComponentInMain("personalSchedule");
+      alert("Replacement Request submitted successfully.")
     } catch (err) {
       alert(err.response.data);
-      console.log(err.response.data);
     }
 
     handleClose();
   }
 
-  const handleMaxWidthChange = (event) => {
-    // setMaxWidth(event.target.value);
-  };
-
-  const handleFullWidthChange = (event) => {
-    // setFullWidth(event.target.checked);
-  };
   return (
     <React.Fragment>
       <Dialog
