@@ -13,7 +13,7 @@ export default function RequestForm(props) {
         props.handleCloseForm();
     };
     const handleRejectRequest = async () => {
-        const msg = document.getElementById("requestFormMessage").value;
+        const msg = document.getElementById("requestFormMessage").value+" ";
         props.handleRejectRequest(props.requestID,msg);
         handleClose();
 }

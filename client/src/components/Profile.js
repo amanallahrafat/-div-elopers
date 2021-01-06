@@ -89,8 +89,12 @@ export default function MainFeaturedPost(props) {
     })
 
     const req = { extraInfo: newInfo };
+    try{
     const res = await axios.post('updateMyProfile', req);
     props.setComponentInMain("profile");
+    }catch(err){
+      props.openAlert(err.response.data);
+    }
   }
 
   const classes = useStyles();

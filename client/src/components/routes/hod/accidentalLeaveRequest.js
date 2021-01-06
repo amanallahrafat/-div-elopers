@@ -96,13 +96,13 @@ export default function AccidentalLeaveRequest(props) {
         
             props.updateRequests("accidental leave requests",requestID,"accepted");
             const res = await axios.put(`/hod/respondToAccidentalLeaveRequest/${requestID}`,  req);
-            props.setComponentInMain("accidentalLeaveRequest");
         } catch (err) {
             props.updateRequests("accidental leave requests",requestID,"pending");
-          
-            alert(err.response.data);
+            
+            props.openAlert(err.response.data);
             
         }
+        props.setComponentInMain("accidentalLeaveRequest");
     
     }
 
@@ -116,13 +116,13 @@ export default function AccidentalLeaveRequest(props) {
             };
             props.updateRequests("accidental leave requests",requestID,"rejected");
             const res = await axios.put(`/hod/respondToAccidentalLeaveRequest/${requestID}`,  req);
-            props.setComponentInMain("accidentalLeaveRequest");
         } catch (err) {
             props.updateRequests("accidental leave requests",requestID,"pending");
-       
-            alert(err.response.data);
+            
+            props.openAlert(err.response.data);
             
         }
+        props.setComponentInMain("accidentalLeaveRequest");
     
     }
 
@@ -232,7 +232,7 @@ export default function AccidentalLeaveRequest(props) {
                 </Grid>
             </Container>
 
-            <RequestForm open={showForm} handleCloseForm={handleCloseForm} requestID={reqID} handleRejectRequest={handleRejectRequest}  setComponentInMain={props.setComponentInMain} />
+            <RequestForm open={showForm} handleCloseForm={handleCloseForm} requestID={reqID} handleRejectRequest={handleRejectRequest}  setComponentInMain={props.setComponentInMain}  />
 
 
         </div >

@@ -10,6 +10,7 @@ export const login = async userData => {
         throw new Error("Wrong Email or Password");
     localStorage.setItem("auth-token", token);
     localStorage.setItem("type",user.data.type);
+    localStorage.setItem("academicMemberType",user.data.academicMemberType);
     setAuthToken(token);
     return {
         type: user.data.type,

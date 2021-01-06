@@ -13,10 +13,10 @@ import axios from 'axios';
 import React from 'react';
 
 export default function AssignInstructorForm(props) {
-    const [newType, setNewType] = React.useState(-1);
-    const [chosenInstructor, setChosenInstructor] = React.useState();
+    const [chosenInstructor, setChosenInstructor] = React.useState(null);
 
     const handleClose = () => {
+        setChosenInstructor(null);
         props.handleClose();
     };
     const handleAdd = async () => {
@@ -30,7 +30,7 @@ export default function AssignInstructorForm(props) {
             const res = await axios.put('/hod/assignCourseInstructor', req);
             props.setComponentInMain("manageCourseInstructors");
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
         handleClose();
     }
@@ -41,7 +41,7 @@ export default function AssignInstructorForm(props) {
                 <DialogTitle id="form-dialog-title">Add Course Instructor </DialogTitle>
                 <DialogContent>
                 <Autocomplete
-                    id="AddCourseInstructorComboBox"
+                    id="AssignAcademicMemberToSlotComboBox"
                     options={(props.academicMembers).filter((mem)=>{
                         if(!props.course)return true;
                         return !props.course.instructor.map(x=>x.ID).includes(mem.ID)})}
@@ -61,7 +61,7 @@ export default function AssignInstructorForm(props) {
                     <Button onClick={handleClose} color="primary">
                         Cancel
           </Button>
-                    <Button onClick={handleAdd} color="primary">
+                    <Button disabled={chosenInstructor==null }onClick={handleAdd} color="primary">
                         Add
           </Button>
                 </DialogActions>

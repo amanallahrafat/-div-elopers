@@ -13,11 +13,13 @@ import axios from 'axios';
 import React from 'react';
 
 export default function UpdateInstructorForm(props) {
-    const [chosenInstructor, setChosenInstructor] = React.useState();
-    const [newCourse, setNewCourse] = React.useState();
+    const [chosenInstructor, setChosenInstructor] = React.useState(null);
+    const [newCourse, setNewCourse] = React.useState(null);
     
 
     const handleClose = () => {
+        setChosenInstructor(null);
+        setNewCourse(null);
         props.handleClose();
     };
     const handleUpdate = async () => {
@@ -32,7 +34,7 @@ export default function UpdateInstructorForm(props) {
             const res = await axios.put(`/hod/updateCourseInstructor/${instructorID}`, req);
             props.setComponentInMain("manageCourseInstructors");
         } catch (err) {
-            alert("please enter valid data.");
+            props.openAlert(err.response.data);
         }
         handleClose();
     }
@@ -77,7 +79,7 @@ export default function UpdateInstructorForm(props) {
                     <Button onClick={handleClose} color="primary">
                         Cancel
           </Button>
-                    <Button onClick={handleUpdate} color="primary">
+                    <Button disabled={newCourse==null||chosenInstructor==null} onClick={handleUpdate} color="primary">
                         Update
           </Button>
                 </DialogActions>

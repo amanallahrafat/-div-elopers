@@ -96,14 +96,14 @@ export default function AnnualLeaveRequest(props) {
         
             props.updateRequests("annual leave requests",requestID,"accepted");
             const res = await axios.put(`/hod/respondToAnnualLeaveRequests/${requestID}`,  req);
-            props.setComponentInMain("annualLeaveRequest");
         } catch (err) {
             props.updateRequests("annual leave requests",requestID,"pending");
-          
-            alert(err.response.data);
+            
+            props.openAlert(err.response.data);
             
         }
-    
+        props.setComponentInMain("annualLeaveRequest");
+        
     }
 
     const handleRejectRequest= async(requestID,msg)=>{
@@ -116,13 +116,13 @@ export default function AnnualLeaveRequest(props) {
             };
             props.updateRequests("annual leave requests",requestID,"rejected");
             const res = await axios.put(`/hod/respondToAnnualLeaveRequests/${requestID}`,  req);
-            props.setComponentInMain("annualLeaveRequest");
         } catch (err) {
             props.updateRequests("annual leave requests",requestID,"pending");
-       
-            alert(err.response.data);
+            
+            props.openAlert(err.response.data);
             
         }
+        props.setComponentInMain("annualLeaveRequest");
     
     }
 

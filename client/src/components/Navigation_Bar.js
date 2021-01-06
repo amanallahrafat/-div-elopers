@@ -15,6 +15,7 @@ import DropdownList_NavBar from './DropdownList_NavBar';
 import DropdownList_Notifications from './DropdownList_Notifications';
 import Hod_SlideBar from './slideBars/Hod_SlideBar';
 import HR_SlideBar from './slideBars/HR_SlideBar';
+import CI_SlideBar from './slideBars/CI_SlideBar';
 
 const drawerWidth = 240;
 
@@ -132,10 +133,12 @@ class Navigation_Bar extends Component {
                         </div>
                     </Toolbar>
                     {
+                        
                         (localStorage.getItem('type') == 1 ?
                             <HR_SlideBar
                                 open={this.state.isSlideBarOpen}
                                 setComponentInMain={this.props.fromParent} /> :
+                            localStorage.getItem('academicMemberType')==0?
                             <Hod_SlideBar
                                 open={this.state.isSlideBarOpen}
                                 updateRequestStaffProfile={this.props.updateRequestStaffProfile}
@@ -143,7 +146,16 @@ class Navigation_Bar extends Component {
                                 setComponentInMain={this.props.fromParent} 
                                 requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}
                 
-                                />
+                                />:  localStorage.getItem('academicMemberType')==1?
+
+                                <CI_SlideBar
+                                open={this.state.isSlideBarOpen}
+                                setComponentInMain={this.props.fromParent} 
+                                requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}
+                                updateRequestStaffProfile={this.props.updateRequestStaffProfile}
+                                updateRequestCourseStaff={this.props.updateRequestCourseStaff}
+                                />:<div/>
+                          
                         )
                     }
                 </AppBar>

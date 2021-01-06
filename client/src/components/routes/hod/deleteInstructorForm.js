@@ -13,9 +13,10 @@ import axios from 'axios';
 import React from 'react';
 
 export default function DeleteInstructorForm(props) {
-    const [chosenInstructor, setChosenInstructor] = React.useState();
+    const [chosenInstructor, setChosenInstructor] = React.useState(null);
 
     const handleClose = () => {
+        setChosenInstructor(null);
         props.handleClose();
     };
     const handleDelete = async () => {
@@ -31,7 +32,7 @@ export default function DeleteInstructorForm(props) {
             const res = await axios.delete(`/hod/deleteCourseInstructor/${courseID}`, {data: req});
             props.setComponentInMain("manageCourseInstructors");
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
         handleClose();
     }
@@ -61,7 +62,7 @@ export default function DeleteInstructorForm(props) {
                     <Button onClick={handleClose} color="primary">
                         Cancel
           </Button>
-                    <Button onClick={handleDelete} color="primary">
+                    <Button disabled={chosenInstructor==null} onClick={handleDelete} color="primary">
                         Delete
           </Button>
                 </DialogActions>

@@ -74,27 +74,7 @@ export default function CourseInstructor_Card(props) {
     const [openUpdateCourseInstructor, setOpenUpdateCourseInstructor] = React.useState(false);
 
 
-    //const [academicMemebers, setAcademicMembers] = React.useState();
-
-
-    // const handleOpenEdit = (event) => {
-    //     setOpenUpdateLocation(true);
-    // }
-    // const getAllAcademicMembers = async()=>{
-    //     const res = await axios.get('/hod/getAllAcademicMembers');
-    //     return res.data;
-    // }
-    // React.useEffect(async()=>{
-    //     if(!academicMemebers){
-    //         async function getAllAcademicMembers(){
-    //             const res = await axios.get('/hod/getAllAcademicMembers');
-    //             return res.data;
-    //         }
-    //     setAcademicMembers(await getAllAcademicMembers());
-    //      }
-    // })
-
-
+    
     const handleCloseAddCourseInstructor = () => {
         setAddCourseInstructor(false);
     }
@@ -217,6 +197,7 @@ export default function CourseInstructor_Card(props) {
                 course={currentCourse}
                 academicMembers = {props.academicMembers}
                 setComponentInMain={props.setComponentInMain}
+                openAlert={props.openAlert}
                 
                 />
 
@@ -227,7 +208,9 @@ export default function CourseInstructor_Card(props) {
             course={currentCourse}
             academicMembers = {props.academicMembers}
             setComponentInMain={props.setComponentInMain}
-            />
+            openAlert={props.openAlert}
+             
+           />
 
             <UpdateInstructorForm
             open={openUpdateCourseInstructor}
@@ -237,7 +220,9 @@ export default function CourseInstructor_Card(props) {
             allCourses = {props.courses}
             academicMembers = {props.academicMembers}
             setComponentInMain={props.setComponentInMain}
-            />
+            openAlert={props.openAlert}
+             
+           />
 
 
 

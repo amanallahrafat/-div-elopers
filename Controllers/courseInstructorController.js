@@ -24,6 +24,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const key = "jkanbvakljbefjkawkfew";
 
+
+
 const viewCourseCoverage = async(req, res) => {
     const courseID = parseInt(req.params.courseID);
     if (!await checkings.courseIDExists(courseID)) {
@@ -75,6 +77,111 @@ const viewSlotAssignment = async(req, res) => {
     }
     return res.send(JSON.stringify(slots));
 }
+
+//salma 
+const viewSlotAssignmentLocal = async (req, res) => {
+    console.log("in view course TA local start ");
+    const { ID, type } = req.header.user;
+    const hod = await Academic_Member.findOne({ ID: ID });
+    const staffMembers=await Staff_Member.find({type:0});
+    //const deptID = hod.departmentID;
+    const courses = await Course.find();
+    const course_schedules = await Course_Schedule.find();
+    const allCourseSlots = []
+    for (const curCourse of courses) {
+
+        if (!curCourse.instructor.includes(ID))
+            continue;
+
+        curEntry = {
+            courseID: curCourse.ID,
+            courseName: curCourse.name,
+            courseCode: curCourse.code,
+            courseSlots: [],
+            courseCoverage:""
+          
+        }
+        const scheduleID = curCourse.scheduleID;
+        const curSchedule = course_schedules.find((cs) => { return (cs.ID == scheduleID) });
+        const courseCoverage = viewCourseCoverageLocal(curSchedule);
+        curEntry.courseCoverage = courseCoverage;
+        if (!scheduleID) {
+            allCourseSlots.push(curEntry);
+            continue;
+        }
+        if (!curSchedule.slots) {
+            allCourseSlots.push(curEntry);
+            continue;
+        }
+        console.log("in view course TA local 1 ");
+   
+        let slotsArray = [];
+        const locations=await Location.find();
+        for (const curSlot of curSchedule.slots) {
+            const slotEntry={
+                instructor:"Not yet assigned",
+                instructorID:"",
+                locationName:"",
+                slotNumber:0,
+                day:0,
+                courseID:curCourse.ID,
+                slotID:curSlot.ID
+            }
+            let slotInst = "Not yet assigned";
+            if (curSlot.instructor) {
+                const curInst = staffMembers.find((mem)=>{return (mem.ID== curSlot.instructor) });
+                slotInst = curInst.name
+                slotEntry.instructor=slotInst;
+                slotEntry.instructorID="ac-"+curSlot.instructor;
+            }
+            if(curSlot.locationID){
+               const loc=locations.find((loc)=>{return (loc.ID==curSlot.locationID)});
+               if(loc.name)
+                slotEntry.locationName=loc.name;
+            }
+
+            slotEntry.slotNumber=curSlot.slotNumber;
+            slotEntry.day=curSlot.day;
+
+
+            slotsArray.push(slotEntry);
+        }
+        console.log("in view course TA local 2 ");
+   
+        curEntry.courseSlots=slotsArray;
+        allCourseSlots.push(curEntry);
+    }
+    return res.send(allCourseSlots);
+}
+
+
+const viewCourseCoverageLocal = (courseSchedule) => {
+
+    if (!courseSchedule)
+        return ("No schedule is set yet for the course");
+    if (courseSchedule.slots.length == 0)
+        return ("Course schedule has no slot entries yet");
+    const filteredSlots = courseSchedule.slots.filter((s) => s.instructor != null);
+    const coverage = filteredSlots.length / courseSchedule.slots.length;
+    return (parseInt(coverage * 100*100)/100)+"%";
+}
+
+const requestInstructorCoursesLocal = async(req, res)=>{
+    const allCourses = await Course.find();
+    const ans = []
+    const ID = req.header.user.ID;
+    return res.send( allCourses.filter((c)=>{
+        if(c.instructor){
+            return c.instructor.includes(ID);
+        }
+        return false;
+    }))
+    
+}
+
+
+
+
 
 const assignAcademicMemberToSlot = async(req, res) => {
     const instructorID = req.header.user.ID;
@@ -265,6 +372,7 @@ const removeAcademicMemberFromCourse = async(req, res) => {
 }
 
 const assignCourseCoordinator = async(req, res) => {
+    console.log(req.body.academicMemberID)
     const instructorID = req.header.user.ID;
     const courseID = req.body.courseID;
     const academicMemberID = req.body.academicMemberID;
@@ -365,6 +473,137 @@ const viewStaffProfilesInCourse = async(req, res)=>{
     res.send(JSON.stringify(staffProfiles));
 }
 
+
+
+const viewDepartmentMembersByCourse = async (req, res) => {
+    const { ID, type } = req.header.user;
+    const hod = await Academic_Member.findOne({ ID: ID });
+    const deptID = hod.departmentID;
+    let totalArray = [];
+    const course = await Course.findOne({ ID: req.params.courseID });
+
+    if (!course)
+        res.status(400).send("This course doesn't exist")
+    if (!(course.department && course.department.includes(deptID))) {
+        return res.status(400).send("This course is not in your department");
+    }
+
+
+    const staffMembers = await Staff_Member.find();
+    const Locations = await Location.find()
+    const Departments = await Department.find()
+    const academicMembers = await Academic_Member.find();
+    if (course.teachingStaff)
+        for (const curMemID of course.teachingStaff) {
+            //const curMem = await Academic_Member.findOne({ID:curMemID});
+            const curMem = academicMembers.find((mem) => { return mem.ID == curMemID });
+            const curEntry = createMemEntry(curMem, staffMembers, Locations, Departments);
+            totalArray.push(curEntry);
+        }
+    if (course.instructor)
+        for (const curMemID of course.instructor) {
+            //const curMem = await Academic_Member.findOne({ID:curMemID});
+            const curMem = academicMembers.find((mem) => { return mem.ID == curMemID });
+            const curEntry = createMemEntry(curMem, staffMembers, Locations, Departments);
+            totalArray.push(curEntry);
+        }
+
+    //The coordinator is already inside the teaching staff    
+
+    // if(course.coordinatorID){
+    //     //const curMem = await Academic_Member.findOne({ID:course.coordinatorID});
+    //     const curMem = academicMembers.find((mem)=>{return mem.ID == curMemID});
+    //     const curEntry =  createMemEntry(curMem,staffMembers,Locations,Departments);
+    //     totalArray.push(curEntry);
+    // }
+
+    return res.send(totalArray)
+}
+
+
+const createMemEntry = (curMem, staffMembers, Locations, Departments) => {
+    const curStaff = staffMembers.find((mem => { return mem.ID == curMem.ID && mem.type == 0 }));
+    const office = Locations.find((loc) => { return (loc.ID == curStaff.officeID && loc.type == 2) });
+    const dept = Departments.find((curDept) => { return (curDept.ID == curMem.departmentID) });
+
+    const curEntry = {
+        name: curStaff.name,
+        email: curStaff.email,
+        ID: "ac-" + curStaff.ID,
+        type: curStaff.type,
+        dayOff: curStaff.dayOff,
+        gender: curStaff.gender,
+        officeID: office ? office.name : "Not yet assigned",
+        departmentID: dept.name,
+        extraInfo: curStaff.extraInfo ? curStaff.extraInfo : "None",
+    }
+    return curEntry;
+}
+
+
+
+
+
+
+
+
+
+
+//Use this in remove an assigned academic member in course and in assign course coordinator only 
+// Because you can only view TAs but not instructors
+const viewMembersByCourse = async (req, res) => {
+    console.log("The course ID is  ", req.params.courseID)
+    const { ID, type } = req.header.user;
+    const hod = await Academic_Member.findOne({ ID: ID });
+    //const deptID = hod.departmentID;
+    let totalArray = [];
+    const course = await Course.findOne({ ID: req.params.courseID });
+
+    if (!course)
+        res.status(400).send("This course doesn't exist")
+    // if (!(course.department && course.department.includes(deptID))) {
+    //     return res.status(400).send("This course is not in your department");
+    // }
+    if(!course.instructor.includes(ID)){
+        return res.status(400).send("You are not an instructor in this course!!!");
+    }
+
+    const staffMembers = await Staff_Member.find();
+    const Locations = await Location.find()
+    const Departments = await Department.find()
+    const academicMembers = await Academic_Member.find();
+    if (course.teachingStaff)
+        for (const curMemID of course.teachingStaff) {
+            //const curMem = await Academic_Member.findOne({ID:curMemID});
+            const curMem = academicMembers.find((mem) => { return mem.ID == curMemID });
+            const curEntry = createMemEntry(curMem, staffMembers, Locations, Departments);
+            totalArray.push(curEntry);
+        }
+    // if (course.instructor)
+    //     for (const curMemID of course.instructor) {
+    //         //const curMem = await Academic_Member.findOne({ID:curMemID});
+    //         const curMem = academicMembers.find((mem) => { return mem.ID == curMemID });
+    //         const curEntry = createMemEntry(curMem, staffMembers, Locations, Departments);
+    //         totalArray.push(curEntry);
+    //     }
+
+    //The coordinator is already inside the teaching staff    
+
+    // if(course.coordinatorID){
+    //     //const curMem = await Academic_Member.findOne({ID:course.coordinatorID});
+    //     const curMem = academicMembers.find((mem)=>{return mem.ID == curMemID});
+    //     const curEntry =  createMemEntry(curMem,staffMembers,Locations,Departments);
+    //     totalArray.push(curEntry);
+    // }
+
+    return res.send(totalArray)
+}
+
+
+
+
+
+
 module.exports = {
     viewCourseCoverage,
     assignAcademicMemberToSlot,
@@ -375,4 +614,8 @@ module.exports = {
     assignCourseCoordinator,
     viewStaffProfilesInDepartment,
     viewStaffProfilesInCourse,
+    viewSlotAssignmentLocal,
+    requestInstructorCoursesLocal,
+    viewMembersByCourse,
+    viewDepartmentMembersByCourse
 }

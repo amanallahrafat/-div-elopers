@@ -96,13 +96,13 @@ export default function MaternityLeaveRequest(props) {
         
             props.updateRequests("maternity leave requests",requestID,"accepted");
             const res = await axios.put(`/hod/respondToMaternityLeaveRequest/${requestID}`,  req);
-            props.setComponentInMain("maternityLeaveRequest");
         } catch (err) {
             props.updateRequests("maternity leave requests",requestID,"pending");
-          
-            alert(err.response.data);
+            
+            props.openAlert(err.response.data);
             
         }
+        props.setComponentInMain("maternityLeaveRequest");
     
     }
 
@@ -116,13 +116,13 @@ export default function MaternityLeaveRequest(props) {
             };
             props.updateRequests("maternity leave requests",requestID,"rejected");
             const res = await axios.put(`/hod/respondToMaternityLeaveRequest/${requestID}`,  req);
-            props.setComponentInMain("maternityLeaveRequest");
         } catch (err) {
             props.updateRequests("maternity leave requests",requestID,"pending");
-       
-            alert(err.response.data);
+            
+            props.openAlert(err.response.data);
             
         }
+        props.setComponentInMain("maternityLeaveRequest");
     
     }
 

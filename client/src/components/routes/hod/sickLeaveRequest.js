@@ -96,14 +96,14 @@ export default function SickLeaveRequest(props) {
         
             props.updateRequests("sick leave requests",requestID,"accepted");
             const res = await axios.put(`/hod/respondToSickLeaveRequests/${requestID}`,  req);
-            props.setComponentInMain("sickLeaveRequest");
         } catch (err) {
             props.updateRequests("sick leave requests",requestID,"pending");
           
-            alert(err.response.data);
+            props.openAlert(err.response.data);
             
         }
-    
+        
+        props.setComponentInMain("sickLeaveRequest");
     }
 
     const handleRejectRequest= async(requestID,msg)=>{
@@ -116,13 +116,13 @@ export default function SickLeaveRequest(props) {
             };
             props.updateRequests("sick leave requests",requestID,"rejected");
             const res = await axios.put(`/hod/respondToSickLeaveRequests/${requestID}`,  req);
-            props.setComponentInMain("sickLeaveRequest");
         } catch (err) {
             props.updateRequests("sick leave requests",requestID,"pending");
-       
-            alert(err.response.data);
+            
+            props.openAlert(err.response.data);
             
         }
+        props.setComponentInMain("sickLeaveRequest");
     
     }
 

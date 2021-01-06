@@ -195,9 +195,6 @@ const viewDepartmentMembers = async (req, res) => {
 
 const viewDepartmentMembersByCourse = async (req, res) => {
     const { ID, type } = req.header.user;
-    if (!await checkings.isHOD(ID)) {
-        return res.status(400).send("You have to be a head of department to do this");
-    }
     const hod = await Academic_Member.findOne({ ID: ID });
     const deptID = hod.departmentID;
     let totalArray = [];
@@ -363,9 +360,10 @@ const viewCourseTeachingAssignmentsLocal = async (req, res) => {
             courseName: curCourse.name,
             courseCode: curCourse.code,
             courseSlots: [],
-            courseCoverage:""
-          
+            courseCoverage:""  
         }
+        
+
         const scheduleID = curCourse.scheduleID;
         const curSchedule = course_schedules.find((cs) => { return (cs.ID == scheduleID) });
         const courseCoverage = viewCourseCoverageLocal(curSchedule);
@@ -555,6 +553,7 @@ const viewAllRequests = async (req, res) => {
 
 const respondToChangeDayOffRequest = async (req, res) => {
     const { ID, type } = req.header.user;
+    
     const request = await Change_Day_Off_Request.findOne({ ID: parseInt(req.params.ID) });
     if (await requestFailChecks(request, res, ID))
         return;
@@ -567,6 +566,7 @@ const respondToChangeDayOffRequest = async (req, res) => {
         return res.status(400).send({ error: isValid.error.details[0].message });
 
     const member = await Academic_Member.find({ ID: memID });
+    
     let msg = req.body.response == 1 ? "Your change day off request was accepted" : "Your change day off request was rejected";
     if (req.body.msg != null && req.body.msg != undefined && req.body.msg != "")
         msg = msg + "\n reason: " + req.body.msg;
@@ -667,18 +667,18 @@ const respondToAccidentalLeaveRequest = async (req, res) => {
         console.log("accidental balance", curMem.accidentalLeaveBalance)
 
         if (curMem.accidentalLeaveBalance < 1 || curMem.annualBalance < 1) {
-            await Accidental_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "rejected" });
-            const notification = new Notification({ senderID: ID, receiverID: memID, msg: "Your accidental leave request was rejected because you don't have enough accidental leave days", date: Date.now() });
-            await notification.save();
+            // await Accidental_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "rejected" });
+            // const notification = new Notification({ senderID: ID, receiverID: memID, msg: "Your accidental leave request was rejected because you don't have enough accidental leave days", date: Date.now() });
+            // await notification.save();
             return res.status(400).send("You can't accept this request since this user has no more accidental leave days");
         }
-        if (new Date(request.requestedDate) < new Date()) {
-            await Accidental_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "rejected" });
-            const notification = new Notification({ senderID: ID, receiverID: memID, msg: "Your accidental leave request was rejected because the requested date has already passed", date: Date.now() });
-            await notification.save();
-            return res.status(400).send("You can't accept this request since the requested date has already passed");
+        // if (new Date(request.requestedDate) < new Date()) {
+        //     await Accidental_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "rejected" });
+        //     const notification = new Notification({ senderID: ID, receiverID: memID, msg: "Your accidental leave request was rejected because the requested date has already passed", date: Date.now() });
+        //     await notification.save();
+        //     return res.status(400).send("You can't accept this request since the requested date has already passed");
 
-        }
+        // }
         await Accidental_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "accepted" });
         curMem.accidentalLeaveBalance -= 1
         curMem.annualBalance -= 1
@@ -755,9 +755,9 @@ const respondToAnnualLeaveRequests = async (req, res) => {
     if (req.body.response == 1) {
         const curMem = await Staff_Member.findOne({ ID: memID, type: 0 });
         if (curMem.annualBalance < 1) {
-            await Annual_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "rejected" });
-            const notification = new Notification({ senderID: ID, receiverID: memID, msg: "Your annual leave request was rejected because you don't have enough annual leave balance", date: Date.now() });
-            await notification.save();
+            // await Annual_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "rejected" });
+            // const notification = new Notification({ senderID: ID, receiverID: memID, msg: "Your annual leave request was rejected because you don't have enough annual leave balance", date: Date.now() });
+            // await notification.save();
             return res.status(400).send("You can't accept this request, since this member doesn't have enough annaul leave balance");
         }
         curMem.annualBalance -= 1
@@ -877,8 +877,8 @@ const createReplacementEntry = (replacement, staffMembers, courses, courses_sche
 
 const getDepartmentCourses = async (req, res) => {
     const { ID, type } = req.header.user;
-    if (!await checkings.isHOD(ID))
-        return res.status(400).send("You have to be a head of department to do this");
+    // if (!await checkings.isHOD(ID))
+    //     return res.status(400).send("You have to be a head of department to do this");
     const hod = await Academic_Member.findOne({ ID: ID });
     const deptID = hod.departmentID;
     let allCourses = await Course.find();
@@ -890,6 +890,7 @@ const getDepartmentCourses = async (req, res) => {
     // })
 
     allCourses = allCourses.filter((course) => {
+      //  if(!course.Department)return false;
         return course.department.includes(deptID);
     });
     const ans = [];
@@ -901,22 +902,33 @@ const getDepartmentCourses = async (req, res) => {
 
 }
 
-//get the names of all academic members
+//get all staff academic members
 const getAllAcademicMembers = async (req, res) => {
     const { ID, type } = req.header.user;
-    if (!await checkings.isHOD(ID))
-        return res.status(400).send("You have to be a head of department to do this");
+    // if (!await checkings.isHOD(ID))
+    //     return res.status(400).send("You have to be a head of department to do this");
 
     let allMemberNames = await Staff_Member.find({ type: 0 });
     return res.send(allMemberNames);
 }
-
+//academic member with names
 const getAcademicMembersTable = async (req, res) => {
     let allStaffMembers = await Staff_Member.find({ type: 0 });
-
+    let locations=await Location.find();
+    let departments=await Department.find();
     let allAcademicMemberNames = await Academic_Member.find();
     for (const ac of allAcademicMemberNames) {
-        ac['_doc'].name = (allStaffMembers.find((mem) => { return (mem.ID == ac['_doc'].ID) })).name;
+        const staffMem=(allStaffMembers.find((mem) => { return (mem.ID == ac['_doc'].ID) }));
+        const department=departments.find((dep)=>{return dep.ID==ac.departmentID});
+        const loc=locations.find((l)=>{return l.ID==staffMem.officeID})
+        ac['_doc'].name = staffMem.name;
+        ac['_doc'].email=staffMem.email;
+        ac['_doc'].officeID=loc.name;
+        ac['_doc'].departmentID=department.name;
+
+
+      
+        
     }
     return res.send(allAcademicMemberNames);
 }

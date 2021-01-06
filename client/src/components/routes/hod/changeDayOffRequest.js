@@ -96,13 +96,13 @@ export default function ChangeDayOffRequest(props) {
         
             props.updateRequests("change day off requests",requestID,"accepted");
             const res = await axios.put(`/hod/respondToChangeDayOffRequest/${requestID}`,  req);
-            props.setComponentInMain("changeDayOffRequest");
         } catch (err) {
             props.updateRequests("change day off requests",requestID,"pending");
-          
-            alert(err.response.data);
+            
+            props.openAlert(err.response.data);
             
         }
+        props.setComponentInMain("changeDayOffRequest");
     
     }
 
@@ -116,13 +116,13 @@ export default function ChangeDayOffRequest(props) {
             };
             props.updateRequests("change day off requests",requestID,"rejected");
             const res = await axios.put(`/hod/respondToChangeDayOffRequest/${requestID}`,  req);
-            props.setComponentInMain("changeDayOffRequest");
         } catch (err) {
             props.updateRequests("change day off requests",requestID,"pending");
-       
-            alert(err.response.data);
+            
+            props.openAlert(err.response.data);
             
         }
+        props.setComponentInMain("changeDayOffRequest");
     
     }
 
