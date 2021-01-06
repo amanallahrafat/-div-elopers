@@ -8,7 +8,11 @@ import setAuthToken from "../../../actions/setAuthToken";
 import Attendance from '../../Attendance';
 import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
+import Accidental_Leave_Request from "../ac/Academic_Requests/Accidental_Leave/Accidental_Leave_List";
+import Annual_Leave_Request from "../ac/Academic_Requests/Annual_Leave/Annual_Leave_List";
 import Change_Day_Off_Request from "../ac/Academic_Requests/Change_Day_Off/Change_Day_Off_List";
+import Maternity_Leave_Request from "../ac/Academic_Requests/Maternity_leave/Maternity_Leave_List";
+import Sick_Leave_Request from "../ac/Academic_Requests/Sick_Leave/Sick_Leave_List";
 import Course_Schedule from "../ac/All_Course_Schedule/Course_Schedule";
 import Schedule from '../ac/Schedule_Handler/Schedule';
 import AccidentalLeaveRequest from './accidentalLeaveRequest.js';
@@ -20,6 +24,13 @@ import ManageCourseInstructors from "./ManageCourseInstructors.js";
 import MaternityLeaveRequest from "./maternityLeaveRequest.js";
 import SickLeaveRequest from "./sickLeaveRequest.js";
 import ViewStaffProfiles from "./viewStaffProfiles.js";
+import {
+    getAllSentRequests,
+    requestSchedule,
+    getReplacementRequests,
+    viewAllCourseSchedules,
+    getAllCoursesInstructorsNames
+} from '../ac/ac_helper.js'
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get("/viewProfile");
@@ -46,16 +57,6 @@ const getAcademicMembersTable = async () => {
     return res.data;
 };
 
-const viewAllCourseSchedules = async () => {
-    const courseSchedules = await axios.get("/ac/viewAllCourseSchedules");
-    return courseSchedules.data;
-};
-
-const getAllCoursesInstructorsNames = async () => {
-    const coursesInstructorName = await axios.get("/ac/getAllCoursesInstructorsNames");
-    return coursesInstructorName.data;
-};
-
 const requestStaffProfiles = async (filter = "none", obj = {}) => {
     if (filter == "none") {
         const res = await axios.get("/hod/viewDepartmentMembers");
@@ -74,14 +75,6 @@ const requestStaffProfiles = async (filter = "none", obj = {}) => {
     }
 };
 
-const getReplacementRequests = async () => {
-    let res = (await axios.get('ac/viewReplacementRequests')).data;
-    const userID = localStorage.getItem('ID');
-    res = res.filter(r => r.senderID != userID && new Date(r.requestedDate).getTime() >= new Date(Date.now()).getTime());
-    return res;
-}
-
-
 // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
 const drawerWidth = 240;
 // *********************************************
@@ -91,23 +84,12 @@ const requestAllRequests = async () => {
     return res.data;
 }
 
-
 const requestAllDepartmentCourses = async () => {
     console.log("begin in request all department courses");
     const res = await axios.get('/hod/viewCourseTeachingAssignmentsLocal');
     console.log("end of  request all department courses", res.data);
     return res.data;
 }
-
-// const getAllAcademicMembers = async()=>{
-//     const res = await axios.get('/hod/getAllAcademicMembers');
-//     return res.data;
-// }
-
-const requestSchedule = async () => {
-    const schedule = await axios.get("ac/viewSchedule");
-    return schedule.data;
-};
 
 const styles = (theme) => ({
     appBar: {
@@ -174,15 +156,6 @@ class HOD extends Component {
         }
     }
 
-    getAllSentRequests = async () => {
-        try {
-            const res = (await axios.get("/ac/viewAllRequests/0")).data;
-            return res;
-        } catch (err) {
-            console.log(err.response.data);
-        }
-    }
-
     updateHODProfile = async () => {
         this.setState({ hodProfile: await requestUserProfile() });
     };
@@ -198,14 +171,6 @@ class HOD extends Component {
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods()}
                     setComponentInMain={this.setComponentInMain}
-                />
-            });
-        } else if (event == "personalSchedule") {
-            console.log("personalSchedule")
-            this.setState({
-                componentInMain: <Schedule
-                    schedule={await requestSchedule()}
-                    replacementRequests={await getReplacementRequests()}
                 />
             });
         }
@@ -297,6 +262,21 @@ class HOD extends Component {
                 />
             });
         }
+        else if (event == "personalSchedule") {
+            console.log("personalSchedule")
+            const requestsArr = (await getAllSentRequests());
+            console.log(requestsArr)
+            this.setState({
+                componentInMain: <Schedule
+                    schedule={await requestSchedule()}
+                    replacementRequests={await getReplacementRequests()}
+                    sentReplacementRequests={requestsArr.requests[5]}
+                    senderObj={requestsArr.senderObj}
+                    setComponentInMain={this.setComponentInMain}
+
+                />
+            });
+        }
         else if (event == "allCourseSchedule") {
             console.log("allCourseSchedule")
             this.setState({
@@ -308,10 +288,58 @@ class HOD extends Component {
         }
         else if (event == "ac_changeDayOffRequest") {
             console.log("ac_changeDayOffRequest")
+            const requestsArr = (await this.getAllSentRequests());
             this.setState({
                 componentInMain: <Change_Day_Off_Request
                     setComponentInMain={this.setComponentInMain}
-                    requests={(await this.getAllSentRequests())[2]}
+                    requests={requestsArr.requests[2]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_annualLeaveRequest") {
+            console.log("ac_annualLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            console.log(requestsArr);
+            this.setState({
+                componentInMain: <Annual_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[1]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_accidentalLeaveRequest") {
+            console.log("ac_accidentalLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            console.log(requestsArr);
+            this.setState({
+                componentInMain: <Accidental_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[0]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_maternityLeaveRequest") {
+            console.log("ac_maternityLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Maternity_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[4]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_sickLeaveRequest") {
+            console.log("ac_sickLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Sick_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[6]}
+                    senderObj={requestsArr.senderObj}
                 />
             });
         }

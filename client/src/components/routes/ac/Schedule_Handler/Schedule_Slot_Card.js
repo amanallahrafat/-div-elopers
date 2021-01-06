@@ -79,13 +79,25 @@ export default function SimpleCard(props) {
             console.log(err.response.data);
         }
     }
+    const handleCancelReplacementRequest = async (reqID) => {
+        console.log(reqID)
+        try {
+            const res = await axios.delete(`/ac/cancelReplacementRequest/${reqID}`);
+            await props.setComponentInMain("personalSchedule");
+            alert("Request has been cancelled successfully.")
+        } catch (err) {
+            console.log(err);
+            console.log(err.response.data)
+        }
+    }
 
     return (
         <div>
             <Tooltip title={
-                props.cardType == "replacement" ?
-                    (requestStatus == "pending" ? "Pending Replacement Request" :
-                        (requestStatus == "accepted" ? "Accepted Replacement Request" : "Rejected Replacement Request")) : "Regular Slot"}>
+                props.cardType == "replacement_sent" ? "Sent Replacement Request" :
+                    props.cardType == "replacement" ?
+                        (requestStatus == "pending" ? "Pending Replacement Request" :
+                            (requestStatus == "accepted" ? "Accepted Replacement Request" : "Rejected Replacement Request")) : "Regular Slot"}>
 
                 <Card className={classes.root} className={
                     props.cardType == "replacement" ?
@@ -100,7 +112,7 @@ export default function SimpleCard(props) {
                                 <Typography className={classes.pos} color="textSecondary">
                                     <b>Location:&nbsp;</b>{props.locationName}
                                 </Typography>
-                                <Collapse in={props.cardType == "replacement"}>
+                                <Collapse in={props.cardType == "replacement" || props.cardType == "replacement_sent"}>
                                     <Typography className={classes.pos} color="textSecondary">
                                         <b>Instructor:&nbsp;</b>{props.courseInstructor ? props.courseInstructor.name : ""}
                                     </Typography>
@@ -110,6 +122,11 @@ export default function SimpleCard(props) {
                                     <Typography className={classes.pos} color="textSecondary">
                                         {props.courseInstructor ? (new Date(props.requestedDate)).toLocaleDateString('en-US') : ""}
                                     </Typography>
+                                    <Collapse in={props.cardType == "replacement_sent"}>
+                                        <Typography className={classes.pos} color="textSecondary">
+                                            <b>Status:&nbsp;</b>{props.requestStatus}
+                                        </Typography>
+                                    </Collapse>
                                 </Collapse>
                             </Box>
                             <Box >
@@ -145,6 +162,23 @@ export default function SimpleCard(props) {
                                             </Tooltip>
                                         </CardActions></div>) : <div />
                                 }
+                                {
+                                    (props.cardType == "replacement_sent" && props.requestStatus == "pending") ? (<div><CardActions>
+
+                                    </CardActions>
+                                        <CardActions>
+                                            <Tooltip title="Cancel Replacement Request">
+                                                <Button
+                                                    size="small"
+                                                    style={{ color: "red" }}
+                                                    onClick={() => {
+                                                        handleCancelReplacementRequest(props.requestID)
+                                                    }}
+                                                ><CloseIcon />
+                                                </Button>
+                                            </Tooltip>
+                                        </CardActions></div>) : <div />
+                                }
                             </Box>
                         </Box>
                     </CardContent>
@@ -155,6 +189,7 @@ export default function SimpleCard(props) {
                         slotNumber={props.slotNumber}
                         slotDay={props.slotDay}
                         slotID={props.slotID}
+                        setComponentInMain = {props.setComponentInMain}
                     />
                 </Card>
             </Tooltip>

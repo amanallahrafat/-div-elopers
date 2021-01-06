@@ -67,7 +67,15 @@ const makeCard = (arrayOfCards) => {
     </Grid>);
     return g;
 }
-function mapToScheduleObj(courseSchedule, replacementRequests) {
+function mapToScheduleObj(courseSchedule,
+    replacementRequests,
+    replacementRequestsRecieved,
+    recievedFlag,
+    sentFlag,
+    senderObj,
+    props
+) {
+
     scheduleRow = [];
     scheduleRowWithReplacement = [];
 
@@ -93,6 +101,8 @@ function mapToScheduleObj(courseSchedule, replacementRequests) {
 
     for (const entry of courseSchedule) {
         const card = <Schedule_Slot_Card
+            setComponentInMain={props.setComponentInMain}
+
             courseName={entry.courseName}
             locationName={entry.slot.locationName}
             courseID={entry.courseID}
@@ -107,24 +117,53 @@ function mapToScheduleObj(courseSchedule, replacementRequests) {
         scheduleObjWithReplacement[entry.slot.day][entry.slot.slotNumber - 1].push(card);
     }
 
-    for (const entry of replacementRequests) {
-        console.log(entry);
-        scheduleObjWithReplacement[entry.slot.day][entry.slot.slotNumber - 1].push(
-            <Schedule_Slot_Card
-                courseName={entry.courseName}
-                locationName={entry.locationName}
-                courseID={entry.courseID}
-                slotNumer={entry.slot.slotNumber}
-                slotDay={entry.slot.day}
-                slotID={entry.slot.ID}
+    if (recievedFlag) {
+        for (const entry of replacementRequests) {
+            console.log(entry);
+            if (entry.slot == null) continue;
+            scheduleObjWithReplacement[entry.slot.day][entry.slot.slotNumber - 1].push(
+                <Schedule_Slot_Card
+                    setComponentInMain={props.setComponentInMain}
 
-                cardType="replacement"
-                courseInstructor={entry.senderName}
-                requestedDate={entry.requestedDate}
-                requestID={entry.ID}
-                requestStatus={entry.status}
-            />
-        );
+                    courseName={entry.courseName}
+                    locationName={entry.locationName}
+                    courseID={entry.courseID}
+                    slotNumer={entry.slot.slotNumber}
+                    slotDay={entry.slot.day}
+                    slotID={entry.slot.ID}
+
+                    cardType="replacement"
+                    courseInstructor={entry.senderName}
+                    requestedDate={entry.requestedDate}
+                    requestID={entry.ID}
+                    requestStatus={entry.status}
+                />
+            );
+        }
+    }
+    if (sentFlag) {
+        for (const entry of replacementRequestsRecieved) {
+            console.log("entry", entry);
+            if (entry.slot == null) continue;
+            scheduleObjWithReplacement[entry.slot.day][entry.slot.slotNumber - 1].push(
+                <Schedule_Slot_Card
+                    setComponentInMain={props.setComponentInMain}
+
+                    courseName={entry.courseName}
+                    locationName={entry.locationName}
+                    courseID={entry.courseID}
+                    slotNumer={entry.slot.slotNumber}
+                    slotDay={entry.slot.day}
+                    slotID={entry.slot.ID}
+
+                    cardType="replacement_sent"
+                    courseInstructor={senderObj}
+                    requestedDate={entry.requestedDate}
+                    requestID={entry.ID}
+                    requestStatus={entry.status}
+                />
+            );
+        }
     }
 
     console.log("with replacement", scheduleObjWithReplacement);
@@ -160,14 +199,22 @@ const useStyles = makeStyles({
 
 export default function CustomizedTables(props) {
     const classes = useStyles();
-    mapToScheduleObj(props.schedule, props.replacementRequests);
-
     const [state, setState] = React.useState({
         checkedA: false,
         checkedB: false,
     });
 
     const [isViewingReplacementRequest, setIsViewingReplacementRequest] = React.useState(false);
+    const [isViewingSentReplacementRequest, setIsViewingSentReplacementRequest] = React.useState(false);
+
+    mapToScheduleObj(props.schedule,
+        props.replacementRequests,
+        props.sentReplacementRequests,
+        isViewingReplacementRequest,
+        isViewingSentReplacementRequest,
+        props.senderObj,
+        props,
+    );
 
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
@@ -175,7 +222,11 @@ export default function CustomizedTables(props) {
         console.log(isViewingReplacementRequest);
     };
 
-    console.log("from schedudle", props.replacementRequests);
+    const handleChangeSent = (event) => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+        setIsViewingSentReplacementRequest(!isViewingSentReplacementRequest);
+        console.log(isViewingSentReplacementRequest);
+    };
 
     return (
         <Container maxWidth="lg" style={{ marginTop: "30px" }} >
@@ -187,7 +238,18 @@ export default function CustomizedTables(props) {
                                 onChange={handleChange} name="checkedA"
                                 color="primary"
                             />}
-                        label="View Replacement Requests"
+                        label="View Received Replacement Requests"
+                        style={{ align: "right" }}
+
+                    />
+                    <br />
+                    <FormControlLabel
+                        control={
+                            <Switch checked={state.checkedB}
+                                onChange={handleChangeSent} name="checkedB"
+                                color="primary"
+                            />}
+                        label="View Sent Replacement Requests"
                         style={{ align: "right" }}
 
                     />
@@ -206,7 +268,7 @@ export default function CustomizedTables(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(isViewingReplacementRequest ? scheduleRowWithReplacement : scheduleRow).map((row) => (
+                        {(isViewingReplacementRequest||isViewingSentReplacementRequest ? scheduleRowWithReplacement : scheduleRow).map((row) => (
                             <StyledTableRow key={row.name}>
                                 <StyledTableCell component="th" scope="row">
                                     <b>{row.day.charAt(0).toUpperCase() + row.day.slice(1)}</b>

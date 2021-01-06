@@ -87,6 +87,22 @@ class Academic_Member_List extends Component {
     handleChangeDayOffRequest = async (event) => {
         this.props.setComponentInMain("ac_changeDayOffRequest");
     }
+    
+    handleAnnualLeaveRequest = async(event)=>{
+        this.props.setComponentInMain("ac_annualLeaveRequest");
+    }
+
+    handleAccidentalLeaveRequest = async(event)=>{
+        this.props.setComponentInMain("ac_accidentalLeaveRequest");
+    }
+
+    handleMaternityLeaveRequest = async(event)=>{
+        this.props.setComponentInMain("ac_maternityLeaveRequest");
+    }
+
+    handleSickLeaveRequest = async(event)=>{
+        this.props.setComponentInMain("ac_sickLeaveRequest");
+    }
 
     async componentDidMount() {
         if (!localStorage.getItem('auth-token')) {
@@ -140,16 +156,16 @@ class Academic_Member_List extends Component {
                                 <ListItemText primary={"Change day off"} onClick={this.handleChangeDayOffRequest} />
                             </ListItem>
                             <ListItem button >
-                                <ListItemText primary={"Annual leaves"} />
+                                <ListItemText primary={"Annual leaves"} onClick={this.handleAnnualLeaveRequest}/>
                             </ListItem>
                             <ListItem button >
-                                <ListItemText primary={"Accidental leaves"} />
+                                <ListItemText primary={"Accidental leaves" } onClick={this.handleAccidentalLeaveRequest}/>
                             </ListItem>
                             <ListItem button >
-                                <ListItemText primary={"Sick leaves"} />
+                                <ListItemText primary={"Sick leaves"} onClick={this.handleSickLeaveRequest}/>
                             </ListItem>
                             <ListItem button >
-                                <ListItemText primary={"Maternity leaves"} />
+                                <ListItemText primary={"Maternity leaves"} onClick={this.handleMaternityLeaveRequest}/>
                             </ListItem>
                             <ListItem button >
                                 <ListItemText primary={"Compensation leaves"} />
