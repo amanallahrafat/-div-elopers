@@ -39,18 +39,6 @@ const requestAttendanceRecods = async () => {
 
 const drawerWidth = 240;
 
-// const requestSchedule = async () => {
-//     const schedule = await axios.get("ac/viewSchedule");
-//     return schedule.data;
-// };
-
-// const getReplacementRequests = async () => {
-//     let res = (await axios.get('ac/viewReplacementRequests')).data;
-//     const userID = localStorage.getItem('ID');
-//     res = res.filter(r => r.senderID != userID && new Date(r.requestedDate).getTime() >= new Date(Date.now()).getTime());
-//     return res;
-// }
-
 const requestAllSlots = async () =>{
     return (await axios.get("cc/viewAllSlots")).data;
 }
@@ -200,7 +188,7 @@ class CC extends Component {
                 />
             });
          } 
-         if (event == "viewMissingDays") {
+         else if (event == "viewMissingDays") {
             this.setState({
                 componentInMain: (
                     <ViewMissingDaysForm

@@ -11,10 +11,22 @@ import CICourses from './CICourses';
 import ViewStaffProfiles from './CIViewStaffProfiles.js';
 import ManageCourseStaff from './manageCourseStaff.js'
 import { Alert, AlertTitle } from '@material-ui/lab';
-
+import ViewMissingDaysForm from '../../ViewMissingDaysForm.js';
 
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import clsx from 'clsx';
+
+
+const requestMissingDays = async () => {
+    const res = await axios.get('/viewMissingDays');
+    const dates = res.data;
+    const mappedDates = [];
+    for (const date of dates) {
+        mappedDates.push({ date: (new Date(date)).toLocaleString() + "" })
+    }
+    console.log(mappedDates);
+    return mappedDates;
+}
 
 const requestUserProfile = async (openAlert) => {
     try{
@@ -242,7 +254,17 @@ class CI extends Component {
                     openAlert={this.openAlert}
                 />
             });
-        } else if (event == "schedule") {
+            
+        } else if (event == "viewMissingDays") {
+            this.setState({
+                componentInMain: (
+                    <ViewMissingDaysForm
+                        missedDays={await requestMissingDays()}
+                    />
+                )
+            })
+        }
+        else if (event == "schedule") {
             console.log("schedule")
             this.setState({
                 componentInMain: <Schedule
