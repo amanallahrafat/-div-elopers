@@ -1,21 +1,32 @@
 import { Container } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import { Alert, AlertTitle } from '@material-ui/lab';
 import axios from "axios";
+import clsx from 'clsx';
 import { Component } from "react";
 import { Redirect } from 'react-router-dom';
 import setAuthToken from "../../../actions/setAuthToken";
 import Attendance from '../../Attendance';
 import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
+import ViewMissingDaysForm from '../../ViewMissingDaysForm.js';
+import Accidental_Leave_Request from "../ac/Academic_Requests/Accidental_Leave/Accidental_Leave_List";
+import Annual_Leave_Request from "../ac/Academic_Requests/Annual_Leave/Annual_Leave_List";
+import Change_Day_Off_Request from "../ac/Academic_Requests/Change_Day_Off/Change_Day_Off_List";
+import Compensation_Leave_Request from "../ac/Academic_Requests/Compensation_Leave/Compensation_Leave_List";
+import Maternity_Leave_Request from "../ac/Academic_Requests/Maternity_leave/Maternity_Leave_List";
+import Sick_Leave_Request from "../ac/Academic_Requests/Sick_Leave/Sick_Leave_List";
+import {
+    getAllCoursesInstructorsNames,
+    getAllMissingDays, getAllSentRequests,
+    getReplacementRequests, requestSchedule,
+    viewAllCourseSchedules
+} from '../ac/ac_helper.js';
+import Course_Schedule from "../ac/All_Course_Schedule/Course_Schedule";
 import Schedule from '../ac/Schedule_Handler/Schedule';
 import CICourses from './CICourses';
 import ViewStaffProfiles from './CIViewStaffProfiles.js';
-import ManageCourseStaff from './manageCourseStaff.js'
-import { Alert, AlertTitle } from '@material-ui/lab';
-import ViewMissingDaysForm from '../../ViewMissingDaysForm.js';
-
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import clsx from 'clsx';
-
+import ManageCourseStaff from './manageCourseStaff.js';
 
 const requestMissingDays = async () => {
     const res = await axios.get('/viewMissingDays');
@@ -29,10 +40,10 @@ const requestMissingDays = async () => {
 }
 
 const requestUserProfile = async (openAlert) => {
-    try{
-    const userProfile = await axios.get('/viewProfile');
-    return userProfile.data;
-    }catch(err){
+    try {
+        const userProfile = await axios.get('/viewProfile');
+        return userProfile.data;
+    } catch (err) {
         openAlert(err.response.data);
         return {};
     }
@@ -54,21 +65,19 @@ const requestAttendanceRecods = async (openAlert) => {
         return attendanceRecords.data;
     } catch (err) {
         openAlert(err.response.data);
-  
+
     }
 }
-
-
 
 const requestAllInstructorCourses = async (openAlert) => {
 
     console.log("begin in request all instructor courses");
-    try{
-    const res = await axios.get('/ci/viewSlotAssignmentLocal');
+    try {
+        const res = await axios.get('/ci/viewSlotAssignmentLocal');
 
         console.log("end of  request all instructor courses", res.data);
         return res.data;
-    }catch(err){
+    } catch (err) {
         openAlert(err.response.data);
         return undefined;
     }
@@ -91,8 +100,8 @@ const requestInstructorCourses = async (openAlert) => {
 }
 
 
-const requestStaffProfiles = async (filter = "none", obj = {},openAlert) => {
-    try{
+const requestStaffProfiles = async (filter = "none", obj = {}, openAlert) => {
+    try {
         if (filter == "none") {
             const res = await axios.get('/ci/viewDepartmentMembers');
             return res.data;
@@ -107,25 +116,25 @@ const requestStaffProfiles = async (filter = "none", obj = {},openAlert) => {
             return out;
 
         }
-    }catch(err){
+    } catch (err) {
         openAlert(err.response.data);
     }
-  
+
 }
 
-const requestCourseStaffProfiles = async (obj,openAlert) => {
-        if (obj.courseID == -1) {
-            console.log("obj ID is -1")
-            return [];
-        }
-        try{
+const requestCourseStaffProfiles = async (obj, openAlert) => {
+    if (obj.courseID == -1) {
+        console.log("obj ID is -1")
+        return [];
+    }
+    try {
         const res = await axios.get(`/ci/viewMembersByCourse/${obj.courseID}`);
         return res.data;
-        }catch(err){
-            openAlert(err.response.data);
-            
-        }
-  }
+    } catch (err) {
+        openAlert(err.response.data);
+
+    }
+}
 
 const getAcademicMembersTable = async (openAlert) => {
     try {
@@ -137,25 +146,7 @@ const getAcademicMembersTable = async (openAlert) => {
     }
 }
 
-
-
 const drawerWidth = 240;
-
-
-
-
-
-
-
-const requestSchedule = async (openAlert) => {
-    try {
-        const schedule = await axios.get('ac/viewSchedule');
-        return schedule.data;
-    } catch (err) {
-        openAlert(err.response.data);
-  
-    }
-}
 
 const styles = (theme) => ({
     appBar: {
@@ -174,7 +165,6 @@ const styles = (theme) => ({
     },
 });
 
-
 class CI extends Component {
     state = {
         isLoggedIn: 0,
@@ -184,43 +174,43 @@ class CI extends Component {
         staffProfiles: [],
         departmentCourses: undefined,
         manageCourseStaff: [],
-        showAlert:false,
-        alertMessage:"testing"
+        showAlert: false,
+        alertMessage: "testing"
     }
-    openAlert=(message)=>{
-        this.setState({showAlert:true,alertMessage:message})
+    openAlert = (message) => {
+        this.setState({ showAlert: true, alertMessage: message })
     }
 
     uniqBy(a, key) {
         var seen = {};
-        return a.filter(function(item) {
+        return a.filter(function (item) {
             var k = key(item);
             return seen.hasOwnProperty(k) ? false : (seen[k] = true);
         })
     }
 
     updateRequestStaffProfile = async (filter = "none", obj = {}) => {
-        const profiles = await requestStaffProfiles(filter, obj,this.openAlert);
+        const profiles = await requestStaffProfiles(filter, obj, this.openAlert);
         //let uniqueProfiles = [];
         let uniqueProfiles = this.uniqBy(profiles, JSON.stringify)
         // uniqueProfiles = profiles.filter(function(item, pos) {
         //     return profiles.indexOf(item,(i)=>{return i.ID==item.ID}) == pos;
         // })
-        console.log("before unique",profiles)
-        
-        console.log("after unique",uniqueProfiles)
+        console.log("before unique", profiles)
+
+        console.log("after unique", uniqueProfiles)
         this.setState({ staffProfiles: uniqueProfiles });
         return uniqueProfiles;
-  
+
     }
     updateRequestCourseStaff = async (obj = { courseID: -1 }) => {
-       
+
         if (obj.courseID == -1) {
             this.setState({ manageCourseStaff: [] });
 
             return [];
         }
-        const manageCourseStaff = await requestCourseStaffProfiles(obj,this.openAlert);
+        const manageCourseStaff = await requestCourseStaffProfiles(obj, this.openAlert);
         this.setState({ manageCourseStaff: manageCourseStaff });
         return manageCourseStaff;
     }
@@ -230,11 +220,11 @@ class CI extends Component {
         this.setState({ departmentCourses: departmentCourses });
         console.log("end update department courses")
         return departmentCourses;
-       }
+    }
 
     updateCIProfile = async () => {
         this.setState({ ciProfile: await requestUserProfile(this.openAlert) });
-     
+
     }
 
     setComponentInMain = async (event) => {
@@ -244,7 +234,7 @@ class CI extends Component {
                     profile={await requestUserProfile(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
                     openAlert={this.openAlert}
-                    />
+                />
             });
         } else if (event == "attendance") {
             this.setState({
@@ -254,7 +244,7 @@ class CI extends Component {
                     openAlert={this.openAlert}
                 />
             });
-            
+
         } else if (event == "viewMissingDays") {
             this.setState({
                 componentInMain: (
@@ -263,15 +253,6 @@ class CI extends Component {
                     />
                 )
             })
-        }
-        else if (event == "schedule") {
-            console.log("schedule")
-            this.setState({
-                componentInMain: <Schedule
-                    schedule={await requestSchedule(this.openAlert)}
-                    openAlert={this.openAlert}
-                />
-            });
         }
         else if (event == "instructorCourses") {
             console.log("instructorCourses")
@@ -312,6 +293,98 @@ class CI extends Component {
                     hodProfile={this.state.ciProfile}
                     updateProfiles={this.updateRequestCourseStaff}
                     openAlert={this.openAlert}
+                />
+            });
+        } else if (event == "personalSchedule") {
+            console.log("personalSchedule")
+            const requestsArr = (await getAllSentRequests());
+            console.log(requestsArr)
+            this.setState({
+                componentInMain: <Schedule
+                    schedule={await requestSchedule()}
+                    replacementRequests={await getReplacementRequests()}
+                    sentReplacementRequests={requestsArr.requests[5]}
+                    senderObj={requestsArr.senderObj}
+                    setComponentInMain={this.setComponentInMain}
+
+                />
+            });
+        }
+        else if (event == "allCourseSchedule") {
+            console.log("allCourseSchedule")
+            this.setState({
+                componentInMain: <Course_Schedule
+                    departmentCourses={await viewAllCourseSchedules()}
+                    allCourses={await getAllCoursesInstructorsNames()}
+                />
+            });
+        }
+        else if (event == "ac_changeDayOffRequest") {
+            console.log("ac_changeDayOffRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Change_Day_Off_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[2]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_annualLeaveRequest") {
+            console.log("ac_annualLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            console.log(requestsArr);
+            this.setState({
+                componentInMain: <Annual_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[1]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_accidentalLeaveRequest") {
+            console.log("ac_accidentalLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            console.log(requestsArr);
+            this.setState({
+                componentInMain: <Accidental_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[0]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_maternityLeaveRequest") {
+            console.log("ac_maternityLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Maternity_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[4]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_sickLeaveRequest") {
+            console.log("ac_sickLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Sick_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[6]}
+                    senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_compensationLeaveRequest") {
+            console.log("ac_compensationLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Compensation_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[3]}
+                    senderObj={requestsArr.senderObj}
+                    missingDays={await getAllMissingDays()}
                 />
             });
         }
@@ -358,9 +431,9 @@ class CI extends Component {
                     updateRequestCourseStaff={this.updateRequestCourseStaff}
                     handleAppBarShift={this.handleAppBarShift}
                 />
-                <Alert style={(!this.state.showAlert)?{display:'none'}:{}} severity="error"  onClose={()=> {this.setState({showAlert:false})}}>
+                <Alert style={(!this.state.showAlert) ? { display: 'none' } : {}} severity="error" onClose={() => { this.setState({ showAlert: false }) }}>
                     <AlertTitle>Error</AlertTitle>
-                  <strong>{this.state.alertMessage}</strong>
+                    <strong>{this.state.alertMessage}</strong>
                 </Alert>
 
 

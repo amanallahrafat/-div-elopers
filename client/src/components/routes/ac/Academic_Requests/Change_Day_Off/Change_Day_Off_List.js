@@ -86,8 +86,11 @@ export default function ChangeDayOffRequest(props) {
         }
     }
 
-    const handleOpenAddReplacementRequest = async () => {
-        setShowForm(true);
+    const handleOpenAddReplacementRequest = async (event) => {
+        console.log("Leeeeh?")
+        await setShowForm(true);
+        console.log("Leeeeh2", showForm);
+
     }
 
     const classes = useStyles();
@@ -178,13 +181,7 @@ export default function ChangeDayOffRequest(props) {
 
                                             </Box>
                                         </CardContent>
-                                        <Change_Day_Off_Request_Card
-                                            open={showForm}
-                                            dayOff={props.senderObj.dayOff}
-                                            handleCloseForm={handleCloseForm}
-                                            senderObj={props.senderObj}
-                                            setComponentInMain={props.setComponentInMain}
-                                        />
+
                                     </div>
                                 </Card>
                             </Grid>
@@ -192,6 +189,13 @@ export default function ChangeDayOffRequest(props) {
                     }
                 </Grid>
             </Container>
+            <Change_Day_Off_Request_Card
+                open={showForm}
+                dayOff={props.senderObj.dayOff}
+                handleCloseForm={handleCloseForm}
+                senderObj={props.senderObj}
+                setComponentInMain={props.setComponentInMain}
+            />
         </div >
     );
 }

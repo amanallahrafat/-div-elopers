@@ -210,7 +210,6 @@ class CC extends Component {
                 />
             });
         }
-        // props-to-be-send => requests,slots,setInMain,handleSlots,handleSlotLinkingRequests,academicMembers,locations
         else if(event == "slotLinkingRequest"){
             console.log("slotLinkingRequests");
             console.log(this.state.slots);
