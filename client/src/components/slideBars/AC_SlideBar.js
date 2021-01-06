@@ -88,7 +88,6 @@ export default function PersistentDrawerLeft(props) {
         <div className={classes.drawerHeader}>
         </div>
         <Divider />
-        <Course_Instructor_List setComponentInMain={props.setComponentInMain} updateRequestStaffProfile={props.updateRequestStaffProfile} updateRequestCourseStaff={props.updateRequestCourseStaff}/>
         <Academic_Member_List setComponentInMain={props.setComponentInMain}/>
       </Drawer>
     </div>

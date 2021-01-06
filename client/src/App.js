@@ -6,6 +6,7 @@ import HOD from "./components/routes/hod/hod.js";
 import HR from './components/routes/hr/hr.js';
 import CI from "./components/routes/ci/ci.js";
 import CC from "./components/routes/cc/cc.js";
+import AC from "./components/routes/ac/ac.js";
 
 //Test pickers
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -21,6 +22,8 @@ function App() {
             <Route exact path="/hr" component={HR} />
             <Route exact path="/ci" component={CI} />
             <Route exact path="/cc" component={CC} />
+            <Route exact path="/ac" component={AC} />
+\
           </div>
         </BrowserRouter>
     </MuiPickersUtilsProvider>

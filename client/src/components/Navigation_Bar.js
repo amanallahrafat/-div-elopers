@@ -18,6 +18,7 @@ import CC_SlideBar from './slideBars/CC_SlideBar';
 import CI_SlideBar from './slideBars/CI_SlideBar';
 import Hod_SlideBar from './slideBars/Hod_SlideBar';
 import HR_SlideBar from './slideBars/HR_SlideBar';
+import AC_SlideBar from './slideBars/AC_SlideBar';
 
 const drawerWidth = 240;
 
@@ -175,20 +176,15 @@ class Navigation_Bar extends Component {
                                         updateRequestStaffProfile={this.props.updateRequestStaffProfile}
                                         updateRequestCourseStaff={this.props.updateRequestCourseStaff}
                                     />
-
-
-
                                     :
                                     (localStorage.getItem("academicMemberType") == 2) ?
                                         <CC_SlideBar
                                             open={this.state.isSlideBarOpen}
                                             setComponentInMain={this.props.fromParent} /> :
-                                        <Hod_SlideBar
+                                        <AC_SlideBar
                                             open={this.state.isSlideBarOpen}
-                                            updateRequestStaffProfile={this.props.updateRequestStaffProfile}
-                                            updateRequests={this.props.updateRequests}
                                             setComponentInMain={this.props.fromParent}
-                                            requestAllDepartmentCourses={this.props.requestAllDepartmentCourses} />
+                                        />
                     }
                 </AppBar>
             </div>
