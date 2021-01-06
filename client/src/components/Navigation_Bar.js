@@ -81,6 +81,10 @@ class Navigation_Bar extends Component {
         this.props.fromParent("attendance");
     }
 
+    // handleViewMissingDays = (event) => {
+    //     this.props.fromParent("viewMissingDays");
+    // }
+
     handleSlideBarToggle = async (event) => {
         await this.setState({ isSlideBarOpen: !this.state.isSlideBarOpen });
         this.props.handleAppBarShift(this.state.isSlideBarOpen);
@@ -129,7 +133,9 @@ class Navigation_Bar extends Component {
                             >
                                 <AccountCircle />
                             </IconButton>
-                            <DropdownList_NavBar />
+                            <DropdownList_NavBar 
+                                fromParent = {this.props.fromParent}
+                            />
                         </div>
                     </Toolbar>
                     {

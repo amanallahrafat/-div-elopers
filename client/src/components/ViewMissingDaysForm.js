@@ -51,8 +51,7 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: 'AttendanceStatus', numeric: true, disablePadding: true, label: 'Status' },
-  { id: 'AttendanceSignin', numeric: true, disablePadding: true, label: 'Sign in' },
-  { id: 'AttendanceSignout', numeric: true, disablePadding: true, label: 'Sign out' },
+  { id: 'AttendanceSignin', numeric: true, disablePadding: true, label: 'Day' },
  ];
 
 function EnhancedTableHead(props) {
@@ -125,22 +124,8 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h5" id="tableTitle" component="div">
-          Attendance Records
+          Missing Days
         </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-
-        <Tooltip title="Filter list">
-            <DropdownList_Attendance handleFilter={props.handleFilter}/>
-
-        </Tooltip>
       )}
     </Toolbar>
   );
@@ -168,7 +153,7 @@ const useStyles = makeStyles((theme) => ({
     margin: -1,
     overflow: 'hidden',
     padding: 0,
-    position: 'absolute',
+    position:   'absolute',
     top: 20,
     width: 1,
   },
@@ -177,17 +162,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EnhancedTable(props) {
     
-const [rows,setRows]=React.useState(props.attendanceRecords);
-const allRows=props.attendanceRecords;
-const handleFilter=(month)=>{
-     if(month=="")return;
-    if(isNaN(month)||month=="all")setRows(allRows);
-    else
-    setRows(allRows.filter((r)=>{
-        return new Date(r.signin).getMonth()==(parseInt(month)-1);
-    }))
-}
-//const rows=allRows;
+const [rows,setRows]=React.useState(props.missedDays);
+const allRows=props.missedDays;
+
 const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('AttendanceSignin');
@@ -250,7 +227,7 @@ const classes = useStyles();
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} handleFilter={handleFilter}/>
+        <EnhancedTableToolbar numSelected={selected.length}/>
         <TableContainer>
           <Table
             className={classes.table}
@@ -283,9 +260,8 @@ const classes = useStyles();
                       key={row.name}
                       selected={isItemSelected}
                     >
-                      <TableCell align="center">{row.status}</TableCell>
-                       <TableCell align="center">{row.signin}</TableCell>
-                      <TableCell align="center">{row.signout}</TableCell>
+                      <TableCell align="center">Absent</TableCell>
+                       <TableCell align="center">{row.date}</TableCell>
                     </TableRow>
                   );
                 })}

@@ -13,6 +13,7 @@ import Department_Card from "./Department_Handler/Department_Card";
 import Faculty_Card from "./Faculty_Handler/Faculty_Card";
 import Location_Card from "./Location_Handler/Location_Card";
 import StaffMember_Card from "./StaffMember_Handler/StaffMember_Card";
+import ViewMissingDaysForm from '../../ViewMissingDaysForm.js';
 
 const requestUserProfile = async () => {
   const userProfile = await axios.get("/viewProfile");
@@ -70,6 +71,17 @@ const requestStaffMembersWithMissingDays = async ()=>{
 
 const requestStaffMembersWithMissingHours = async () =>{
   return (await axios.get("/hr/viewStaffMembersWithMissingHours")).data;
+}
+
+const requestMissingDays = async () => {
+  const res = await axios.get('/viewMissingDays');
+  const dates = res.data;
+  const mappedDates = [];
+  for(const date of dates){
+      mappedDates.push({date : (new Date(date)).toLocaleString()+""})
+  }
+  console.log(mappedDates);
+  return mappedDates;
 }
 // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
 const drawerWidth = 240;
@@ -203,7 +215,16 @@ class HR extends Component {
     await this.handleFaculties();
     await this.handleDepartments();
 
-    if (event == "profile") {
+    if( event == "viewMissingDays"){
+      this.setState({
+        componentInMain :(
+          <ViewMissingDaysForm
+            missedDays = {await requestMissingDays()}
+          />
+        )
+      })
+    }
+    else if (event == "profile") {
       this.setState({
         componentInMain: (
           <Profile
@@ -298,28 +319,28 @@ class HR extends Component {
   }
 
   render() {
-    // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
     const { classes } = this.props;
-    //********************
     if (this.state.isLoggedIn === 0) return <div />;
     if (this.state.isLoggedIn === 1) {
       return <Redirect to="/" />;
     }
     return (
       <div>
-        <Navigation_Bar
-          handleAppBarShift={this.handleAppBarShift}
-          fromParent={this.setComponentInMain}
-        />
-        <Container
-          maxWidth="lg"
-          style={{ marginTop: "30px" }}
-          className={clsx({
-            [classes.appBarShift]: this.state.isAppBarShift,
-          })}
-        >
-          {this.state.componentInMain}
-        </Container>
+        <div>
+          <Navigation_Bar
+            handleAppBarShift={this.handleAppBarShift}
+            fromParent={this.setComponentInMain}
+          />
+          <Container
+            maxWidth="lg"
+            style={{ marginTop: "30px" }}
+            className={clsx({
+              [classes.appBarShift]: this.state.isAppBarShift,
+            })}
+          >
+            {this.state.componentInMain}
+          </Container>
+        </div>
       </div>
     );
   }

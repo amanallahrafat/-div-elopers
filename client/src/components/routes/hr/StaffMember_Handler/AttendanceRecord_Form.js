@@ -12,8 +12,7 @@ import Attendance_Card from '../../../Attendance';
 import axios from 'axios';
 import React from 'react';
 
-export default function EditStaffMemberForm(props) {
-    const [newType, setNewType] = React.useState(-1);
+export default function ViewAttendanceForm(props) {
 
     const handleClickOpen = () => {
         props.handleOpenAttendance();
@@ -22,22 +21,6 @@ export default function EditStaffMemberForm(props) {
     const handleClose = () => {
         props.handleCloseAttendance();
     };
-    const handleUpdate = async () => {
-        const newName = document.getElementById("editName").value;
-        const newCapacity = document.getElementById("editCapacity").value;
-        try {
-            const req = {
-                name: newName,
-                capacity: newCapacity,
-                type: newType==-1? props.location.type: newType
-            };
-            const res = await axios.put(`hr/updateLocation/${props.location.ID}`, req);
-            props.setComponentInMain("staffMember");
-        } catch (err) {
-            alert("please enter valid data.");
-        }
-        handleClose();
-    }
     
     return (
         <div>
