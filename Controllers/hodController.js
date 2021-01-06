@@ -341,6 +341,7 @@ const viewCourseCoverage = async (req, res) => {
     return res.send(JSON.stringify(coverage));
 }
 
+// GET course with all its information(schedule/ instructors....)
 const viewCourseTeachingAssignmentsLocal = async (req, res) => {
     console.log("in view course TA local start ");
     const { ID, type } = req.header.user;
@@ -867,7 +868,7 @@ const createReplacementEntry = (replacement, staffMembers, courses, courses_sche
     return {
         receiverName: receiver.name,
         courseName: course.name,
-        slotNumber: replacementSlot.slotNumber,
+        slotNumber: replacementSlot?.slotNumber,
         status: replacement.status
     }
 

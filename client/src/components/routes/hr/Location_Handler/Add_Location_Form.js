@@ -11,17 +11,19 @@ import axios from 'axios';
 import React from 'react';
 
 export default function EditLocationForm(props) {
-    const [newType, setNewType] = React.useState(0);
+    const [newType, setNewType] = React.useState(-1);
 
     const handleClickOpen = () => {
         props.handleOpenAdd();
     };
 
     const handleClose = () => {
+        setNewType(-1);
         props.handleCloseAdd();
     };
 
     const handleAddLocation = async () => {
+        console.log("here********************");
         const newName = document.getElementById("editName").value;
         const newCapacity = document.getElementById("editCapacity").value;
         try {
@@ -31,7 +33,9 @@ export default function EditLocationForm(props) {
                 type: newType
             };
             const res = await axios.post(`/hr/createLocation`, req);
-            props.setComponentInMain("faculty");
+            console.log(res.data);
+            await props.handleLocations(res.data,0);
+            props.setComponentInMain("location");
         } catch (err) {
             alert("please enter valid data.");
         }
@@ -39,7 +43,6 @@ export default function EditLocationForm(props) {
     }
     return (
         <div>
-
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Add Location </DialogTitle>
                 <DialogContent>
@@ -62,7 +65,7 @@ export default function EditLocationForm(props) {
                             }
                         }} fullWidth
                     />
-                    <RadioGroup name="locationType" id="editType" defaultValue="0">
+                    <RadioGroup name="locationType" id="editType">
                         <FormControlLabel onClick={() => { setNewType(0) }}
                             value="0" control={<Radio />} label="Hall" />
                         <FormControlLabel onClick={() => { setNewType(1) }}
@@ -74,12 +77,8 @@ export default function EditLocationForm(props) {
                     </RadioGroup>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
-          </Button>
-                    <Button onClick={handleAddLocation} color="primary">
-                        Add
-          </Button>
+                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                    <Button onClick={handleAddLocation} color="primary">Add</Button>
                 </DialogActions>
             </Dialog>
         </div>

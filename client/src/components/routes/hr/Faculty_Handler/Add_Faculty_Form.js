@@ -27,6 +27,7 @@ export default function AddFacultyForm(props) {
                 departments: newDepartments,
             };
             const res = await axios.post(`/hr/createFaculty`, req);
+            props.handleFaculties(res.data,0);
             props.setComponentInMain("faculty");
         } catch (err) {
             alert(err.response.data);

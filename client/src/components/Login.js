@@ -15,6 +15,7 @@ import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
 import { login } from '../actions/authAction.js';
 import Copyright from './Material_UI_Copyright.js';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = (theme) => ({
     root: {
@@ -59,11 +60,13 @@ class Login extends Component {
         emptyPassword: true,
         isDirtyEmail: false,
         isDirtyPassword: false,
+        clicked : false
     };
 
     handleSubmit = async (event) => {
         event.preventDefault();
         await this.setState({ clicked: true });
+        console.log(this.state.clicked)
         const req = {
             email: this.state.email,
             password: this.state.password,
@@ -78,6 +81,7 @@ class Login extends Component {
         } catch (error) {
             this.setState({ loginError: true })
         }
+        this.setState({clicked : false});
     }
 
     handleChange = event => {
@@ -130,7 +134,7 @@ class Login extends Component {
             }
         }
         return (
-            <Grid container component="main" className={classes.root}>
+            <Grid container component="main" className={classes.root} >
                 <CssBaseline />
                 <Grid item xs={false} sm={4} md={7} className={classes.image} />
                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -185,6 +189,7 @@ class Login extends Component {
                                     This field is required!
                             </Alert>
                             </Collapse>
+                            {!this.state.clicked ?(
                             <Button
                                 type="submit"
                                 fullWidth
@@ -199,7 +204,18 @@ class Login extends Component {
 
                             >
                                 Login
-            </Button>
+                            </Button>) :(
+                                <CircularProgress
+                                style={{
+                                  marginTop: "6px",
+                                  marginRight: "240px",
+                                  display: "block",
+                                  margin: "0 auto"
+                                }}
+                              />
+                            )
+
+            }
                             <Collapse in={this.state.loginError}>
                                 <Alert
                                     severity="error"

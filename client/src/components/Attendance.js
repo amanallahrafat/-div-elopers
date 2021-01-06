@@ -125,7 +125,7 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h5" id="tableTitle" component="div">
-          Attendance records
+          Attendance Records
         </Typography>
       )}
 

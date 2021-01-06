@@ -134,6 +134,7 @@ export default function PersistentDrawerLeft(props) {
     await (props.updateRequests());
     props.setComponentInMain("sickLeaveRequest");
   }
+  
   const handleMaternityLeaveRequest=async ()=>{
     console.log("cliked on maternity leave request")
     await (props.updateRequests());
@@ -145,12 +146,14 @@ export default function PersistentDrawerLeft(props) {
     await (props.updateRequests());
     props.setComponentInMain("compensationLeaveRequest");
   }
+
   const handleDepartmentCourses=async ()=>{
     console.log("cliked on handle department courses")
     await (props.requestAllDepartmentCourses());
     props.setComponentInMain("departmentCourses");
     console.log("passed set comp in main")
   }
+
   return (
     <div className={classes.root}>
       <CssBaseline />

@@ -51,6 +51,7 @@ const getCurDay = (date) => { // date entered as normal date not miliseconds
   const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   return days[date.getDay()];
 }
+
 export default function MaxWidthDialog(props) {
   const classes = useStyles();
   const [academicMembers, setAcademicMembers] = React.useState([]);
@@ -59,45 +60,36 @@ export default function MaxWidthDialog(props) {
 
   useEffect(async () => {
     if (academicMembers.length == 0) {
-      setAcademicMembers(
-        (await axios.post('ac/viewCourseMembers', { courseID: props.courseID })).data
-      );
+      let members = (await axios.post('ac/viewCourseMembers', { courseID: props.courseID })).data;
+      const userID = localStorage.getItem('ID');
+      members = members.filter(m => m.ID != userID);
+      setAcademicMembers(members);
     }
   });
 
   function disableNonSlotDays(date) {
     return getCurDay(date) != props.slotDay || date.getTime() < new Date(Date.now());
   }
-  const handleClickOpen = () => {
-    // setOpen(true);
-  };
 
   const handleClose = () => {
     props.onClose();
   };
 
   const handleSubmit = async (event) => {
-    try{
-      await axios.post('ac/sendReplacementRequest',{replacementID : selectedMem, courseID : props.courseID,
-        slotID : props.slotID, requestedDate : selectedDate.getTime()});
-    }catch(err){
+    try {
+      await axios.post('ac/sendReplacementRequest', {
+        replacementID: selectedMem, courseID: props.courseID,
+        slotID: props.slotID, requestedDate: selectedDate.getTime()
+      });
+      await props.setComponentInMain("personalSchedule");
+      alert("Replacement Request submitted successfully.")
+    } catch (err) {
       alert(err.response.data);
-      console.log(err.response.data);
     }
-    
-    handleClose();
 
-   
+    handleClose();
   }
 
-  const handleMaxWidthChange = (event) => {
-    // setMaxWidth(event.target.value);
-  };
-
-  const handleFullWidthChange = (event) => {
-    // setFullWidth(event.target.checked);
-  };
-  console.log(props.slotDay)
   return (
     <React.Fragment>
       <Dialog
@@ -117,7 +109,6 @@ export default function MaxWidthDialog(props) {
               <InputLabel htmlFor="max-width">Academic Members</InputLabel>
               <Select
                 autoFocus
-                // value={maxWidth}
                 inputProps={{
                   name: 'max-width',
                   id: 'max-width',
@@ -132,25 +123,12 @@ export default function MaxWidthDialog(props) {
               </Select>
             </FormControl>
           </form>
-          {/* <form className={classes.container} noValidate>
-            <TextField
-              id="date"
-              label="Birthday"
-              type="date"
-              // defaultValue="2017-05-24"
-              shouldDisableDate={false}
-              className={classes.textField}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </form> */}
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DatePicker 
-            value={selectedDate} 
-            shouldDisableDate = {disableNonSlotDays}  
-            onChange={handleDateChange} />
-
+            <DatePicker
+              value={selectedDate}
+              shouldDisableDate={disableNonSlotDays}
+              onChange={handleDateChange}
+            />
           </MuiPickersUtilsProvider>
         </DialogContent>
         <DialogActions>

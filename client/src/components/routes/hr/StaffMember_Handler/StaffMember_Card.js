@@ -20,6 +20,7 @@ import TodayIcon from '@material-ui/icons/Today';
 import { deepPurple } from '@material-ui/core/colors';
 import Tooltip from '@material-ui/core/Tooltip';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Switch from '@material-ui/core/Switch';
 import AddStaffMemberForm from './Add_StaffMember_Form';
 import EditStaffMemberForm from './Edit_StaffMember_Form';
 import AttendanceRecordForm from './AttendanceRecord_Form';
@@ -79,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
       },
 }));
 
-export default function Edit_StaffMember_Card(props) {
+export default function StaffMember_Card(props) {
     const [openEdit, setOpenEdit] = React.useState(false);
 
     const [openUpdate, setOpenUpdate] = React.useState(false);
@@ -87,7 +88,26 @@ export default function Edit_StaffMember_Card(props) {
     const [attendanceView , setAttendanceView] = React.useState(null);
     const [openAdd, setOpenAdd] = React.useState(false);
     const [openAttendance , setOpenAttendance] = React.useState(false);
+    const [openUpdateSession , setOpenUpdateSession] = React.useState(false);
+    const [updatedStaffMemberSession , setUpdatedStaffMemberSession] = React.useState({});
+    const [viewMissingDays, setViewMissingDays] = React.useState(false);
+    const [viewMissingHours, setViewMissingHours] = React.useState(false);
+    
+    const handleChangeMissingDays = async (event) => {
+        setViewMissingDays(event.target.checked);
+    };
 
+    const handleChangeMissingHours = async (event) => {
+        setViewMissingHours(event.target.checked);
+    };
+
+    const handleOpenUpdateSession = (event) =>{
+        setOpenUpdateSession(true);
+    }
+
+    const handleCloseUpdateSession = (event) =>{
+        setOpenUpdateSession(false);
+    }
 
     const handleOpenEdit = (event) => {
         setOpenUpdate(true);
@@ -133,6 +153,14 @@ export default function Edit_StaffMember_Card(props) {
         setOpenUpdate(true);
     }
 
+    const handleUpdateSession = async (event) => {
+        const memberID = event.currentTarget.id.split('_')[2];
+        const type = event.currentTarget.id.split('_')[1];
+        const member = props.staffMembers.filter(l => l.ID == memberID && l.type == type );
+        setUpdatedStaffMemberSession(member[0]);
+        setOpenUpdateSession(true);
+    }
+
     const handleAttendance = async (event) =>{
         const memberID = event.currentTarget.id.split('_')[2];
         const type = event.currentTarget.id.split('_')[1];
@@ -144,13 +172,6 @@ export default function Edit_StaffMember_Card(props) {
         setOpenAttendance(true);
     }
 
-    const handleAddMissingSessions = async (event) =>{
-        const memberID = event.currentTarget.id.split('_')[2];
-        const type = event.currentTarget.id.split('_')[1];
-        console.log("Add Missing Sign In and Out");
-    }
-
-
     const getOfficeName = (ID) =>{
         const office = props.offices.filter(elm => elm.ID == ID);
         return office.length > 0 ? office[0].name : undefined;
@@ -161,8 +182,19 @@ export default function Edit_StaffMember_Card(props) {
         return dep.length > 0 ? dep[0].name : undefined;
     }
 
-    const classes = useStyles();
+    const getViewedMembers = () =>{
+        if(viewMissingDays && !viewMissingHours) return props.staffMembersWithMissingDays;
+        else if(!viewMissingDays && viewMissingHours) return props.staffMembersWithMissingHours;
+        else if( viewMissingDays && viewMissingHours){
+            setViewMissingDays(false);setViewMissingHours(false);
+            return props.staffMembers;
+        }
+        else return props.staffMembers;
+    }
 
+    const classes = useStyles();
+    console.log(localStorage.getItem("type"))
+    console.log(localStorage.getItem('ID'))
     return (
         <div>
             <Container maxWidth="lg">
@@ -174,6 +206,7 @@ export default function Edit_StaffMember_Card(props) {
 
                 <Typography className={classes.title} variant="h5" component="div">
                     <b>Staff Members</b>
+                    <Tooltip title="Add new Staff Member">
                     <IconButton
                         aria-label="account of current user"
                         aria-haspopup="true"
@@ -183,23 +216,39 @@ export default function Edit_StaffMember_Card(props) {
                         <AddCircleIcon style={{ fontSize: 25, opacity: 0.8 }}
                         />
                     </IconButton>
+                    </Tooltip>
+                    <Tooltip title = "View Staff Members with Missing Days">
+                    <Switch
+                        checked={viewMissingDays}
+                        onChange={handleChangeMissingDays}
+                        name="viewMissingDays"
+                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                    />
+                    </Tooltip>
+                    <Tooltip title = "View Staff Members with Missing Hours">
+                    <Switch
+                        checked={viewMissingHours}
+                        onChange={handleChangeMissingHours}
+                        name="viewMissingHours"
+                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                    />
+                    </Tooltip>
                 </Typography>
 
                 <Grid container spacing={4} >
                     {
-                        props.staffMembers.map(staffMember =>
+                        getViewedMembers().map(staffMember =>
                             <Grid item xs={12} md={6}>
-                                <CardActionArea component="a" disabled={false}>
                                     <Card className={classes.card}>
                                         <div className={classes.cardDetails}>
                                             <CardContent style={{paddingBottom:"0px",paddingLeft:"0px"}}>
                                                 <Typography variant="subtitle1" paragraph style={{marginBottom:"0px"}}>
                                                     <Box display="flex" flexDirection="row" >
-                                                        <Box width="30%" style={{margin:"auto",textAlign:"center"}}>
+                                                        <Box width="40%" style={{margin:"auto",textAlign:"center"}}>
                                                             <Avatar src="/broken-image.jpg" className={classes.Avatar}>{staffMember.name.substring(0, 2).toUpperCase()}</Avatar>
                                                             <b> {staffMember.name}</b><br />
                                                         </Box>
-                                                        <Box width="35%">
+                                                        <Box width="30%">
                                                             <b>Email: </b><a href={"mailto:"+staffMember.email}>{staffMember.email}</a> <br />
                                                             <b>Day Off: </b> {staffMember.dayOff}<br />
                                                             <b>Gender: </b> {staffMember.gender}<br />
@@ -209,7 +258,7 @@ export default function Edit_StaffMember_Card(props) {
                                                                 <b>Department: </b> {getDepartmentName(staffMember.departmentID)}<br />
                                                             </Collapse>
                                                         </Box>
-                                                        <Box width="35%">
+                                                        <Box width="30%">
                                                         <b>Extra Info:</b><br />
                                                         {staffMember.extraInfo.map(elm =>{
                                                             return(
@@ -258,21 +307,24 @@ export default function Edit_StaffMember_Card(props) {
                                                 <TodayIcon style={{ fontSize: 30, opacity: 1 ,padding:"0px"}} />
                                             </IconButton>
                                             </Tooltip>
-                                            <Tooltip title="Add Missing Sessions">
-                                            <IconButton
-                                                aria-label="account of current user"
-                                                aria-haspopup="true"
-                                                id={"viewAttendance_"+staffMember.type+"_" + staffMember.ID}
-                                                color='primary'
-                                                onClick={handleAddMissingSessions}
-                                                style={{paddingRight : "0px"}}
-                                            >
-                                                <ExitToAppIcon style={{ fontSize: 30, opacity: 1 ,padding:"0px"}} />
-                                            </IconButton>
-                                            </Tooltip>
+                                            <Collapse 
+                                            style = {{display : "inline-block"}}
+                                            in = {!(staffMember.ID == localStorage.getItem("ID") && staffMember.type == localStorage.getItem("type"))}>
+                                                <Tooltip title="Add Missing Sessions">
+                                                <IconButton
+                                                    aria-label="account of current user"
+                                                    aria-haspopup="true"
+                                                    id={"viewAttendance_"+staffMember.type+"_" + staffMember.ID}
+                                                    color='primary'
+                                                    onClick={handleUpdateSession}
+                                                    style={{paddingRight : "0px"}}
+                                                >
+                                                    <ExitToAppIcon style={{ fontSize: 30, opacity: 1 ,padding:"0px"}} />
+                                                </IconButton>
+                                                </Tooltip>
+                                            </Collapse>
                                         </div>
                                     </Card>
-                                </CardActionArea>
                             </Grid>
                         )
                     }
@@ -299,7 +351,13 @@ export default function Edit_StaffMember_Card(props) {
                 handleCloseAttendance={handleCloseAttendance}
                 attendanceRecords = {attendanceView}
                 setComponentInMain={props.setComponentInMain} /> 
-            {/* <AddMissingSignInOutForm/>   */}
+            <AddMissingSignInOutForm
+                open = {openUpdateSession}
+                handleOpenUpdateSession = {handleOpenUpdateSession}
+                handleCloseUpdateSession = {handleCloseUpdateSession}
+                staffMember = {updatedStaffMemberSession}
+                setComponentInMain = {props.setComponentInMain}
+            />  
         </div >
     );
 }

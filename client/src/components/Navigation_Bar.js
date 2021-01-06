@@ -1,4 +1,4 @@
-import { Collapse } from '@material-ui/core';
+import { Collapse, Tooltip } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
@@ -9,13 +9,15 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MenuIcon from '@material-ui/icons/Menu';
 import TodayIcon from '@material-ui/icons/Today';
+import WorkOffIcon from '@material-ui/icons/WorkOff';
 import clsx from 'clsx';
 import React, { Component } from 'react';
 import DropdownList_NavBar from './DropdownList_NavBar';
 import DropdownList_Notifications from './DropdownList_Notifications';
+import CC_SlideBar from './slideBars/CC_SlideBar';
+import CI_SlideBar from './slideBars/CI_SlideBar';
 import Hod_SlideBar from './slideBars/Hod_SlideBar';
 import HR_SlideBar from './slideBars/HR_SlideBar';
-import CI_SlideBar from './slideBars/CI_SlideBar';
 
 const drawerWidth = 240;
 
@@ -81,6 +83,10 @@ class Navigation_Bar extends Component {
         this.props.fromParent("attendance");
     }
 
+    handleViewMissingDays = (event) => {
+        this.props.fromParent("viewMissingDays");
+    }
+
     handleSlideBarToggle = async (event) => {
         await this.setState({ isSlideBarOpen: !this.state.isSlideBarOpen });
         this.props.handleAppBarShift(this.state.isSlideBarOpen);
@@ -111,52 +117,78 @@ class Navigation_Bar extends Component {
                   </Typography>
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
-                            <IconButton aria-label="show 4 new mails" color="inherit" onClick={this.handleViewAttendance}>
-                                <Badge badgeContent={0} color="secondary">
-                                    <TodayIcon />
-                                </Badge>
-                            </IconButton>
+                            <Tooltip title={"View Missing Days"}>
+                                <IconButton aria-label="show 4 new mails" color="inherit" onClick={this.handleViewMissingDays}>
+                                    <Badge badgeContent={0} color="secondary">
+                                        <WorkOffIcon />
+                                    </Badge>
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title={"View Attendance"}>
+                                <IconButton aria-label="show 4 new mails" color="inherit" onClick={this.handleViewAttendance}>
+                                    <Badge badgeContent={0} color="secondary">
+                                        <TodayIcon />
+                                    </Badge>
+                                </IconButton>
+                            </Tooltip>
                             <Collapse in={localStorage.getItem('type') == 0}>
-                                <DropdownList_Notifications />
+                                <Tooltip title={"Notifications"}>
+                                    <DropdownList_Notifications />
+                                </Tooltip>
                             </Collapse>
 
-                            <IconButton
-                                aria-label="account of current user"
-                                aria-haspopup="true"
-                                id="profile"
-                                onClick={this.handleViewProfile}
-                                color="inherit"
-                            >
-                                <AccountCircle />
-                            </IconButton>
-                            <DropdownList_NavBar />
+                            <Tooltip title={"View Profile"}>
+                                <IconButton
+                                    aria-label="account of current user"
+                                    aria-haspopup="true"
+                                    id="profile"
+                                    onClick={this.handleViewProfile}
+                                    color="inherit"
+                                >
+                                    <AccountCircle />
+                                </IconButton>
+                            </Tooltip>
+                            <DropdownList_NavBar
+                                fromParent={this.props.fromParent}
+                            />
                         </div>
                     </Toolbar>
                     {
-                        
-                        (localStorage.getItem('type') == 1 ?
+
+                        (localStorage.getItem('type') == 1) ?
                             <HR_SlideBar
                                 open={this.state.isSlideBarOpen}
                                 setComponentInMain={this.props.fromParent} /> :
-                            localStorage.getItem('academicMemberType')==0?
-                            <Hod_SlideBar
-                                open={this.state.isSlideBarOpen}
-                                updateRequestStaffProfile={this.props.updateRequestStaffProfile}
-                                updateRequests={this.props.updateRequests}
-                                setComponentInMain={this.props.fromParent} 
-                                requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}
-                
-                                />:  localStorage.getItem('academicMemberType')==1?
+                            (localStorage.getItem("academicMemberType") == 0) ?
+                                <Hod_SlideBar
+                                    open={this.state.isSlideBarOpen}
+                                    updateRequestStaffProfile={this.props.updateRequestStaffProfile}
+                                    updateRequests={this.props.updateRequests}
+                                    setComponentInMain={this.props.fromParent}
+                                    requestAllDepartmentCourses={this.props.requestAllDepartmentCourses} />
+                                : localStorage.getItem('academicMemberType') == 1 ?
 
-                                <CI_SlideBar
-                                open={this.state.isSlideBarOpen}
-                                setComponentInMain={this.props.fromParent} 
-                                requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}
-                                updateRequestStaffProfile={this.props.updateRequestStaffProfile}
-                                updateRequestCourseStaff={this.props.updateRequestCourseStaff}
-                                />:<div/>
-                          
-                        )
+                                    <CI_SlideBar
+                                        open={this.state.isSlideBarOpen}
+                                        setComponentInMain={this.props.fromParent}
+                                        requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}
+                                        updateRequestStaffProfile={this.props.updateRequestStaffProfile}
+                                        updateRequestCourseStaff={this.props.updateRequestCourseStaff}
+                                    />
+
+
+
+                                    :
+                                    (localStorage.getItem("academicMemberType") == 2) ?
+                                        <CC_SlideBar
+                                            open={this.state.isSlideBarOpen}
+                                            setComponentInMain={this.props.fromParent} /> :
+                                        <Hod_SlideBar
+                                            open={this.state.isSlideBarOpen}
+                                            updateRequestStaffProfile={this.props.updateRequestStaffProfile}
+                                            updateRequests={this.props.updateRequests}
+                                            setComponentInMain={this.props.fromParent}
+                                            requestAllDepartmentCourses={this.props.requestAllDepartmentCourses} />
                     }
                 </AppBar>
             </div>

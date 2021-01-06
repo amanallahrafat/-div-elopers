@@ -2,11 +2,37 @@ const Course = require('../Models/Academic/Course.js');
 const Course_Schedule = require('../Models/Academic/Course_Schedule.js');
 const Notification = require('../Models/Others/Notification.js');
 const Slot_Linking_Request = require('../Models/Requests/Slot_Linking_Request.js');
-
+const Staff_Member = require('../Models/Users/Staff_Member');
+const Academic_Member = require('../Models/Users/Academic_Member');
 const Location = require('../Models/Others/Location.js')
 const validator = require('../Validations/courseCoordinatorValidation.js');
 const checkings = require('../utils/checkings.js');
 
+const viewAllLocations = async (req, res) => {
+    res.send(await Location.find());
+}
+
+const viewAllMembersProfiles = async (req,res) =>{
+    const academicMembers = await Academic_Member.find();
+    let data = []
+    for(const staff of academicMembers){
+        const ac = await Staff_Member.findOne({ID : staff.ID , type : 0});
+        staff['_doc'].name = ac.name;
+        data.push(staff);
+    }
+    res.send(data);
+}
+
+const viewAllSlots = async (req,res) =>{
+    const {ID,type} = req.header.user;
+    const course = await Course.findOne({ coordinatorID: ID });
+    const schedule = await Course_Schedule.findOne({ID : course.ID});
+    for (const entry of schedule.slots) {
+        entry.courseName = course.code;
+        entry.courseID = course.ID;
+    }
+    res.send(schedule);
+}
 
 const viewSlotLinkingRequests = async(req, res) => {
     const { ID, type } = req.header.user;
@@ -63,7 +89,7 @@ const hendleSlotLinkingRequest = async(req, res) => {
         });
         await notification.save();
         await Slot_Linking_Request.updateOne({ ID: requestID }, { status: "accepted" });
-        res.send("The Request is accepted sucessfully !");
+        res.send("The Request is accepted successfully !");
     }
 }
 
@@ -118,7 +144,8 @@ const createSlot = async(req, res) => {
 
     course_schedule.slots.push(newSlot);
     await Course_Schedule.updateOne({ ID: course.ID }, { slots: course_schedule.slots });
-    res.send("Slot added sucessfully !");
+    newSlot.courseName = course.code;
+    res.send(newSlot);
 }
 
 const deleteSlot = async(req, res) => {
@@ -159,13 +186,18 @@ const updateSlot = async(req, res) => {
     const isValid = validator.validateSlot(req.body);
     if (isValid.error)
         return res.status(400).send({ error: isValid.error.details[0].message });
+    if(oldSlot[0].instructor != null ) req.body.instructor = oldSlot[0].instructor;
     req.body.ID = oldSlot[0].ID;
     slots.push(req.body);
     await Course_Schedule.updateOne({ ID: courseID }, { slots: slots });
-    res.send("The slot has been updated sucessfully !");
+    console.log(req.body);
+    res.send(req.body);
 }
 
 module.exports = {
+    viewAllSlots,
+    viewAllLocations,
+    viewAllMembersProfiles,
     viewSlotLinkingRequests,
     hendleSlotLinkingRequest,
     createSlot,

@@ -7,10 +7,11 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import setAuthToken from "../actions/setAuthToken.js";
 
-export default function SimpleMenu() {
+export default function SimpleMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isLoggedOut, setIsLoggedOut] = React.useState(false);
 
+   
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -48,25 +49,27 @@ export default function SimpleMenu() {
     
     return (
         <div>
-            <IconButton
-                aria-label="account of current user"
-                aria-haspopup="true"
-                color="inherit"
-                onClick={handleClick}
-            >
-                <MoreVertIcon />
-            </IconButton>
-            <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                <MenuItem id="signIn" onClick={handleClose}>Sign in</MenuItem>
-                <MenuItem id="signOut" onClick={handleClose}>Sign out</MenuItem>
-                <MenuItem id="logout" onClick={handleClose}>Logout</MenuItem>
-            </Menu>
+            <div>
+                <IconButton
+                    aria-label="account of current user"
+                    aria-haspopup="true"
+                    color="inherit"
+                    onClick={handleClick}
+                >
+                    <MoreVertIcon />
+                </IconButton>
+                <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                >
+                    <MenuItem id="signIn" onClick={handleClose}>Sign in</MenuItem>
+                    <MenuItem id="signOut" onClick={handleClose}>Sign out</MenuItem>
+                    <MenuItem id="logout" onClick={handleClose}>Logout</MenuItem>
+                </Menu>
+            </div>
         </div>
     );
 }

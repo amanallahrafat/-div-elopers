@@ -6,6 +6,10 @@ const courseCoordinatorRouter = express.Router();
 
 auth = [authStaffMember,authCourseCoordinator];
 
+
+courseCoordinatorRouter.get('/viewAllMembersProfiles',auth,courseCoordinatorController.viewAllMembersProfiles);
+courseCoordinatorRouter.get('/viewAllLocations',auth,courseCoordinatorController.viewAllLocations);
+courseCoordinatorRouter.get('/viewAllSlots',auth,courseCoordinatorController.viewAllSlots);
 courseCoordinatorRouter.get('/viewSlotLinkingRequests',auth,courseCoordinatorController.viewSlotLinkingRequests)
 courseCoordinatorRouter.post('/handleSlotLinkingRequest',auth,courseCoordinatorController.hendleSlotLinkingRequest);
 

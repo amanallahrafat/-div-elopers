@@ -27,11 +27,13 @@ academicMemberRouter.delete('/cancelCompensationLeaveRequest/:ID', auth, academi
 academicMemberRouter.delete('/cancelMaternityLeaveRequest/:ID', auth, academicMemberController.cancelMaternityLeaveRequest);
 academicMemberRouter.delete('/cancelSickLeaveRequest/:ID', auth, academicMemberController.cancelSickLeaveRequest);
 academicMemberRouter.delete('/cancelReplacementRequest/:ID', auth, academicMemberController.cancelReplacementRequest);
-academicMemberRouter.delete('/cancelAccidentalLeaveRequest', auth, academicMemberController.cancelAccidentalLeaveRequest);
-academicMemberRouter.delete('/cancelAnnualLeaveRequest', auth, academicMemberController.cancelAnnualLeaveRequest);
+academicMemberRouter.delete('/cancelAccidentalLeaveRequest/:ID', auth, academicMemberController.cancelAccidentalLeaveRequest);
+academicMemberRouter.delete('/cancelAnnualLeaveRequest/:ID', auth, academicMemberController.cancelAnnualLeaveRequest);
 
 
 // EXTRA
 //post cause it works that way. sam7yny ya HTTP1.1 standards.
 academicMemberRouter.post('/viewCourseMembers', auth, academicMemberController.viewCourseMembers);
+academicMemberRouter.get('/viewAllCourseSchedules', auth, academicMemberController.viewAllCourseSchedules);
+academicMemberRouter.get('/getAllCoursesInstructorsNames', auth, academicMemberController.getAllCoursesInstructorsNames)
 module.exports = academicMemberRouter;

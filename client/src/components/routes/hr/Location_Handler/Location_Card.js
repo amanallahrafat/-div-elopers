@@ -92,7 +92,9 @@ export default function Location_Card(props) {
     // }
 
     const handleDeleteLocation = async (event) => {
-        const res = await axios.delete(`/hr/deleteLocation/${event.currentTarget.id.split('_')[1]}`);
+        const deletedID = event.currentTarget.id.split('_')[1];
+        const res = await axios.delete(`/hr/deleteLocation/${deletedID}`);
+        props.handleLocations({ID : deletedID},2);
         props.setComponentInMain("location");
     }
 
@@ -130,7 +132,6 @@ export default function Location_Card(props) {
                     {
                         props.locations.map(location =>
                             <Grid item xs={12} md={4}>
-                                <CardActionArea component="a" href="#" disabled={false}>
                                     <Card className={classes.card}>
                                         <div className={classes.cardDetails}>
                                             <CardContent>
@@ -165,7 +166,6 @@ export default function Location_Card(props) {
                                             </IconButton>
                                         </div>
                                     </Card>
-                                </CardActionArea>
                             </Grid>
                         )
                     }
@@ -176,11 +176,13 @@ export default function Location_Card(props) {
                 handleOpenEdit={handleOpenEdit}
                 handleCloseEdit={handleCloseEdit}
                 location={updatedLocation}
+                handleLocations = {props.handleLocations}
                 setComponentInMain={props.setComponentInMain} />
             <AddLocationForm
                 open={openAddLocation}
                 handleOpenAdd={handleOpenAdd}
                 handleCloseAdd={handleCloseAdd}
+                handleLocations = {props.handleLocations}
                 setComponentInMain={props.setComponentInMain} />
         </div >
     );

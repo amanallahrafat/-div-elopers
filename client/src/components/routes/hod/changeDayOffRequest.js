@@ -188,7 +188,7 @@ export default function ChangeDayOffRequest(props) {
                                                 <b>Sender Name:</b> {req.senderID}<br />
                                                  <b>Email:</b> <a href={"mailto:"+req.email}>{req.email} </a><br /> 
                                                 <b>Message:</b> {req.msg}<br />
-                                                <b>Resquested day off :</b> {req.targetDayOff}<br />
+                                                <b>Requested day off :</b> {req.targetDayOff}<br />
                                                  <b>Current day off:</b> {req.dayOff}<br /> 
                                                 <b>Submission date:</b> {req.submissionDate}<br />
                                                 <b>Status:</b> {req.status}<br />
