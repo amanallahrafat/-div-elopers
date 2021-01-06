@@ -268,7 +268,7 @@ export default function CustomizedTables(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(isViewingReplacementRequest ? scheduleRowWithReplacement : scheduleRow).map((row) => (
+                        {(isViewingReplacementRequest||isViewingSentReplacementRequest ? scheduleRowWithReplacement : scheduleRow).map((row) => (
                             <StyledTableRow key={row.name}>
                                 <StyledTableCell component="th" scope="row">
                                     <b>{row.day.charAt(0).toUpperCase() + row.day.slice(1)}</b>
