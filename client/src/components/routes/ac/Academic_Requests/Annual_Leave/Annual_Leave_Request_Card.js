@@ -32,9 +32,9 @@ export default function RequestForm(props) {
 
     const handleSubmitRequest = async () => {
         try {
-            handleClose();
             const res = await axios.post("ac/sendAnnualLeaveRequest",
                 { "requestedDate": (new Date(selectedDate)).getTime(), "msg": msg });
+            handleClose();
             await props.setComponentInMain("ac_annualLeaveRequest");
             alert('Request has been submitted successfully.')
         } catch (err) {

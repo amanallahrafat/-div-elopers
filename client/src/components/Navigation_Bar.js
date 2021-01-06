@@ -1,4 +1,4 @@
-import { Collapse } from '@material-ui/core';
+import { Collapse, Tooltip } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,6 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import TodayIcon from '@material-ui/icons/Today';
 import clsx from 'clsx';
 import React, { Component } from 'react';
+import WorkOffIcon from '@material-ui/icons/WorkOff';
 import DropdownList_NavBar from './DropdownList_NavBar';
 import DropdownList_Notifications from './DropdownList_Notifications';
 import Hod_SlideBar from './slideBars/Hod_SlideBar';
@@ -81,9 +82,9 @@ class Navigation_Bar extends Component {
         this.props.fromParent("attendance");
     }
 
-    // handleViewMissingDays = (event) => {
-    //     this.props.fromParent("viewMissingDays");
-    // }
+    handleViewMissingDays = (event) => {
+        this.props.fromParent("viewMissingDays");  
+    }
 
     handleSlideBarToggle = async (event) => {
         await this.setState({ isSlideBarOpen: !this.state.isSlideBarOpen });
@@ -115,24 +116,37 @@ class Navigation_Bar extends Component {
                   </Typography>
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
-                            <IconButton aria-label="show 4 new mails" color="inherit" onClick={this.handleViewAttendance}>
-                                <Badge badgeContent={0} color="secondary">
-                                    <TodayIcon />
-                                </Badge>
-                            </IconButton>
+                            <Tooltip title={"View Missing Days"}>
+                                <IconButton aria-label="show 4 new mails" color="inherit" onClick={this.handleViewMissingDays}>
+                                    <Badge badgeContent={0} color="secondary">
+                                        <WorkOffIcon />
+                                    </Badge>
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title={"View Attendance"}>
+                                <IconButton aria-label="show 4 new mails" color="inherit" onClick={this.handleViewAttendance}>
+                                    <Badge badgeContent={0} color="secondary">
+                                        <TodayIcon />
+                                    </Badge>
+                                </IconButton>
+                            </Tooltip>
                             <Collapse in={localStorage.getItem('type') == 0}>
-                                <DropdownList_Notifications />
+                                <Tooltip title={"Notifications"}>
+                                    <DropdownList_Notifications />
+                                </Tooltip>
                             </Collapse>
 
-                            <IconButton
-                                aria-label="account of current user"
-                                aria-haspopup="true"
-                                id="profile"
-                                onClick={this.handleViewProfile}
-                                color="inherit"
-                            >
-                                <AccountCircle />
-                            </IconButton>
+                            <Tooltip title={"View Profile"}>
+                                <IconButton
+                                    aria-label="account of current user"
+                                    aria-haspopup="true"
+                                    id="profile"
+                                    onClick={this.handleViewProfile}
+                                    color="inherit"
+                                >
+                                    <AccountCircle />
+                                </IconButton>
+                            </Tooltip>
                             <DropdownList_NavBar 
                                 fromParent = {this.props.fromParent}
                             />

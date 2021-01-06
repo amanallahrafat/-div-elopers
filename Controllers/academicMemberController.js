@@ -201,7 +201,7 @@ const viewAllRequests = async (req, res) => {
         result.push(await Maternity_Leave_Request.find({ senderID: ID }));//4
         result.push(await Replacement_Request.find({ senderID: ID }));//5
         result.push(await Sick_Leave_Request.find({ senderID: ID }));//6
-        result.push(await Slot_Linking_Request.find({ senderID: ID }));
+        result.push(await Slot_Linking_Request.find({ senderID: ID }));//7
         // return res.send(result);
     } else if (req.params.view == 1) {
         result.push(await Accidental_Leave_Request.find({ senderID: ID, status: "accepted" }));
@@ -547,7 +547,7 @@ const sendCompensationLeaveRequest = async (req, res) => {
     const user = await Staff_Member.findOne({ ID: ID, type: type });
     const dayOff = extraUtils.getCurDay(new Date(requestedDate));
     if (dayOff != user.dayOff) {
-        return res.send("You can't accept this request, since the compensation day is not the day off");
+        return res.status(404).send("You can't accept this request, since the compensation day is not the day off");
     }
 
     const curDate = new Date(requestedDate);
@@ -565,6 +565,7 @@ const sendCompensationLeaveRequest = async (req, res) => {
         return res.status(403).send("The requested compensation day is not in same month as the missed day");
     }
     const request = await Compensation_Leave_Request.find();
+    console.log(req.body.msg);
     const compensation_leave_request = new Compensation_Leave_Request({
         ID: getMaxSlotID(request) + 1,
         senderID: ID,

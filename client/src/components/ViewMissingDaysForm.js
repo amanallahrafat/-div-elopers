@@ -1,7 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import { Collapse } from '@material-ui/core';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
 import { lighten, makeStyles } from '@material-ui/core/styles';
+import Switch from '@material-ui/core/Switch';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,20 +11,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import Typography from '@material-ui/core/Typography';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import DropdownList_Attendance from './DropdownList_Attendance';
-import { Collapse } from '@material-ui/core';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 
 function descendingComparator(a, b, orderBy) {
@@ -54,10 +49,10 @@ function stableSort(array, comparator) {
 const headCells = [
   { id: 'AttendanceStatus', numeric: true, disablePadding: true, label: 'Status' },
   { id: 'AttendanceSignin', numeric: true, disablePadding: true, label: 'Day' },
- ];
+];
 
 function EnhancedTableHead(props) {
-    
+
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -72,7 +67,7 @@ function EnhancedTableHead(props) {
             align={'center'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            <b style={{fontSize:20}}>{headCell.label}</b>
+            <b style={{ fontSize: 20 }}>{headCell.label}</b>
           </TableCell>
         ))}
       </TableRow>
@@ -98,13 +93,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: '1 1 100%',
   },
@@ -125,10 +120,10 @@ const EnhancedTableToolbar = (props) => {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography className={classes.title} variant="h5" id="tableTitle" component="div">
-          Missing Days
-        </Typography>
-      )}
+          <Typography className={classes.title} variant="h5" id="tableTitle" component="div">
+            Missing Days
+          </Typography>
+        )}
     </Toolbar>
   );
 };
@@ -155,7 +150,7 @@ const useStyles = makeStyles((theme) => ({
     margin: -1,
     overflow: 'hidden',
     padding: 0,
-    position:   'absolute',
+    position: 'absolute',
     top: 20,
     width: 1,
   },
@@ -163,11 +158,11 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function EnhancedTable(props) {
-    
-const [rows,setRows]=React.useState(props.missedDays);
-const allRows=props.missedDays;
 
-const classes = useStyles();
+  const [rows, setRows] = React.useState(props.missedDays);
+  const allRows = props.missedDays;
+
+  const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('AttendanceSignin');
   const [selected, setSelected] = React.useState([]);
@@ -229,7 +224,7 @@ const classes = useStyles();
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length}/>
+        <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             className={classes.table}
@@ -264,21 +259,10 @@ const classes = useStyles();
                     >
                       <TableCell align="center">Absent</TableCell>
                       <TableCell align="center">{row.date}</TableCell>
-                      <Collapse in = {localStorage.getItem("type") == 0}>
-                        <TableCell align="center">
-                          <Tooltip title ={"Send Compensation Leave"}>
-                            <IconButton style={{padding:"0px" , margin:"0px"}}>
-                              <SwapHorizIcon
-                                onClick={console.log("send compensations leave on day"+row.date)}
-                              />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
-                      </Collapse>
                     </TableRow>
                   );
                 })}
-                
+
               {emptyRows > 0 && (
                 <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
                   <TableCell colSpan={6} />
@@ -287,7 +271,7 @@ const classes = useStyles();
             </TableBody>
           </Table>
         </TableContainer>
-      
+
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"

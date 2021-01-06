@@ -30,3 +30,8 @@ export const getAllCoursesInstructorsNames = async () => {
     const coursesInstructorName = await axios.get("/ac/getAllCoursesInstructorsNames");
     return coursesInstructorName.data;
 };
+
+export const getAllMissingDays = async () => {
+    const missingDays = await axios.get("/viewMissingDays");
+    return missingDays.data;
+};

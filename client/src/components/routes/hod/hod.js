@@ -10,6 +10,7 @@ import Navigation_Bar from '../../Navigation_Bar.js';
 import Profile from '../../Profile';
 import Accidental_Leave_Request from "../ac/Academic_Requests/Accidental_Leave/Accidental_Leave_List";
 import Annual_Leave_Request from "../ac/Academic_Requests/Annual_Leave/Annual_Leave_List";
+import Compensation_Leave_Request from "../ac/Academic_Requests/Compensation_Leave/Compensation_Leave_List";
 import Change_Day_Off_Request from "../ac/Academic_Requests/Change_Day_Off/Change_Day_Off_List";
 import Maternity_Leave_Request from "../ac/Academic_Requests/Maternity_leave/Maternity_Leave_List";
 import Sick_Leave_Request from "../ac/Academic_Requests/Sick_Leave/Sick_Leave_List";
@@ -24,12 +25,15 @@ import ManageCourseInstructors from "./ManageCourseInstructors.js";
 import MaternityLeaveRequest from "./maternityLeaveRequest.js";
 import SickLeaveRequest from "./sickLeaveRequest.js";
 import ViewStaffProfiles from "./viewStaffProfiles.js";
+import ViewMissingDaysForm from '../../ViewMissingDaysForm.js';
+
 import {
     getAllSentRequests,
     requestSchedule,
     getReplacementRequests,
     viewAllCourseSchedules,
-    getAllCoursesInstructorsNames
+    getAllCoursesInstructorsNames,
+    getAllMissingDays,
 } from '../ac/ac_helper.js'
 
 const requestUserProfile = async () => {
@@ -90,6 +94,17 @@ const requestAllDepartmentCourses = async () => {
     console.log("end of  request all department courses", res.data);
     return res.data;
 }
+
+const requestMissingDays = async () => {
+    const res = await axios.get('/viewMissingDays');
+    const dates = res.data;
+    const mappedDates = [];
+    for(const date of dates){
+        mappedDates.push({date : (new Date(date)).toLocaleString()+""})
+    }
+    console.log(mappedDates);
+    return mappedDates;
+  }
 
 const styles = (theme) => ({
     appBar: {
@@ -160,7 +175,16 @@ class HOD extends Component {
         this.setState({ hodProfile: await requestUserProfile() });
     };
     setComponentInMain = async (event) => {
-        if (event == "profile") {
+        if( event == "viewMissingDays"){
+            this.setState({
+              componentInMain :(
+                <ViewMissingDaysForm
+                  missedDays = {await requestMissingDays()}
+                />
+              )
+            })
+          }
+        else if (event == "profile") {
             this.setState({
                 componentInMain: <Profile
                     profile={await requestUserProfile()}
@@ -288,7 +312,7 @@ class HOD extends Component {
         }
         else if (event == "ac_changeDayOffRequest") {
             console.log("ac_changeDayOffRequest")
-            const requestsArr = (await this.getAllSentRequests());
+            const requestsArr = (await getAllSentRequests());
             this.setState({
                 componentInMain: <Change_Day_Off_Request
                     setComponentInMain={this.setComponentInMain}
@@ -340,6 +364,18 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[6]}
                     senderObj={requestsArr.senderObj}
+                />
+            });
+        }
+        else if (event == "ac_compensationLeaveRequest") {
+            console.log("ac_compensationLeaveRequest")
+            const requestsArr = (await getAllSentRequests());
+            this.setState({
+                componentInMain: <Compensation_Leave_Request
+                    setComponentInMain={this.setComponentInMain}
+                    requests={requestsArr.requests[3]}
+                    senderObj={requestsArr.senderObj}
+                    missingDays={await getAllMissingDays()}
                 />
             });
         }

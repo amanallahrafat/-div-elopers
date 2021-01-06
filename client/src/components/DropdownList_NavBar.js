@@ -11,10 +11,6 @@ export default function SimpleMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isLoggedOut, setIsLoggedOut] = React.useState(false);
 
-    const handleOpenViewMissingDays = async (event) => {
-        props.fromParent("viewMissingDays");
-        setAnchorEl(null);
-    }
    
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -69,7 +65,6 @@ export default function SimpleMenu(props) {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
-                    <MenuItem id="viewMissingDays" onClick={handleOpenViewMissingDays}>View Missing Days</MenuItem>
                     <MenuItem id="signIn" onClick={handleClose}>Sign in</MenuItem>
                     <MenuItem id="signOut" onClick={handleClose}>Sign out</MenuItem>
                     <MenuItem id="logout" onClick={handleClose}>Logout</MenuItem>

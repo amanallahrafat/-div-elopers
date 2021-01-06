@@ -37,7 +37,6 @@ export default function RequestForm(props) {
 
     const handleSubmitRequest = async () => {
         try {
-            handleClose();
             const res = await axios.post("ac/sendMaternityLeaveRequest",
                 {
                     "startDate": (new Date(selectedStartDate)).getTime(),
@@ -45,6 +44,7 @@ export default function RequestForm(props) {
                     "msg": msg,
                     "documents": document,
                 });
+            handleClose();
             await props.setComponentInMain("ac_maternityLeaveRequest");
             alert('Request has been submitted successfully.')
         } catch (err) {
