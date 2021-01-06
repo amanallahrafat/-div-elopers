@@ -18,9 +18,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import DropdownList_Attendance from './DropdownList_Attendance';
+import { Collapse } from '@material-ui/core';
 
 
 function descendingComparator(a, b, orderBy) {
@@ -261,7 +263,18 @@ const classes = useStyles();
                       selected={isItemSelected}
                     >
                       <TableCell align="center">Absent</TableCell>
-                       <TableCell align="center">{row.date}</TableCell>
+                      <TableCell align="center">{row.date}</TableCell>
+                      <Collapse in = {localStorage.getItem("type") == 0}>
+                        <TableCell align="center">
+                          <Tooltip title ={"Send Compensation Leave"}>
+                            <IconButton style={{padding:"0px" , margin:"0px"}}>
+                              <SwapHorizIcon
+                                onClick={console.log("send compensations leave on day"+row.date)}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </Collapse>
                     </TableRow>
                   );
                 })}
