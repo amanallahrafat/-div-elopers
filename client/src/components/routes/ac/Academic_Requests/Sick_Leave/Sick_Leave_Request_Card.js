@@ -7,8 +7,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import {
     DatePicker,
-
-
     MuiPickersUtilsProvider
 } from '@material-ui/pickers';
 import axios from 'axios';
@@ -21,8 +19,7 @@ export default function RequestForm(props) {
     const today = new Date()
     const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate() + 1)
-    const [selectedStartDate, handleStartDateChange] = React.useState(tomorrow);
-    const [selectedEndDate, handleEndDateChange] = React.useState(tomorrow);
+    const [selectedRequestedDate, handleRequestedDateChange] = React.useState(tomorrow);
 
     const handleClose = () => {
         setMsg(" ");
@@ -30,22 +27,20 @@ export default function RequestForm(props) {
         const today = new Date()
         const tomorrow = new Date(today)
         tomorrow.setDate(tomorrow.getDate() + 1)
-        handleStartDateChange(tomorrow);
-        handleEndDateChange(tomorrow);
+        handleRequestedDateChange(tomorrow);
         props.handleCloseForm();
     };
 
     const handleSubmitRequest = async () => {
         try {
             handleClose();
-            const res = await axios.post("ac/sendMaternityLeaveRequest",
+            const res = await axios.post("ac/sendSickLeaveRequest",
                 {
-                    "startDate": (new Date(selectedStartDate)).getTime(),
-                    "endDate": (new Date(selectedEndDate)).getTime(),
+                    "requestedDate": (new Date(selectedRequestedDate)).getTime(),
                     "msg": msg,
                     "documents": document,
                 });
-            await props.setComponentInMain("ac_maternityLeaveRequest");
+            await props.setComponentInMain("ac_sickLeaveRequest");
             alert('Request has been submitted successfully.')
         } catch (err) {
             console.log(err.response.data)
@@ -54,8 +49,12 @@ export default function RequestForm(props) {
     }
 
     function disablePast(date) {
-        return date.getTime() <= new Date(Date.now());
+        const today = new Date()
+        const threeDaysBefore = new Date(today)
+        threeDaysBefore.setDate(tomorrow.getDate() - 4)
+        return date.getTime() <= new Date(threeDaysBefore);
     }
+
     return (
         <div>
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -81,17 +80,9 @@ export default function RequestForm(props) {
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <br /><br /><label> <div style={{ fontSize: "18px" }}>Start Date:</div> </label>
                         <DatePicker
-                            value={selectedStartDate}
+                            value={selectedRequestedDate}
                             shouldDisableDate={disablePast}
-                            onChange={handleStartDateChange}
-                        />
-                    </MuiPickersUtilsProvider>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <br /><br /><label> <div style={{ fontSize: "18px" }}>End Date:</div> </label>
-                        <DatePicker
-                            value={selectedEndDate}
-                            shouldDisableDate={disablePast}
-                            onChange={handleEndDateChange}
+                            onChange={handleRequestedDateChange}
                         />
                     </MuiPickersUtilsProvider>
                 </DialogContent>

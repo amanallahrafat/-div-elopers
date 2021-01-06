@@ -9,13 +9,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import CloseIcon from '@material-ui/icons/Close';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import axios from 'axios';
 import React from 'react';
-import Maternity_Leave_Request_Card from "./Maternity_Leave_Request_Card";
+import Sick_Leave_Request_Card from "./Sick_Leave_Request_Card";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -81,8 +80,8 @@ export default function ChangeDayOffRequest(props) {
     const handleCancelForm = async (reqID) => {
         console.log(reqID)
         try {
-            const res = await axios.delete(`/ac/cancelMaternityLeaveRequest/${reqID}`);
-            await props.setComponentInMain("ac_maternityLeaveRequest");
+            const res = await axios.delete(`/ac/cancelSickLeaveRequest/${reqID}`);
+            await props.setComponentInMain("ac_sickLeaveRequest");
             alert("Request has been cancelled successfully.")
         } catch (err) {
             console.log(err.response.data)
@@ -102,7 +101,7 @@ export default function ChangeDayOffRequest(props) {
                     <div className={classes.overlay} />
                 </Paper>
                 <Typography className={classes.title} variant="h5" component="div">
-                    <b>Maternity Leave Requests</b>
+                    <b>Sick Leave Requests</b>
                     <IconButton
                         aria-label="account of current user"
                         aria-haspopup="true"
@@ -142,7 +141,6 @@ export default function ChangeDayOffRequest(props) {
                     alignItems="stretch"
                 >
                     {
-
                         props.requests.map(req =>
                             <Grid item xs style={(req.status != selection && selection != "all") ? { display: 'none' } : {}} >
                                 <Card className={classes.card}>
@@ -155,8 +153,7 @@ export default function ChangeDayOffRequest(props) {
                                                         <b>Email:</b> <a href={"mailto:" + props.senderObj.email}>{props.senderObj.email} </a><br />
                                                         <b>Message:</b> {req.msg}<br />
                                                         <b>Documents URL:</b> <a href="url">{req.documents}</a><br />
-                                                        <b>Start date:</b> {(new Date(req.startDate)).toLocaleDateString('en-US')}<br />
-                                                        <b>End date:</b> {(new Date(req.endDate)).toLocaleDateString('en-US')}<br />
+                                                        <b>Requested date:</b> {(new Date(req.requestedDate)).toLocaleDateString('en-US')}<br />
                                                         <b>Submission date:</b> {(new Date(req.submissionDate)).toLocaleDateString('en-US')}<br />
                                                         <b>Status:</b> {req.status}<br />
                                                     </Typography>
@@ -190,9 +187,8 @@ export default function ChangeDayOffRequest(props) {
                         )
                     }
                 </Grid>
-
             </Container>
-            <Maternity_Leave_Request_Card
+            <Sick_Leave_Request_Card
                 open={showForm}
                 dayOff={props.senderObj.dayOff}
                 handleCloseForm={handleCloseForm}

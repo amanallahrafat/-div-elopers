@@ -199,8 +199,8 @@ const viewAllRequests = async (req, res) => {
         result.push(await Change_Day_Off_Request.find({ senderID: ID }));//2
         result.push(await Compensation_Leave_Request.find({ senderID: ID }));//3
         result.push(await Maternity_Leave_Request.find({ senderID: ID }));//4
-        result.push(await Replacement_Request.find({ senderID: ID }));
-        result.push(await Sick_Leave_Request.find({ senderID: ID }));
+        result.push(await Replacement_Request.find({ senderID: ID }));//5
+        result.push(await Sick_Leave_Request.find({ senderID: ID }));//6
         result.push(await Slot_Linking_Request.find({ senderID: ID }));
         // return res.send(result);
     } else if (req.params.view == 1) {
