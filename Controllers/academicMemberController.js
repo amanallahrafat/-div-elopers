@@ -123,9 +123,10 @@ const sendSlotLinkingRequest = async (req, res) => {
     if (course_schedule == null)
         res.status(404).send("The requested course does not exist");
     const slot = course_schedule.slots.filter((elm) => elm.ID == slotID);
+    console.log(slot,slot[0].instructor);
     if (slot == null || slot.length == 0)
         return res.status(404).send("The requested slot was not found");
-    if (slot.instructor != null)
+    if (slot[0].instructor != null)
         return res.status(400).send("The requested slot is already assigned to another academic member");
     const requests = await Slot_Linking_Request.find();
     const slotLinkingRequest = new Slot_Linking_Request({

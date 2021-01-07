@@ -45,7 +45,7 @@ export default function SimpleCard(props) {
     useEffect(() => {
         console.log(props)
         console.log(hasBeenCancelled)
-        if (status == '-'  &&!hasBeenCancelled &&props.slotLinkingReq) {
+        if (status == '-' && !hasBeenCancelled && props.slotLinkingReq) {
             setStatus(props.slotLinkingReq.status);
         }
         if (instructorName == 'Not yet assigned' && props.instructorName) {
@@ -57,15 +57,16 @@ export default function SimpleCard(props) {
         if (locationName == '' && props.locationName) {
             setLocationName(props.locationName);
         }
-        if(status!='-'){
+        if (status != '-') {
             setIsMe(true);
-        }else{
+        } else {
             setIsMe(false);
         }
     });
 
     const handleSlotLinkingRequest = async () => {
         try {
+            console.log(props.courseID, props.slotID)
             const res = await axios.post("ac/sendSlotLinkingRequest", { courseID: props.courseID, slotID: props.slotID })
             setReqID(res.data.data.reqID);
             setStatus('pending');
@@ -78,14 +79,14 @@ export default function SimpleCard(props) {
     }
 
     const handleCancelSlotLinkingRequest = async (reqID) => {
-        try{
+        try {
             const res = await axios.delete(`ac/cancelSlotLinkingRequest/${reqID}`);
             alert("Request has been cancelled successfully.")
             await setHasBeenCanelled(true);
             await setStatus('-');
             await setIsMe(false);
-        }catch(err){
-            alert(err);
+        } catch (err) {
+            alert(err.response.data);
         }
     }
 
@@ -113,7 +114,7 @@ export default function SimpleCard(props) {
                         <Box>
                             {
                                 (status == "-" && instructorName == "Not yet assigned") ||
-                                    status == "rejected"
+                                    (status == "rejected" && props.slotLinkingReq.senderID == props.instructorID)
                                     ? <CardActions>
                                         <Tooltip title="Send Slot Linking Request">
                                             <Button size="small" color="primary" onClick={handleSlotLinkingRequest}><CallReceivedIcon /></Button>
@@ -124,11 +125,11 @@ export default function SimpleCard(props) {
                                             <Tooltip title="Cancel Slot Linking Request">
                                                 <Button size="small" style={{ color: "red" }} onClick={
                                                     () => {
-                                                        let requestID=-1;
-                                                        if(props.slotLinkingReq){
-                                                            requestID=props.slotLinkingReq.ID;
-                                                        }else{
-                                                            requestID=reqID;
+                                                        let requestID = -1;
+                                                        if (props.slotLinkingReq) {
+                                                            requestID = props.slotLinkingReq.ID;
+                                                        } else {
+                                                            requestID = reqID;
                                                         }
                                                         handleCancelSlotLinkingRequest(requestID);
                                                     }}><CloseIcon /></Button>

@@ -243,10 +243,13 @@ class CC extends Component {
         }
         else if (event == "allCourseSchedule") {
             console.log("allCourseSchedule")
+            const requestsArr = (await getAllSentRequests());
             this.setState({
                 componentInMain: <Course_Schedule
                     departmentCourses={await viewAllCourseSchedules()}
                     allCourses={await getAllCoursesInstructorsNames()}
+                    requests={requestsArr.requests[7]}
+                    senderObj={requestsArr.senderObj}
                 />
             });
         }

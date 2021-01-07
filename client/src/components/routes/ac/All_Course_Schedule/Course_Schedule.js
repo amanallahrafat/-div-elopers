@@ -59,8 +59,19 @@ function mapToScheduleObj(courseSchedule, courseObj, requests) {
     rows = [];
     for (const entry of courseSchedule) {
         console.log(entry);
-        const slotLinkingReq = requests.filter(x => x.slotID == entry.slotID
-            && x.courseID == courseObj.courseID)[0];
+        let slotLinkingReq = requests.filter(x => x.slotID == entry.slotID
+            && x.courseID == courseObj.courseID);
+        let temp = slotLinkingReq[0];
+        for (const s of slotLinkingReq) {
+            if (s.status == "accepted"){
+                temp = s;
+                break;
+            } 
+            if (s.status == "pending"){
+                temp = s;
+            } 
+        }
+        slotLinkingReq = temp;
         scheduleObj[entry.day][entry.slotNumber - 1].push(
             <Course_Schedule_Card
                 instructorName={entry.instructor}
