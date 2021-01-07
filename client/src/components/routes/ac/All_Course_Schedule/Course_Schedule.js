@@ -44,7 +44,7 @@ let scheduleObj = {
     'friday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
 }
 
-function mapToScheduleObj(courseSchedule, courseObj) {
+function mapToScheduleObj(courseSchedule, courseObj, requests) {
     scheduleObj = {
         'saturday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
         'sunday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
@@ -59,13 +59,17 @@ function mapToScheduleObj(courseSchedule, courseObj) {
     rows = [];
     for (const entry of courseSchedule) {
         console.log(entry);
+        const slotLinkingReq = requests.filter(x => x.slotID == entry.slotID
+            && x.courseID == courseObj.courseID)[0];
         scheduleObj[entry.day][entry.slotNumber - 1].push(
             <Course_Schedule_Card
                 instructorName={entry.instructor}
                 instructorID={entry.instructorID}
                 locationName={entry.locationName}
-                courseID= {courseObj.courseID}
+                courseID={courseObj.courseID}
                 slotID={entry.slotID}
+
+                slotLinkingReq={slotLinkingReq}
             />
         )
     }
@@ -114,6 +118,8 @@ export default function CustomizedTables(props) {
         courseCode: "select a course first",
         courseSlots: [],
     })
+    console.log(selectedCourse);
+    mapToScheduleObj(selectedCourse?.courseSlots, selectedCourse, props.requests);
 
     return (
         <TableContainer component={Paper} style={{ border: '1px' }}>
@@ -145,7 +151,7 @@ export default function CustomizedTables(props) {
                                 const sc = props.departmentCourses.find((c) => {
                                     return c.courseID == newValue.ID
                                 });
-                                mapToScheduleObj(sc?.courseSlots, sc);
+                                mapToScheduleObj(sc?.courseSlots, sc, props.requests);
                                 setSelectedCourse(sc);
                                 console.log("selected course from list ", newValue.ID, " selected from props", sc)
                             }

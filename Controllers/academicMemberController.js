@@ -137,7 +137,12 @@ const sendSlotLinkingRequest = async (req, res) => {
         status: "pending"
     });
     await slotLinkingRequest.save();
-    res.send("The request has been sent sucessfully");
+    res.send({
+        msg: "The request has been sent sucessfully",
+        data: {
+            reqID: slotLinkingRequest.ID
+        }
+    });
 }
 // {newdayoff , msg}
 const sendChangeDayOffRequest = async (req, res) => {
@@ -242,7 +247,7 @@ const viewAllRequests = async (req, res) => {
         const locationTable = await Location.find();
         for (const request of result[5]) {
             const courseSchedule = courseScheduleTable.filter((elem) => elem.ID == request.courseID)[0];
-            if(courseSchedule==null){
+            if (courseSchedule == null) {
                 console.log(request.courseID)
             }
             const slot = courseSchedule.slots.filter(s => s.ID == request.slotID)[0];
