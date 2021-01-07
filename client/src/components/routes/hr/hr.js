@@ -83,9 +83,8 @@ const requestMissingDays = async () => {
   console.log(mappedDates);
   return mappedDates;
 }
-// ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
+
 const drawerWidth = 240;
-// *********************************************
 const styles = (theme) => ({
   appBar: {
     transition: theme.transitions.create(["margin", "width"], {
