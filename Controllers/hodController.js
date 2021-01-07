@@ -868,7 +868,7 @@ const createReplacementEntry = (replacement, staffMembers, courses, courses_sche
     return {
         receiverName: receiver.name,
         courseName: course.name,
-        slotNumber: replacementSlot?.slotNumber,
+        slotNumber: replacementSlot?replacementSlot.slotNumber : undefined,
         status: replacement.status
     }
 

@@ -120,6 +120,9 @@ class Login extends Component {
 
     render() {
         const { classes } = this.props;
+        if(this.state.res.firstLogin){
+            return <Redirect to={{pathname:"/resetPassword",state :{firstLogin : this.state.res.firstLogin}}} />
+        }
         if (this.state.isLoggedIn ) {
             if (this.state.res.type === 1) {
                 return <Redirect to='/hr' />;

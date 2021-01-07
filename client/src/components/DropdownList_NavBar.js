@@ -10,11 +10,18 @@ import setAuthToken from "../actions/setAuthToken.js";
 export default function SimpleMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isLoggedOut, setIsLoggedOut] = React.useState(false);
+    const [resetPasswordFlag , setResetPasswordFlag] = React.useState(false);
 
    
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
+
+    const handleResetPassword = (event) =>{
+        // props.fromParent("resetPassword");
+        setResetPasswordFlag(true);
+        setAnchorEl(null);
+    }
 
     const handleClose = async (event) => {
         let res;
@@ -45,6 +52,9 @@ export default function SimpleMenu(props) {
     if (isLoggedOut) {
         return <Redirect to='/' />;
     }
+    if(resetPasswordFlag){
+        return <Redirect to='/resetPassword' />;
+    }
 
     
     return (
@@ -65,6 +75,7 @@ export default function SimpleMenu(props) {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
+                    <MenuItem id="resetPassword" onClick={handleResetPassword}>Reset Password</MenuItem>
                     <MenuItem id="signIn" onClick={handleClose}>Sign in</MenuItem>
                     <MenuItem id="signOut" onClick={handleClose}>Sign out</MenuItem>
                     <MenuItem id="logout" onClick={handleClose}>Logout</MenuItem>
