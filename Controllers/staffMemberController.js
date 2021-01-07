@@ -71,6 +71,7 @@ const login = async (req, res) => {
         ID : u.ID,
         academicMemberType: academicMemberType,
         ID: u.ID,
+        firstLogin : u.firstLogin
     });
 }
 
@@ -111,7 +112,9 @@ const resetPassword = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashedPass = await bcrypt.hash(req.body.newPassword, salt);
-    await Staff_Member.updateOne({ ID: ID, type: type }, { password: hashedPass });
+    const firstLogin = (req.body.firstLogin) ? false : false;
+    console.log(firstLogin);
+    await Staff_Member.updateOne({ ID: ID, type: type }, { password: hashedPass , firstLogin : firstLogin });
     res.send("password has changed successfully");
 }
 

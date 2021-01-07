@@ -15,6 +15,7 @@ export const login = async userData => {
     setAuthToken(token);
     return {
         type: user.data.type,
-        academicMemberType: user.data.academicMemberType
+        academicMemberType: user.data.academicMemberType,
+        firstLogin : user.data.firstLogin
     };
 };

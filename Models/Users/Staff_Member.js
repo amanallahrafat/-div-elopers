@@ -18,6 +18,7 @@ const StaffSchema = new Schema({
     salary : Number,
     annualBalance : Number,
     accidentalLeaveBalance : Number,
+    firstLogin : {type : Boolean , default : true}
 });
 
 //StaffSchema.index();

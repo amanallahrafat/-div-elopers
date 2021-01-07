@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function ResetPassword(props) {
   const classes = useStyles();
   const [oldPassword , setOldPassword] = React.useState(null);
   const [newPassword , setNewPassword] = React.useState(null);
@@ -55,23 +55,24 @@ export default function SignIn() {
         setPassFlag(true);
         setMsg((newPassword.localeCompare(newPasswordConfirm)) == 0 ? true : false);
         try{
-            const res = await axios.post('/resetPassword',{
-                oldPassword : oldPassword,
-                newPassword : newPassword
-            });
+            const req = {
+              oldPassword : oldPassword,
+              newPassword : newPassword,
+            }
+            if (props.location.state != null) req.firstLogin = props.location.state.firstLogin;
+            const res = await axios.post('/resetPassword',req);
             setShouldLogin(true);
         }
         catch(err){
-            console.log(err.response.data);
+            console.log(err);
         }
         setClicked(false);
   }
-
   if (shouldLogin) {
-    if (localStorage.getItem("type") == 1) {
+    if (parseInt(localStorage.getItem("type")) == 1) {
         return <Redirect to='/hr' />;
     } else {
-        switch (localStorage.getItem("academicMemberType")) {
+        switch (parseInt(localStorage.getItem("academicMemberType"))) {
             case 0: return <Redirect to='/hod' />;
             case 1: return <Redirect to='/ci' />;
             case 2: return <Redirect to='/cc' />;
