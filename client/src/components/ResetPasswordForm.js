@@ -48,6 +48,7 @@ export default function ResetPassword(props) {
   const [msg , setMsg] = React.useState();
   const [clicked , setClicked] = React.useState(false);
   const [shouldLogin , setShouldLogin] = React.useState(false);
+  const [newequalOld , setNewequalOld] = React.useState(false);
 
   const handleSubmit = async (event) =>{
         event.preventDefault();
@@ -114,8 +115,18 @@ export default function ResetPassword(props) {
             type="password"
             id="newPassword"
             autoFocus
-            onChange = {(event) => {setNewPassword(event.target.value)}}
+            onChange = {async (event) => {
+              await setNewPassword(event.target.value);
+              setNewequalOld(oldPassword.localeCompare(event.target.value) == 0)
+            }}
           />
+          <Collapse in={newequalOld}>
+                <Alert
+                severity= "error"
+                id="passwordError"
+                className={classes.alert}
+                > New Password can not be equal to the Old Password </Alert>
+            </Collapse>
           <TextField
             variant="outlined"
             margin="normal"
