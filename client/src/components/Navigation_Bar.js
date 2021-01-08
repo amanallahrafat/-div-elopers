@@ -137,7 +137,7 @@ class Navigation_Bar extends Component {
 
         return (
             <div className={classes.grow} id = "Header" style={styles.Header} ref="Header" style={{zIndex:5000}}>
-                <AppBar position="fixed" className={clsx(classes.appBar, {
+                <AppBar style={{zIndex:5000}} position="fixed" className={clsx(classes.appBar, {
                     [classes.appBarShift]: this.state.isSlideBarOpen,
                 })}>
                     <Toolbar >
