@@ -168,11 +168,11 @@ class Navigation_Bar extends Component {
                                     </Badge>
                                 </IconButton>
                             </Tooltip>
-                            <Collapse in={localStorage.getItem('type') == 0}>
                                 <Tooltip title={"Notifications"}>
+                            <Collapse in={localStorage.getItem('type') == 0}>
                                     <DropdownList_Notifications />
-                                </Tooltip>
                             </Collapse>
+                                </Tooltip>
 
                             <Tooltip title={"View Profile"}>
                                 <IconButton

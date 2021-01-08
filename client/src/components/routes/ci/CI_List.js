@@ -33,19 +33,19 @@ class Course_Instructor_List extends Component {
 
         this.props.setComponentInMain("instructorCourses")
     }
-    
-   handleViewStaffProfiles = () => {
-    console.log("clicked on view staff profile")
-        this.props.updateRequestStaffProfile();
-    this.props.setComponentInMain("viewStaffProfiles");
-  }
-  handleManageCourseStaff = async () => {
-    console.log("clicked on mange course staff")
-   await  this.props.updateRequestCourseStaff();
-    this.props.setComponentInMain("manageCourseStaff");
-  }
 
-    
+    handleViewStaffProfiles = () => {
+        console.log("clicked on view staff profile")
+        this.props.updateRequestStaffProfile();
+        this.props.setComponentInMain("viewStaffProfiles");
+    }
+    handleManageCourseStaff = async () => {
+        console.log("clicked on mange course staff")
+        await this.props.updateRequestCourseStaff();
+        this.props.setComponentInMain("manageCourseStaff");
+    }
+
+
     async componentDidMount() {
         if (!localStorage.getItem('auth-token')) {
             this.setState({ isLoggedIn: 1 });
@@ -70,19 +70,19 @@ class Course_Instructor_List extends Component {
         return (
             <div >
                 <List>
-                    <ListItem button>
+                    <ListItem button onClick={this.handleInstructorCourses} >
                         <ListItemIcon><MenuBookIcon /></ListItemIcon>
-                        <ListItemText primary="Instructor courses" onClick={this.handleInstructorCourses} />
+                        <ListItemText primary="Instructor courses" />
                     </ListItem>
-                    <ListItem button key="View Staff Profiles">
-            <ListItemIcon> <SupervisorAccountIcon /></ListItemIcon>
-            <ListItemText primary={"View Staff Profiles"} onClick={this.handleViewStaffProfiles} />
-          </ListItem>
-          <ListItem button key="Manage Course Staff">
-            <ListItemIcon> <SupervisedUserCircleIcon /></ListItemIcon>
-            <ListItemText primary={"Manage Course Staff"} onClick={this.handleManageCourseStaff} />
-          </ListItem>
-            
+                    <ListItem button key="View Staff Profiles" onClick={this.handleViewStaffProfiles}>
+                        <ListItemIcon> <SupervisorAccountIcon /></ListItemIcon>
+                        <ListItemText primary={"View Staff Profiles"}  />
+                    </ListItem>
+                    <ListItem button key="Manage Course Staff" onClick={this.handleManageCourseStaff}>
+                        <ListItemIcon> <SupervisedUserCircleIcon /></ListItemIcon>
+                        <ListItemText primary={"Manage Course Staff"}  />
+                    </ListItem>
+
                 </List>
             </div>
         )

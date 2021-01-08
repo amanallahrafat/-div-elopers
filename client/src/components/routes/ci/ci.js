@@ -201,6 +201,7 @@ class CI extends Component {
         alertMessage: "testing"
     }
     openAlert = (message) => {
+        
         this.setState({ showAlert: true, alertMessage: message })
     }
 
