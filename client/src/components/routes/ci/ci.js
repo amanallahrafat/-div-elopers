@@ -40,18 +40,24 @@ const requestMissingDays = async () => {
 }
 
 const requestUserProfile = async (openAlert) => {
-    try {
-        const userProfile = await axios.get('/viewProfile');
-        return userProfile.data;
-    } catch (err) {
-        openAlert(err.response.data);
+    try{
+    console.log("start CI request user profile")
+    const userProfile = await axios.get('/viewProfile');
+    console.log("end CI request user profile") 
+    return userProfile.data;
+    }catch(err){
+       openAlert(err.response.data);
         return {};
     }
 }
 
 const requestDepartmentCourses = async (openAlert) => {
     try {
+        console.log("start CI request department courses")
+  
         const departmentCourses = await axios.get('/ci/getDepartmentCourses');
+        console.log("end CI request department courses")
+  
         return departmentCourses.data;
     }
     catch (err) {
@@ -61,7 +67,11 @@ const requestDepartmentCourses = async (openAlert) => {
 }
 const requestAttendanceRecods = async (openAlert) => {
     try {
+        console.log("start CI request attendance records")
+  
         const attendanceRecords = await axios.get('/viewAttendance');
+        console.log("end CI request attendance records")
+        
         return attendanceRecords.data;
     } catch (err) {
         openAlert(err.response.data);
@@ -85,11 +95,11 @@ const requestAllInstructorCourses = async (openAlert) => {
 
 const requestInstructorCourses = async (openAlert) => {
 
-    console.log("begin in request all  courses");
+    console.log("begin in request instructor  courses");
     try {
         const departmentCourses = await axios.get('/ci/requestInstructorCoursesLocal');
 
-        console.log("end in request all  courses");
+        console.log("end in request instructor  courses");
 
         return departmentCourses.data;
     }
@@ -100,8 +110,11 @@ const requestInstructorCourses = async (openAlert) => {
 }
 
 
-const requestStaffProfiles = async (filter = "none", obj = {}, openAlert) => {
-    try {
+
+const requestStaffProfiles = async (filter = "none", obj = {},openAlert) => {
+    try{
+        console.log("start CI request staff profiles")
+  
         if (filter == "none") {
             const res = await axios.get('/ci/viewDepartmentMembers');
             return res.data;
@@ -116,19 +129,25 @@ const requestStaffProfiles = async (filter = "none", obj = {}, openAlert) => {
             return out;
 
         }
-    } catch (err) {
+        console.log("end CI request staff profiles")
+  
+    }catch(err){
         openAlert(err.response.data);
     }
 
 }
 
-const requestCourseStaffProfiles = async (obj, openAlert) => {
-    if (obj.courseID == -1) {
-        console.log("obj ID is -1")
-        return [];
-    }
-    try {
+const requestCourseStaffProfiles = async (obj,openAlert) => {
+        if (obj.courseID == -1) {
+            console.log("obj ID is -1")
+            return [];
+        }
+        try{
+            console.log("start CI request course staff profiles")
+  
         const res = await axios.get(`/ci/viewMembersByCourse/${obj.courseID}`);
+        console.log("end CI request course staff profiles")
+  
         return res.data;
     } catch (err) {
         openAlert(err.response.data);
@@ -138,7 +157,11 @@ const requestCourseStaffProfiles = async (obj, openAlert) => {
 
 const getAcademicMembersTable = async (openAlert) => {
     try {
+        console.log("start CI get academic members table")
+  
         const res = await axios.get('/ci/getAcademicMembersTable');
+        console.log("end CI get academic members table")
+  
         return res.data;
     } catch (err) {
         openAlert(err.response.data);
@@ -147,7 +170,7 @@ const getAcademicMembersTable = async (openAlert) => {
 }
 
 const drawerWidth = 240;
-
+ 
 const styles = (theme) => ({
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
@@ -229,6 +252,7 @@ class CI extends Component {
 
     setComponentInMain = async (event) => {
         if (event == "profile") {
+            console.log("set comp in main with profile")
             this.setState({
                 componentInMain: <Profile
                     profile={await requestUserProfile(this.openAlert)}

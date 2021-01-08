@@ -266,7 +266,7 @@ class HOD extends Component {
                 />
             });
         }
-        else if (event == "manageCourseInstructors") {
+      else if (event == "manageCourseInstructors") {
             console.log("I am in event course")
             this.setState({
                 componentInMain: <ManageCourseInstructors
@@ -486,6 +486,7 @@ class HOD extends Component {
 
         await this.updateRequestStaffProfile();
         await this.updateHODProfile();
+        console.log("end did mount")
     }
 
     render() {
