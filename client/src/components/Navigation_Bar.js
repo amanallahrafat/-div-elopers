@@ -56,10 +56,10 @@ const styles = (theme) => ({
         color: 'inherit',
     },
     sectionDesktop: {
-        display: 'none',
-        [theme.breakpoints.up('md')]: {
+        // display: 'none',
+        // [theme.breakpoints.up('md')]: {
             display: 'flex',
-        },
+        // },
     },
     sectionMobile: {
         display: 'flex',
