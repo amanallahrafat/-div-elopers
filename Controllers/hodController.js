@@ -346,7 +346,7 @@ const viewCourseTeachingAssignmentsLocal = async (req, res) => {
     console.log("in view course TA local start ");
     const { ID, type } = req.header.user;
     const hod = await Academic_Member.findOne({ ID: ID });
-    const staffMembers=await Staff_Member.find({type:0});
+    const staffMembers = await Staff_Member.find({ type: 0 });
     const deptID = hod.departmentID;
     const courses = await Course.find();
     const course_schedules = await Course_Schedule.find();
@@ -361,9 +361,9 @@ const viewCourseTeachingAssignmentsLocal = async (req, res) => {
             courseName: curCourse.name,
             courseCode: curCourse.code,
             courseSlots: [],
-            courseCoverage:""  
+            courseCoverage: ""
         }
-        
+
 
         const scheduleID = curCourse.scheduleID;
         const curSchedule = course_schedules.find((cs) => { return (cs.ID == scheduleID) });
@@ -378,60 +378,60 @@ const viewCourseTeachingAssignmentsLocal = async (req, res) => {
             continue;
         }
         console.log("in view course TA local 1 ");
-   
+
         let slotsArray = [];
-        const locations=await Location.find();
+        const locations = await Location.find();
         for (const curSlot of curSchedule.slots) {
-            const slotEntry={
-                instructor:"Not yet assigned",
-                instructorID:"",
-                locationName:"",
-                slotNumber:0,
-                day:0
+            const slotEntry = {
+                instructor: "Not yet assigned",
+                instructorID: "",
+                locationName: "",
+                slotNumber: 0,
+                day: 0
             }
             let slotInst = "Not yet assigned";
             if (curSlot.instructor) {
-                const curInst = staffMembers.find((mem)=>{return (mem.ID== curSlot.instructor) });
+                const curInst = staffMembers.find((mem) => { return (mem.ID == curSlot.instructor) });
                 slotInst = curInst.name
-                slotEntry.instructor=slotInst;
-                slotEntry.instructorID="ac-"+curSlot.instructor;
+                slotEntry.instructor = slotInst;
+                slotEntry.instructorID = "ac-" + curSlot.instructor;
             }
-            if(curSlot.locationID){
-               const loc=locations.find((loc)=>{return (loc.ID==curSlot.locationID)});
-               if(loc.name)
-                slotEntry.locationName=loc.name;
+            if (curSlot.locationID) {
+                const loc = locations.find((loc) => { return (loc.ID == curSlot.locationID) });
+                if (loc.name)
+                    slotEntry.locationName = loc.name;
             }
 
-            slotEntry.slotNumber=curSlot.slotNumber;
-            slotEntry.day=getDayNumber(curSlot.day);
+            slotEntry.slotNumber = curSlot.slotNumber;
+            slotEntry.day = getDayNumber(curSlot.day);
 
 
             slotsArray.push(slotEntry);
         }
         console.log("in view course TA local 2 ");
-   
-        curEntry.courseSlots=slotsArray;
+
+        curEntry.courseSlots = slotsArray;
         allCourseSlots.push(curEntry);
     }
     return res.send(allCourseSlots);
 }
 
-const getDayNumber=(day)=>{
+const getDayNumber = (day) => {
     return day;
-    if(day=="saturday")
-    return 0;
-    if(day=="sunday")
-    return 1;
-    if(day=="monday")
-    return 2;
-    if(day=="tuesday")
-    return 3;
-    if(day=="wednesday")
-    return 4;
-    if(day=="thursday")
-    return 5;
-    if(day=="friday")
-    return 6;
+    if (day == "saturday")
+        return 0;
+    if (day == "sunday")
+        return 1;
+    if (day == "monday")
+        return 2;
+    if (day == "tuesday")
+        return 3;
+    if (day == "wednesday")
+        return 4;
+    if (day == "thursday")
+        return 5;
+    if (day == "friday")
+        return 6;
     return -1;
 }
 const viewCourseCoverageLocal = (courseSchedule) => {
@@ -442,7 +442,7 @@ const viewCourseCoverageLocal = (courseSchedule) => {
         return ("Course schedule has no slot entries yet");
     const filteredSlots = courseSchedule.slots.filter((s) => s.instructor != null);
     const coverage = filteredSlots.length / courseSchedule.slots.length;
-    return (parseInt(coverage * 100*100)/100)+"%";
+    return (parseInt(coverage * 100 * 100) / 100) + "%";
 }
 
 //To be tested
@@ -554,7 +554,7 @@ const viewAllRequests = async (req, res) => {
 
 const respondToChangeDayOffRequest = async (req, res) => {
     const { ID, type } = req.header.user;
-    
+
     const request = await Change_Day_Off_Request.findOne({ ID: parseInt(req.params.ID) });
     if (await requestFailChecks(request, res, ID))
         return;
@@ -567,7 +567,7 @@ const respondToChangeDayOffRequest = async (req, res) => {
         return res.status(400).send({ error: isValid.error.details[0].message });
 
     const member = await Academic_Member.find({ ID: memID });
-    
+
     let msg = req.body.response == 1 ? "Your change day off request was accepted" : "Your change day off request was rejected";
     if (req.body.msg != null && req.body.msg != undefined && req.body.msg != "")
         msg = msg + "\n reason: " + req.body.msg;
@@ -868,7 +868,7 @@ const createReplacementEntry = (replacement, staffMembers, courses, courses_sche
     return {
         receiverName: receiver.name,
         courseName: course.name,
-        slotNumber: replacementSlot?replacementSlot.slotNumber : undefined,
+        slotNumber: (replacementSlot) ? replacementSlot.slotNumber : undefined,
         status: replacement.status
     }
 
@@ -891,7 +891,7 @@ const getDepartmentCourses = async (req, res) => {
     // })
 
     allCourses = allCourses.filter((course) => {
-      //  if(!course.Department)return false;
+        //  if(!course.Department)return false;
         return course.department.includes(deptID);
     });
     const ans = [];
@@ -915,21 +915,21 @@ const getAllAcademicMembers = async (req, res) => {
 //academic member with names
 const getAcademicMembersTable = async (req, res) => {
     let allStaffMembers = await Staff_Member.find({ type: 0 });
-    let locations=await Location.find();
-    let departments=await Department.find();
+    let locations = await Location.find();
+    let departments = await Department.find();
     let allAcademicMemberNames = await Academic_Member.find();
     for (const ac of allAcademicMemberNames) {
-        const staffMem=(allStaffMembers.find((mem) => { return (mem.ID == ac['_doc'].ID) }));
-        const department=departments.find((dep)=>{return dep.ID==ac.departmentID});
-        const loc=locations.find((l)=>{return l.ID==staffMem.officeID})
+        const staffMem = (allStaffMembers.find((mem) => { return (mem.ID == ac['_doc'].ID) }));
+        const department = departments.find((dep) => { return dep.ID == ac.departmentID });
+        const loc = locations.find((l) => { return l.ID == staffMem.officeID })
         ac['_doc'].name = staffMem.name;
-        ac['_doc'].email=staffMem.email;
-        ac['_doc'].officeID=loc.name;
-        ac['_doc'].departmentID=department.name;
+        ac['_doc'].email = staffMem.email;
+        ac['_doc'].officeID = loc.name;
+        ac['_doc'].departmentID = department.name;
 
 
-      
-        
+
+
     }
     return res.send(allAcademicMemberNames);
 }

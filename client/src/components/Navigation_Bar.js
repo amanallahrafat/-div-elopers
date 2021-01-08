@@ -28,6 +28,7 @@ const styles = (theme) => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
+        zIndex : 10
     },
     appBarShift: {
         width: `calc(100% - ${drawerWidth}px)`,
@@ -135,8 +136,8 @@ class Navigation_Bar extends Component {
         // }
 
         return (
-            <div className={classes.grow} id="Header" style={styles.Header} ref="Header">
-                <AppBar position="fixed" className={clsx(classes.appBar, {
+            <div className={classes.grow} id = "Header" style={styles.Header} ref="Header" style={{zIndex:5000}}>
+                <AppBar style={{zIndex:5000}} position="fixed" className={clsx(classes.appBar, {
                     [classes.appBarShift]: this.state.isSlideBarOpen,
                 })}>
                     <Toolbar >

@@ -279,7 +279,7 @@ class HOD extends Component {
                 />
             });
         }
-        else if (event == "manageCourseInstructors") {
+      else if (event == "manageCourseInstructors") {
             console.log("I am in event course")
             await this.setState({
                 componentInMain: <ManageCourseInstructors
