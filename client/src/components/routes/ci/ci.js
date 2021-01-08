@@ -27,6 +27,8 @@ import Schedule from '../ac/Schedule_Handler/Schedule';
 import CICourses from './CICourses';
 import ViewStaffProfiles from './CIViewStaffProfiles.js';
 import ManageCourseStaff from './manageCourseStaff.js';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const requestMissingDays = async () => {
     const res = await axios.get('/viewMissingDays');
@@ -163,6 +165,10 @@ const styles = (theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 });
 
 class CI extends Component {
@@ -175,7 +181,10 @@ class CI extends Component {
         departmentCourses: undefined,
         manageCourseStaff: [],
         showAlert: false,
-        alertMessage: "testing"
+        alertMessage: "testing",
+
+        // ******** Backdrop states
+        backdropIsOpen: true,
     }
     openAlert = (message) => {
         this.setState({ showAlert: true, alertMessage: message })
@@ -228,8 +237,10 @@ class CI extends Component {
     }
 
     setComponentInMain = async (event) => {
+        this.setState({ backdropIsOpen: true });
+
         if (event == "profile") {
-            this.setState({
+            await this.setState({
                 componentInMain: <Profile
                     profile={await requestUserProfile(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
@@ -237,7 +248,7 @@ class CI extends Component {
                 />
             });
         } else if (event == "attendance") {
-            this.setState({
+            await this.setState({
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
@@ -246,7 +257,7 @@ class CI extends Component {
             });
 
         } else if (event == "viewMissingDays") {
-            this.setState({
+            await this.setState({
                 componentInMain: (
                     <ViewMissingDaysForm
                         missedDays={await requestMissingDays()}
@@ -256,7 +267,7 @@ class CI extends Component {
         }
         else if (event == "instructorCourses") {
             console.log("instructorCourses")
-            this.setState({
+            await this.setState({
                 componentInMain: <CICourses
                     departmentCourses={await requestAllInstructorCourses(this.openAlert)}
                     allCourses={await requestInstructorCourses(this.openAlert)}
@@ -270,7 +281,7 @@ class CI extends Component {
         }
         else if (event == "viewStaffProfiles") {
             console.log("I am in event profiles")
-            this.setState({
+            await this.setState({
                 componentInMain: <ViewStaffProfiles
                     allCourses={await requestDepartmentCourses(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
@@ -284,7 +295,7 @@ class CI extends Component {
         }
         else if (event == "manageCourseStaff") {
             console.log("I am in event of manage course staff")
-            this.setState({
+            await this.setState({
                 componentInMain: <ManageCourseStaff
                     allCourses={await requestInstructorCourses(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
@@ -299,7 +310,7 @@ class CI extends Component {
             console.log("personalSchedule")
             const requestsArr = (await getAllSentRequests());
             console.log(requestsArr)
-            this.setState({
+            await this.setState({
                 componentInMain: <Schedule
                     schedule={await requestSchedule()}
                     replacementRequests={await getReplacementRequests()}
@@ -313,20 +324,20 @@ class CI extends Component {
         else if (event == "allCourseSchedule") {
             console.log("allCourseSchedule")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Course_Schedule
                     departmentCourses={await viewAllCourseSchedules()}
                     allCourses={await getAllCoursesInstructorsNames()}
                     requests={requestsArr.requests[7]}
                     senderObj={requestsArr.senderObj}
-                    
+
                 />
             });
         }
         else if (event == "ac_changeDayOffRequest") {
             console.log("ac_changeDayOffRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Change_Day_Off_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[2]}
@@ -338,7 +349,7 @@ class CI extends Component {
             console.log("ac_annualLeaveRequest")
             const requestsArr = (await getAllSentRequests());
             console.log(requestsArr);
-            this.setState({
+            await this.setState({
                 componentInMain: <Annual_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[1]}
@@ -350,7 +361,7 @@ class CI extends Component {
             console.log("ac_accidentalLeaveRequest")
             const requestsArr = (await getAllSentRequests());
             console.log(requestsArr);
-            this.setState({
+            await this.setState({
                 componentInMain: <Accidental_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[0]}
@@ -361,7 +372,7 @@ class CI extends Component {
         else if (event == "ac_maternityLeaveRequest") {
             console.log("ac_maternityLeaveRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Maternity_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[4]}
@@ -372,7 +383,7 @@ class CI extends Component {
         else if (event == "ac_sickLeaveRequest") {
             console.log("ac_sickLeaveRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Sick_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[6]}
@@ -383,7 +394,7 @@ class CI extends Component {
         else if (event == "ac_compensationLeaveRequest") {
             console.log("ac_compensationLeaveRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Compensation_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[3]}
@@ -392,6 +403,8 @@ class CI extends Component {
                 />
             });
         }
+
+        this.setState({ backdropIsOpen: false });
     }
 
     handleAppBarShift = (event) => {
@@ -400,6 +413,8 @@ class CI extends Component {
     }
 
     async componentDidMount() {
+        this.setState({ backdropIsOpen: true });
+
         if (!localStorage.getItem('auth-token')) {
             this.setState({ isLoggedIn: 1 });
             return;
@@ -416,6 +431,7 @@ class CI extends Component {
         }
 
         await this.updateCIProfile();
+        this.setState({ backdropIsOpen: false });
     }
 
     render() {
@@ -448,7 +464,10 @@ class CI extends Component {
 
                     {this.state.componentInMain}
                 </Container>
-
+                <Backdrop className={classes.backdrop} open={this.state.backdropIsOpen}
+                    style={{ zIndex: 600000000 }}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </div>
         )
     }

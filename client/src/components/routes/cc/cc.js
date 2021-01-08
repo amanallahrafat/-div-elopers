@@ -25,7 +25,8 @@ import Schedule from '../ac/Schedule_Handler/Schedule';
 import Slot_Card from './Slot_Handler/Slot_Card.js';
 import Schedule_Requests_Card from './Slot_Linking_Request/Schedule_Requests_Card.js';
 import ViewMissingDaysForm from '../../ViewMissingDaysForm.js';
-
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get("/viewProfile");
@@ -81,6 +82,10 @@ const styles = (theme) => ({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
     },
 });
 
@@ -166,22 +171,23 @@ class CC extends Component {
     }
 
     setComponentInMain = async (event) => {
+        this.setState({ backdropIsOpen: true });
+
         console.log("Triggered");
         console.log(event);
         await this.handleSlots();
         await this.handleSlotLinkingRequest();
 
-
         if (event == "profile") {
             console.log("profile")
-            this.setState({
+            await this.setState({
                 componentInMain: <Profile
                     profile={await requestUserProfile()}
                     setComponentInMain={this.setComponentInMain} />
             });
         } else if (event == "attendance") {
             console.log("attendance")
-            this.setState({
+            await this.setState({
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods()}
                     setComponentInMain={this.setComponentInMain}
@@ -189,7 +195,7 @@ class CC extends Component {
             });
          } 
          else if (event == "viewMissingDays") {
-            this.setState({
+            await this.setState({
                 componentInMain: (
                     <ViewMissingDaysForm
                         missedDays={await requestMissingDays()}
@@ -199,7 +205,7 @@ class CC extends Component {
         }
         else if(event == "slot"){
             console.log("slot")
-            this.setState({
+            await this.setState({
                 componentInMain: <Slot_Card
                     schedule={this.state.slots}
                     courseID = {this.state.courseID}
@@ -213,7 +219,7 @@ class CC extends Component {
         else if(event == "slotLinkingRequest"){
             console.log("slotLinkingRequests");
             console.log(this.state.slots);
-            this.setState({
+            await this.setState({
                 componentInMain: <Schedule_Requests_Card
                     requests = {this.state.slotLinkingRequests}
                     slots = {this.state.slots}
@@ -230,7 +236,7 @@ class CC extends Component {
             console.log("personalSchedule")
             const requestsArr = (await getAllSentRequests());
             console.log(requestsArr)
-            this.setState({
+            await this.setState({
                 componentInMain: <Schedule
                     schedule={await requestSchedule()}
                     replacementRequests={await getReplacementRequests()}
@@ -244,7 +250,7 @@ class CC extends Component {
         else if (event == "allCourseSchedule") {
             console.log("allCourseSchedule")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Course_Schedule
                     departmentCourses={await viewAllCourseSchedules()}
                     allCourses={await getAllCoursesInstructorsNames()}
@@ -256,7 +262,7 @@ class CC extends Component {
         else if (event == "ac_changeDayOffRequest") {
             console.log("ac_changeDayOffRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Change_Day_Off_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[2]}
@@ -268,7 +274,7 @@ class CC extends Component {
             console.log("ac_annualLeaveRequest")
             const requestsArr = (await getAllSentRequests());
             console.log(requestsArr);
-            this.setState({
+            await this.setState({
                 componentInMain: <Annual_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[1]}
@@ -280,7 +286,7 @@ class CC extends Component {
             console.log("ac_accidentalLeaveRequest")
             const requestsArr = (await getAllSentRequests());
             console.log(requestsArr);
-            this.setState({
+            await this.setState({
                 componentInMain: <Accidental_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[0]}
@@ -291,7 +297,7 @@ class CC extends Component {
         else if (event == "ac_maternityLeaveRequest") {
             console.log("ac_maternityLeaveRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Maternity_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[4]}
@@ -302,7 +308,7 @@ class CC extends Component {
         else if (event == "ac_sickLeaveRequest") {
             console.log("ac_sickLeaveRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Sick_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[6]}
@@ -313,7 +319,7 @@ class CC extends Component {
         else if (event == "ac_compensationLeaveRequest") {
             console.log("ac_compensationLeaveRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Compensation_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[3]}
@@ -322,10 +328,14 @@ class CC extends Component {
                 />
             });
         }
+
+        this.setState({ backdropIsOpen: false });
     }
+
     handleAppBarShift = (event) => {
         this.setState({ isAppBarShift: event });
     };
+
     async componentDidMount() {
         if (!localStorage.getItem("auth-token")) {
             this.setState({ isLoggedIn: 1 });
@@ -360,7 +370,10 @@ class CC extends Component {
                 })}>
                     {this.state.componentInMain}
                 </Container>
-
+                <Backdrop className={classes.backdrop} open={this.state.backdropIsOpen}
+                    style={{ zIndex: 600000000 }}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </div>
         )
     }

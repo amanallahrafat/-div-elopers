@@ -33,6 +33,8 @@ import ManageCourseInstructors from './ManageCourseInstructors.js';
 import MaternityLeaveRequest from './maternityLeaveRequest.js';
 import SickLeaveRequest from './sickLeaveRequest.js';
 import ViewStaffProfiles from './viewStaffProfiles.js';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const requestUserProfile = async (openAlert) => {
     try {
@@ -167,6 +169,10 @@ const styles = (theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 });
 
 class HOD extends Component {
@@ -180,7 +186,10 @@ class HOD extends Component {
         // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
         isAppBarShift: false,
         showAlert: false,
-        alertMessage: "testing"
+        alertMessage: "testing",
+
+        // ******** Backdrop states
+        backdropIsOpen: true,
 
     }
     openAlert = (message) => {
@@ -197,10 +206,12 @@ class HOD extends Component {
 
 
     updateRequestStaffProfile = async (filter = "none", obj = {}) => {
+
         const profiles = await requestStaffProfiles(filter, obj, this.openAlert);
         let uniqueProfiles = this.uniqBy(profiles, JSON.stringify)
 
-        this.setState({ staffProfiles: uniqueProfiles });
+        await this.setState({ staffProfiles: uniqueProfiles });
+
         return uniqueProfiles;
     }
     //*************
@@ -240,8 +251,10 @@ class HOD extends Component {
     }
 
     setComponentInMain = async (event) => {
+        this.setState({ backdropIsOpen: true });
+
         if (event == "viewMissingDays") {
-            this.setState({
+            await this.setState({
                 componentInMain: (
                     <ViewMissingDaysForm
                         missedDays={await requestMissingDays()}
@@ -250,7 +263,7 @@ class HOD extends Component {
             })
         }
         else if (event == "profile") {
-            this.setState({
+            await this.setState({
                 componentInMain: <Profile
                     profile={await requestUserProfile(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
@@ -258,7 +271,7 @@ class HOD extends Component {
                 />
             });
         } else if (event == "attendance") {
-            this.setState({
+            await this.setState({
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
@@ -268,7 +281,7 @@ class HOD extends Component {
         }
         else if (event == "manageCourseInstructors") {
             console.log("I am in event course")
-            this.setState({
+            await this.setState({
                 componentInMain: <ManageCourseInstructors
                     courses={await requestDepartmentCourses(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
@@ -280,7 +293,7 @@ class HOD extends Component {
         }
         else if (event == "viewStaffProfiles") {
             console.log("I am in event profiles")
-            this.setState({
+            await this.setState({
                 componentInMain: <ViewStaffProfiles
                     allCourses={await requestDepartmentCourses(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
@@ -293,7 +306,7 @@ class HOD extends Component {
             });
         } else if (event == "changeDayOffRequest") {
             console.log(this.state.requests);
-            this.setState({
+            await this.setState({
                 componentInMain: <ChangeDayOffRequest
                     setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
@@ -303,7 +316,7 @@ class HOD extends Component {
             });
 
         } else if (event == "annualLeaveRequest") {
-            this.setState({
+            await this.setState({
                 componentInMain: <AnnualLeaveRequest
                     setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
@@ -313,7 +326,7 @@ class HOD extends Component {
             });
 
         } else if (event == "accidentalLeaveRequest") {
-            this.setState({
+            await this.setState({
                 componentInMain: <AccidentalLeaveRequest
                     setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
@@ -325,7 +338,7 @@ class HOD extends Component {
 
 
         } else if (event == "sickLeaveRequest") {
-            this.setState({
+            await this.setState({
                 componentInMain: <SickLeaveRequest
                     setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
@@ -336,7 +349,7 @@ class HOD extends Component {
             });
 
         } else if (event == "maternityLeaveRequest") {
-            this.setState({
+            await this.setState({
                 componentInMain: <MaternityLeaveRequest
                     setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
@@ -347,7 +360,7 @@ class HOD extends Component {
             });
 
         } else if (event == "compensationLeaveRequest") {
-            this.setState({
+            await this.setState({
                 componentInMain: <CompensationLeaveRequest
                     setComponentInMain={this.setComponentInMain}
                     updateRequests={this.updateRequests}
@@ -358,7 +371,7 @@ class HOD extends Component {
             });
 
         } else if (event == "departmentCourses") {
-            this.setState({
+            await this.setState({
                 componentInMain: <DepartmentCourses
                     setComponentInMain={this.setComponentInMain}
                     departmentCourses={await requestAllDepartmentCourses(this.openAlert)}
@@ -372,7 +385,7 @@ class HOD extends Component {
             console.log("personalSchedule")
             const requestsArr = (await getAllSentRequests());
             console.log(requestsArr)
-            this.setState({
+            await this.setState({
                 componentInMain: <Schedule
                     schedule={await requestSchedule()}
                     replacementRequests={await getReplacementRequests()}
@@ -386,7 +399,7 @@ class HOD extends Component {
         else if (event == "allCourseSchedule") {
             console.log("allCourseSchedule")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Course_Schedule
                     departmentCourses={await viewAllCourseSchedules()}
                     allCourses={await getAllCoursesInstructorsNames()}
@@ -398,7 +411,7 @@ class HOD extends Component {
         else if (event == "ac_changeDayOffRequest") {
             console.log("ac_changeDayOffRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Change_Day_Off_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[2]}
@@ -410,7 +423,7 @@ class HOD extends Component {
             console.log("ac_annualLeaveRequest")
             const requestsArr = (await getAllSentRequests());
             console.log(requestsArr);
-            this.setState({
+            await this.setState({
                 componentInMain: <Annual_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[1]}
@@ -422,7 +435,7 @@ class HOD extends Component {
             console.log("ac_accidentalLeaveRequest")
             const requestsArr = (await getAllSentRequests());
             console.log(requestsArr);
-            this.setState({
+            await this.setState({
                 componentInMain: <Accidental_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[0]}
@@ -433,7 +446,7 @@ class HOD extends Component {
         else if (event == "ac_maternityLeaveRequest") {
             console.log("ac_maternityLeaveRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Maternity_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[4]}
@@ -444,7 +457,7 @@ class HOD extends Component {
         else if (event == "ac_sickLeaveRequest") {
             console.log("ac_sickLeaveRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Sick_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[6]}
@@ -455,7 +468,7 @@ class HOD extends Component {
         else if (event == "ac_compensationLeaveRequest") {
             console.log("ac_compensationLeaveRequest")
             const requestsArr = (await getAllSentRequests());
-            this.setState({
+            await this.setState({
                 componentInMain: <Compensation_Leave_Request
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[3]}
@@ -464,13 +477,15 @@ class HOD extends Component {
                 />
             });
         }
+        this.setState({ backdropIsOpen: false });
     }
     handleAppBarShift = (event) => {
         this.setState({ isAppBarShift: event });
         console.log(this.state.isAppBarShift);
     };
-    
+
     async componentDidMount() {
+        this.setState({ backdropIsOpen: true });
         if (!localStorage.getItem("auth-token")) {
             this.setState({ isLoggedIn: 1 });
             return;
@@ -486,6 +501,7 @@ class HOD extends Component {
 
         await this.updateRequestStaffProfile();
         await this.updateHODProfile();
+        this.setState({ backdropIsOpen: false })
     }
 
     render() {
@@ -514,7 +530,10 @@ class HOD extends Component {
                 })}>
                     {this.state.componentInMain}
                 </Container>
-
+                <Backdrop className={classes.backdrop} open={this.state.backdropIsOpen}
+                    style={{ zIndex: 600000000 }}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </div>
         )
     }

@@ -23,7 +23,8 @@ import {
 } from '../ac/ac_helper.js';
 import Course_Schedule from "./All_Course_Schedule/Course_Schedule";
 import Schedule from './Schedule_Handler/Schedule';
-
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get("/viewProfile");
@@ -64,6 +65,10 @@ const styles = (theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 });
 
 class AC extends Component {
@@ -71,11 +76,15 @@ class AC extends Component {
         isLoggedIn: 0,
         componentInMain: <div />,
         isAppBarShift: false,
+
+        // ******** Backdrop states
+        backdropIsOpen: true,
     };
 
     setComponentInMain = async (event) => {
         console.log("Triggered");
         console.log(event);
+        this.setState({ backdropIsOpen: true });
 
         if (event == "profile") {
             console.log("profile")
@@ -92,8 +101,8 @@ class AC extends Component {
                     setComponentInMain={this.setComponentInMain}
                 />
             });
-         } 
-         else if (event == "viewMissingDays") {
+        }
+        else if (event == "viewMissingDays") {
             this.setState({
                 componentInMain: (
                     <ViewMissingDaysForm
@@ -198,11 +207,16 @@ class AC extends Component {
                 />
             });
         }
+        this.setState({ backdropIsOpen: false });
     }
+
     handleAppBarShift = (event) => {
         this.setState({ isAppBarShift: event });
     };
+
     async componentDidMount() {
+        this.setState({ backdropIsOpen: true });
+
         if (!localStorage.getItem("auth-token")) {
             this.setState({ isLoggedIn: 1 });
             return;
@@ -215,6 +229,7 @@ class AC extends Component {
         } catch (err) {
             this.setState({ isLoggedIn: 1 });
         }
+        this.setState({ backdropIsOpen: false });
     }
 
     render() {
@@ -235,10 +250,13 @@ class AC extends Component {
                 })}>
                     {this.state.componentInMain}
                 </Container>
-
+                <Backdrop className={classes.backdrop} open={this.state.backdropIsOpen}
+                    style={{ zIndex: 600000000 }}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </div>
         )
     }
-  }
-  
+}
+
 export default withStyles(styles)(AC);

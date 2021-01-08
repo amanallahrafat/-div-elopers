@@ -58,7 +58,7 @@ const styles = (theme) => ({
     sectionDesktop: {
         // display: 'none',
         // [theme.breakpoints.up('md')]: {
-            display: 'flex',
+        display: 'flex',
         // },
     },
     sectionMobile: {
@@ -109,25 +109,25 @@ class Navigation_Bar extends Component {
     }
 
     async componentDidMount() {
-       // window.addEventListener('scroll',this.handleScroll);
+        // window.addEventListener('scroll',this.handleScroll);
         window.onscroll = () => {
-        const newScrollHeight = Math.ceil(window.scrollY / 50) * 50;
-        if (this.state.currentScrollHeight !== newScrollHeight) {
-          this.setState({ currentScrollHeight: newScrollHeight });
+            const newScrollHeight = Math.ceil(window.scrollY / 50) * 50;
+            if (this.state.currentScrollHeight !== newScrollHeight) {
+                this.setState({ currentScrollHeight: newScrollHeight });
             }
         };
         await this.setState({
             targetHeight:
-              this.props.first -
-              document.getElementById("Header").getClientRects()[0].y
-          });
+                this.props.first -
+                document.getElementById("Header").getClientRects()[0].y
+        });
         this.handleViewProfile();
     }
 
     render() {
         const { classes } = this.props;
         const styles = {
-            Header : {position : "fixed"}
+            Header: { position: "fixed" }
         }
         // let  navbarClasses=['navbar'];
         // if(this.state.scrolled){
@@ -135,7 +135,7 @@ class Navigation_Bar extends Component {
         // }
 
         return (
-            <div className={classes.grow} id = "Header" style={styles.Header} ref="Header">
+            <div className={classes.grow} id="Header" style={styles.Header} ref="Header">
                 <AppBar position="fixed" className={clsx(classes.appBar, {
                     [classes.appBarShift]: this.state.isSlideBarOpen,
                 })}>
