@@ -509,7 +509,7 @@ class HOD extends Component {
                     <strong>{this.state.alertMessage}</strong>
                 </Alert>
 
-                <Container maxWidth="lg" style={{ marginTop: "30px" }} className={clsx({
+                <Container maxWidth="lg" style={{ marginTop: "100px" }} className={clsx({
                     [classes.appBarShift]: this.state.isAppBarShift,
                 })}>
                     {this.state.componentInMain}

@@ -332,7 +332,7 @@ class HR extends Component {
           />
           <Container
             maxWidth="lg"
-            style={{ marginTop: "30px" }}
+            style={{ marginTop: "100px" }}
             className={clsx({
               [classes.appBarShift]: this.state.isAppBarShift,
             })}

@@ -73,7 +73,22 @@ class Navigation_Bar extends Component {
     state = {
         viewProfile: false,
         isSlideBarOpen: false,
+        headerHeight: 0,
+        screenHeight: 0,
+        screenWidth: 0,
+        currentScrollHeight: 0,
+        targetHeight: 0,
     };
+
+    // handleScroll= () => {
+    //     const offset=   window.scrollY;
+    //     if(offset > 200 ){
+    //         this.state.scrolled(true);
+    //     }
+    //     else{
+    //         this.state.scrolled(false);
+    //     }
+    //   }
 
     handleViewProfile = (event) => {
         this.setState({ viewProfile: true });
@@ -93,15 +108,35 @@ class Navigation_Bar extends Component {
         this.props.handleAppBarShift(this.state.isSlideBarOpen);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+       // window.addEventListener('scroll',this.handleScroll);
+        window.onscroll = () => {
+        const newScrollHeight = Math.ceil(window.scrollY / 50) * 50;
+        if (this.state.currentScrollHeight !== newScrollHeight) {
+          this.setState({ currentScrollHeight: newScrollHeight });
+            }
+        };
+        await this.setState({
+            targetHeight:
+              this.props.first -
+              document.getElementById("Header").getClientRects()[0].y
+          });
         this.handleViewProfile();
     }
 
     render() {
         const { classes } = this.props;
+        const styles = {
+            Header : {position : "fixed"}
+        }
+        // let  navbarClasses=['navbar'];
+        // if(this.state.scrolled){
+        //     navbarClasses.push('scrolled');
+        // }
+
         return (
-            <div className={classes.grow}>
-                <AppBar position="static" className={clsx(classes.appBar, {
+            <div className={classes.grow} id = "Header" style={styles.Header} ref="Header">
+                <AppBar position="fixed" className={clsx(classes.appBar, {
                     [classes.appBarShift]: this.state.isSlideBarOpen,
                 })}>
                     <Toolbar >

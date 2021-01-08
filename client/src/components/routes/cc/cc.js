@@ -355,7 +355,7 @@ class CC extends Component {
                 <Navigation_Bar fromParent={this.setComponentInMain}
                     handleAppBarShift={this.handleAppBarShift}
                 />
-                <Container maxWidth="lg" style={{ marginTop: "30px" }} className={clsx({
+                <Container maxWidth="lg" style={{ marginTop: "100px" }} className={clsx({
                     [classes.appBarShift]: this.state.isAppBarShift,
                 })}>
                     {this.state.componentInMain}

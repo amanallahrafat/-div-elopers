@@ -442,7 +442,7 @@ class CI extends Component {
                 </Alert>
 
 
-                <Container maxWidth="lg" style={{ marginTop: "30px" }} className={clsx({
+                <Container maxWidth="lg" style={{ marginTop: "100px" }} className={clsx({
                     [classes.appBarShift]: this.state.isAppBarShift,
                 })}>
 
