@@ -121,25 +121,25 @@ export default function PersistentDrawerLeft(props) {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button>
+                    <ListItem button onClick={handleLocation}>
                         <ListItemIcon><AddLocationIcon /></ListItemIcon>
-                        <ListItemText primary="Locations" onClick={handleLocation} />
+                        <ListItemText primary="Locations"  />
                     </ListItem>
-                    <ListItem button>
+                    <ListItem button onClick={handleFaculties}>
                         <ListItemIcon><SchoolIcon /></ListItemIcon>
-                        <ListItemText primary="Faculties" onClick={handleFaculties} />
+                        <ListItemText primary="Faculties"  />
                     </ListItem>
-                    <ListItem button>
+                    <ListItem button onClick={handleDepartments}>
                         <ListItemIcon><LocalLibraryIcon /></ListItemIcon>
-                        <ListItemText primary="Departments" onClick={handleDepartments} />
+                        <ListItemText primary="Departments"  />
                     </ListItem>
-                    <ListItem button>
+                    <ListItem button onClick={handleCourses}>
                         <ListItemIcon><MenuBookIcon /></ListItemIcon>
-                        <ListItemText primary="Courses" onClick={handleCourses} />
+                        <ListItemText primary="Courses"  />
                     </ListItem>
-                    <ListItem button>
+                    <ListItem button onClick={handleStaffMembers}>
                         <ListItemIcon><PeopleAltIcon /></ListItemIcon>
-                        <ListItemText primary="Staff Members" onClick={handleStaffMembers} />
+                        <ListItemText primary="Staff Members"  />
                     </ListItem>
                 </List>
             </Drawer>

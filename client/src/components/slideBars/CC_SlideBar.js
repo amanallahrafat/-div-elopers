@@ -111,13 +111,13 @@ export default function PersistentDrawerLeft(props) {
         </div>
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem button onClick={handleSlots}>
             <ListItemIcon> <MenuBookIcon /></ListItemIcon>
-            <ListItemText primary={"Course Slots"} onClick={handleSlots} />
+            <ListItemText primary={"Course Slots"}  />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={handleSlotLinkingRequests}>
             <ListItemIcon> <CallReceivedIcon /></ListItemIcon>
-            <ListItemText primary={"Slot Linking Requests"} onClick={handleSlotLinkingRequests} />
+            <ListItemText primary={"Slot Linking Requests"} />
           </ListItem>
         </List>
         <Academic_Member_List setComponentInMain={props.setComponentInMain} />

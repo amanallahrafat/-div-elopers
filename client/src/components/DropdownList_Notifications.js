@@ -56,7 +56,7 @@ export default function SimpleMenu() {
                     notifications.map((mem) => {
                         return (
                             <div>
-                                <MenuItem >
+                                <MenuItem>
                                     <p>
                                         <b>{mem.senderName + " : "}
                                         </b>

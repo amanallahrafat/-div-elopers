@@ -210,6 +210,7 @@ class CI extends Component {
         backdropIsOpen: true,
     }
     openAlert = (message) => {
+        
         this.setState({ showAlert: true, alertMessage: message })
     }
 
