@@ -171,17 +171,17 @@ export default function PersistentDrawerLeft(props) {
         </div>
         <Divider />
         <List>
-          <ListItem button key="Manage Course Instructors">
+          <ListItem button key="Manage Course Instructors" onClick={handleCourseInsructor}>
             <ListItemIcon> <AssignmentIndIcon /></ListItemIcon>
-            <ListItemText primary={"Manage Course Instructors"} onClick={handleCourseInsructor} />
+            <ListItemText primary={"Manage Course Instructors"}/>
           </ListItem>
-          <ListItem button key="View Staff Profiles">
+          <ListItem button key="View Staff Profiles" onClick={handleViewStaffProfiles}>
             <ListItemIcon> <SupervisorAccountIcon /></ListItemIcon>
-            <ListItemText primary={"View Staff Profiles"} onClick={handleViewStaffProfiles} />
+            <ListItemText primary={"View Staff Profiles"}  />
           </ListItem>
-          <ListItem button key="Department courses">
+          <ListItem button key="Department courses" onClick={handleDepartmentCourses}>
             <ListItemIcon> <MenuBookIcon /></ListItemIcon>
-            <ListItemText primary={"Department courses"} onClick={handleDepartmentCourses} />
+            <ListItemText primary={"Department courses"} />
           </ListItem>
         </List>
         <Accordion className={classes.accordionStyle}>
@@ -195,23 +195,23 @@ export default function PersistentDrawerLeft(props) {
           </AccordionSummary>
           <AccordionDetails>
             <List>
-              <ListItem button key="test1">
-                <ListItemText primary={"Change day off"} onClick={handleChangeDayOff} />
+              <ListItem button key="test1" onClick={handleChangeDayOff}>
+                <ListItemText primary={"Change day off"}  />
               </ListItem>
-              <ListItem button key="test 2">
-                <ListItemText primary={"Annual leaves"} onClick={handleAnnualLeaveRequest} />
+              <ListItem button key="test 2" onClick={handleAnnualLeaveRequest}>
+                <ListItemText primary={"Annual leaves"}  />
               </ListItem>
-              <ListItem button key="test 2">
-                <ListItemText primary={"Accidental leaves"} onClick={handleAccidentalLeaveRequest} />
+              <ListItem button key="test 3" onClick={handleAccidentalLeaveRequest}>
+                <ListItemText primary={"Accidental leaves"}  />
               </ListItem>
-              <ListItem button key="test 2">
-                <ListItemText primary={"Sick leaves"} onClick={handleSickLeaveRequest} />
+              <ListItem button key="test 4" onClick={handleSickLeaveRequest}>
+                <ListItemText primary={"Sick leaves"}  />
               </ListItem>
-              <ListItem button key="test 2">
-                <ListItemText primary={"Maternity leaves"} onClick={handleMaternityLeaveRequest}/>
+              <ListItem button key="test 5" onClick={handleMaternityLeaveRequest}>
+                <ListItemText primary={"Maternity leaves"} />
               </ListItem>
-              <ListItem button key="test 2">
-                <ListItemText primary={"Compensation leaves"} onClick={handleCompensationLeaveRequest}/>
+              <ListItem button key="test 6" onClick={handleCompensationLeaveRequest}>
+                <ListItemText primary={"Compensation leaves"} />
               </ListItem>
             </List>
           </AccordionDetails>

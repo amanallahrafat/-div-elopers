@@ -18,6 +18,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import axios from 'axios';
 import AlertMessage from './Alert_Message.js';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   mainFeaturedPost: {
@@ -58,11 +60,16 @@ const useStyles = makeStyles((theme) => ({
   cardMedia: {
     width: 160,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+},
 }));
 
 export default function MainFeaturedPost(props) {
   const [openEdit, setOpenEdit] = React.useState(false);
   const [openExtraInfo, setOpenExtraInfo] = React.useState(false);
+  const [backdropIsOpen, setBackdropIsOpen] = React.useState(false);
 
   const handleOpenEdit = (event) => {
     setOpenEdit(true);
@@ -79,6 +86,7 @@ export default function MainFeaturedPost(props) {
   }
 
   const handleDeleteExtraInfo = async (event) => {
+    setBackdropIsOpen(true);
     const newInfo = props.profile.extraInfo.filter((info, idx) => {
       return idx != event.currentTarget.id;
     })
@@ -91,6 +99,7 @@ export default function MainFeaturedPost(props) {
     }catch(err){
       props.openAlert(err.response.data);
     }
+    setBackdropIsOpen(false);
   }
 
   const classes = useStyles();
@@ -166,54 +175,58 @@ export default function MainFeaturedPost(props) {
           </Grid>
           <Grid item xs={12} md={6}>
             {/* <CardActionArea component="a" href="#" disabled={false}> */}
-              <Card className={classes.card}>
-                <div className={classes.cardDetails}>
-                  <CardContent>
-                    <Typography variant="subtitle1" paragraph>
-                      <b>Extra Information:</b>
+            <Card className={classes.card}>
+              <div className={classes.cardDetails}>
+                <CardContent>
+                  <Typography variant="subtitle1" paragraph>
+                    <b>Extra Information:</b>
 
-                      <IconButton
-                        aria-label="account of current user"
-                        aria-haspopup="true"
-                        color='primary'
+                    <IconButton
+                      aria-label="account of current user"
+                      aria-haspopup="true"
+                      color='primary'
 
-                        onClick={handleOpenAddExtraInfo}
-                      >
-                        <AddCircleIcon style={{ fontSize: 25, opacity: 0.8 }}
-                        />
-                      </IconButton>
-                      <br />
-                      {props.profile.extraInfo.map((i, idx) => {
-                        return (
-                          <div>
-                            {i}
-                            <IconButton
-                              disabled={false}
-                              aria-label="account of current user"
-                              aria-haspopup="true"
-                              id={"" + idx}
-                              color='primary'
-                              onClick={handleDeleteExtraInfo}
-                            >
-                              <DeleteIcon style={{ fontSize: 25, opacity: 0.8 }}
-                              />
-                            </IconButton>
-                          </div>
-                        )
-                      })}
-                    </Typography>
-                  </CardContent>
-                </div>
-                <Hidden xsDown>
-                  <CardMedia className={classes.cardMedia} title={"SARAH"} />
-                </Hidden>
-              </Card>
+                      onClick={handleOpenAddExtraInfo}
+                    >
+                      <AddCircleIcon style={{ fontSize: 25, opacity: 0.8 }}
+                      />
+                    </IconButton>
+                    <br />
+                    {props.profile.extraInfo.map((i, idx) => {
+                      return (
+                        <div>
+                          {i}
+                          <IconButton
+                            disabled={false}
+                            aria-label="account of current user"
+                            aria-haspopup="true"
+                            id={"" + idx}
+                            color='primary'
+                            onClick={handleDeleteExtraInfo}
+                          >
+                            <DeleteIcon style={{ fontSize: 25, opacity: 0.8 }}
+                            />
+                          </IconButton>
+                        </div>
+                      )
+                    })}
+                  </Typography>
+                </CardContent>
+              </div>
+              <Hidden xsDown>
+                <CardMedia className={classes.cardMedia} title={"SARAH"} />
+              </Hidden>
+            </Card>
             {/* </CardActionArea> */}
           </Grid>
         </Grid>
       </Container>
       <AddExtraInfoForm open={openExtraInfo} openAlert={props.openAlert} handleOpenEdit={handleOpenAddExtraInfo} handleCloseEdit={handleCloseExtraInfo} profile={props.profile} setComponentInMain={props.setComponentInMain} />
       <EditProfileForm open={openEdit} openAlert={props.openAlert} handleOpenEdit={handleOpenEdit} handleCloseEdit={handleCloseEdit} profile={props.profile} setComponentInMain={props.setComponentInMain} />
+      <Backdrop className={classes.backdrop} open={backdropIsOpen}
+        style={{ zIndex: 600000000 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div >
   );
 }

@@ -135,13 +135,13 @@ class Academic_Member_List extends Component {
         return (
             <div >
                 <List>
-                    <ListItem button>
+                    <ListItem button onClick={this.handlePersonalSchedule}>
                         <ListItemIcon><PermContactCalendarIcon /></ListItemIcon>
-                        <ListItemText primary="Personal Schedule" onClick={this.handlePersonalSchedule} />
+                        <ListItemText primary="Personal Schedule"  />
                     </ListItem>
-                    <ListItem button>
+                    <ListItem button onClick={this.handleAllCourseSchedule}>
                         <ListItemIcon><DateRangeIcon /></ListItemIcon>
-                        <ListItemText primary="All Course Schedules" onClick={this.handleAllCourseSchedule} />
+                        <ListItemText primary="All Course Schedules"  />
                     </ListItem>
                 </List>
                 <Accordion className={classes.accordionStyle}>
@@ -157,23 +157,23 @@ class Academic_Member_List extends Component {
                     </AccordionSummary>
                     <AccordionDetails>
                         <List>
-                            <ListItem button>
-                                <ListItemText primary={"Change day off"} onClick={this.handleChangeDayOffRequest} />
+                            <ListItem button onClick={this.handleChangeDayOffRequest}>
+                                <ListItemText primary={"Change day off"}  />
                             </ListItem>
-                            <ListItem button >
-                                <ListItemText primary={"Annual leaves"} onClick={this.handleAnnualLeaveRequest}/>
+                            <ListItem button onClick={this.handleAnnualLeaveRequest} >
+                                <ListItemText primary={"Annual leaves"} />
                             </ListItem>
-                            <ListItem button >
-                                <ListItemText primary={"Accidental leaves" } onClick={this.handleAccidentalLeaveRequest}/>
+                            <ListItem button onClick={this.handleAccidentalLeaveRequest} >
+                                <ListItemText primary={"Accidental leaves" } />
                             </ListItem>
-                            <ListItem button >
-                                <ListItemText primary={"Sick leaves"} onClick={this.handleSickLeaveRequest}/>
+                            <ListItem button onClick={this.handleSickLeaveRequest} >
+                                <ListItemText primary={"Sick leaves"} />
                             </ListItem>
-                            <ListItem button >
-                                <ListItemText primary={"Maternity leaves"} onClick={this.handleMaternityLeaveRequest}/>
+                            <ListItem button onClick={this.handleMaternityLeaveRequest}>
+                                <ListItemText primary={"Maternity leaves"} />
                             </ListItem>
-                            <ListItem button >
-                                <ListItemText primary={"Compensation leaves"}  onClick={this.handleCompensationLeaveRequest}/>
+                            <ListItem button  onClick={this.handleCompensationLeaveRequest}>
+                                <ListItemText primary={"Compensation leaves"}  />
                             </ListItem>
                         </List>
                     </AccordionDetails>

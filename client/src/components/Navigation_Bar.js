@@ -97,25 +97,25 @@ class Navigation_Bar extends Component {
     }
 
     async componentDidMount() {
-       // window.addEventListener('scroll',this.handleScroll);
+        // window.addEventListener('scroll',this.handleScroll);
         window.onscroll = () => {
-        const newScrollHeight = Math.ceil(window.scrollY / 50) * 50;
-        if (this.state.currentScrollHeight !== newScrollHeight) {
-          this.setState({ currentScrollHeight: newScrollHeight });
+            const newScrollHeight = Math.ceil(window.scrollY / 50) * 50;
+            if (this.state.currentScrollHeight !== newScrollHeight) {
+                this.setState({ currentScrollHeight: newScrollHeight });
             }
         };
         await this.setState({
             targetHeight:
-              this.props.first -
-              document.getElementById("Header").getClientRects()[0].y
-          });
+                this.props.first -
+                document.getElementById("Header").getClientRects()[0].y
+        });
         this.handleViewProfile();
     }
 
     render() {
         const { classes } = this.props;
         const styles = {
-            Header : {position : "fixed"}
+            Header: { position: "fixed" }
         }
 
         return (
@@ -151,11 +151,11 @@ class Navigation_Bar extends Component {
                                     </Badge>
                                 </IconButton>
                             </Tooltip>
-                            <Collapse in={localStorage.getItem('type') == 0}>
                                 <Tooltip title={"Notifications"}>
+                            <Collapse in={localStorage.getItem('type') == 0}>
                                     <DropdownList_Notifications />
-                                </Tooltip>
                             </Collapse>
+                                </Tooltip>
 
                             <Tooltip title={"View Profile"}>
                                 <IconButton

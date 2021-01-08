@@ -168,7 +168,7 @@ export default function ViewStaffProfiles(props) {
                                         <CardContent>
                                             <Typography variant="subtitle1" paragraph>
                                                 <b>Name:</b> {profile.name}<br />
-                                                <b>Email:</b> {profile.email}<br />
+                                                <b>Email:</b> <a href={"mailto:"+profile.email}>{profile.email} </a><br /> 
                                                 <b>ID:</b> {profile.ID}<br />
                                                 <b>Office:</b> {profile.officeID}<br/>
                                                 <b>Day off:</b> {profile.dayOff}<br/>
