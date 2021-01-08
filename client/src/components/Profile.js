@@ -14,10 +14,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import React from 'react';
 import EditProfileForm from './editProfileForm';
 import AddExtraInfoForm from './addExtraInfoForm';
-
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import axios from 'axios';
+import AlertMessage from './Alert_Message.js';
 
 const useStyles = makeStyles((theme) => ({
   mainFeaturedPost: {
@@ -62,9 +62,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainFeaturedPost(props) {
   const [openEdit, setOpenEdit] = React.useState(false);
-
   const [openExtraInfo, setOpenExtraInfo] = React.useState(false);
-
 
   const handleOpenEdit = (event) => {
     setOpenEdit(true);
@@ -80,18 +78,16 @@ export default function MainFeaturedPost(props) {
     setOpenExtraInfo(false);
   }
 
-
-
   const handleDeleteExtraInfo = async (event) => {
-
     const newInfo = props.profile.extraInfo.filter((info, idx) => {
       return idx != event.currentTarget.id;
     })
 
     const req = { extraInfo: newInfo };
     try{
-    const res = await axios.post('updateMyProfile', req);
-    props.setComponentInMain("profile");
+      const res = await axios.post('updateMyProfile', req);
+      props.openAlert(res.data,"success");
+      props.setComponentInMain("profile");
     }catch(err){
       props.openAlert(err.response.data);
     }
@@ -216,9 +212,8 @@ export default function MainFeaturedPost(props) {
           </Grid>
         </Grid>
       </Container>
-      <AddExtraInfoForm open={openExtraInfo} handleOpenEdit={handleOpenAddExtraInfo} handleCloseEdit={handleCloseExtraInfo} profile={props.profile} setComponentInMain={props.setComponentInMain} />
-
-      <EditProfileForm open={openEdit} handleOpenEdit={handleOpenEdit} handleCloseEdit={handleCloseEdit} profile={props.profile} setComponentInMain={props.setComponentInMain} />
+      <AddExtraInfoForm open={openExtraInfo} openAlert={props.openAlert} handleOpenEdit={handleOpenAddExtraInfo} handleCloseEdit={handleCloseExtraInfo} profile={props.profile} setComponentInMain={props.setComponentInMain} />
+      <EditProfileForm open={openEdit} openAlert={props.openAlert} handleOpenEdit={handleOpenEdit} handleCloseEdit={handleCloseEdit} profile={props.profile} setComponentInMain={props.setComponentInMain} />
     </div >
   );
 }

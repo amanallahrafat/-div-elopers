@@ -57,10 +57,7 @@ const styles = (theme) => ({
         color: 'inherit',
     },
     sectionDesktop: {
-        // display: 'none',
-        // [theme.breakpoints.up('md')]: {
-            display: 'flex',
-        // },
+        display: 'flex',
     },
     sectionMobile: {
         display: 'flex',
@@ -80,16 +77,6 @@ class Navigation_Bar extends Component {
         currentScrollHeight: 0,
         targetHeight: 0,
     };
-
-    // handleScroll= () => {
-    //     const offset=   window.scrollY;
-    //     if(offset > 200 ){
-    //         this.state.scrolled(true);
-    //     }
-    //     else{
-    //         this.state.scrolled(false);
-    //     }
-    //   }
 
     handleViewProfile = (event) => {
         this.setState({ viewProfile: true });
@@ -130,14 +117,10 @@ class Navigation_Bar extends Component {
         const styles = {
             Header : {position : "fixed"}
         }
-        // let  navbarClasses=['navbar'];
-        // if(this.state.scrolled){
-        //     navbarClasses.push('scrolled');
-        // }
 
         return (
-            <div className={classes.grow} id = "Header" style={styles.Header} ref="Header" style={{zIndex:5000}}>
-                <AppBar style={{zIndex:5000}} position="fixed" className={clsx(classes.appBar, {
+            <div className={classes.grow} id = "Header" style={styles.Header} ref="Header" style={{zIndex:500000000}}>
+                <AppBar style={{zIndex:500000000}} position="fixed" className={clsx(classes.appBar, {
                     [classes.appBarShift]: this.state.isSlideBarOpen,
                 })}>
                     <Toolbar >
@@ -187,6 +170,7 @@ class Navigation_Bar extends Component {
                             </Tooltip>
                             <DropdownList_NavBar
                                 fromParent={this.props.fromParent}
+                                openAlert = {this.props.openAlert}
                             />
                         </div>
                     </Toolbar>

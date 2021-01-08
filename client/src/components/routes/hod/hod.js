@@ -33,6 +33,7 @@ import ManageCourseInstructors from './ManageCourseInstructors.js';
 import MaternityLeaveRequest from './maternityLeaveRequest.js';
 import SickLeaveRequest from './sickLeaveRequest.js';
 import ViewStaffProfiles from './viewStaffProfiles.js';
+import AlertMessage from '../../Alert_Message.js';
 
 const requestUserProfile = async (openAlert) => {
     try {
@@ -110,9 +111,7 @@ const requestStaffProfiles = async (filter = "none", obj = {}, openAlert) => {
     }
 }
 
-// ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
 const drawerWidth = 240;
-// *********************************************
 
 const requestAllRequests = async (openAlert) => {
     try {
@@ -177,14 +176,14 @@ class HOD extends Component {
         hodProfile: {},
         requests: [],
         requestsFirstTime: true,
-        // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
         isAppBarShift: false,
         showAlert: false,
-        alertMessage: "testing"
-
+        alertMessage: "",
+        errorType : ""
     }
-    openAlert = (message) => {
-        this.setState({ showAlert: true, alertMessage: message })
+    openAlert = (message , type = "error") => {
+        console.log("here*********************");
+        this.setState({ showAlert: true, alertMessage: message, errorType : type });
     }
 
     uniqBy(a, key) {
@@ -203,8 +202,6 @@ class HOD extends Component {
         this.setState({ staffProfiles: uniqueProfiles });
         return uniqueProfiles;
     }
-    //*************
-
 
     updateRequests = async (type = "", requestID = -1, newStatus = "") => {
         console.log("2na hna")
@@ -262,7 +259,6 @@ class HOD extends Component {
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
-                    openAlert={this.openAlert}
                 />
             });
         }
@@ -319,7 +315,6 @@ class HOD extends Component {
                     updateRequests={this.updateRequests}
                     requests={this.state.requests.find((req) => { return req.type == "accidental leave requests" }).requests}
                     openAlert={this.openAlert}
-
                 />
             });
 
@@ -331,7 +326,6 @@ class HOD extends Component {
                     updateRequests={this.updateRequests}
                     requests={this.state.requests.find((req) => { return req.type == "sick leave requests" }).requests}
                     openAlert={this.openAlert}
-
                 />
             });
 
@@ -342,7 +336,6 @@ class HOD extends Component {
                     updateRequests={this.updateRequests}
                     requests={this.state.requests.find((req) => { return req.type == "maternity leave requests" }).requests}
                     openAlert={this.openAlert}
-
                 />
             });
 
@@ -353,7 +346,6 @@ class HOD extends Component {
                     updateRequests={this.updateRequests}
                     requests={this.state.requests.find((req) => { return req.type == "compensation leave requests" }).requests}
                     openAlert={this.openAlert}
-
                 />
             });
 
@@ -364,7 +356,6 @@ class HOD extends Component {
                     departmentCourses={await requestAllDepartmentCourses(this.openAlert)}
                     allCourses={await requestDepartmentCourses(this.openAlert)}
                     openAlert={this.openAlert}
-
                 />
             });
         }
@@ -379,7 +370,7 @@ class HOD extends Component {
                     sentReplacementRequests={requestsArr.requests[5]}
                     senderObj={requestsArr.senderObj}
                     setComponentInMain={this.setComponentInMain}
-
+                    openAlert={this.openAlert}
                 />
             });
         }
@@ -392,6 +383,7 @@ class HOD extends Component {
                     allCourses={await getAllCoursesInstructorsNames()}
                     requests={requestsArr.requests[7]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
                 />
             });
         }
@@ -403,6 +395,7 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[2]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
                 />
             });
         }
@@ -415,6 +408,7 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[1]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
                 />
             });
         }
@@ -427,6 +421,7 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[0]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
                 />
             });
         }
@@ -438,6 +433,7 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[4]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
                 />
             });
         }
@@ -449,6 +445,7 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[6]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
                 />
             });
         }
@@ -461,6 +458,7 @@ class HOD extends Component {
                     requests={requestsArr.requests[3]}
                     senderObj={requestsArr.senderObj}
                     missingDays={await getAllMissingDays()}
+                    openAlert={this.openAlert}
                 />
             });
         }
@@ -503,11 +501,8 @@ class HOD extends Component {
                     updateRequests={this.updateRequests}
                     requestAllDepartmentCourses={requestAllDepartmentCourses}
                     handleAppBarShift={this.handleAppBarShift}
+                    openAlert = {this.openAlert}
                 />
-                <Alert style={(!this.state.showAlert) ? { display: 'none' } : {}} severity="error" onClose={() => { this.setState({ showAlert: false }) }}>
-                    <AlertTitle>Error</AlertTitle>
-                    <strong>{this.state.alertMessage}</strong>
-                </Alert>
 
                 <Container maxWidth="lg" style={{ marginTop: "100px" }} className={clsx({
                     [classes.appBarShift]: this.state.isAppBarShift,
@@ -515,6 +510,9 @@ class HOD extends Component {
                     {this.state.componentInMain}
                 </Container>
 
+                <AlertMessage open={this.state.showAlert} type={this.state.errorType} onClose={() => { this.setState({ showAlert: false }) }}
+                    msg={this.state.alertMessage}
+                />
             </div>
         )
     }

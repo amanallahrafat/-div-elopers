@@ -181,7 +181,9 @@ const updateMyProfile = async (req, res) => {
 
     } else {
         const users = await Staff_Member.find({ email: req.body.email });
-        if (users.length != 0 && users[0].ID != ID && users[0].type != type) {
+        console.log(users);
+        console.log(req.body.email);
+        if (users.length != 0 && users[0].ID != ID) {
             return res.status(400).send("This email already exists. Emails have to be unique");
         }
 
