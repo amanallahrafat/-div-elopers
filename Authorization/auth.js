@@ -25,23 +25,17 @@ const authStaffMember = async (req,res,next)=>{
        return res.status(403).send("Please login to continue!");
     }
 }
-// const authHr=async(req,res,next)=>{
-//     if(req.header.user.type!=1)
-//     return res.status(403).send("you are not an HR and don't have authority");
-//     next();
-// }
-
 
 const authHr = async (req,res,next) =>{
     const token = req.header("auth-token");
     if(!token)
         return res.status(403).send("You need to login to continue");
     const {ID , type} = req.header.user;
+    if(type != 1)
+        return res.status(401).send("you are not allowed. this operation is only for HRs");
     const staff_member = await Staff_Member.findOne({ID : ID , type : 1});
     if(staff_member==null)
         return res.status(401).send("Please register first");
-    if(type != 1)
-        return res.status(401).send("you are not allowed. this operation is only for HRs");
     next();
 }
 
@@ -49,9 +43,9 @@ const authHOD = async (req,res,next) =>{
     const token = req.header("auth-token");
     if(!token)
         return res.status(403).send("You need to login to continue");
-       
-    
-        const {ID , type} = req.header.user;
+    const {ID , type} = req.header.user;
+    if(type != 0)
+        return res.status(401).send("you are not allowed. this operation is only for academic members only");
     const academic_member = await Academic_Member.findOne({ID : ID});
     if(academic_member==null)
         return res.status(401).send("Please register first");
@@ -66,6 +60,8 @@ const authCourseInstructor = async (req,res,next)=>{
     if(!token)
         return res.status(403).send("you need to login to continue");
     const {ID , type} = req.header.user;
+    if(type != 0)
+        return res.status(401).send("you are not allowed. this operation is only for academic members only");
     const academic_member = await Academic_Member.findOne({ID : ID});
     if(academic_member==null)
         return res.status(401).send("Please register first");
@@ -79,6 +75,8 @@ const authCourseCoordinator = async (req,res,next)=>{
     if(!token)
         return res.status(403).send("you need to login to continue");
     const{ID , type} = req.header.user;
+    if(type != 0)
+        return res.status(401).send("you are not allowed. this operation is only for academic members only");
     const academic_member = await Academic_Member.findOne({ID : ID});
     if(academic_member==null)
         return res.status(401).send("Please register first");

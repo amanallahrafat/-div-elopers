@@ -5,7 +5,10 @@ const staffMemberRouter = express.Router();
 
 staffMemberRouter.get('/authStaffMember',authorization.authStaffMember,(req,res)=>{res.send("You are logged in as staff member")});
 staffMemberRouter.get('/authHr',authorization.authHr,(req,res)=>{res.send("You are logged in as staff member")});
-
+staffMemberRouter.get('/authHOD',authorization.authHOD,(req,res)=>{res.send("You are logged in as HOD")});
+staffMemberRouter.get('/authCourseInstructor',authorization.authCourseInstructor,(req,res)=>{res.send("You are logged in as Course Instructor")});
+staffMemberRouter.get('/authCourseCoordinator',authorization.authCourseCoordinator,(req,res)=>{res.send("you are logged in as Course Coordinator")});
+staffMemberRouter.get('/authAcademicMember',authorization.authAcademicMember,(req,res)=>{res.send("You are logged in as Academic Members")});
 
 staffMemberRouter.post('/login', staffMemberController.login);
 staffMemberRouter.post('/logout', authorization.authStaffMember,staffMemberController.logout);

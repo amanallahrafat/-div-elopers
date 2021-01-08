@@ -465,12 +465,11 @@ class HOD extends Component {
             });
         }
     }
-    // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
     handleAppBarShift = (event) => {
         this.setState({ isAppBarShift: event });
         console.log(this.state.isAppBarShift);
     };
-    //**************************
+    
     async componentDidMount() {
         if (!localStorage.getItem("auth-token")) {
             this.setState({ isLoggedIn: 1 });
@@ -479,6 +478,7 @@ class HOD extends Component {
         try {
             setAuthToken(localStorage.getItem("auth-token"));
             await axios.get("/authStaffMember");
+            await axios.get("/authHOD");
             this.setState({ isLoggedIn: 2 });
         } catch (err) {
             this.setState({ isLoggedIn: 1 });
@@ -489,9 +489,7 @@ class HOD extends Component {
     }
 
     render() {
-        // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
         const { classes } = this.props;
-        //********************
         if (this.state.isLoggedIn === 0)
             return <div />;
         if (this.state.isLoggedIn === 1) {

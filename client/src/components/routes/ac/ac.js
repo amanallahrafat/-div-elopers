@@ -210,6 +210,7 @@ class AC extends Component {
         try {
             setAuthToken(localStorage.getItem("auth-token"));
             await axios.get("/authStaffMember");
+            await axios.get('/authAcademicMember');
             this.setState({ isLoggedIn: 2 });
         } catch (err) {
             this.setState({ isLoggedIn: 1 });
