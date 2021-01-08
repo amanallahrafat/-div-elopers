@@ -334,6 +334,8 @@ class CC extends Component {
         try {
             setAuthToken(localStorage.getItem("auth-token"));
             await axios.get("/authStaffMember");
+            await axios.get('/authCourseCoordinator');
+            console.log("here");
             this.setState({ isLoggedIn: 2 });
         } catch (err) {
             this.setState({ isLoggedIn: 1 });
@@ -341,9 +343,7 @@ class CC extends Component {
     }
 
     render() {
-        // ******** TO BE ADDED IN EVERY ACADEMIC MEMBER
         const { classes } = this.props;
-        //********************
         if (this.state.isLoggedIn === 0)
             return <div />;
         if (this.state.isLoggedIn === 1) {
