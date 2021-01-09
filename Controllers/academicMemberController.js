@@ -37,13 +37,13 @@ const sendReplacementRequest = async (req, res) => {
     if ((await Academic_Member.findOne({ ID: replacementID })) == null)
         return res.status(404).send("The replacement member was not found");
     if ((await Academic_Member.findOne({ ID: ID })).departmentID != (await Academic_Member.findOne({ ID: replacementID })).departmentID)
-        return res.status(400).send("you cannot be replaced by a member does not belong to your department");
+        return res.status(400).send("You can not be replaced by a member does not belong to your department.");
     const course = await Course.findOne({ ID: courseID });
-    if (!((course.teachingStaff.includes(ID) ^ course.instructor.includes(ID)) &&
-        (course.teachingStaff.includes(replacementID) ^ course.instructor.includes(replacementID))))
-        return res.status(400).send("you canot be replaced by a member does not teach the same course");
+    if (!((course.teachingStaff.includes(ID) || course.instructor.includes(ID)) &&
+        (course.teachingStaff.includes(replacementID) || course.instructor.includes(replacementID))))
+        return res.status(400).send("You can not be replaced by a member that does not teach the same course.");
     if (extraUtils.getDifferenceInDays(requestedDate, Date.now()) <= 0)
-        return res.status(400).send("The requested date already passed !");
+        return res.status(400).send("The requested date has already passed!");
     const coursesSchedules = await Course_Schedule.find();
     for (const coursesSchedule of coursesSchedules) {
         const slots = coursesSchedule.slots;

@@ -27,9 +27,15 @@ const getAcademicMembersByID_arr = async(ID_arr)=>{
 
 const getAcademicMemberByID_arr = async (ID_arr) => {
     const academicMem = await Staff_Member.find({type : 0});
+    const academicMem2 = await Academic_Member.find();
     const academicMemNames = [];
     for(const id of ID_arr){
         academicMemNames.push(academicMem.filter(elem => elem.ID == id)[0]);
+    }
+    for(const mem of academicMemNames){
+        const ac = academicMem2.filter(elem=>elem.ID==mem.ID)[0];
+        mem['_doc'].ac = ac;
+        console.log(mem)
     }
     return academicMemNames;
 }
