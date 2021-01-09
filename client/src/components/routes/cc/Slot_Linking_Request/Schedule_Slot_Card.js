@@ -57,10 +57,11 @@ export default function SimpleCard(props) {
             const res = await axios.post('/cc/handleSlotLinkingRequest',
                 { requestID: props.request.ID, decision: 1 }
             );
+            props.openAlert("Request has been accepted Successfully!","success");
             await props.handleSlotLinkingRequest(props.request.ID ,1);
         } catch (err) {
             setRequestStatus("pending")
-            console.log(err.response.data);
+            props.openAlert(err.response.data);
         }
 
     }
@@ -72,10 +73,11 @@ export default function SimpleCard(props) {
             const res = await axios.post('/cc/handleSlotLinkingRequest',
                 { requestID: props.request.ID, decision: 0 }
             );
+            props.openAlert("Request has been rejected Successfully!","success");
             await props.handleSlotLinkingRequest(props.request.ID ,0);
         } catch (err) {
             setRequestStatus("pending")
-            console.log(err.response.data);
+            props.openAlert(err.response.data);
         }
     }
 

@@ -55,9 +55,10 @@ export default function AddSlotForm(props) {
             obj.courseID = props.slot.courseID;
             obj.courseName = props.slot.courseName;
             await props.handleSlots(obj,1);
-            props.setComponentInMain("slot");
+            await props.setComponentInMain("slot");
+            props.openAlert("Slot has been updated Successfully","success");
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
         handleClose();
     }

@@ -86,6 +86,7 @@ function mapToScheduleObj(props) {
             academicMembers = {props.academicMembers}
             handleSlotLinkingRequest = {props.handleSlotLinkingRequest}
             handleSlots = {props.handleSlots}
+            openAlert = {props.openAlert}
             setComponentInMain={props.setComponentInMain}
         />;
         scheduleObj[slot.day][slot.slotNumber - 1].push(card);
