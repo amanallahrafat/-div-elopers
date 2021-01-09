@@ -20,8 +20,6 @@ const useStyles = makeStyles({
     },
     bullet: {
         display: 'inline-block',
-        // margin: '0 1px',
-        // transform: 'scale(0.8)',
     },
     title: {
     },
@@ -59,6 +57,7 @@ export default function SimpleCard(props) {
         const res = await axios.delete(`/cc/deleteSlot/${props.courseID}/${slotID}`);
         props.handleSlots({slotID : slotID},2);
         props.setComponentInMain("slot");
+        props.openAlert("Slot has been deleted Successfully!","success");
     }
     const handleUpdateSlot = async (event) => {
         const slotID = event.currentTarget.id.split('_')[1];
@@ -111,6 +110,7 @@ export default function SimpleCard(props) {
                         handleClose={handleCloseEdit}
                         locations = {props.locations}
                         handleSlots = {props.handleSlots}
+                        openAlert = {props.openAlert}
                         setComponentInMain={props.setComponentInMain}
                     />
                 </Card>

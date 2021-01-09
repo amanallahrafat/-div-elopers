@@ -54,9 +54,10 @@ export default function AddSlotForm(props) {
             const res = await axios.post(`/cc/createSlot`, req);
             console.log(res.data);
             await props.handleSlots(res.data,0);
-            props.setComponentInMain("slot");
+            await props.setComponentInMain("slot");
+            props.openAlert("Slot has been deleted Successfully!","success");
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
         handleClose();
     }

@@ -87,6 +87,7 @@ function mapToScheduleObj(prop) {
             locations = {prop.locations}
             academicMembers = {prop.academicMembers}
             handleSlots = {prop.handleSlots}
+            openAlert = {prop.openAlert}
             setComponentInMain={prop.setComponentInMain}
         />;
         scheduleObj[entry.day][entry.slotNumber - 1].push(card);
@@ -175,6 +176,7 @@ export default function CustomizedTables(props) {
                 handleSlots = {props.handleSlots}
                 locations = {props.locations}
                 courseID = {props.courseID}
+                openAlert = {props.openAlert}
                 setComponentInMain={props.setComponentInMain} />
         </Container>
     );
