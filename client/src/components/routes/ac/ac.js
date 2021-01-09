@@ -88,6 +88,10 @@ class AC extends Component {
         this.setState({ showAlert: true, alertMessage: message, errorType : type });
     }
 
+    setBackdropIsOpen = (val) => {
+        this.setState({ backdropIsOpen: val })
+    }
+    
     setComponentInMain = async (event) => {
         console.log("Triggered");
         console.log(event);
@@ -132,6 +136,7 @@ class AC extends Component {
                     senderObj={requestsArr.senderObj}
                     openAlert = {this.openAlert}
                     setComponentInMain={this.setComponentInMain}
+                    setBackdropIsOpen = {this.setBackdropIsOpen}
                 />
             });
         }

@@ -80,11 +80,13 @@ export default function SimpleCard(props) {
     
     const handleCancelReplacementRequest = async (reqID) => {
         console.log(reqID)
+        props.setBackdropIsOpen(true);
         try {
             const res = await axios.delete(`/ac/cancelReplacementRequest/${reqID}`);
             await props.setComponentInMain("personalSchedule");
             props.openAlert("Request has been cancelled successfully.","success");
         } catch (err) {
+            props.setBackdropIsOpen(false);
             props.openAlert(err.response.data);
         }
     }
@@ -189,6 +191,8 @@ export default function SimpleCard(props) {
                         slotID={props.slotID}
                         openAlert = {props.openAlert}
                         setComponentInMain = {props.setComponentInMain}
+
+                        setBackdropIsOpen={props.setBackdropIsOpen}
                     />
                 </Card>
             </Tooltip>

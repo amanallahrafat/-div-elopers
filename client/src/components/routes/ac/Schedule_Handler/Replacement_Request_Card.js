@@ -82,6 +82,7 @@ export default function MaxWidthDialog(props) {
 
   const handleSubmit = async (event) => {
     try {
+      props.setBackdropIsOpen(true);
       await axios.post('ac/sendReplacementRequest', {
         replacementID: selectedMem, courseID: props.courseID,
         slotID: props.slotID, requestedDate: selectedDate.getTime()
@@ -89,6 +90,7 @@ export default function MaxWidthDialog(props) {
       await props.setComponentInMain("personalSchedule");
       props.openAlert("Replacement Request submitted successfully!","success");
     } catch (err) {
+      props.setBackdropIsOpen(false);
       props.openAlert(err.response.data);
     }
 
