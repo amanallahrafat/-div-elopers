@@ -18,7 +18,6 @@ export default function SimpleMenu(props) {
     };
 
     const handleResetPassword = (event) =>{
-        // props.fromParent("resetPassword");
         setResetPasswordFlag(true);
         setAnchorEl(null);
     }
@@ -29,10 +28,12 @@ export default function SimpleMenu(props) {
             switch (event.target.id) {
                 case "signIn": {
                     res = await axios.post('/signIn');
+                    props.openAlert("Signing in Successfully !" ,"success");
                     break;
                 }
                 case "signOut": {
                     res = await axios.post('/signOut');
+                    props.openAlert("Signing out Successfully !" ,"success");
                     break;
                 }
                 case "logout": {
@@ -45,7 +46,7 @@ export default function SimpleMenu(props) {
             }
         }
         catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data,"error");
         }
         setAnchorEl(null);
     };

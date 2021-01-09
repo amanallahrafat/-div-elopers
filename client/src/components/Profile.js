@@ -14,10 +14,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import React from 'react';
 import EditProfileForm from './editProfileForm';
 import AddExtraInfoForm from './addExtraInfoForm';
-
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import axios from 'axios';
+import AlertMessage from './Alert_Message.js';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -68,10 +68,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainFeaturedPost(props) {
   const [openEdit, setOpenEdit] = React.useState(false);
-
   const [openExtraInfo, setOpenExtraInfo] = React.useState(false);
   const [backdropIsOpen, setBackdropIsOpen] = React.useState(false);
-
 
   const handleOpenEdit = (event) => {
     setOpenEdit(true);
@@ -94,10 +92,11 @@ export default function MainFeaturedPost(props) {
     })
 
     const req = { extraInfo: newInfo };
-    try {
+    try{
       const res = await axios.post('updateMyProfile', req);
+      props.openAlert(res.data,"success");
       props.setComponentInMain("profile");
-    } catch (err) {
+    }catch(err){
       props.openAlert(err.response.data);
     }
     setBackdropIsOpen(false);
@@ -222,9 +221,8 @@ export default function MainFeaturedPost(props) {
           </Grid>
         </Grid>
       </Container>
-      <AddExtraInfoForm open={openExtraInfo} handleOpenEdit={handleOpenAddExtraInfo} handleCloseEdit={handleCloseExtraInfo} profile={props.profile} setComponentInMain={props.setComponentInMain} />
-
-      <EditProfileForm open={openEdit} handleOpenEdit={handleOpenEdit} handleCloseEdit={handleCloseEdit} profile={props.profile} setComponentInMain={props.setComponentInMain} />
+      <AddExtraInfoForm open={openExtraInfo} openAlert={props.openAlert} handleOpenEdit={handleOpenAddExtraInfo} handleCloseEdit={handleCloseExtraInfo} profile={props.profile} setComponentInMain={props.setComponentInMain} />
+      <EditProfileForm open={openEdit} openAlert={props.openAlert} handleOpenEdit={handleOpenEdit} handleCloseEdit={handleCloseEdit} profile={props.profile} setComponentInMain={props.setComponentInMain} />
       <Backdrop className={classes.backdrop} open={backdropIsOpen}
         style={{ zIndex: 600000000 }}>
         <CircularProgress color="inherit" />

@@ -6,6 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React from 'react';
+import AlertMessage from './Alert_Message.js';
 
 export default function EditProfileForm(props) {
     const handleClickOpen = () => {
@@ -15,14 +16,16 @@ export default function EditProfileForm(props) {
     const handleClose = () => {
         props.handleCloseEdit();
     };
+
     const handleUpdate = async () => {
         const newMail = document.getElementById("editEmail").value;
         try {
             const req = { email: newMail };
             const res = await axios.post('updateMyProfile', req);
+            props.openAlert(res.data , "success");
             props.setComponentInMain("profile");
         } catch (err) {
-            alert("please enter a valid mail");
+            props.openAlert(err.response.data,"error");
         }
         handleClose();
     }

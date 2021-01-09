@@ -24,9 +24,10 @@ export default function addExtraInfoForm(props) {
                 ]
             };
             const res = await axios.post('updateMyProfile', req);
+            props.openAlert("Profile Updated Successfully","success");
             props.setComponentInMain("profile");
         } catch (err) {
-            alert("please enter a valid info");
+            props.openAlert(err.response.data,"error");
         }
         handleClose();
 }
