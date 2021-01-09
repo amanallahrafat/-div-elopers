@@ -90,6 +90,7 @@ export default function Course_Card(props) {
     const handleDeleteCourse = async (event) => {
         const res = await axios.delete(`/hr/deleteCourse/${event.currentTarget.id.split('_')[1]}`);
         props.setComponentInMain("course");
+        props.openAlert("Course Deleted SUccessfully!" , "success");
     }
 
     const handleUpdateCourse = async (event) => {
@@ -195,11 +196,13 @@ export default function Course_Card(props) {
                 handleCloseEdit={handleCloseEdit}
                 course = {updatedCourse}
                 departments = {props.departments}
+                openAlert = {props.openAlert}
                 setComponentInMain={props.setComponentInMain} />
             <AddCourseForm
                 open={openAddCourse}
                 handleCloseAdd={handleCloseAdd}
                 departments = {props.departments}
+                openAlert = {props.openAlert}
                 setComponentInMain={props.setComponentInMain} />
         </div >
     );

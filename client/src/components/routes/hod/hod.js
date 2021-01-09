@@ -192,6 +192,10 @@ class HOD extends Component {
         console.log("here*********************");
         this.setState({ showAlert: true, alertMessage: message, errorType : type });
     }
+        setBackdropIsOpen=(val)=>{
+        this.setState({backdropIsOpen:val})
+    }
+  
 
     uniqBy(a, key) {
         var seen = {};
@@ -203,7 +207,7 @@ class HOD extends Component {
 
 
     updateRequestStaffProfile = async (filter = "none", obj = {}) => {
-
+        
         const profiles = await requestStaffProfiles(filter, obj, this.openAlert);
         let uniqueProfiles = this.uniqBy(profiles, JSON.stringify)
 
@@ -213,6 +217,7 @@ class HOD extends Component {
     }
 
     updateRequests = async (type = "", requestID = -1, newStatus = "") => {
+        this.setBackdropIsOpen(true);
         console.log("2na hna")
         if (this.state.requestsFirstTime || requestID == -1) {
             const requests = await requestAllRequests(this.openAlert);
@@ -239,6 +244,8 @@ class HOD extends Component {
             this.setState({ requests: allRequests });
             return allRequests;
         }
+        this.setBackdropIsOpen(false);
+   
     }
 
     updateHODProfile = async () => {
@@ -281,6 +288,8 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                     academicMembers={await getAllAcademicMembers(this.openAlert)}
                     openAlert={this.openAlert}
+                    setBackdropIsOpen={this.setBackdropIsOpen}
+                  
                 />
             });
 
@@ -509,7 +518,6 @@ class HOD extends Component {
         }
         return (
             <div >
-
                 <Navigation_Bar fromParent={this.setComponentInMain}
                     updateRequestStaffProfile={this.updateRequestStaffProfile}
                     updateRequests={this.updateRequests}

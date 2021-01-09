@@ -122,6 +122,8 @@ export default function CustomizedTables(props) {
     // mapToScheduleObj(selectedCourse?.courseSlots);
     console.log("props.allCourses", props.allCourses);
     console.log("props.departmentCourses", props.departmentCourses)
+    mapToScheduleObj(selectedCourse?.courseSlots);
+                         
     return (
         <TableContainer component={Paper} style={{border:'1px'}}>
             <Grid container

@@ -29,8 +29,9 @@ export default function AddFacultyForm(props) {
             const res = await axios.post(`/hr/createFaculty`, req);
             props.handleFaculties(res.data,0);
             props.setComponentInMain("faculty");
+            props.openAlert("Faculty Added Successfully!" , "success");
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
         handleClose();
     }

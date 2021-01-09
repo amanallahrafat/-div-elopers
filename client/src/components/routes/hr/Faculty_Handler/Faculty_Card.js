@@ -93,6 +93,7 @@ export default function Faculty_Card(props) {
         const res = await axios.delete(`/hr/deleteFaculty/${deletedName}`);
         props.handleFaculties({name : deletedName },2);
         props.setComponentInMain("faculty");
+        props.openAlert("Faculty deleted Successfully!" , "success");
     }
 
     const handleUpdateFaculty = async (event) => {
@@ -177,6 +178,7 @@ export default function Faculty_Card(props) {
                 faculty={updatedFaculty}
                 departments={props.departments}
                 handleFaculties = {props.handleFaculties}
+                openAlert = {props.openAlert}
                 setComponentInMain={props.setComponentInMain} />
             <AddFacultyForm
                 open={openAddFaculty}
@@ -184,6 +186,7 @@ export default function Faculty_Card(props) {
                 handleCloseAdd={handleCloseAdd}
                 departments = {props.departments}
                 handleFaculties = {props.handleFaculties}
+                openAlert = {props.openAlert}
                 setComponentInMain={props.setComponentInMain} />
         </div >
     );

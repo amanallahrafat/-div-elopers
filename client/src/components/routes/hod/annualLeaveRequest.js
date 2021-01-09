@@ -184,8 +184,8 @@ export default function AnnualLeaveRequest(props) {
                                                 <b>Sender Name: </b> {req.senderID}<br />
                                                  <b>Email: </b> <a href={"mailto:"+req.email}>{req.email} </a><br /> 
                                                 <b>Message: </b> {req.msg}<br />
-                                                <b>Resquested date: </b> {req.requestedDate}<br />
-                                                <b>Submission date:</b> {req.submissionDate}<br />
+                                                <b>Resquested date:</b> {new Date(req.requestedDate).toLocaleDateString('en-US')}<br />
+                                                <b>Submission date:</b> {new Date(req.submissionDate).toLocaleDateString('en-US')}<br />
                                                 <b>Status:</b> {req.status}<br />
                                                 <b>Replacement: </b> 
                                                  {/* <Divider/> */}

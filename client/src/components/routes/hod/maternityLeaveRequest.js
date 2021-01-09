@@ -81,9 +81,9 @@ export default function MaternityLeaveRequest(props) {
         setShowForm(false);
     }
     const handleOpenForm=(event)=>{
-           const requestID = event.currentTarget.id.split('_')[1];
-           setReqID(requestID);
-        setShowForm(true);
+            const requestID = event.currentTarget.id.split('_')[1];
+            setReqID(requestID);
+            setShowForm(true);
     }
     const handleAcceptRequest= async(event)=>{
 
@@ -184,9 +184,9 @@ export default function MaternityLeaveRequest(props) {
                                                 <b>Sender Name:</b> {req.senderID}<br />
                                                  <b>Email:</b> <a href={"mailto:"+req.email}>{req.email} </a><br /> 
                                                 <b>Message:</b> {req.msg}<br />
-                                                <b>Resquested start date  :</b> {req.startDate}<br />
-                                                <b>Resquested end date  :</b> {req.endDate}<br />
-                                                <b>Submission date:</b> {req.submissionDate}<br />
+                                                <b>Resquested start date  :</b> {new Date(req.startDate).toLocaleDateString('en-US')}<br />
+                                                <b>Resquested end date  :</b> {new Date(req.endDate).toLocaleDateString('en-US')}<br />
+                                                <b>Submission date:</b> {new Date(req.submissionDate).toLocaleDateString('en-US')}<br />
                                                 <b>Document :</b> {req.documents}<br />
                                                 <b>Status:</b> {req.status}<br />
                                             </Typography>

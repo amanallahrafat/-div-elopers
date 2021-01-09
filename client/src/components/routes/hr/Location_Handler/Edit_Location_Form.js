@@ -33,8 +33,9 @@ export default function EditLocationForm(props) {
             const res = await axios.put(`hr/updateLocation/${props.location.ID}`, req);
             props.handleLocations(res.data.newLocation,1);
             props.setComponentInMain("location");
+            props.openAlert("Location updated Successfully!","success");
         } catch (err) {
-            alert("please enter valid data.");
+            props.openAlert(err.response.data);
         }
         handleClose();
     }

@@ -94,13 +94,6 @@ export default function CourseInstructor_Card(props) {
         setOpenDeleteCourseInstructor(true);
     }
 
-    // const handleUpdateLocation = async (event) => {
-    //     const locationID = event.currentTarget.id.split('_')[1];
-    //     const location = props.locations.filter(l => l.ID == locationID);
-    //     setUpdatedLocation(location[0]);
-    //     setOpenUpdateLocation(true);
-    // }
-
     const handleOpenAddCourseInstructor = async (event) => {
         const courseID = event.currentTarget.id.split('_')[1];
         const course = props.courses.filter(l => l.ID == courseID);
@@ -198,7 +191,7 @@ export default function CourseInstructor_Card(props) {
                 academicMembers = {props.academicMembers}
                 setComponentInMain={props.setComponentInMain}
                 openAlert={props.openAlert}
-                
+                setBackdropIsOpen={props.setBackdropIsOpen}
                 />
 
             <DeleteInstructorForm
@@ -209,6 +202,8 @@ export default function CourseInstructor_Card(props) {
             academicMembers = {props.academicMembers}
             setComponentInMain={props.setComponentInMain}
             openAlert={props.openAlert}
+            
+            setBackdropIsOpen={props.setBackdropIsOpen}
              
            />
 
@@ -221,6 +216,8 @@ export default function CourseInstructor_Card(props) {
             academicMembers = {props.academicMembers}
             setComponentInMain={props.setComponentInMain}
             openAlert={props.openAlert}
+            
+            setBackdropIsOpen={props.setBackdropIsOpen}
              
            />
 

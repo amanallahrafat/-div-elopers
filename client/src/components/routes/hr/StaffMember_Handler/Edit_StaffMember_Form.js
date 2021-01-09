@@ -70,9 +70,10 @@ export default function EditStaffMemberForm(props) {
             console.log(req)
             const res = await axios.put(`/hr/updateStaffMember/${props.staffMember.ID}/${props.staffMember.type}`, req);
             props.setComponentInMain("staffMember");
+            props.openAlert("Staff Member has been updated Successfully!","success");
             handleClose();
         } catch (err) {
-            alert("err.response.data");
+            props.openAlert(err.response.data);
         }
         handleClose();
     }

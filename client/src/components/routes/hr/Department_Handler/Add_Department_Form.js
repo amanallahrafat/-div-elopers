@@ -52,8 +52,9 @@ export default function AddDepartmentForm(props) {
             if (newMembers.length > 0) req.members = newMembers;
             const res = await axios.post(`/hr/createDepartment`, req);
             props.setComponentInMain("department");
+            props.openAlert("Department Added Successfully!" , "success");
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
         handleClose();
     }
