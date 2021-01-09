@@ -67,26 +67,27 @@ export default function SimpleCard(props) {
     const handleSlotLinkingRequest = async () => {
         try {
             console.log(props.courseID, props.slotID)
-            const res = await axios.post("ac/sendSlotLinkingRequest", { courseID: props.courseID, slotID: props.slotID })
+            const res = await axios.post("ac/sendSlotLinkingRequest", { courseID: props.courseID, slotID: props.slotID });
+            props.openAlert("Request has been sent Successfully!","success");
             setReqID(res.data.data.reqID);
             setStatus('pending');
             setHasBeenCanelled(false);
         } catch (err) {
-            console.log({ courseID: props.courseID, slotID: props.slotID })
-            console.log(err.response.data)
-            alert(err.response.data)
+            // console.log({ courseID: props.courseID, slotID: props.slotID })
+            // console.log(err.response.data)
+            props.openAlert(err.response.data)
         }
     }
 
     const handleCancelSlotLinkingRequest = async (reqID) => {
         try {
             const res = await axios.delete(`ac/cancelSlotLinkingRequest/${reqID}`);
-            alert("Request has been cancelled successfully.")
+            props.openAlert("Request has been canceled Successfully!","success");
             await setHasBeenCanelled(true);
             await setStatus('-');
             await setIsMe(false);
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data)
         }
     }
 

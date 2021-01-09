@@ -83,10 +83,9 @@ export default function ChangeDayOffRequest(props) {
         try {
             const res = await axios.delete(`/ac/cancelAnnualLeaveRequest/${reqID}`);
             await props.setComponentInMain("ac_annualLeaveRequest");
-            alert("Request has been cancelled successfully.")
+            props.openAlert("Request has been cancelled successfully!","success");
         } catch (err) {
-            console.log("HEEELLLLO")
-            console.log(err.response.data)
+            props.openAlert(err.response.data)
         }
     }
 
@@ -196,6 +195,7 @@ export default function ChangeDayOffRequest(props) {
                 dayOff={props.senderObj.dayOff}
                 handleCloseForm={handleCloseForm}
                 senderObj={props.senderObj}
+                openAlert = {props.openAlert}
                 setComponentInMain={props.setComponentInMain}
             />
         </div >

@@ -87,9 +87,9 @@ export default function MaxWidthDialog(props) {
         slotID: props.slotID, requestedDate: selectedDate.getTime()
       });
       await props.setComponentInMain("personalSchedule");
-      alert("Replacement Request submitted successfully.")
+      props.openAlert("Replacement Request submitted successfully!","success");
     } catch (err) {
-      alert(err.response.data);
+      props.openAlert(err.response.data);
     }
 
     handleClose();
@@ -98,8 +98,6 @@ export default function MaxWidthDialog(props) {
   return (
     <React.Fragment>
       <Dialog
-        // fullWidth={fullWidth}
-        // maxWidth={maxWidth}
         open={props.open}
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"

@@ -83,9 +83,9 @@ export default function ChangeDayOffRequest(props) {
         try {
             const res = await axios.delete(`/ac/cancelCompensationLeaveRequest/${reqID}`);
             await props.setComponentInMain("ac_compensationLeaveRequest");
-            console.log("Request has been cancelled successfully.")
+            props.openAlert("Request has been cancelled successfully!","success");
         } catch (err) {
-            console.log(err.response.data)
+            props.openAlert(err.response.data)
         }
     }
 
@@ -102,7 +102,7 @@ export default function ChangeDayOffRequest(props) {
                     <div className={classes.overlay} />
                 </Paper>
                 <Typography className={classes.title} variant="h5" component="div">
-                    <b>Compenstaion Leave Requests</b>
+                    <b>Compensation Leave Requests</b>
                     <IconButton
                         aria-label="account of current user"
                         aria-haspopup="true"
@@ -198,6 +198,7 @@ export default function ChangeDayOffRequest(props) {
                 senderObj={props.senderObj}
                 setComponentInMain={props.setComponentInMain}
                 missingDays={props.missingDays}
+                openAlert = {props.openAlert}
             />
         </div >
     );

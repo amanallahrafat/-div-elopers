@@ -25,6 +25,7 @@ import Course_Schedule from "./All_Course_Schedule/Course_Schedule";
 import Schedule from './Schedule_Handler/Schedule';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import AlertMessage from '../../Alert_Message.js';
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get("/viewProfile");
@@ -76,10 +77,16 @@ class AC extends Component {
         isLoggedIn: 0,
         componentInMain: <div />,
         isAppBarShift: false,
-
-        // ******** Backdrop states
+        showAlert: false,
+        alertMessage: "",
+        errorType : "",
         backdropIsOpen: true,
     };
+
+    openAlert = (message , type = "error") => {
+        console.log("here*********************");
+        this.setState({ showAlert: true, alertMessage: message, errorType : type });
+    }
 
     setComponentInMain = async (event) => {
         console.log("Triggered");
@@ -91,6 +98,7 @@ class AC extends Component {
             this.setState({
                 componentInMain: <Profile
                     profile={await requestUserProfile()}
+                    openAlert = {this.openAlert}
                     setComponentInMain={this.setComponentInMain} />
             });
         } else if (event == "attendance") {
@@ -98,6 +106,7 @@ class AC extends Component {
             this.setState({
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods()}
+                    openAlert = {this.openAlert}
                     setComponentInMain={this.setComponentInMain}
                 />
             });
@@ -121,8 +130,8 @@ class AC extends Component {
                     replacementRequests={await getReplacementRequests()}
                     sentReplacementRequests={requestsArr.requests[5]}
                     senderObj={requestsArr.senderObj}
+                    openAlert = {this.openAlert}
                     setComponentInMain={this.setComponentInMain}
-
                 />
             });
         }
@@ -135,6 +144,7 @@ class AC extends Component {
                     allCourses={await getAllCoursesInstructorsNames()}
                     requests={requestsArr.requests[7]}
                     senderObj={requestsArr.senderObj}
+                    openAlert = {this.openAlert}
                 />
             });
         }
@@ -146,6 +156,7 @@ class AC extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[2]}
                     senderObj={requestsArr.senderObj}
+                    openAlert = {this.openAlert}
                 />
             });
         }
@@ -158,6 +169,7 @@ class AC extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[1]}
                     senderObj={requestsArr.senderObj}
+                    openAlert = {this.openAlert}
                 />
             });
         }
@@ -170,6 +182,7 @@ class AC extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[0]}
                     senderObj={requestsArr.senderObj}
+                    openAlert = {this.openAlert}
                 />
             });
         }
@@ -181,6 +194,7 @@ class AC extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[4]}
                     senderObj={requestsArr.senderObj}
+                    openAlert = {this.openAlert}
                 />
             });
         }
@@ -192,6 +206,7 @@ class AC extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[6]}
                     senderObj={requestsArr.senderObj}
+                    openAlert = {this.openAlert}
                 />
             });
         }
@@ -204,6 +219,7 @@ class AC extends Component {
                     requests={requestsArr.requests[3]}
                     senderObj={requestsArr.senderObj}
                     missingDays={await getAllMissingDays()}
+                    openAlert = {this.openAlert}
                 />
             });
         }
@@ -250,6 +266,8 @@ class AC extends Component {
                 })}>
                     {this.state.componentInMain}
                 </Container>
+                <AlertMessage open={this.state.showAlert} type={this.state.errorType} onClose={() => { this.setState({ showAlert: false }) }}
+                    msg={this.state.alertMessage} />
                 <Backdrop className={classes.backdrop} open={this.state.backdropIsOpen}
                     style={{ zIndex: 600000000 }}>
                     <CircularProgress color="inherit" />

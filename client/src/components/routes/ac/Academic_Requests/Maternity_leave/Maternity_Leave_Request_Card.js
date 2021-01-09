@@ -46,10 +46,9 @@ export default function RequestForm(props) {
                 });
             handleClose();
             await props.setComponentInMain("ac_maternityLeaveRequest");
-            alert('Request has been submitted successfully.')
+            props.openAlert('Request has been submitted successfully!',"success");
         } catch (err) {
-            console.log(err.response.data)
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
     }
 

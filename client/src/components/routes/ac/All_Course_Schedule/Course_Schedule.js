@@ -44,7 +44,7 @@ let scheduleObj = {
     'friday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
 }
 
-function mapToScheduleObj(courseSchedule, courseObj, requests) {
+function mapToScheduleObj(courseSchedule, courseObj, requests,props) {
     scheduleObj = {
         'saturday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
         'sunday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
@@ -79,7 +79,7 @@ function mapToScheduleObj(courseSchedule, courseObj, requests) {
                 locationName={entry.locationName}
                 courseID={courseObj.courseID}
                 slotID={entry.slotID}
-
+                openAlert = {props.openAlert}
                 slotLinkingReq={slotLinkingReq}
             />
         )
@@ -130,7 +130,7 @@ export default function CustomizedTables(props) {
         courseSlots: [],
     })
     console.log(selectedCourse);
-    mapToScheduleObj(selectedCourse?.courseSlots, selectedCourse, props.requests);
+    mapToScheduleObj(selectedCourse?.courseSlots, selectedCourse, props.requests,props);
 
     return (
         <TableContainer component={Paper} style={{ border: '1px' }}>

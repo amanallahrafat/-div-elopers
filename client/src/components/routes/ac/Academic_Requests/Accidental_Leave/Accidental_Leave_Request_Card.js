@@ -36,9 +36,9 @@ export default function RequestForm(props) {
                 { "requestedDate": (new Date(selectedDate)).getTime(), "msg": msg });
             handleClose();
             await props.setComponentInMain("ac_accidentalLeaveRequest");
-            alert('Request has been submitted successfully.')
+            props.openAlert('Request has been submitted successfully!',"success");
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
     }
 

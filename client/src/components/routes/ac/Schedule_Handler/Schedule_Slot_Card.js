@@ -17,8 +17,6 @@ const useStyles = makeStyles({
     },
     bullet: {
         display: 'inline-block',
-        // margin: '0 1px',
-        // transform: 'scale(0.8)',
     },
     title: {
     },
@@ -60,9 +58,10 @@ export default function SimpleCard(props) {
             const res = await axios.put('ac/respondToReplacementRequest',
                 { "requestID": props.requestID, "response": 1 }
             );
+            props.openAlert("Request has been accepted Successfully!" ,"success");
         } catch (err) {
             setRequestStatus("pending")
-            console.log(err.response.data);
+            props.openAlert(err.response.data);
         }
     }
 
@@ -75,7 +74,7 @@ export default function SimpleCard(props) {
             );
         } catch (err) {
             setRequestStatus("pending")
-            console.log(err.response.data);
+            props.openAlert(err.response.data);
         }
     }
     
@@ -84,10 +83,9 @@ export default function SimpleCard(props) {
         try {
             const res = await axios.delete(`/ac/cancelReplacementRequest/${reqID}`);
             await props.setComponentInMain("personalSchedule");
-            alert("Request has been cancelled successfully.")
+            props.openAlert("Request has been cancelled successfully.","success");
         } catch (err) {
-            console.log(err);
-            console.log(err.response.data)
+            props.openAlert(err.response.data);
         }
     }
 
@@ -189,6 +187,7 @@ export default function SimpleCard(props) {
                         slotNumber={props.slotNumber}
                         slotDay={props.slotDay}
                         slotID={props.slotID}
+                        openAlert = {props.openAlert}
                         setComponentInMain = {props.setComponentInMain}
                     />
                 </Card>

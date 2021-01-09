@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ChangeDayOffRequest(props) {
+export default function SickLeaveRequest(props) {
     const [showForm, setShowForm] = React.useState(false);
     const [selection, setSelection] = React.useState("all");
     const [max_ID, setMax_ID] = React.useState(1);
@@ -82,9 +82,9 @@ export default function ChangeDayOffRequest(props) {
         try {
             const res = await axios.delete(`/ac/cancelSickLeaveRequest/${reqID}`);
             await props.setComponentInMain("ac_sickLeaveRequest");
-            alert("Request has been cancelled successfully.")
+            props.openAlert("Request has been cancelled successfully!","success");
         } catch (err) {
-            console.log(err.response.data)
+            props.openAlert(err.response.data)
         }
     }
 
@@ -194,6 +194,7 @@ export default function ChangeDayOffRequest(props) {
                 handleCloseForm={handleCloseForm}
                 senderObj={props.senderObj}
                 setComponentInMain={props.setComponentInMain}
+                openAlert = {props.openAlert}
             />
         </div >
     );

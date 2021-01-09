@@ -31,9 +31,10 @@ export default function RequestForm(props) {
         try {
             const res = await axios.post("ac/sendChangeDayOffRequest", { "newDayOff": dayOff, "msg": msg });
             props.setComponentInMain("ac_changeDayOffRequest");
+            props.openAlert("Request has been submitted Successfully!","success");
             handleClose();
         } catch (err) {
-            console.log(err.response.data);
+            props.openAlert(err.response.data);
         }
     }
     return (
