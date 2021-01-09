@@ -96,6 +96,8 @@ export default function ManageCourseStaff(props) {
         currentInstructorID = currentInstructorID.split('-')[1];
         console.log(event.currentTarget.id.split('_'));
         console.log(courseID, "in handle remove");
+        props.setBackdropIsOpen(true);
+        
         try {
             const req = {
                 "academicMemberID": parseInt(currentInstructorID),
@@ -117,6 +119,7 @@ export default function ManageCourseStaff(props) {
        
             props.openAlert(err.response.data);
         }
+        props.setBackdropIsOpen(false);
     }
 
     const classes = useStyles();
@@ -210,6 +213,7 @@ export default function ManageCourseStaff(props) {
                             updateCourseStaff={props.updateProfiles}
                             setSelectedCourseCordinator={setSelectedCourseCordinator}
                             setSelectedCourseCordinatorID={setSelectedCourseCordinatorID}
+                            setBackdropIsOpen={props.setBackdropIsOpen}
                         />
 
 

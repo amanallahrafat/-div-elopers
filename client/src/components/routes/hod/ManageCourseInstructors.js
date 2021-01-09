@@ -191,7 +191,7 @@ export default function CourseInstructor_Card(props) {
                 academicMembers = {props.academicMembers}
                 setComponentInMain={props.setComponentInMain}
                 openAlert={props.openAlert}
-                
+                setBackdropIsOpen={props.setBackdropIsOpen}
                 />
 
             <DeleteInstructorForm
@@ -202,6 +202,8 @@ export default function CourseInstructor_Card(props) {
             academicMembers = {props.academicMembers}
             setComponentInMain={props.setComponentInMain}
             openAlert={props.openAlert}
+            
+            setBackdropIsOpen={props.setBackdropIsOpen}
              
            />
 
@@ -214,6 +216,8 @@ export default function CourseInstructor_Card(props) {
             academicMembers = {props.academicMembers}
             setComponentInMain={props.setComponentInMain}
             openAlert={props.openAlert}
+            
+            setBackdropIsOpen={props.setBackdropIsOpen}
              
            />
 

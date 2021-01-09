@@ -25,6 +25,8 @@ export default function AssignInstructorForm(props) {
         console.log(props.courseID, props.slotID, "in handle add form")
         const courseID = parseInt((props.courseID));
         const slotID = parseInt((props.slotID));
+       props.setBackdropIsOpen(true)
+        
         try {
             const req = {
                 courseID: courseID,
@@ -54,6 +56,8 @@ export default function AssignInstructorForm(props) {
             console.log(err);
             props.openAlert(err.response.data);
         }
+        props.setBackdropIsOpen(false)
+        
         handleClose();
     }
     return (

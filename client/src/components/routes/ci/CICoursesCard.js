@@ -1,16 +1,13 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import FindReplaceIcon from '@material-ui/icons/FindReplace';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import React from 'react';
 
 const useStyles = makeStyles({
     root: {
@@ -46,7 +43,7 @@ export default function SimpleCard(props) {
         const slotID = event.currentTarget.id.split('_')[5];
         // const courseID = props.currentCourse;
         // const slotID = props.currentSlot;    
-
+        
         console.log(event.currentTarget.id.split('_'));
         console.log(courseID, "in handle update");
         props.setCurrentCourse(courseID)
