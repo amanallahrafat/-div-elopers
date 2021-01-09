@@ -22,6 +22,8 @@ export default function AssignInstructorForm(props) {
     const handleAdd = async () => {
         const instructorID = chosenInstructor.ID;
         const courseID = parseInt(JSON.stringify(props.course.ID));
+        
+        props.setBackdropIsOpen(true);
         try {
             const req = {
                 courseID: courseID,
@@ -32,6 +34,7 @@ export default function AssignInstructorForm(props) {
         } catch (err) {
             props.openAlert(err.response.data);
         }
+        props.setBackdropIsOpen(false);
         handleClose();
     }
     return (

@@ -26,6 +26,7 @@ export default function UpdateInstructorForm(props) {
         const instructorID = chosenInstructor.ID;
         const oldCourseID = parseInt(JSON.stringify(props.course.ID));
         const newCourseID = newCourse.ID;
+        props.setBackdropIsOpen(true);
         try {
             const req = {
                 oldCourseID: oldCourseID,
@@ -36,6 +37,7 @@ export default function UpdateInstructorForm(props) {
         } catch (err) {
             props.openAlert(err.response.data);
         }
+        props.setBackdropIsOpen(false)
         handleClose();
     }
     return (

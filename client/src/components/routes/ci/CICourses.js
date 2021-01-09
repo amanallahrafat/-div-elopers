@@ -133,6 +133,7 @@ export default function CustomizedTables(props) {
                     setOpenUpdateAcademicMemberForm = {setOpenUpdateAcademicMemberForm}
                     handleDeleteAssignMemberToSlot={handleDeleteAssignMemberToSlot}
                     openAlert={openAlert}
+                  
                 />
             )
         }
@@ -152,6 +153,7 @@ export default function CustomizedTables(props) {
     
 
     const handleDeleteAssignMemberToSlot=async (slotID,courseID,currentInstructorID)=>{
+        props.setBackdropIsOpen(true);
         try {
             
             const req = {
@@ -181,6 +183,8 @@ export default function CustomizedTables(props) {
         } catch (err) {
         props.openAlert(err.response.data);
         }
+        props.setBackdropIsOpen(false);
+        
      
     }
     const handleCloseAssignMemberToSlot = ()=>{
@@ -288,6 +292,8 @@ export default function CustomizedTables(props) {
                 setOpenUpdateAcademicMemberForm={setOpenUpdateAcademicMemberForm}
                 handleDeleteAssignMemberToSlot={handleDeleteAssignMemberToSlot}
                 openAlert={props.openAlert}
+                setBackdropIsOpen={props.setBackdropIsOpen}
+        
 
           />
 
@@ -313,6 +319,8 @@ export default function CustomizedTables(props) {
                 setOpenUpdateAcademicMemberForm={setOpenUpdateAcademicMemberForm}
                 handleDeleteAssignMemberToSlot={handleDeleteAssignMemberToSlot}
                 openAlert={props.openAlert}
+                setBackdropIsOpen={props.setBackdropIsOpen}
+        
               />
               
               

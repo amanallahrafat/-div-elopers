@@ -209,6 +209,9 @@ class CI extends Component {
         // ******** Backdrop states
         backdropIsOpen: true,
     }
+    setBackdropIsOpen=(val)=>{
+        this.setState({backdropIsOpen:val})
+    }
     openAlert = (message) => {
         
         this.setState({ showAlert: true, alertMessage: message })
@@ -299,6 +302,7 @@ class CI extends Component {
                     setComponentInMain={this.setComponentInMain}
                     updateDepartmentCourses={this.updateDepartmentCourses}
                     openAlert={this.openAlert}
+                    setBackdropIsOpen={this.setBackdropIsOpen}
 
                 />
             });
@@ -328,6 +332,8 @@ class CI extends Component {
                     hodProfile={this.state.ciProfile}
                     updateProfiles={this.updateRequestCourseStaff}
                     openAlert={this.openAlert}
+                    setBackdropIsOpen={this.setBackdropIsOpen}
+        
                 />
             });
         } else if (event == "personalSchedule") {

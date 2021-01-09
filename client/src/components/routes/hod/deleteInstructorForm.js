@@ -24,6 +24,7 @@ export default function DeleteInstructorForm(props) {
         const courseID =parseInt( JSON.stringify(props.course.ID));
         console.log(courseID);
         console.log(typeof courseID);
+        props.setBackdropIsOpen(true);
         try {
             const req = {
                 "instructorID": parseInt(instructorID)
@@ -34,6 +35,7 @@ export default function DeleteInstructorForm(props) {
         } catch (err) {
             props.openAlert(err.response.data);
         }
+        props.setBackdropIsOpen(false)
         handleClose();
     }
     return (

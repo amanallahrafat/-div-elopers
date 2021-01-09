@@ -190,7 +190,7 @@ export default function ChangeDayOffRequest(props) {
                                                 <b>Message:</b> {req.msg}<br />
                                                 <b>Requested day off :</b> {req.targetDayOff}<br />
                                                  <b>Current day off:</b> {req.dayOff}<br /> 
-                                                <b>Submission date:</b> {req.submissionDate}<br />
+                                                <b>Submission date:</b> {new Date(req.submissionDate).toLocaleDateString('en-US')}<br />
                                                 <b>Status:</b> {req.status}<br />
                                             </Typography>
                                             </Box>

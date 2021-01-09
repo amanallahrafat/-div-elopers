@@ -64,7 +64,6 @@ export default function SimpleCard(props) {
             setRequestStatus("pending")
             console.log(err.response.data);
         }
-
     }
 
     const handleRejectReplacementRequest = async () => {
@@ -79,6 +78,7 @@ export default function SimpleCard(props) {
             console.log(err.response.data);
         }
     }
+    
     const handleCancelReplacementRequest = async (reqID) => {
         console.log(reqID)
         try {

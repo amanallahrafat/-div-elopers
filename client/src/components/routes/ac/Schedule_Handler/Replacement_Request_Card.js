@@ -62,7 +62,12 @@ export default function MaxWidthDialog(props) {
     if (academicMembers.length == 0) {
       let members = (await axios.post('ac/viewCourseMembers', { courseID: props.courseID })).data;
       const userID = localStorage.getItem('ID');
-      members = members.filter(m => m.ID != userID);
+      const userObj = members.filter(m => m.ID == userID)[0];
+      members = members.filter(m => {
+        return m.ID != userID &&
+          userObj.ac.departmentID ==
+          m.ac.departmentID
+      });
       setAcademicMembers(members);
     }
   });

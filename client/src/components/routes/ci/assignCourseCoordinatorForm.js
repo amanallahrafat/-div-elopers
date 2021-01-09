@@ -24,6 +24,7 @@ export default function AssignCourseCoordinatorForm(props) {
         console.log("The instructor ID is ", instructorID)
         console.log(props.courseID, "in handle assign coordinator form")
         const courseID = parseInt((props.courseID));
+        props.setBackdropIsOpen(true);
         try {
             const req = {
                 courseID: courseID,
@@ -39,6 +40,7 @@ export default function AssignCourseCoordinatorForm(props) {
             console.log(err);
             alert(err.response.data);
         }
+        props.setBackdropIsOpen(false);
         handleClose();
     }
     return (

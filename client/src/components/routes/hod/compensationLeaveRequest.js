@@ -183,9 +183,9 @@ export default function CompensationLeaveRequest(props) {
                                             <Typography variant="subtitle1" paragraph>
                                                 <b>Sender Name:</b> {req.senderID}<br />
                                                 <b>Email:</b> <a href={"mailto:"+req.email}>{req.email} </a><br /> 
-                                                <b>Resquested date:</b> {req.requestedDate}<br />
-                                                <b>Absence date:</b> {req.absenceDate}<br />                                                
-                                                <b>Submission date:</b> {req.submissionDate}<br />
+                                                <b>Resquested date:</b> {new Date(req.requestedDate).toLocaleDateString('en-US')}<br />
+                                                <b>Absence date:</b> {new Date(req.absenceDate).toLocaleDateString('en-US')}<br />                                                
+                                                <b>Submission date:</b> {new Date(req.submissionDate).toLocaleDateString('en-US')}<br />
                                                 <b>Status:</b> {req.status}<br />
                                             </Typography>
                                             </Box>

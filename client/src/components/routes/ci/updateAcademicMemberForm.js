@@ -34,6 +34,7 @@ export default function UpdateInstructorForm(props) {
         //const newCourseID = parseInt(chosenCourse.ID)
         const newSlotID = parseInt(chosenSlot.slotID)
         
+        props.setBackdropIsOpen(true);
         
 
         try {
@@ -68,6 +69,8 @@ export default function UpdateInstructorForm(props) {
             console.log(err);
             props.openAlert(err.response.data);
         }
+        props.setBackdropIsOpen(false)
+        
         handleClose();
     }
     return (
