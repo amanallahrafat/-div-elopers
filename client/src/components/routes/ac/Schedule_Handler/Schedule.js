@@ -111,6 +111,7 @@ function mapToScheduleObj(courseSchedule,
             slotID={entry.slot.ID}
 
             cardType="regularSlot"
+            setBackdropIsOpen={props.setBackdropIsOpen}
         />;
         scheduleObj[entry.slot.day][entry.slot.slotNumber - 1] = card;
 
@@ -137,6 +138,8 @@ function mapToScheduleObj(courseSchedule,
                     requestedDate={entry.requestedDate}
                     requestID={entry.ID}
                     requestStatus={entry.status}
+
+                    setBackdropIsOpen={props.setBackdropIsOpen}
                 />
             );
         }
@@ -161,6 +164,8 @@ function mapToScheduleObj(courseSchedule,
                     requestedDate={entry.requestedDate}
                     requestID={entry.ID}
                     requestStatus={entry.status}
+
+                    setBackdropIsOpen={props.setBackdropIsOpen}
                 />
             );
         }

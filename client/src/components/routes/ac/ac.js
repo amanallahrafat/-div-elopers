@@ -80,7 +80,9 @@ class AC extends Component {
         // ******** Backdrop states
         backdropIsOpen: true,
     };
-
+    setBackdropIsOpen = (val) => {
+        this.setState({ backdropIsOpen: val })
+    }
     setComponentInMain = async (event) => {
         console.log("Triggered");
         console.log(event);
@@ -122,7 +124,7 @@ class AC extends Component {
                     sentReplacementRequests={requestsArr.requests[5]}
                     senderObj={requestsArr.senderObj}
                     setComponentInMain={this.setComponentInMain}
-
+                    setBackdropIsOpen = {this.setBackdropIsOpen}
                 />
             });
         }

@@ -185,17 +185,17 @@ class HOD extends Component {
         isAppBarShift: false,
         showAlert: false,
         alertMessage: "",
-        errorType : "",
+        errorType: "",
         backdropIsOpen: true,
     }
-    openAlert = (message , type = "error") => {
+    openAlert = (message, type = "error") => {
         console.log("here*********************");
-        this.setState({ showAlert: true, alertMessage: message, errorType : type });
+        this.setState({ showAlert: true, alertMessage: message, errorType: type });
     }
-        setBackdropIsOpen=(val)=>{
-        this.setState({backdropIsOpen:val})
+
+    setBackdropIsOpen = (val) => {
+        this.setState({ backdropIsOpen: val })
     }
-  
 
     uniqBy(a, key) {
         var seen = {};
@@ -207,7 +207,7 @@ class HOD extends Component {
 
 
     updateRequestStaffProfile = async (filter = "none", obj = {}) => {
-        
+
         const profiles = await requestStaffProfiles(filter, obj, this.openAlert);
         let uniqueProfiles = this.uniqBy(profiles, JSON.stringify)
 
@@ -244,8 +244,6 @@ class HOD extends Component {
             this.setState({ requests: allRequests });
             return allRequests;
         }
-        this.setBackdropIsOpen(false);
-   
     }
 
     updateHODProfile = async () => {
@@ -280,7 +278,7 @@ class HOD extends Component {
                 />
             });
         }
-      else if (event == "manageCourseInstructors") {
+        else if (event == "manageCourseInstructors") {
             console.log("I am in event course")
             await this.setState({
                 componentInMain: <ManageCourseInstructors
@@ -288,8 +286,8 @@ class HOD extends Component {
                     setComponentInMain={this.setComponentInMain}
                     academicMembers={await getAllAcademicMembers(this.openAlert)}
                     openAlert={this.openAlert}
+
                     setBackdropIsOpen={this.setBackdropIsOpen}
-                  
                 />
             });
 
@@ -391,6 +389,8 @@ class HOD extends Component {
                     senderObj={requestsArr.senderObj}
                     setComponentInMain={this.setComponentInMain}
                     openAlert={this.openAlert}
+
+                    setBackdropIsOpen={this.setBackdropIsOpen}
                 />
             });
         }
@@ -523,7 +523,7 @@ class HOD extends Component {
                     updateRequests={this.updateRequests}
                     requestAllDepartmentCourses={requestAllDepartmentCourses}
                     handleAppBarShift={this.handleAppBarShift}
-                    openAlert = {this.openAlert}
+                    openAlert={this.openAlert}
                 />
 
                 <Container maxWidth="lg" style={{ marginTop: "100px" }} className={clsx({
