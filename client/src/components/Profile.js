@@ -94,8 +94,8 @@ export default function MainFeaturedPost(props) {
     const req = { extraInfo: newInfo };
     try{
       const res = await axios.post('updateMyProfile', req);
-      props.openAlert(res.data,"success");
       props.setComponentInMain("profile");
+      props.openAlert(res.data,"success");
     }catch(err){
       props.openAlert(err.response.data);
     }

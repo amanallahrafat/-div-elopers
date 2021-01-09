@@ -50,8 +50,9 @@ export default function EditCourseForm(props) {
             }
             const res = await axios.put(`hr/updateCourse/${props.course.ID}`, req);
             props.setComponentInMain("course");
+            props.openAlert("Course updated Successfully!" , "success");
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
         handleClose();
     }

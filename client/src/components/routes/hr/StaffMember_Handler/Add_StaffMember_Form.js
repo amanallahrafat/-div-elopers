@@ -79,9 +79,10 @@ export default function AddStaffMemberForm(props) {
             }
             const res = await axios.post("/hr/addStaffMember", req);
             props.setComponentInMain("staffMember");
+            props.openAlert("StaffMember Added Successfully" , "success");
             handleClose();
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
     }
 

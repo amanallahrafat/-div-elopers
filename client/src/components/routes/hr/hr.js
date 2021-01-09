@@ -16,6 +16,7 @@ import StaffMember_Card from "./StaffMember_Handler/StaffMember_Card";
 import ViewMissingDaysForm from '../../ViewMissingDaysForm.js';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import AlertMessage from '../../Alert_Message.js';
 
 const requestUserProfile = async () => {
   const userProfile = await axios.get("/viewProfile");
@@ -122,6 +123,10 @@ class HR extends Component {
     firstTimeStaffMembers: true,
     componentInMain: <div />,
     isAppBarShift: false,
+    showAlert: false,
+    alertMessage: "",
+    errorType : "",
+    backdropIsOpen: true,
   };
 
   handleAppBarShift = (event) => {
@@ -173,7 +178,8 @@ class HR extends Component {
       this.setState({ faculties: faculties });
     }
     else if (decision == 1) {
-      const newFaculties = this.state.faculties.filter(elm => elm.name != obj.name);
+      const newFaculties = this.state.faculties.filter(elm => elm.name != obj.oldName);
+      delete obj.oldName;
       newFaculties.push(obj);
       newFaculties.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
       this.setState({ faculties: newFaculties });
@@ -211,6 +217,12 @@ class HR extends Component {
     }
   }
 
+    openAlert = (message , type = "error") => {
+      console.log("here*********************");
+      this.setState({ showAlert: true, alertMessage: message, errorType : type });
+  }
+
+
   setComponentInMain = async (event) => {
     console.log("aman");
     console.log(event);
@@ -235,6 +247,7 @@ class HR extends Component {
           <Profile
             profile={await requestUserProfile()}
             setComponentInMain={this.setComponentInMain}
+            openAlert = {this.openAlert}
           />
         ),
       });
@@ -245,6 +258,7 @@ class HR extends Component {
             locations={this.state.locations}
             handleLocations={this.handleLocations}
             setComponentInMain={this.setComponentInMain}
+            openAlert = {this.openAlert}
           />
         ),
       });
@@ -254,11 +268,10 @@ class HR extends Component {
           <Attendance
             attendanceRecords={await requestAttendanceRecods()}
             setComponentInMain={this.setComponentInMain}
+            openAlert = {this.openAlert}
           />
         ),
       });
-      // TODO : if you to decide to deal with states you should handle update department as in the backend
-      // if not -> you must use the slow method to get all departments every time.
     } else if (event == "faculty") {
       await this.setState({
         componentInMain: (
@@ -267,6 +280,7 @@ class HR extends Component {
             departments={await requestAllDepartments()}
             handleFaculties={this.handleFaculties}
             setComponentInMain={this.setComponentInMain}
+            openAlert = {this.openAlert}
           />
         ),
       });
@@ -277,6 +291,7 @@ class HR extends Component {
             departments={await requestAllDepartments()}
             academicMembers={await requestAllAcademicMembers()}
             setComponentInMain={this.setComponentInMain}
+            openAlert = {this.openAlert}
           />
         ),
       });
@@ -288,6 +303,7 @@ class HR extends Component {
             departments={await requestAllDepartments()}
             academicMembers={await requestAllAcademicMembers()}
             setComponentInMain={this.setComponentInMain}
+            openAlert = {this.openAlert}
           />
         ),
       });
@@ -301,6 +317,7 @@ class HR extends Component {
             staffMembersWithMissingDays={await requestStaffMembersWithMissingDays()}
             staffMembersWithMissingHours={await requestStaffMembersWithMissingHours()}
             setComponentInMain={this.setComponentInMain}
+            openAlert = {this.openAlert}
           />
         ),
       });
@@ -340,6 +357,7 @@ class HR extends Component {
           <Navigation_Bar
             handleAppBarShift={this.handleAppBarShift}
             fromParent={this.setComponentInMain}
+            openAlert = {this.openAlert}
           />
           <Container
             maxWidth="lg"
@@ -351,6 +369,8 @@ class HR extends Component {
             {this.state.componentInMain}
           </Container>
         </div>
+        <AlertMessage open={this.state.showAlert} type={this.state.errorType} onClose={() => { this.setState({ showAlert: false }) }}
+          msg={this.state.alertMessage} />
         <Backdrop className={classes.backdrop} open={this.state.backdropIsOpen}
           style={{ zIndex: 600000000 }}>
           <CircularProgress color="inherit" />

@@ -84,18 +84,12 @@ export default function Location_Card(props) {
         setOpenAddLocation(false);
     }
 
-    // const handleOpenAddExtraInfo = () => {
-    //     setOpenExtraInfo(true);
-    // }
-    // const handleCloseExtraInfo = () => {
-    //     setOpenExtraInfo(false);
-    // }
-
     const handleDeleteLocation = async (event) => {
         const deletedID = event.currentTarget.id.split('_')[1];
         const res = await axios.delete(`/hr/deleteLocation/${deletedID}`);
         props.handleLocations({ID : deletedID},2);
         props.setComponentInMain("location");
+        props.openAlert("Location deleted Successfully!","success");
     }
 
     const handleUpdateLocation = async (event) => {
@@ -177,12 +171,14 @@ export default function Location_Card(props) {
                 handleCloseEdit={handleCloseEdit}
                 location={updatedLocation}
                 handleLocations = {props.handleLocations}
+                openAlert = {props.openAlert}
                 setComponentInMain={props.setComponentInMain} />
             <AddLocationForm
                 open={openAddLocation}
                 handleOpenAdd={handleOpenAdd}
                 handleCloseAdd={handleCloseAdd}
                 handleLocations = {props.handleLocations}
+                openAlert = {props.openAlert}
                 setComponentInMain={props.setComponentInMain} />
         </div >
     );

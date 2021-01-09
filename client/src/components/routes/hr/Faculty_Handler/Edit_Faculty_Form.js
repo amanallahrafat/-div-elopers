@@ -27,10 +27,13 @@ export default function EditFacultyForm(props) {
                 departments: newDepartments,
             };
             const res = await axios.put(`hr/updateFaculty/${props.faculty.name}`, req);
-            props.handleFaculties(res.data.newFaculty,1);
+            const newFaculty = res.data.newFaculty;
+            newFaculty.oldName = props.faculty.name;
+            props.handleFaculties(newFaculty,1);
             props.setComponentInMain("faculty");
+            props.openAlert("Faculty updated Successfully!","success");
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
         handleClose();
     }

@@ -94,13 +94,6 @@ export default function CourseInstructor_Card(props) {
         setOpenDeleteCourseInstructor(true);
     }
 
-    // const handleUpdateLocation = async (event) => {
-    //     const locationID = event.currentTarget.id.split('_')[1];
-    //     const location = props.locations.filter(l => l.ID == locationID);
-    //     setUpdatedLocation(location[0]);
-    //     setOpenUpdateLocation(true);
-    // }
-
     const handleOpenAddCourseInstructor = async (event) => {
         const courseID = event.currentTarget.id.split('_')[1];
         const course = props.courses.filter(l => l.ID == courseID);

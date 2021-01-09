@@ -509,7 +509,6 @@ class HOD extends Component {
         }
         return (
             <div >
-
                 <Navigation_Bar fromParent={this.setComponentInMain}
                     updateRequestStaffProfile={this.updateRequestStaffProfile}
                     updateRequests={this.updateRequests}

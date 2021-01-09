@@ -81,9 +81,9 @@ export default function MaternityLeaveRequest(props) {
         setShowForm(false);
     }
     const handleOpenForm=(event)=>{
-           const requestID = event.currentTarget.id.split('_')[1];
-           setReqID(requestID);
-        setShowForm(true);
+            const requestID = event.currentTarget.id.split('_')[1];
+            setReqID(requestID);
+            setShowForm(true);
     }
     const handleAcceptRequest= async(event)=>{
 

@@ -22,8 +22,8 @@ export default function EditProfileForm(props) {
         try {
             const req = { email: newMail };
             const res = await axios.post('updateMyProfile', req);
+            await props.setComponentInMain("profile");
             props.openAlert(res.data , "success");
-            props.setComponentInMain("profile");
         } catch (err) {
             props.openAlert(err.response.data,"error");
         }

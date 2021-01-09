@@ -138,11 +138,12 @@ export default function StaffMember_Card(props) {
             const memberID = event.currentTarget.id.split('_')[2];
             const type = event.currentTarget.id.split('_')[1];
             const res = await axios.delete(`/hr/deleteStaffMember/${memberID}/${type}`);
+            props.setComponentInMain("staffMember");
+            props.openAlert("Staff Member has been deleted Successfully!","success");
         }
         catch(err){
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
-        props.setComponentInMain("staffMember");
     }
 
     const handleUpdate = async (event) => {
@@ -164,11 +165,9 @@ export default function StaffMember_Card(props) {
     const handleAttendance = async (event) =>{
         const memberID = event.currentTarget.id.split('_')[2];
         const type = event.currentTarget.id.split('_')[1];
-        //const staffMember = props.staffMembers.filter(elm => elm.ID == member && elm.type == type);
         const attendanceRecords = await axios.get(`/hr/viewStaffMemberAttendance/${memberID}/${type}`);
         console.log(attendanceRecords.data);
         setAttendanceView(attendanceRecords.data);
-        //console.log(staffMember[0].attendanceRecord);
         setOpenAttendance(true);
     }
 
@@ -193,8 +192,7 @@ export default function StaffMember_Card(props) {
     }
 
     const classes = useStyles();
-    console.log(localStorage.getItem("type"))
-    console.log(localStorage.getItem('ID'))
+    
     return (
         <div>
             <Container maxWidth="lg">
@@ -336,6 +334,7 @@ export default function StaffMember_Card(props) {
                 staffMember={updatedStaffMember}
                 offices = {props.offices}
                 departments = {props.departments}
+                openAlert = {props.openAlert}
                 setComponentInMain={props.setComponentInMain} />
             <AddStaffMemberForm
                 open={openAdd}
@@ -344,6 +343,7 @@ export default function StaffMember_Card(props) {
                 handleCloseAdd={handleCloseAdd}
                 offices = {props.offices}
                 departments = {props.departments}
+                openAlert = {props.openAlert}
                 setComponentInMain={props.setComponentInMain} />
             <AttendanceRecordForm
                 open={openAttendance}
@@ -356,6 +356,7 @@ export default function StaffMember_Card(props) {
                 handleOpenUpdateSession = {handleOpenUpdateSession}
                 handleCloseUpdateSession = {handleCloseUpdateSession}
                 staffMember = {updatedStaffMemberSession}
+                openAlert = {props.openAlert}
                 setComponentInMain = {props.setComponentInMain}
             />  
         </div >

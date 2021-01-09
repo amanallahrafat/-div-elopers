@@ -36,8 +36,9 @@ export default function EditLocationForm(props) {
             console.log(res.data);
             await props.handleLocations(res.data,0);
             props.setComponentInMain("location");
+            props.openAlert("Location Added Successfully!","success");
         } catch (err) {
-            alert("please enter valid data.");
+            props.openAlert(err.response.data);
         }
         handleClose();
     }

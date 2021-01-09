@@ -98,7 +98,6 @@ export default function AccidentalLeaveRequest(props) {
             const res = await axios.put(`/hod/respondToAccidentalLeaveRequest/${requestID}`,  req);
         } catch (err) {
             props.updateRequests("accidental leave requests",requestID,"pending");
-            
             props.openAlert(err.response.data);
             
         }
@@ -118,7 +117,6 @@ export default function AccidentalLeaveRequest(props) {
             const res = await axios.put(`/hod/respondToAccidentalLeaveRequest/${requestID}`,  req);
         } catch (err) {
             props.updateRequests("accidental leave requests",requestID,"pending");
-            
             props.openAlert(err.response.data);
             
         }

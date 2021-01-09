@@ -52,8 +52,9 @@ export default function EditDepartmentForm(props) {
             if (newMembers.length > 0) req.members = newMembers;
             const res = await axios.put(`/hr/updateDepartment/${props.department.ID}`, req);
             props.setComponentInMain("department");
+            props.openAlert("Department updated Successfully!" ,"success");
         } catch (err) {
-            alert(err.response.data);
+            props.openAlert(err.response.data);
         }
         handleClose();
     }
