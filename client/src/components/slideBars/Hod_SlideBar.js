@@ -147,7 +147,7 @@ export default function PersistentDrawerLeft(props) {
 
   const handleDepartmentCourses = async () => {
     console.log("cliked on handle department courses")
-    await (props.requestAllDepartmentCourses());
+   // await (props.requestAllDepartmentCourses());
     props.setComponentInMain("departmentCourses");
     console.log("passed set comp in main")
   }
