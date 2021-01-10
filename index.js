@@ -6,6 +6,7 @@ const key = "jkanbvakljbefjkawkfew";
 const express = require('express');
 const hrRouter = require('./Routes/hr.js');
 const hodRouter = require('./Routes/hod.js');
+
 const staffMemberRouter = require('./Routes/staffMember.js');
 const courseInstructorRouter = require('./Routes/courseInstructor.js');
 const courseCoordinatorRouter = require('./Routes/courseCoordinator.js');
@@ -14,9 +15,6 @@ const academicMemberRouter = require('./Routes/academicMember.js');
 const app = express();
 app.use(express.json());
 
-if(process.env.NODE_ENV == "production"){
-    app.use(express.static('client/build'));
-}
 
 app.use('/', staffMemberRouter);
 app.use('/hr', hrRouter);

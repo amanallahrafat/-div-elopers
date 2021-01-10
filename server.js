@@ -5,7 +5,7 @@ const periodic = require('./periodic.js');
 
 mongoose.connect("mongodb+srv://team9:team9@cluster0.j2oep.mongodb.net/gucDB?retryWrites=true&w=majority")
     .then(async() => {
-        app.listen(process.env.PORT || 5000);
+        app.listen(5000);
         console.log("Server is UP");
         periodic.loop_month(0);
     })
