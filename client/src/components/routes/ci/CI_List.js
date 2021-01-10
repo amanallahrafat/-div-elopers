@@ -1,16 +1,17 @@
+import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import DateRangeIcon from '@material-ui/icons/DateRange';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-
 import axios from "axios";
 import { Component } from "react";
 import { Redirect } from 'react-router-dom';
 import setAuthToken from "../../../actions/setAuthToken";
-import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
+
 
 const requestUserProfile = async () => {
     const userProfile = await axios.get('/viewProfile');
@@ -22,6 +23,7 @@ const requestAttendanceRecods = async () => {
     return attendanceRecords.data;
 }
 
+     
 class Course_Instructor_List extends Component {
     state = {
         isLoggedIn: 0,
@@ -44,8 +46,7 @@ class Course_Instructor_List extends Component {
         await this.props.updateRequestCourseStaff();
         this.props.setComponentInMain("manageCourseStaff");
     }
-
-
+     
     async componentDidMount() {
         if (!localStorage.getItem('auth-token')) {
             this.setState({ isLoggedIn: 1 });
@@ -69,8 +70,17 @@ class Course_Instructor_List extends Component {
         }
         return (
             <div >
-                <List>
-                    <ListItem button onClick={this.handleInstructorCourses} >
+
+                <List style={(localStorage.getItem("academicMemberType")!=0)?{display:'none'}:{}}>
+                <ListItem button  backgroundColor="primary" onClick={this.props.handleHODFunctionalities} >
+                        <ListItemIcon><SwapHorizIcon /></ListItemIcon>
+                        <ListItemText primary="HOD functionalities" />
+                    </ListItem>
+                    </List>
+                      <Divider />
+
+                  <List> 
+                       <ListItem button onClick={this.handleInstructorCourses} >
                         <ListItemIcon><MenuBookIcon /></ListItemIcon>
                         <ListItemText primary="Instructor courses" />
                     </ListItem>

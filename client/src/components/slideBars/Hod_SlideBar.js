@@ -1,3 +1,6 @@
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -6,22 +9,17 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import MailIcon from '@material-ui/icons/Mail';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import LocalHotelIcon from '@material-ui/icons/LocalHotel';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-
-import Academic_Member_List from '../routes/ac/ac_List.js'
-import React from 'react';
-
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import React from 'react';
+import Academic_Member_List from '../routes/ac/ac_List.js';
+import Course_Instructor_List from '../routes/ci/CI_List.js';
+import {useHistory} from 'react-router-dom'
+import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
+
 
 
 
@@ -111,49 +109,53 @@ export default function PersistentDrawerLeft(props) {
     props.setComponentInMain("viewStaffProfiles");
   }
 
-  const handleChangeDayOff=async ()=>{
+  const handleChangeDayOff = async () => {
     console.log("cliked on change day off")
     await (props.updateRequests());
     props.setComponentInMain("changeDayOffRequest");
   }
 
-  const handleAnnualLeaveRequest=async ()=>{
+  const handleAnnualLeaveRequest = async () => {
     console.log("cliked on annual leave request")
     await (props.updateRequests());
     props.setComponentInMain("annualLeaveRequest");
   }
 
-  const handleAccidentalLeaveRequest=async ()=>{
+  const handleAccidentalLeaveRequest = async () => {
     console.log("cliked on accidental leave request")
     await (props.updateRequests());
     props.setComponentInMain("accidentalLeaveRequest");
   }
 
-  const handleSickLeaveRequest=async ()=>{
+  const handleSickLeaveRequest = async () => {
     console.log("cliked on Sick leave request")
     await (props.updateRequests());
     props.setComponentInMain("sickLeaveRequest");
   }
-  
-  const handleMaternityLeaveRequest=async ()=>{
+
+  const handleMaternityLeaveRequest = async () => {
     console.log("cliked on maternity leave request")
     await (props.updateRequests());
     props.setComponentInMain("maternityLeaveRequest");
   }
 
-  const handleCompensationLeaveRequest=async ()=>{
+  const handleCompensationLeaveRequest = async () => {
     console.log("cliked on Compensation leave request")
     await (props.updateRequests());
     props.setComponentInMain("compensationLeaveRequest");
   }
 
-  const handleDepartmentCourses=async ()=>{
+  const handleDepartmentCourses = async () => {
     console.log("cliked on handle department courses")
     await (props.requestAllDepartmentCourses());
     props.setComponentInMain("departmentCourses");
     console.log("passed set comp in main")
   }
-
+  const history = useHistory();
+  const handleCIFunctionalities=()=>{
+    let path='/ci';
+    history.push(path);
+  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -169,15 +171,21 @@ export default function PersistentDrawerLeft(props) {
       >
         <div className={classes.drawerHeader}>
         </div>
+       <List>
+        <ListItem button key="Course Instructor Functionalities" color="primary" onClick={handleCIFunctionalities}>
+            <ListItemIcon> <SwapHorizIcon /></ListItemIcon>
+            <ListItemText primary={"Course Instructor Functionalities"} />
+          </ListItem>
+          </List>
         <Divider />
         <List>
           <ListItem button key="Manage Course Instructors" onClick={handleCourseInsructor}>
             <ListItemIcon> <AssignmentIndIcon /></ListItemIcon>
-            <ListItemText primary={"Manage Course Instructors"}/>
+            <ListItemText primary={"Manage Course Instructors"} />
           </ListItem>
           <ListItem button key="View Staff Profiles" onClick={handleViewStaffProfiles}>
             <ListItemIcon> <SupervisorAccountIcon /></ListItemIcon>
-            <ListItemText primary={"View Staff Profiles"}  />
+            <ListItemText primary={"View Staff Profiles"} />
           </ListItem>
           <ListItem button key="Department courses" onClick={handleDepartmentCourses}>
             <ListItemIcon> <MenuBookIcon /></ListItemIcon>
@@ -190,22 +198,22 @@ export default function PersistentDrawerLeft(props) {
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-             <ListItemIcon ><CallReceivedIcon/></ListItemIcon>
-             <ListItemText style = {{textAlign:"left"}}className={classes.menuButton} primary={"Requests"} />
+            <ListItemIcon ><CallReceivedIcon /></ListItemIcon>
+            <ListItemText style={{ textAlign: "left" }} className={classes.menuButton} primary={"Requests"} />
           </AccordionSummary>
           <AccordionDetails>
             <List>
               <ListItem button key="test1" onClick={handleChangeDayOff}>
-                <ListItemText primary={"Change day off"}  />
+                <ListItemText primary={"Change day off"} />
               </ListItem>
               <ListItem button key="test 2" onClick={handleAnnualLeaveRequest}>
-                <ListItemText primary={"Annual leaves"}  />
+                <ListItemText primary={"Annual leaves"} />
               </ListItem>
               <ListItem button key="test 3" onClick={handleAccidentalLeaveRequest}>
-                <ListItemText primary={"Accidental leaves"}  />
+                <ListItemText primary={"Accidental leaves"} />
               </ListItem>
               <ListItem button key="test 4" onClick={handleSickLeaveRequest}>
-                <ListItemText primary={"Sick leaves"}  />
+                <ListItemText primary={"Sick leaves"} />
               </ListItem>
               <ListItem button key="test 5" onClick={handleMaternityLeaveRequest}>
                 <ListItemText primary={"Maternity leaves"} />
@@ -216,7 +224,7 @@ export default function PersistentDrawerLeft(props) {
             </List>
           </AccordionDetails>
         </Accordion>
-        <Academic_Member_List setComponentInMain={props.setComponentInMain}/>
+        <Academic_Member_List setComponentInMain={props.setComponentInMain} />
       </Drawer>
     </div>
   );

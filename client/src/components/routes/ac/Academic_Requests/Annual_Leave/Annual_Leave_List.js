@@ -94,7 +94,6 @@ export default function ChangeDayOffRequest(props) {
     }
 
     const classes = useStyles();
-    console.log(props.senderObj)
     return (
         <div>
             <Container maxWidth="lg">

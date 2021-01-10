@@ -65,6 +65,7 @@ const login = async (req, res) => {
         const academicMember = await Academic_Member.findOne({ ID: u.ID });
         academicMemberType = academicMember.type;
     }
+
     res.header('auth-token', token).send({
         msg: "Login Successfully!",
         type: u.type,

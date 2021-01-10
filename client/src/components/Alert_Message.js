@@ -34,7 +34,7 @@ export default function AlertMessage(props) {
   console.log(open,props.msg,props.type);
   return (
     <div className={classes.root}>
-      <Snackbar open={props.open} autoHideDuration={3000} onClose={handleClose}>
+      <Snackbar open={props.open} autoHideDuration={5000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={props.type}>{props.msg}</Alert>
       </Snackbar>
       {/* <Alert severity="error">This is an error message!</Alert>

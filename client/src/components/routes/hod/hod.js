@@ -36,7 +36,7 @@ import ViewStaffProfiles from './viewStaffProfiles.js';
 import AlertMessage from '../../Alert_Message.js';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import CI from '../ci/ci'
 const requestUserProfile = async (openAlert) => {
     try {
         const userProfile = await axios.get('/viewProfile');
@@ -258,6 +258,8 @@ class HOD extends Component {
                 componentInMain: (
                     <ViewMissingDaysForm
                         missedDays={await requestMissingDays()}
+                        openAlert={this.openAlert}
+             
                     />
                 )
             })
@@ -275,6 +277,8 @@ class HOD extends Component {
                 componentInMain: <Attendance
                     attendanceRecords={await requestAttendanceRecods(this.openAlert)}
                     setComponentInMain={this.setComponentInMain}
+                    openAlert={this.openAlert}
+             
                 />
             });
         }

@@ -5,6 +5,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import React from 'react';
 import Academic_Member_List from '../routes/ac/ac_List.js';
 import Course_Instructor_List from '../routes/ci/CI_List.js';
+import {useHistory} from 'react-router-dom'
 
 const drawerWidth = 240;
 
@@ -71,6 +72,11 @@ const useStyles = makeStyles((theme) => ({
 export default function PersistentDrawerLeft(props) {
   const classes = useStyles();
   const theme = useTheme();
+  const history=useHistory();
+  const handleHODFunctionalities=()=>{
+   let path='/hod';
+   history.push(path);
+ }
 
   return (
     <div className={classes.root}>
@@ -88,7 +94,7 @@ export default function PersistentDrawerLeft(props) {
         <div className={classes.drawerHeader}>
         </div>
         <Divider />
-        <Course_Instructor_List setComponentInMain={props.setComponentInMain} updateRequestStaffProfile={props.updateRequestStaffProfile} updateRequestCourseStaff={props.updateRequestCourseStaff}/>
+        <Course_Instructor_List setComponentInMain={props.setComponentInMain} updateRequestStaffProfile={props.updateRequestStaffProfile} updateRequestCourseStaff={props.updateRequestCourseStaff} handleHODFunctionalities={handleHODFunctionalities}/>
         <Academic_Member_List setComponentInMain={props.setComponentInMain}/>
       </Drawer>
     </div>

@@ -168,7 +168,7 @@ class AC extends Component {
         else if (event == "ac_annualLeaveRequest") {
             console.log("ac_annualLeaveRequest")
             const requestsArr = (await getAllSentRequests());
-            console.log(requestsArr);
+            console.log(this.openAlert," openAlert");
             this.setState({
                 componentInMain: <Annual_Leave_Request
                     setComponentInMain={this.setComponentInMain}

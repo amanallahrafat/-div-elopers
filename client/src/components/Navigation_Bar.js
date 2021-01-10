@@ -19,6 +19,7 @@ import CI_SlideBar from './slideBars/CI_SlideBar';
 import Hod_SlideBar from './slideBars/Hod_SlideBar';
 import HR_SlideBar from './slideBars/HR_SlideBar';
 import AC_SlideBar from './slideBars/AC_SlideBar';
+import {useLocation,withRouter} from 'react-router-dom'
 
 const drawerWidth = 240;
 
@@ -117,7 +118,9 @@ class Navigation_Bar extends Component {
         const styles = {
             Header: { position: "fixed" }
         }
-
+        
+        const currentRoute=window.location.pathname;
+        
         return (
             <div className={classes.grow} id = "Header" style={styles.Header} ref="Header" style={{zIndex:500000000}}>
                 <AppBar style={{zIndex:500000000}} position="fixed" className={clsx(classes.appBar, {
@@ -180,14 +183,16 @@ class Navigation_Bar extends Component {
                             <HR_SlideBar
                                 open={this.state.isSlideBarOpen}
                                 setComponentInMain={this.props.fromParent} /> :
-                            (localStorage.getItem("academicMemberType") == 0) ?
+                            (localStorage.getItem("academicMemberType") == 0 &&currentRoute=="/hod") ?
                                 <Hod_SlideBar
                                     open={this.state.isSlideBarOpen}
                                     updateRequestStaffProfile={this.props.updateRequestStaffProfile}
                                     updateRequests={this.props.updateRequests}
                                     setComponentInMain={this.props.fromParent}
-                                    requestAllDepartmentCourses={this.props.requestAllDepartmentCourses} />
-                                : localStorage.getItem('academicMemberType') == 1 ?
+                                    requestAllDepartmentCourses={this.props.requestAllDepartmentCourses}
+                                    updateRequestCourseStaff={this.props.updateRequestCourseStaff}
+                                    />
+                                : (localStorage.getItem('academicMemberType') == 1||(localStorage.getItem("academicMemberType") == 0)) ?
 
                                     <CI_SlideBar
                                         open={this.state.isSlideBarOpen}

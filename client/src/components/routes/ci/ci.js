@@ -29,6 +29,8 @@ import ViewStaffProfiles from './CIViewStaffProfiles.js';
 import ManageCourseStaff from './manageCourseStaff.js';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import AlertMessage from '../../Alert_Message.js';
+
 
 const requestMissingDays = async () => {
     const res = await axios.get('/viewMissingDays');
@@ -42,13 +44,13 @@ const requestMissingDays = async () => {
 }
 
 const requestUserProfile = async (openAlert) => {
-    try{
-    console.log("start CI request user profile")
-    const userProfile = await axios.get('/viewProfile');
-    console.log("end CI request user profile") 
-    return userProfile.data;
-    }catch(err){
-       openAlert(err.response.data);
+    try {
+        console.log("start CI request user profile")
+        const userProfile = await axios.get('/viewProfile');
+        console.log("end CI request user profile")
+        return userProfile.data;
+    } catch (err) {
+        openAlert(err.response.data);
         return {};
     }
 }
@@ -56,10 +58,10 @@ const requestUserProfile = async (openAlert) => {
 const requestDepartmentCourses = async (openAlert) => {
     try {
         console.log("start CI request department courses")
-  
+
         const departmentCourses = await axios.get('/ci/getDepartmentCourses');
         console.log("end CI request department courses")
-  
+
         return departmentCourses.data;
     }
     catch (err) {
@@ -70,10 +72,10 @@ const requestDepartmentCourses = async (openAlert) => {
 const requestAttendanceRecods = async (openAlert) => {
     try {
         console.log("start CI request attendance records")
-  
+
         const attendanceRecords = await axios.get('/viewAttendance');
         console.log("end CI request attendance records")
-        
+
         return attendanceRecords.data;
     } catch (err) {
         openAlert(err.response.data);
@@ -113,10 +115,10 @@ const requestInstructorCourses = async (openAlert) => {
 
 
 
-const requestStaffProfiles = async (filter = "none", obj = {},openAlert) => {
-    try{
+const requestStaffProfiles = async (filter = "none", obj = {}, openAlert) => {
+    try {
         console.log("start CI request staff profiles")
-  
+
         if (filter == "none") {
             const res = await axios.get('/ci/viewDepartmentMembers');
             return res.data;
@@ -132,24 +134,24 @@ const requestStaffProfiles = async (filter = "none", obj = {},openAlert) => {
 
         }
         console.log("end CI request staff profiles")
-  
-    }catch(err){
+
+    } catch (err) {
         openAlert(err.response.data);
     }
 
 }
 
-const requestCourseStaffProfiles = async (obj,openAlert) => {
-        if (obj.courseID == -1) {
-            console.log("obj ID is -1")
-            return [];
-        }
-        try{
-            console.log("start CI request course staff profiles")
-  
+const requestCourseStaffProfiles = async (obj, openAlert) => {
+    if (obj.courseID == -1) {
+        console.log("obj ID is -1")
+        return [];
+    }
+    try {
+        console.log("start CI request course staff profiles")
+
         const res = await axios.get(`/ci/viewMembersByCourse/${obj.courseID}`);
         console.log("end CI request course staff profiles")
-  
+
         return res.data;
     } catch (err) {
         openAlert(err.response.data);
@@ -160,10 +162,10 @@ const requestCourseStaffProfiles = async (obj,openAlert) => {
 const getAcademicMembersTable = async (openAlert) => {
     try {
         console.log("start CI get academic members table")
-  
+
         const res = await axios.get('/ci/getAcademicMembersTable');
         console.log("end CI get academic members table")
-  
+
         return res.data;
     } catch (err) {
         openAlert(err.response.data);
@@ -172,7 +174,7 @@ const getAcademicMembersTable = async (openAlert) => {
 }
 
 const drawerWidth = 240;
- 
+
 const styles = (theme) => ({
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
@@ -204,17 +206,19 @@ class CI extends Component {
         departmentCourses: undefined,
         manageCourseStaff: [],
         showAlert: false,
-        alertMessage: "testing",
+        alertMessage: "",
+        errorType: "",
 
+        isHOD: false,
         // ******** Backdrop states
         backdropIsOpen: true,
     }
-    setBackdropIsOpen=(val)=>{
-        this.setState({backdropIsOpen:val})
+    setBackdropIsOpen = (val) => {
+        this.setState({ backdropIsOpen: val })
     }
-    openAlert = (message) => {
-        
-        this.setState({ showAlert: true, alertMessage: message })
+    openAlert = (message, type = "error") => {
+        console.log("here*********************");
+        this.setState({ showAlert: true, alertMessage: message, errorType: type });
     }
 
     uniqBy(a, key) {
@@ -262,7 +266,6 @@ class CI extends Component {
         this.setState({ ciProfile: await requestUserProfile(this.openAlert) });
 
     }
-
     setComponentInMain = async (event) => {
         this.setState({ backdropIsOpen: true });
 
@@ -333,7 +336,7 @@ class CI extends Component {
                     updateProfiles={this.updateRequestCourseStaff}
                     openAlert={this.openAlert}
                     setBackdropIsOpen={this.setBackdropIsOpen}
-        
+
                 />
             });
         } else if (event == "personalSchedule") {
@@ -347,7 +350,7 @@ class CI extends Component {
                     sentReplacementRequests={requestsArr.requests[5]}
                     senderObj={requestsArr.senderObj}
                     setComponentInMain={this.setComponentInMain}
-
+                    openAlert={this.openAlert}
                 />
             });
         }
@@ -360,7 +363,7 @@ class CI extends Component {
                     allCourses={await getAllCoursesInstructorsNames()}
                     requests={requestsArr.requests[7]}
                     senderObj={requestsArr.senderObj}
-
+                    openAlert={this.openAlert}
                 />
             });
         }
@@ -372,6 +375,8 @@ class CI extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[2]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
+
                 />
             });
         }
@@ -384,6 +389,8 @@ class CI extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[1]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
+
                 />
             });
         }
@@ -396,6 +403,8 @@ class CI extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[0]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
+
                 />
             });
         }
@@ -407,6 +416,8 @@ class CI extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[4]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
+
                 />
             });
         }
@@ -418,6 +429,8 @@ class CI extends Component {
                     setComponentInMain={this.setComponentInMain}
                     requests={requestsArr.requests[6]}
                     senderObj={requestsArr.senderObj}
+                    openAlert={this.openAlert}
+
                 />
             });
         }
@@ -430,6 +443,8 @@ class CI extends Component {
                     requests={requestsArr.requests[3]}
                     senderObj={requestsArr.senderObj}
                     missingDays={await getAllMissingDays()}
+                    openAlert={this.openAlert}
+
                 />
             });
         }
@@ -454,6 +469,13 @@ class CI extends Component {
             await axios.get('/authStaffMember');
             await axios.get('/authCourseInstructor');
             this.setState({ isLoggedIn: 2 });
+            try {
+                await axios.get("/authHOD");
+                this.setState({ isHOD: true });
+            } catch (err) {
+                this.setState({ isHOD: false });
+
+            }
 
         }
         catch (err) {
@@ -482,10 +504,6 @@ class CI extends Component {
                     updateRequestCourseStaff={this.updateRequestCourseStaff}
                     handleAppBarShift={this.handleAppBarShift}
                 />
-                <Alert style={(!this.state.showAlert) ? { display: 'none' } : {}} severity="error" onClose={() => { this.setState({ showAlert: false }) }}>
-                    <AlertTitle>Error</AlertTitle>
-                    <strong>{this.state.alertMessage}</strong>
-                </Alert>
 
 
                 <Container maxWidth="lg" style={{ marginTop: "100px" }} className={clsx({
@@ -494,6 +512,10 @@ class CI extends Component {
 
                     {this.state.componentInMain}
                 </Container>
+                <AlertMessage open={this.state.showAlert} type={this.state.errorType} onClose={() => { this.setState({ showAlert: false }) }}
+                    msg={this.state.alertMessage}
+                />
+
                 <Backdrop className={classes.backdrop} open={this.state.backdropIsOpen}
                     style={{ zIndex: 600000000 }}>
                     <CircularProgress color="inherit" />
