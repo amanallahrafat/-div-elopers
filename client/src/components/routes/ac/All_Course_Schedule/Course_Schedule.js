@@ -162,7 +162,7 @@ export default function CustomizedTables(props) {
                                 const sc = props.departmentCourses.find((c) => {
                                     return c.courseID == newValue.ID
                                 });
-                                mapToScheduleObj(sc?.courseSlots, sc, props.requests);
+                                mapToScheduleObj(sc?.courseSlots, sc, props.requests,props);
                                 setSelectedCourse(sc);
                                 console.log("selected course from list ", newValue.ID, " selected from props", sc)
                             }
