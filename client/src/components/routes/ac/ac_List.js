@@ -27,7 +27,7 @@ const requestAttendanceRecods = async () => {
     return attendanceRecords.data;
 }
 
-const styles = makeStyles((theme) => ({
+const styles = ((theme) => ({
     menuButton: {
         marginRight: theme.spacing(2),
     },
@@ -73,7 +73,6 @@ const styles = makeStyles((theme) => ({
 class Academic_Member_List extends Component {
     state = {
         isLoggedIn: 0,
-        componentInMain: <div />
     }
 
     handlePersonalSchedule = async (event) => {
@@ -109,29 +108,29 @@ class Academic_Member_List extends Component {
         this.props.setComponentInMain("ac_compensationLeaveRequest");
     }
 
-    async componentDidMount() {
-        if (!localStorage.getItem('auth-token')) {
-            this.setState({ isLoggedIn: 1 });
-            return;
-        }
-        try {
-            setAuthToken(localStorage.getItem('auth-token'));
-            await axios.get('/authStaffMember');
-            this.setState({ isLoggedIn: 2 });
-        }
-        catch (err) {
-            this.setState({ isLoggedIn: 1 });
-        }
-    }
+    // async componentDidMount() {
+    //     if (!localStorage.getItem('auth-token')) {
+    //         this.setState({ isLoggedIn: 1 });
+    //         return;
+    //     }
+    //     try {
+    //         setAuthToken(localStorage.getItem('auth-token'));
+    //         await axios.get('/authStaffMember');
+    //         this.setState({ isLoggedIn: 2 });
+    //     }
+    //     catch (err) {
+    //         this.setState({ isLoggedIn: 1 });
+    //     }
+    // }
 
     render() {
         const { classes } = this.props;
 
-        if (this.state.isLoggedIn === 0)
-            return <div />;
-        if (this.state.isLoggedIn === 1) {
-            return <Redirect to='/' />;
-        }
+        // if (this.state.isLoggedIn === 0)
+        //     return <div />;
+        // if (this.state.isLoggedIn === 1) {
+        //     return <Redirect to='/' />;
+        // }
         return (
             <div >
                 <List>
