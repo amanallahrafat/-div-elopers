@@ -96,6 +96,7 @@ export default function AccidentalLeaveRequest(props) {
         
             props.updateRequests("accidental leave requests",requestID,"accepted");
             const res = await axios.put(`/hod/respondToAccidentalLeaveRequest/${requestID}`,  req);
+            props.openAlert("Response submitted successfully", "success");
         } catch (err) {
             props.updateRequests("accidental leave requests",requestID,"pending");
             props.openAlert(err.response.data);
@@ -115,6 +116,7 @@ export default function AccidentalLeaveRequest(props) {
             };
             props.updateRequests("accidental leave requests",requestID,"rejected");
             const res = await axios.put(`/hod/respondToAccidentalLeaveRequest/${requestID}`,  req);
+            props.openAlert("Response submitted successfully", "success");
         } catch (err) {
             props.updateRequests("accidental leave requests",requestID,"pending");
             props.openAlert(err.response.data);

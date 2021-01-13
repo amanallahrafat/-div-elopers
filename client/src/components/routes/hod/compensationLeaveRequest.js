@@ -96,6 +96,7 @@ export default function CompensationLeaveRequest(props) {
         
             props.updateRequests("compensation leave requests",requestID,"accepted");
             const res = await axios.put(`/hod/respondToCompensationLeaveRequest/${requestID}`,  req);
+            props.openAlert("Response submitted successfully.", "success");
         } catch (err) {
             props.updateRequests("compensation leave requests",requestID,"pending");
             
@@ -117,6 +118,7 @@ export default function CompensationLeaveRequest(props) {
             props.updateRequests("compensation leave requests",requestID,"rejected");
             const res = await axios.put(`/hod/respondToCompensationLeaveRequest/${requestID}`,  req);
             props.setComponentInMain("compensationLeaveRequest");
+            props.openAlert("Response submitted successfully.", "success");
         } catch (err) {
             props.updateRequests("compensation leave requests",requestID,"pending");
        
