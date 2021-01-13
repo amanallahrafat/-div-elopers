@@ -339,6 +339,7 @@ class HR extends Component {
 
       this.setState({ isLoggedIn: 2 });
     } catch (err) {
+      console.log(err);
       this.setState({ isLoggedIn: 1 });
     }
 
