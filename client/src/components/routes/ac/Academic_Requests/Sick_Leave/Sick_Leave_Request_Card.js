@@ -57,7 +57,7 @@ export default function RequestForm(props) {
     return (
         <div>
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Write an optional message </DialogTitle>
+                <DialogTitle id="form-dialog-title">Sick Leave Request </DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -77,7 +77,7 @@ export default function RequestForm(props) {
                         onChange={(event) => { setDocument(event.target.value + " ") }}
                     />
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <br /><br /><label> <div style={{ fontSize: "18px" }}>Start Date:</div> </label>
+                        <br /><br /><label> <div style={{ fontSize: "18px" }}>Requested Date:</div> </label>
                         <DatePicker
                             value={selectedRequestedDate}
                             shouldDisableDate={disablePast}
@@ -89,7 +89,8 @@ export default function RequestForm(props) {
                     <Button onClick={handleClose} color="primary">
                         Back
           </Button>
-                    <Button onClick={handleSubmitRequest} color="primary">
+                    <Button onClick={handleSubmitRequest} color="primary"
+                    disabled = {document == " " || document == ""}>
                         Submit request
           </Button>
                 </DialogActions>

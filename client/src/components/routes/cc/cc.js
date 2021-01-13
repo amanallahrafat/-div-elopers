@@ -150,6 +150,7 @@ class CC extends Component {
             console.log("first time slots");
             const academicMembers = await requestAllAcademicMembers();
             const res = await requestAllSlots();
+            console.log(res);
             this.setState({
                 firstTime : false,
                 courseID : res.ID,

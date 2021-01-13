@@ -41,7 +41,7 @@ export default function RequestForm(props) {
         <div>
 
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Write an optional message </DialogTitle>
+                <DialogTitle id="form-dialog-title">Change Day Off Request </DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
