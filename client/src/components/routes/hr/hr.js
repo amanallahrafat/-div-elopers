@@ -330,9 +330,12 @@ class HR extends Component {
       return;
     }
     try {
-      setAuthToken(localStorage.getItem("auth-token"));
+      //setAuthToken(localStorage.getItem("auth-token"));
+      console.log("before auth staff")
       await axios.get("/authStaffMember");
+      console.log("after auth staff")
       await axios.get("/authHr");
+      console.log("after auth hr")
 
       this.setState({ isLoggedIn: 2 });
     } catch (err) {

@@ -39,7 +39,9 @@ export default function SimpleMenu(props) {
                 case "logout": {
                     res = await axios.post('/logout');
                     setIsLoggedOut(true);
+                    console.log("before local clear ")
                     localStorage.clear();
+                    console.log("after local clear ")
                     setAuthToken();
                     break;
                 }
