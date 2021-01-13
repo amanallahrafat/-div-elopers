@@ -108,7 +108,7 @@ const createSlot = async(req, res) => {
     const { courseID, slot } = req.body;
     const isValid = validator.validateSlot(slot);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
 
     const course = await Course.findOne({ ID: courseID });
     if (!courseID)
@@ -185,7 +185,7 @@ const updateSlot = async(req, res) => {
         return res.status(400).send("you are not allowed to update the instructor field !");
     const isValid = validator.validateSlot(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     if(oldSlot[0].instructor != null ) req.body.instructor = oldSlot[0].instructor;
     req.body.ID = oldSlot[0].ID;
     slots.push(req.body);
