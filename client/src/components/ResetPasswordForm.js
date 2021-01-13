@@ -49,6 +49,7 @@ export default function ResetPassword(props) {
   const [clicked , setClicked] = React.useState(false);
   const [shouldLogin , setShouldLogin] = React.useState(false);
   const [newequalOld , setNewequalOld] = React.useState(false);
+  const [errorMsg , setErrorMsg] = React.useState(null);
 
   const handleSubmit = async (event) =>{
         event.preventDefault();
@@ -65,7 +66,8 @@ export default function ResetPassword(props) {
             setShouldLogin(true);
         }
         catch(err){
-            console.log(err);
+           // console.log(err);
+           setErrorMsg(err.response.data);
         }
         setClicked(false);
   }
@@ -147,7 +149,7 @@ export default function ResetPassword(props) {
                 severity={msg ?"success" : "error"}
                 id="passwordError"
                 className={classes.alert}
-                > {msg ? "Password Confirmed" : "Passwords don't Match"}</Alert>
+                > {msg ? "New Password Confirmed" : "Passwords don't Match"}</Alert>
             </Collapse>
             { (clicked) ?
             (
@@ -172,6 +174,13 @@ export default function ResetPassword(props) {
             SUBMIT
           </Button>
         }
+         <Collapse in={errorMsg != null}>
+                <Alert
+                severity= "error"
+                id="passwordError"
+                className={classes.alert}
+                > {errorMsg}</Alert>
+            </Collapse>
         </form>
       </div>
       <Box mt={8}>

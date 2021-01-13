@@ -65,6 +65,11 @@ export default function SimpleCard(props) {
         setOpenUpdateSlot(true);
     }
 
+    const getSlotLocation = (ID) => {
+        const locations = props.locations.filter(elm => elm.ID == ID);
+        return (locations.length > 0 )? locations[0].name : undefined;
+    }
+
     return (
         <div>
                 <Card className={classes.root}>
@@ -75,7 +80,7 @@ export default function SimpleCard(props) {
                                     <b>{props.slot.courseName}</b>
                                 </Typography>
                                 <Typography className={classes.pos} color="textSecondary">
-                                    {props.locations.filter(elm => elm.ID == props.slot.locationID)[0].name}
+                                    {getSlotLocation(props.slot.locationID)}
                                 </Typography>
                                 <Typography className={classes.pos} color="textSecondary">
                                     {getInstructorName(props.academicMembers,props.slot.instructor)}
