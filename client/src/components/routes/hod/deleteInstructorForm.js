@@ -32,6 +32,7 @@ export default function DeleteInstructorForm(props) {
             console.log(req);
             const res = await axios.delete(`/hod/deleteCourseInstructor/${courseID}`, {data: req});
             props.setComponentInMain("manageCourseInstructors");
+            props.openAlert("Course instructor deleted successfully.", "success");
         } catch (err) {
             props.openAlert(err.response.data);
         }

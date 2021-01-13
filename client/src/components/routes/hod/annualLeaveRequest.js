@@ -96,6 +96,7 @@ export default function AnnualLeaveRequest(props) {
         
             props.updateRequests("annual leave requests",requestID,"accepted");
             const res = await axios.put(`/hod/respondToAnnualLeaveRequests/${requestID}`,  req);
+            props.openAlert("Response submitted successfully", "success");
         } catch (err) {
             props.updateRequests("annual leave requests",requestID,"pending");
             
@@ -116,9 +117,9 @@ export default function AnnualLeaveRequest(props) {
             };
             props.updateRequests("annual leave requests",requestID,"rejected");
             const res = await axios.put(`/hod/respondToAnnualLeaveRequests/${requestID}`,  req);
+            props.openAlert("Response submitted successfully", "success");
         } catch (err) {
-            props.updateRequests("annual leave requests",requestID,"pending");
-            
+            props.updateRequests("annual leave requests",requestID,"pending");            
             props.openAlert(err.response.data);
             
         }

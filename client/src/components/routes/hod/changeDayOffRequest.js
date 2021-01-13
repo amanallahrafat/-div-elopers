@@ -96,6 +96,7 @@ export default function ChangeDayOffRequest(props) {
         
             props.updateRequests("change day off requests",requestID,"accepted");
             const res = await axios.put(`/hod/respondToChangeDayOffRequest/${requestID}`,  req);
+            props.openAlert("Response submitted successfully.", "success");
         } catch (err) {
             props.updateRequests("change day off requests",requestID,"pending");
             

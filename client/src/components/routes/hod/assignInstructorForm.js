@@ -31,6 +31,7 @@ export default function AssignInstructorForm(props) {
             };
             const res = await axios.put('/hod/assignCourseInstructor', req);
             props.setComponentInMain("manageCourseInstructors");
+            props.openAlert("Course Instructor assigned successfully.", "success");
         } catch (err) {
             props.openAlert(err.response.data);
         }

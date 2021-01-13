@@ -37,7 +37,7 @@ export default function RequestForm(props) {
                 });
             handleClose();
             await props.setComponentInMain("ac_compensationLeaveRequest");
-            props.openAlert("The Request has been submitted Successfully!","success");
+            props.openAlert("The Request has been submitted Successfully!", "success");
         } catch (err) {
             props.openAlert(err.response.data);
         }
@@ -53,9 +53,9 @@ export default function RequestForm(props) {
         if (year < currYear - 1 || year > currYear + 1)
             return true;
 
-        if (currMonth == month && day >= 10)
+        if (currMonth == month && day <= 10)
             return true;
-        if (currMonth == (month - 1 + 12) % 12 && day < 10)
+        if (month == (currMonth + 1) % 12 && day >= 11)
             return true;
         for (const missing of props.missingDays) {
             const m_year = (new Date(missing)).getFullYear();
@@ -83,29 +83,35 @@ export default function RequestForm(props) {
         weekday[5] = "friday";
         weekday[6] = "saturday";
         const currMonth = (new Date(Date.now())).getMonth();
-        const currYear = (new Date(Date.now())).getFullYear()
-        console.log(props.senderObj.dayOff, date.getDay())
-        if (weekday[date.getDay()] != props.senderObj.dayOff)
-            return true;
+        const currYear = (new Date(Date.now())).getFullYear();
+        const currDay = (new Date(Date.now())).getDate();
+
+        console.log(props.senderObj.dayOff, date.getDay(), currDay, currMonth, month)
         if (year < currYear - 1 || year > currYear + 1)
             return true;
-        if (currMonth == (month + 1) % 12 && day > 10)
-            return false;
-        if (currMonth == month && day <= 10)
+        if (
+            (
+                (month == (currMonth + 1) % 12 && day <= 10) ||
+                (currMonth == month && day >= 11)
+            ) &&
+            weekday[date.getDay()] == props.senderObj.dayOff
+        )
             return false;
         return true;
     }
+    console.log("missing days", props.missingDays);
     return (
         <div>
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Write an optional message </DialogTitle>
+                <DialogTitle id="form-dialog-title">Compensation Leave Request </DialogTitle>
                 <DialogContent>
                     <TextField
+                        required
                         autoFocus
                         margin="dense"
                         id="requestFormMessage"
-                        label="Write an optional message"
-                        type = "text"
+                        label="Write a message"
+                        type="text"
                         fullWidth
                         onChange={(event) => { setMsg(event.target.value + " ") }}
                     />

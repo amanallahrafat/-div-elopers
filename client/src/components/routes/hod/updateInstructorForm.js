@@ -34,6 +34,7 @@ export default function UpdateInstructorForm(props) {
             };
             const res = await axios.put(`/hod/updateCourseInstructor/${instructorID}`, req);
             props.setComponentInMain("manageCourseInstructors");
+            props.openAlert("Course instructor updated successfully.", "success");
         } catch (err) {
             props.openAlert(err.response.data);
         }

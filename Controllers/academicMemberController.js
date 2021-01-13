@@ -838,7 +838,7 @@ const viewAllCourseSchedules = async (req, res) => {
             }
             if (curSlot.locationID) {
                 const loc = locations.find((loc) => { return (loc.ID == curSlot.locationID) });
-                if (loc.name)
+                if (loc && loc.name)
                     slotEntry.locationName = loc.name;
             }
 

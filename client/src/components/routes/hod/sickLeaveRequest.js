@@ -96,6 +96,7 @@ export default function SickLeaveRequest(props) {
         
             props.updateRequests("sick leave requests",requestID,"accepted");
             const res = await axios.put(`/hod/respondToSickLeaveRequests/${requestID}`,  req);
+            props.openAlert("Response submitted successfully.", "success");
         } catch (err) {
             props.updateRequests("sick leave requests",requestID,"pending");
           
@@ -116,6 +117,7 @@ export default function SickLeaveRequest(props) {
             };
             props.updateRequests("sick leave requests",requestID,"rejected");
             const res = await axios.put(`/hod/respondToSickLeaveRequests/${requestID}`,  req);
+            props.openAlert("Response submitted successfully.", "success");
         } catch (err) {
             props.updateRequests("sick leave requests",requestID,"pending");
             

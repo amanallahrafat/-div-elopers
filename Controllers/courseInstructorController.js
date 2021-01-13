@@ -105,7 +105,7 @@ const viewSlotAssignmentLocal = async (req, res) => {
         const curSchedule = course_schedules.find((cs) => { return (cs.ID == scheduleID) });
         const courseCoverage = viewCourseCoverageLocal(curSchedule);
         curEntry.courseCoverage = courseCoverage;
-        if (!scheduleID) {
+        if (!scheduleID || !curSchedule) {
             allCourseSlots.push(curEntry);
             continue;
         }
@@ -128,15 +128,15 @@ const viewSlotAssignmentLocal = async (req, res) => {
                 slotID:curSlot.ID
             }
             let slotInst = "Not yet assigned";
-            if (curSlot.instructor) {
+            if (curSlot && curSlot.instructor) {
                 const curInst = staffMembers.find((mem)=>{return (mem.ID== curSlot.instructor) });
                 slotInst = curInst.name
                 slotEntry.instructor=slotInst;
                 slotEntry.instructorID="ac-"+curSlot.instructor;
             }
-            if(curSlot.locationID){
+            if(curSlot && curSlot.locationID){
                const loc=locations.find((loc)=>{return (loc.ID==curSlot.locationID)});
-               if(loc.name)
+               if(loc && loc.name)
                 slotEntry.locationName=loc.name;
             }
 

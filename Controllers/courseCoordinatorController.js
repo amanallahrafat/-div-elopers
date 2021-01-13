@@ -27,6 +27,7 @@ const viewAllSlots = async (req,res) =>{
     const {ID,type} = req.header.user;
     const course = await Course.findOne({ coordinatorID: ID });
     const schedule = await Course_Schedule.findOne({ID : course.ID});
+    if(schedule == null) return res.send({ID: course.ID, slots : []});
     for (const entry of schedule.slots) {
         entry.courseName = course.code;
         entry.courseID = course.ID;

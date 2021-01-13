@@ -33,7 +33,7 @@ const key = "jkanbvakljbefjkawkfew";
 const assignCourseInstructor = async (req, res) => { // ADD check that the course doesn't exit and that it has no departments
     const isValid = validator.assignInstructorValidator(req.body);
     if (isValid.error) {
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     }
     if (!await checkings.isAcademicMember(req.body.instructorID)) {
         return res.status(400).send("Course instructor has to be an academic member");
@@ -373,6 +373,10 @@ const viewCourseTeachingAssignmentsLocal = async (req, res) => {
             allCourseSlots.push(curEntry);
             continue;
         }
+        if (!curSchedule) {
+            allCourseSlots.push(curEntry);
+            continue;
+        }
         if (!curSchedule.slots) {
             allCourseSlots.push(curEntry);
             continue;
@@ -398,7 +402,7 @@ const viewCourseTeachingAssignmentsLocal = async (req, res) => {
             }
             if (curSlot.locationID) {
                 const loc = locations.find((loc) => { return (loc.ID == curSlot.locationID) });
-                if (loc.name)
+                if (loc && loc.name)
                     slotEntry.locationName = loc.name;
             }
 
@@ -564,13 +568,13 @@ const respondToChangeDayOffRequest = async (req, res) => {
 
     const isValid = validator.requestResponseValidation(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
 
     const member = await Academic_Member.find({ ID: memID });
 
     let msg = req.body.response == 1 ? "Your change day off request was accepted" : "Your change day off request was rejected";
     if (req.body.msg != null && req.body.msg != undefined && req.body.msg != "")
-        msg = msg + "\n reason: " + req.body.msg;
+        msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();
     if (req.body.response == 1) { // accepted
@@ -596,7 +600,7 @@ const respondToMaternityLeaveRequest = async (req, res) => {
         return res.status(400).send("This member is not an academic member");
     const isValid = validator.requestResponseValidation(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send( isValid.error.details[0].message);
 
     if (req.body.response == 1) {
         await Maternity_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "accepted" });
@@ -606,7 +610,7 @@ const respondToMaternityLeaveRequest = async (req, res) => {
     }
     let msg = req.body.response == 1 ? "Your maternity leave request was accepted" : "Your maternity leave request was rejected";
     if (req.body.msg != null)
-        msg = msg + "\n reason: " + req.body.msg;
+        msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();
     if (req.body.response == 1)
@@ -628,7 +632,7 @@ const respondToSickLeaveRequests = async (req, res) => {
         return res.status(400).send("This member is not an academic member");
     const isValid = validator.requestResponseValidation(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
 
     if (req.body.response == 1) {
         await Sick_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "accepted" });
@@ -638,7 +642,7 @@ const respondToSickLeaveRequests = async (req, res) => {
     }
     let msg = req.body.response == 1 ? "Your sick leave request was accepted" : "Your sick leave request was rejected";
     if (req.body.msg != null)
-        msg = msg + "\n reason: " + req.body.msg;
+        msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();
     if (req.body.response == 1)
@@ -661,7 +665,7 @@ const respondToAccidentalLeaveRequest = async (req, res) => {
 
     const isValid = validator.requestResponseValidation(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     const curMem = await Staff_Member.findOne({ ID: request.senderID, type: 0 });
     if (req.body.response == 1) { //accept
         console.log("annual balance", curMem.annualBalance)
@@ -690,7 +694,7 @@ const respondToAccidentalLeaveRequest = async (req, res) => {
     }
     let msg = req.body.response == 1 ? "Your accidental leave request was accepted" : "Your accidental leave request was rejected";
     if (req.body.msg != null)
-        msg = msg + "\n reason: " + req.body.msg;
+        msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();
     if (req.body.response == 1)
@@ -712,7 +716,7 @@ const respondToCompensationLeaveRequest = async (req, res) => {
         return res.status(400).send("This member is not an academic member");
     const isValid = validator.requestResponseValidation(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
 
     if (req.body.response == 1) {
         // const curMem = await Staff_Member.findOne({ID:memID, type:0});
@@ -729,7 +733,7 @@ const respondToCompensationLeaveRequest = async (req, res) => {
     }
     let msg = req.body.response == 1 ? "Your compensation leave request was accepted" : "Your compensation leave request was rejected";
     if (req.body.msg != null)
-        msg = msg + "\n reason: " + req.body.msg;
+        msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();
     if (req.body.response == 1)
@@ -751,7 +755,7 @@ const respondToAnnualLeaveRequests = async (req, res) => {
         return res.status(400).send("This member is not an academic member");
     const isValid = validator.requestResponseValidation(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send( isValid.error.details[0].message);
 
     if (req.body.response == 1) {
         const curMem = await Staff_Member.findOne({ ID: memID, type: 0 });
@@ -773,7 +777,7 @@ const respondToAnnualLeaveRequests = async (req, res) => {
     }
     let msg = req.body.response == 1 ? "Your annual leave request was accepted" : "Your annual leave request was rejected";
     if (req.body.msg != null)
-        msg = msg + "\n reason: " + req.body.msg;
+        msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();
     if (req.body.response == 1)
@@ -924,7 +928,7 @@ const getAcademicMembersTable = async (req, res) => {
         const loc = locations.find((l) => { return l.ID == staffMem.officeID })
         ac['_doc'].name = staffMem.name;
         ac['_doc'].email = staffMem.email;
-        ac['_doc'].officeID = loc.name;
+        ac['_doc'].officeID = loc? loc.name:"";
         ac['_doc'].departmentID = department.name;
 
 

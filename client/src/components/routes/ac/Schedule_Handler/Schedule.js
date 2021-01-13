@@ -67,6 +67,7 @@ const makeCard = (arrayOfCards) => {
     </Grid>);
     return g;
 }
+
 function mapToScheduleObj(courseSchedule,
     replacementRequests,
     replacementRequestsRecieved,
