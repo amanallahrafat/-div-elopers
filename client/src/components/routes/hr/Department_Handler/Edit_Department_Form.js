@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EditDepartmentForm(props) {
     const classes = useStyles();
     const [newHOD, setNewHOD] = React.useState(null);
-    const [newMembers, setNewMembers] = React.useState([]);
+    const [newMembers, setNewMembers] = React.useState(null);
 
     const handleChange = (event) => {
         setNewHOD(event.target.value);
@@ -39,7 +39,7 @@ export default function EditDepartmentForm(props) {
     const handleClose = () => {
         props.handleCloseEdit();
         setNewHOD(null);
-        setNewMembers([]);
+        setNewMembers(null);
     };
 
     const handleEditDepartment = async () => {
@@ -49,7 +49,8 @@ export default function EditDepartmentForm(props) {
                 name: newName,
             };
             if (newHOD != null) req.hodID = newHOD;
-            if (newMembers.length > 0) req.members = newMembers;
+            if (newMembers.length != null) req.members = newMembers;
+            console.log(newMembers);
             const res = await axios.put(`/hr/updateDepartment/${props.department.ID}`, req);
             props.setComponentInMain("department");
             props.openAlert("Department updated Successfully!" ,"success");

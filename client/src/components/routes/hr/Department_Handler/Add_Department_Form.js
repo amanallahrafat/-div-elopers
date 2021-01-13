@@ -27,6 +27,7 @@ export default function AddDepartmentForm(props) {
     const classes = useStyles();
     const [newHOD, setNewHOD] = React.useState(null);
     const [newMembers, setNewMembers] = React.useState([]);
+    const [newName , setNewName] = React.useState.apply(null);
 
     const handleChange = (event) => {
         setNewHOD(event.target.value);
@@ -40,10 +41,10 @@ export default function AddDepartmentForm(props) {
         props.handleCloseAdd();
         setNewHOD(null);
         setNewMembers([]);
+        setNewName(null);
     };
 
     const handleAddDepartment = async () => {
-        const newName = document.getElementById("editName").value;
         try {
             const req = {
                 name: newName,
@@ -69,6 +70,7 @@ export default function AddDepartmentForm(props) {
                         id="editName"
                         label="Name"
                         type="text"
+                        onChange={(event) => {setNewName(event.target.value)}}
                         fullWidth
                     />
                     <FormControl className={classes.formControl}>
@@ -110,7 +112,9 @@ export default function AddDepartmentForm(props) {
                     <Button onClick={handleClose} color="primary">
                         Cancel
           </Button>
-                    <Button onClick={handleAddDepartment} color="primary">
+                    <Button 
+                    disabled = {newName == null}
+                    onClick={handleAddDepartment} color="primary">
                         Add
           </Button>
                 </DialogActions>

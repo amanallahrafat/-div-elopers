@@ -260,7 +260,7 @@ const addStaffMember = async (req, res) => {
     const isValid = validator.validateAddStaffMember(req.body);
     if (isValid.error){
         console.log(isValid.error.details[0].message);
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     }
     if (req.body.officeID) {
         const office = await Location.find({ ID: req.body.officeID, type: 2 });
@@ -415,7 +415,7 @@ const updateStaffMember = async (req, res) => {
     const isValid = validator.validateAddStaffMember(req.body);
     if (isValid.error){
         console.log(isValid.error.details[0].message);
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     }
     await Staff_Member.updateOne({ ID: req.params.ID, type: req.params.type }, req.body);
     res.send("Staff member Updated Successfully!");
@@ -485,7 +485,7 @@ const deleteStaffMember = async (req, res) => {
 const createDepartment = async (req, res) => {
     const isValid = validator.validateDepartment(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
 
     // Check that the department members are academic members.
     if (req.body.members) {
@@ -505,7 +505,7 @@ const createDepartment = async (req, res) => {
     
     if (!req.body.members)
         req.body.members = [];
-    if (!req.body.members.includes(req.body.hodID)) {
+    if (req.body.hodID != null && !req.body.members.includes(req.body.hodID)) {
         req.body.members.push(req.body.hodID);
     }
 
@@ -555,7 +555,7 @@ const updateDepartment = async (req, res) => {
 
     const isValid = validator.validateDepartment(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
 
     // Check that the department members are academic members.
     if (req.body.members) {
@@ -575,7 +575,7 @@ const updateDepartment = async (req, res) => {
 
     if (!req.body.members)
         req.body.members = [];
-    if (!req.body.members.includes(req.body.hodID)) {
+    if (req.body.hodID !=null && !req.body.members.includes(req.body.hodID)) {
         req.body.members.push(req.body.hodID);
     }
 
@@ -603,7 +603,7 @@ const updateDepartment = async (req, res) => {
     if (req.body.hodID) {
         await Academic_Member.updateOne({ ID: req.body.hodID }, { type: 0 });
     }
-
+    console.log(req.body);
     await Department.update({ ID: req.params.ID }, req.body);
     res.send("Department has been updated successfully");
 }
@@ -624,7 +624,7 @@ const createCourse = async (req, res) => {
     const isValid = validator.validateCourse_hr(req.body);
     if (isValid.error){
         console.log(isValid.error.details[0].message)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     }
 
     if (await checkings.courseCodeExists(req.body.code))
@@ -703,7 +703,7 @@ const updateCourse = async (req, res) => {
     if (isValid.error) {
         const course = new Course(JSON.parse(JSON.stringify(oldCourse)));
         await course.save();
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     }
 
     const courseObj = {

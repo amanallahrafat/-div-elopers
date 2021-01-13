@@ -17,6 +17,8 @@ export default function AddFacultyForm(props) {
     };
 
     const handleClose = () => {
+        setNewName(null);
+        setNewDepartments([]);
         props.handleCloseAdd();
     };
 
