@@ -53,10 +53,10 @@ export default function AddCourseForm(props) {
             const res = await axios.post(`/hr/createCourse`, req);
             props.setComponentInMain("course");
             props.openAlert("Course Added Successfully!" , "success");
+            handleClose();
         } catch (err) {
             props.openAlert(err.response.data);
         }
-        handleClose();
     }
 
     return (

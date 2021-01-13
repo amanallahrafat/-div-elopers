@@ -49,7 +49,7 @@ export default function EditDepartmentForm(props) {
                 name: newName,
             };
             if (newHOD != null) req.hodID = newHOD;
-            if (newMembers.length != null) req.members = newMembers;
+            if (newMembers != null) req.members = newMembers;
             console.log(newMembers);
             const res = await axios.put(`/hr/updateDepartment/${props.department.ID}`, req);
             props.setComponentInMain("department");
