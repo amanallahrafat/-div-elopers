@@ -31,11 +31,15 @@ const authHr = async (req,res,next) =>{
     if(!token)
         return res.status(403).send("You need to login to continue");
     const {ID , type} = req.header.user;
-    if(type != 1)
+    if(type != 1){
+        console.log("type is not hr");
         return res.status(401).send("you are not allowed. this operation is only for HRs");
+    }
     const staff_member = await Staff_Member.findOne({ID : ID , type : 1});
-    if(staff_member==null)
-        return res.status(402).send("Please register first");
+    if(staff_member==null){
+        console.log("not in the DB");
+        return res.status(401).send("Please register first");
+    }
     next();
 }
 
