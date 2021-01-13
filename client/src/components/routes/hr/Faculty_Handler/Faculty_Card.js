@@ -91,7 +91,7 @@ export default function Faculty_Card(props) {
     const handleDeleteFaculty = async (event) => {
         const deletedName = event.currentTarget.id.split('_')[1];
         const res = await axios.delete(`/hr/deleteFaculty/${deletedName}`);
-        props.handleFaculties({name : deletedName },2);
+       // props.handleFaculties({name : deletedName },2);
         props.setComponentInMain("faculty");
         props.openAlert("Faculty deleted Successfully!" , "success");
     }
@@ -104,6 +104,7 @@ export default function Faculty_Card(props) {
     }
 
     const classes = useStyles();
+    console.log(props.faculties);
     return (
         <div>
             <Container maxWidth="lg">

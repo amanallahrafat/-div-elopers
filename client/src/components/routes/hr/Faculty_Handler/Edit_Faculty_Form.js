@@ -18,18 +18,19 @@ export default function EditFacultyForm(props) {
 
     const handleClose = () => {
         props.handleCloseEdit();
+        setNewDepartments(null);
     };
     const handleUpdate = async () => {
         const newName = document.getElementById("editName").value;
         try {
             const req = {
                 name: newName,
-                departments: newDepartments,
             };
+            if(newDepartments != null) req.departments = newDepartments;
             const res = await axios.put(`hr/updateFaculty/${props.faculty.name}`, req);
-            const newFaculty = res.data.newFaculty;
-            newFaculty.oldName = props.faculty.name;
-            props.handleFaculties(newFaculty,1);
+            // const newFaculty = res.data.newFaculty;
+            // newFaculty.oldName = props.faculty.name;
+            // props.handleFaculties(newFaculty,1);
             props.setComponentInMain("faculty");
             props.openAlert("Faculty updated Successfully!","success");
         } catch (err) {

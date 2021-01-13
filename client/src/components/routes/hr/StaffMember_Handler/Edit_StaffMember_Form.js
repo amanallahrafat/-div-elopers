@@ -62,7 +62,7 @@ export default function EditStaffMemberForm(props) {
             if(gender != null ) req.gender = gender;
             if(office != null ) req.officeID = office;
             if(salary != null ) req.salary = salary;
-            if(extraInfo != null ) req.extraInfo = extraInfo;
+            if(extraInfo != null ) req.extraInfo = extraInfo.split(',');
             if(props.staffMember.type == 0){
                 if(department != null ) req.departmentID = department;
                 if(memberType != null) req.memberType = parseInt(memberType);

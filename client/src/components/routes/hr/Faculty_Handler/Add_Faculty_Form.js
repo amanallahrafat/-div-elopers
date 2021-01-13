@@ -10,24 +10,29 @@ import React from 'react';
 
 export default function AddFacultyForm(props) {
     const [newDepartments, setNewDepartments] = React.useState([]);
+    const [newName , setNewName] = React.useState(null);
 
     const handleClickOpen = () => {
         props.handleOpenAdd();
     };
 
     const handleClose = () => {
+        setNewName(null);
+        setNewDepartments([]);
         props.handleCloseAdd();
     };
 
     const handleAddFaculty = async () => {
-        const newName = document.getElementById("editName").value;
+        console.log(newDepartments);
         try {
             const req = {
                 name: newName,
                 departments: newDepartments,
             };
             const res = await axios.post(`/hr/createFaculty`, req);
-            props.handleFaculties(res.data,0);
+            // const obj = res.data;
+
+            // props.handleFaculties(res.data,0);
             props.setComponentInMain("faculty");
             props.openAlert("Faculty Added Successfully!" , "success");
         } catch (err) {
@@ -47,6 +52,7 @@ export default function AddFacultyForm(props) {
                         id="editName"
                         label="Name"
                         type="text"
+                        onChange={(event) => {setNewName(event.target.value)}}
                         fullWidth
                     />
                     <Autocomplete
@@ -71,7 +77,9 @@ export default function AddFacultyForm(props) {
                     <Button onClick={handleClose} color="primary">
                         Cancel
           </Button>
-                    <Button onClick={handleAddFaculty} color="primary">
+                    <Button 
+                    disabled = {newName == null}
+                    onClick={handleAddFaculty} color="primary">
                         Add
           </Button>
                 </DialogActions>

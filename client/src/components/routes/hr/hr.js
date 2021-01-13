@@ -190,35 +190,34 @@ class HR extends Component {
     }
   }
 
-  handleDepartments = async (obj, decision) => {
-    if (this.state.firstTimeDepartments) {
-      console.log("first time department", obj, decision);
-      this.setState({ firstTimeDepartments: false });
-      const departments = await requestAllDepartments();
-      departments.sort((a, b) => a.ID - b.ID);
-      this.setState({ departments: departments });
-      return departments;
-    }
-    else if (decision == 0) {
-      const departments = this.state.departments;
-      departments.push(obj);
-      departments.sort((a, b) => a.ID - b.ID);
-      this.setState({ departments: departments });
-    }
-    else if (decision == 1) {
-      const newDepartments = this.state.departments.filter(elm => elm.ID != obj.ID);
-      newDepartments.push(obj);
-      newDepartments.sort((a, b) => a.ID - b.ID);
-      this.setState({ departments: newDepartments });
-    }
-    else if (decision == 2) {
-      const newDepartments = this.state.departments.filter(elm => elm.ID != obj.ID);
-      this.setState({ departments: newDepartments });
-    }
-  }
+  // handleDepartments = async (obj, decision) => {
+  //   if (this.state.firstTimeDepartments) {
+  //     console.log("first time department", obj, decision);
+  //     this.setState({ firstTimeDepartments: false });
+  //     const departments = await requestAllDepartments();
+  //     departments.sort((a, b) => a.ID - b.ID);
+  //     this.setState({ departments: departments });
+  //     return departments;
+  //   }
+  //   else if (decision == 0) {
+  //     const departments = this.state.departments;
+  //     departments.push(obj);
+  //     departments.sort((a, b) => a.ID - b.ID);
+  //     this.setState({ departments: departments });
+  //   }
+  //   else if (decision == 1) {
+  //     const newDepartments = this.state.departments.filter(elm => elm.ID != obj.ID);
+  //     newDepartments.push(obj);
+  //     newDepartments.sort((a, b) => a.ID - b.ID);
+  //     this.setState({ departments: newDepartments });
+  //   }
+  //   else if (decision == 2) {
+  //     const newDepartments = this.state.departments.filter(elm => elm.ID != obj.ID);
+  //     this.setState({ departments: newDepartments });
+  //   }
+  // }
 
     openAlert = (message , type = "error") => {
-      console.log("here*********************");
       this.setState({ showAlert: true, alertMessage: message, errorType : type });
   }
 
@@ -229,8 +228,6 @@ class HR extends Component {
     this.setState({ backdropIsOpen: true });
 
     await this.handleLocations();
-    await this.handleFaculties();
-    await this.handleDepartments();
 
     if (event == "viewMissingDays") {
       await this.setState({
@@ -276,7 +273,7 @@ class HR extends Component {
       await this.setState({
         componentInMain: (
           <Faculty_Card
-            faculties={this.state.faculties}
+            faculties={await requestAllFacutlies()}
             departments={await requestAllDepartments()}
             handleFaculties={this.handleFaculties}
             setComponentInMain={this.setComponentInMain}

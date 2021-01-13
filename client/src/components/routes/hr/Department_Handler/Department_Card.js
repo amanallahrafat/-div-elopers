@@ -101,6 +101,8 @@ export default function Department_Card(props) {
     }
 
     const getHODName = (department , memberNames) =>{
+        console.log(memberNames);
+        if(department.hodID == null) return undefined;
         const hod = memberNames.filter(elm => elm.ID == department.hodID );
         if( hod.length == 1)
             return hod[0].name;
@@ -133,7 +135,7 @@ export default function Department_Card(props) {
                     {
                         props.departments.map(department =>
                             <Grid item xs={12} md={4}>
-                                <CardActionArea component="a" href="#" disabled={false}>
+                                <CardActionArea component="a" disabled={false}>
                                     <Card className={classes.card}>
                                         <div className={classes.cardDetails}>
                                             <CardContent>
@@ -141,9 +143,9 @@ export default function Department_Card(props) {
                                                     <b>Name:</b> {department.name}<br />
                                                     <b>Head of Department:</b> {getHODName(department,department.memberNames)}<br />
                                                     <b>Members:</b> <br/> {
-                                                        department.memberNames.map(m =>
-                                                            <Chip key={m.ID} label={m.name} className={classes.chip} />
-                                                        )
+                                                        department.memberNames.length > 0 ? department.memberNames.map(m =>
+                                                            <Chip key={m.ID} label={m.name} className={classes.chip} /> 
+                                                        ) : undefined
                                                     }<br />
                                                 </Typography>
                                             </CardContent>
