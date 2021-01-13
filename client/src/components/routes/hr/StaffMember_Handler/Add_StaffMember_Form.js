@@ -74,8 +74,8 @@ export default function AddStaffMemberForm(props) {
                 if(memberType != null)
                     req.memberType = parseInt(memberType);
             }
-            if(extraInfo != null){
-                req.extraInfo = [extraInfo];
+            if(extraInfo != null ){
+                if(extraInfo.length > 0) req.extraInfo = [extraInfo];
             }
             const res = await axios.post("/hr/addStaffMember", req);
             props.setComponentInMain("staffMember");
