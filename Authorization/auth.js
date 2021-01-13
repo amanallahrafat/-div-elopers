@@ -35,7 +35,7 @@ const authHr = async (req,res,next) =>{
         return res.status(401).send("you are not allowed. this operation is only for HRs");
     const staff_member = await Staff_Member.findOne({ID : ID , type : 1});
     if(staff_member==null)
-        return res.status(401).send("Please register first");
+        return res.status(402).send("Please register first");
     next();
 }
 
