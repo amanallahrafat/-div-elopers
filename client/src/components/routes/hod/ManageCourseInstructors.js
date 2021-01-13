@@ -136,7 +136,7 @@ export default function CourseInstructor_Card(props) {
                                                     <b>Code:</b> {course.code}<br />
                                                     <b>Instructors:</b><br/> 
                                                     {course.instructor.map((inst=>{
-                                                        return (<div> <b>Name:</b> {inst.name} <span style={{textAlign :"right"}}><b>ID:</b> {inst.ID}</span></div>);
+                                                        return (<div> <b>Name:</b> {inst.name} <span style={{textAlign :"right"}}><b>ID:</b> {"ac-"+inst.ID}</span></div>);
                                                     }))}<br/>                                               
                                                 </Typography>
                                             </CardContent>

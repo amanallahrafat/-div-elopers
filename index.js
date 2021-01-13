@@ -37,7 +37,7 @@ app.use('/ac', academicMemberRouter);
 app.post('/init', async(req, res)=>{
     const salt = await bcrypt.genSalt(10);
     const hashedPass = await bcrypt.hash("123456", salt);
-    const hr = new Staff_Member({name: "firstHR", ID:0 , password: hashedPass, email: "HR@guc.com", type: 1, dayOff: "saturday", gender: "male", salary: 8000});
+    const hr = new Staff_Member({name: "firstHR", ID:0 , password: hashedPass, email: "HR@guc.com", type: 1, dayOff: "saturday", gender: "male", salary: 8000, annualBalance:2.5, accidentalLeaveBalance:6});
     await hr.save();
     return res.send("HR added successfully");
 })

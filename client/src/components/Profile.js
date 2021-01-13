@@ -20,6 +20,7 @@ import axios from 'axios';
 import AlertMessage from './Alert_Message.js';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Collapse } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   mainFeaturedPost: {
@@ -105,13 +106,13 @@ export default function MainFeaturedPost(props) {
   const classes = useStyles();
   return (
     <div>
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" style ={{overflowX:'hidden', overflowY:'hidden'}}>
 
         <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: `url(https://i.pinimg.com/originals/94/f6/41/94f641161d1d124c6bfa2463c7feb8d4.jpg)` }}>
           {/* Increase the priority of the hero background image */}
           {<img style={{ display: 'none' }} />}
           <div className={classes.overlay} />
-          <Grid container>
+          <Grid container  style = {{textAlign: 'left', padding: "25px"}}>  
             <Grid item md={6}>
               <div className={classes.mainFeaturedPostContent}>
                 <Typography component="h1" variant="h3" color="inherit" gutterBottom>
@@ -153,32 +154,32 @@ export default function MainFeaturedPost(props) {
         </Paper>
         <Grid container spacing={4} >
           <Grid item xs={12} md={6}>
-            <CardActionArea component="a" href="#" disabled={false}>
               <Card className={classes.card}>
                 <div className={classes.cardDetails}>
-                  <CardContent>
+                  <CardContent >
                     <Typography variant="subtitle1" paragraph>
                       <b>Gender:</b> {props.profile.gender}<br />
                       <b>Day off:</b> {props.profile.dayOff}<br />
                       <b>Salary:</b> {props.profile.salary}<br />
                       <b>Annual Balance:</b> {props.profile.annualBalance}<br />
                       <b>Accidental Leave Balance:</b> {props.profile.accidentalLeaveBalance}<br />
-
-                    </Typography>
+                      <Collapse in ={localStorage.getItem("type") != 1}>
+                      <b>Department: </b>{props.profile.department}<br />
+                      </Collapse>
+                    </Typography>                    
                   </CardContent>
                 </div>
                 <Hidden xsDown>
                   <CardMedia className={classes.cardMedia} title={"SARAH"} />
                 </Hidden>
               </Card>
-            </CardActionArea>
           </Grid>
           <Grid item xs={12} md={6}>
             {/* <CardActionArea component="a" href="#" disabled={false}> */}
             <Card className={classes.card}>
               <div className={classes.cardDetails}>
                 <CardContent>
-                  <Typography variant="subtitle1" paragraph>
+                  <Typography  variant="subtitle1" paragraph>
                     <b>Extra Information:</b>
 
                     <IconButton

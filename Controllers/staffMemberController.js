@@ -16,6 +16,7 @@ const Change_Day_Off_Request = require('../Models/Requests/Change_Day_Off_Reques
 const Compensation_Leave_Request = require('../Models/Requests/Compensation_Leave_Request.js');
 const Maternity_Leave_Request = require('../Models/Requests/Maternity_Leave_Request.js');
 const Sick_Leave_Request = require('../Models/Requests/Sick_Leave_Request.js');
+const Department = require('../Models/Academic/Department.js');
 
 const signIn = async (req, res) => {
     const { ID, type } = req.header.user;
@@ -96,6 +97,17 @@ const viewProfile = async (req, res) => {
         x.signin = new Date(x.signin);
         x.signout = new Date(x.signout); return x;
     });
+    //If it's an academic member add his department and faculty
+    if(type == 0){ 
+        const academicMem = await Academic_Member.findOne({ID:ID});
+        const deptID = academicMem.departmentID;
+        const deptName = (await Department.findOne({ID:deptID})).name;
+        profile['_doc'].department = deptName;
+    }
+    else{
+        profile['_doc'].department = "";
+    }
+
     const office=(await extraUtils.getOfficeByID(profile.officeID));
     if(office)
     profile['_doc'].officeID = office.name;
