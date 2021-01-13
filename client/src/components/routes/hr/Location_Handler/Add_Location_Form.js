@@ -11,7 +11,9 @@ import axios from 'axios';
 import React from 'react';
 
 export default function EditLocationForm(props) {
-    const [newType, setNewType] = React.useState(-1);
+    const [newType, setNewType] = React.useState(null);
+    const [newName , setNewName] = React.useState(null);
+    const [newCapacity ,  setNewCapacity] = React.useState(null);
 
     const handleClickOpen = () => {
         props.handleOpenAdd();
@@ -24,8 +26,6 @@ export default function EditLocationForm(props) {
 
     const handleAddLocation = async () => {
         console.log("here********************");
-        const newName = document.getElementById("editName").value;
-        const newCapacity = document.getElementById("editCapacity").value;
         try {
             const req = {
                 name: newName,
@@ -53,6 +53,7 @@ export default function EditLocationForm(props) {
                         id="editName"
                         label="Name"
                         type="text"
+                        onChange={(event) => {setNewName(event.target.value)}}
                         fullWidth
                     />
                     <TextField
@@ -60,6 +61,7 @@ export default function EditLocationForm(props) {
                         id="editCapacity"
                         label="Capacity"
                         type="number"
+                        onChange={(event) => {setNewCapacity(event.target.value)}}
                         InputProps={{
                             inputProps: {
                                 min: 0
@@ -79,7 +81,10 @@ export default function EditLocationForm(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
-                    <Button onClick={handleAddLocation} color="primary">Add</Button>
+                    <Button 
+                    disabled = {newName == null  || newCapacity == null || newType || null}
+                    onClick={handleAddLocation}
+                     color="primary">Add</Button>
                 </DialogActions>
             </Dialog>
         </div>
