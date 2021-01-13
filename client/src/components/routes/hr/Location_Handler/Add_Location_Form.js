@@ -11,7 +11,7 @@ import axios from 'axios';
 import React from 'react';
 
 export default function EditLocationForm(props) {
-    const [newType, setNewType] = React.useState(null);
+    const [newType, setNewType] = React.useState(-1);
     const [newName , setNewName] = React.useState(null);
     const [newCapacity ,  setNewCapacity] = React.useState(null);
 
@@ -82,7 +82,7 @@ export default function EditLocationForm(props) {
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
                     <Button 
-                    disabled = {newName == null  || newCapacity == null || newType || null}
+                    disabled = {newName == null  || newCapacity == null || newType == -1}
                     onClick={handleAddLocation}
                      color="primary">Add</Button>
                 </DialogActions>
