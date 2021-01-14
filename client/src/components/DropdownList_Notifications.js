@@ -7,6 +7,7 @@ import axios from 'axios';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
+let isPeriodicCalled = false;
 export default function SimpleMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isLoggedOut, setIsLoggedOut] = React.useState(false);
@@ -18,17 +19,21 @@ export default function SimpleMenu() {
         setNotifications(res.data.sort((a, b) => b.date > a.date));
     };
 
-        const periodic = (() => {
-            setInterval(async () => {
-                if(parseInt(localStorage.getItem("type")) != 0) return;
-                console.log(localStorage.getItem("type"));
-                let res = await axios.get('ac/getAllNotifications');
-                res = res.data.sort((a, b) => b.date > a.date);
-                const resJSON = JSON.stringify(res);
-                if (resJSON != JSON.stringify(notifications))
-                    setNotifications(res);
 
-            }, 100000)
+        const periodic = (() => {
+            if(!isPeriodicCalled){
+                isPeriodicCalled = true;
+                setInterval(async () => {
+                    if(parseInt(localStorage.getItem("type")) != 0) return;
+                    console.log(localStorage.getItem("type"));
+                    let res = await axios.get('ac/getAllNotifications');
+                    res = res.data.sort((a, b) => b.date > a.date);
+                    const resJSON = JSON.stringify(res);
+                    if (resJSON != JSON.stringify(notifications))
+                        setNotifications(res);
+    
+                }, 10000)
+            }
         })();
           
 
