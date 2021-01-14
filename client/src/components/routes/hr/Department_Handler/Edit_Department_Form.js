@@ -39,7 +39,7 @@ export default function EditDepartmentForm(props) {
     const handleClose = () => {
         props.handleCloseEdit();
         setNewHOD(null);
-        setNewMembers(null);
+        //setNewMembers(null);
     };
 
     const handleEditDepartment = async () => {
