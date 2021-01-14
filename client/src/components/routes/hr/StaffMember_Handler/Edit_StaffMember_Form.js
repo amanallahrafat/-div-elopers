@@ -143,10 +143,9 @@ export default function EditStaffMemberForm(props) {
                     <Autocomplete
                         options={props.offices}
                         getOptionLabel={(option) => option.name}
-                        defaultValue = {props.offices.find(elm =>elm.ID == props.staffMember.officeID)}
+                        defaultValue = {getDefaultOffice(props.staffMember.officeID)}
                         onChange={(event, value) => {
-                            value = value.map(elm => elm.ID);
-                            setOffice(value);
+                            setOffice(value.ID);
                         }}
                         renderInput={(params) => (
                             <TextField
@@ -162,8 +161,7 @@ export default function EditStaffMemberForm(props) {
                         getOptionLabel={(option) => option.name}
                         defaultValue = {props.departments.find(elm =>elm.ID == props.staffMember.departmentID)}
                         onChange={(event, value) => {
-                            value = value.map(elm => elm.ID);
-                            setOffice(value);
+                            setDepartment(value.ID);
                         }}
                         renderInput={(params) => (
                             <TextField
