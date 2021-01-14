@@ -21,6 +21,7 @@ export default function SimpleMenu() {
     if(parseInt(localStorage.getItem("type")) == 0){
         const periodic = (() => {
             setInterval(async () => {
+                console.log(localStorage.getItem("type"));
                 let res = await axios.get('ac/getAllNotifications');
                 res = res.data.sort((a, b) => b.date > a.date);
                 const resJSON = JSON.stringify(res);
