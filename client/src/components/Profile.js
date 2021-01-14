@@ -71,7 +71,7 @@ export default function MainFeaturedPost(props) {
   const [openEdit, setOpenEdit] = React.useState(false);
   const [openExtraInfo, setOpenExtraInfo] = React.useState(false);
   const [backdropIsOpen, setBackdropIsOpen] = React.useState(false);
-
+  const [currentMonthSalary,setCurrentMonthSalary]=React.useState("loading..");
   const handleOpenEdit = (event) => {
     setOpenEdit(true);
   }
@@ -88,7 +88,41 @@ export default function MainFeaturedPost(props) {
 
   const calculateSalary = async () => {
     const salary = props.profile.salary;
+    let newSalary=salary;
+    try{
+      let missingHours=(await axios.get('/viewMissingHours')).data;
+      missingHours=parseInt(missingHours);
+      const missingDays=(await axios.get('/viewMissingDays')).data;
+    
+      if(missingHours>=3){
+          missingHours=missingHours-3;
+
+        const numberOfHours=parseInt(missingHours);
+        const numberOfMinutes=(missingHours-numberOfHours)*60;
+        newSalary=newSalary-(numberOfHours*(salary/180.0));
+        newSalary=newSalary-(numberOfMinutes*(salary/(180.0*60.0)));
+    
+      }
+      const noOfDays=missingDays.length;
+      newSalary=newSalary-(noOfDays*(salary/(60.0)));
+      
+
+    }catch(err){
+      props.openAlert("something went wrong please try again");
+    }
+    newSalary=parseInt(newSalary*100)/100.0;
+    setCurrentMonthSalary(newSalary);
+    return newSalary;
   }
+  
+  React.useEffect(  async ()=>{
+    if(currentMonthSalary=="loading..")
+       { 
+         const newSalary=await calculateSalary();
+        console.log("new salary is ",newSalary);
+       }
+
+  },[]);
 
   const handleDeleteExtraInfo = async (event) => {
     setBackdropIsOpen(true);
@@ -165,7 +199,7 @@ export default function MainFeaturedPost(props) {
                       <b>Gender:</b> {props.profile.gender}<br />
                       <b>Day off:</b> {props.profile.dayOff}<br />
                       <b>Salary:</b> {props.profile.salary}<br />
-                      <b>Current Month Salary:</b> {calculateSalary()}<br />
+                      <b>Current Month Salary:</b> { currentMonthSalary}<br />
                       <b>Annual Balance:</b> {props.profile.annualBalance}<br />
                       <b>Accidental Leave Balance:</b> {props.profile.accidentalLeaveBalance}<br />
                       <Collapse in ={localStorage.getItem("type") != 1}>

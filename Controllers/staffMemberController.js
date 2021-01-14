@@ -162,11 +162,12 @@ const viewMissingHours = async (req, res) => {
     const sickLeaves = await Sick_Leave_Request.find();
 
     const missingHours = extraUtils.getMissingHours(staff_member, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
-    if (missingHours > 0) {
-        res.send("the missing hours till today are ".concat(missingHours));
-    } else {
-        res.send("you have extra hours till today ".concat(-1 * missingHours));
-    }
+     res.send(""+missingHours);
+    // if (missingHours > 0) {
+    //     res.send("the missing hours till today are ".concat(missingHours));
+    // } else {
+    //     res.send("you have extra hours till today ".concat(-1 * missingHours));
+    // }
 
 
 }
@@ -235,10 +236,10 @@ const viewMissingDays = async (req, res) => {
     const maternalityLeaves = await Maternity_Leave_Request.find();
     const sickLeaves = await Sick_Leave_Request.find();
 
-    const missingHours = await extraUtils.getMissingDays(staff_member, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
+    const missingDays = await extraUtils.getMissingDays(staff_member, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
 
 
-    res.send(missingHours);
+    res.send(missingDays);
 }
 
 
