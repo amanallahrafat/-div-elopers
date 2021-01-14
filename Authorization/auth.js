@@ -7,7 +7,6 @@ const key = "jkanbvakljbefjkawkfew";
 
 const authStaffMember = async (req,res,next)=>{
     const token = req.header("auth-token");
-    console.log(token);
     if(!token)
         return res.status(403).send("Please Login to continue !");
     try{

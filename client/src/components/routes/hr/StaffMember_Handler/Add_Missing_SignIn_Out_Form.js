@@ -65,9 +65,9 @@ export default function AddStaffMemberForm(props) {
             const req = {
                 ID : props.staffMember.ID,
                 type : props.staffMember.type,
-                signinYear : signIn.date.getFullYear(),signinMonth : signIn.date.getMonth(),signinDay : signIn.date.getDate(),
+                signinYear : signIn.date.getFullYear(),signinMonth : signIn.date.getMonth()+1,signinDay : signIn.date.getDate(),
                 signinHour : signIn.time.getHours() ,signinMinute : signIn.time.getMinutes(),signinSec : signIn.time.getSeconds(),
-                signoutYear : signOut.date.getFullYear(),signoutMonth : signOut.date.getMonth(),signoutDay : signOut.date.getDate(),
+                signoutYear : signOut.date.getFullYear(),signoutMonth : signOut.date.getMonth()+1,signoutDay : signOut.date.getDate(),
                 signoutHour : signOut.time.getHours() ,signoutMinute : signOut.time.getMinutes(),signoutSec : signOut.time.getSeconds(),
             };
             const res = await axios.post("/hr/addMissingSignInOut", req);

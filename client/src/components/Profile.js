@@ -91,9 +91,7 @@ export default function MainFeaturedPost(props) {
     let newSalary=salary;
     try{
       let missingHours=(await axios.get('/viewMissingHours')).data;
-      missingHours=parseInt(missingHours);
       const missingDays=(await axios.get('/viewMissingDays')).data;
-    
       if(missingHours>=3){
           missingHours=missingHours-3;
 
@@ -111,6 +109,7 @@ export default function MainFeaturedPost(props) {
       props.openAlert("something went wrong please try again");
     }
     newSalary=parseInt(newSalary*100)/100.0;
+    newSalary=Math.max(newSalary,0);
     setCurrentMonthSalary(newSalary);
     return newSalary;
   }

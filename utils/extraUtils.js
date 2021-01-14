@@ -35,7 +35,7 @@ const getAcademicMemberByID_arr = async (ID_arr) => {
     for(const mem of academicMemNames){
         const ac = academicMem2.filter(elem=>elem.ID==mem.ID)[0];
         mem['_doc'].ac = ac;
-        console.log(mem)
+     //   console.log(mem)
     }
     return academicMemNames;
 }
@@ -121,6 +121,7 @@ const getMissingHours = (staffMem, accidentalLeaves, annualLeaves, compensationL
     let noOfDaysTillToday = 0;
     while (startOfMonth.getTime() <= curDate.getTime()) {
         if (!isFreeDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves)) {
+            if(!isMissingDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves))
             noOfDaysTillToday = noOfDaysTillToday + 1;
         }
         startDay = startDay + 1;
@@ -223,8 +224,10 @@ const isMissingDay = async (staffMem, date, accidentalLeaves, annualLeaves, comp
     //checking that he signed in on this date
     const attendanceArray = staffMem.attendanceRecord;
     for (const record of attendanceArray) {
+     //   console.log("record ",record);
         if (record.status == 1 && record.signin && record.signout) {
             signinDate = new Date(record.signin);
+       //     console.log("in check equality ",twoDatesAreEqual(signinDate, date) ,signinDate,date)
             if (twoDatesAreEqual(signinDate, date))
                 return false;
 

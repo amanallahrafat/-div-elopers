@@ -1,6 +1,4 @@
-import { Collapse } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
@@ -12,13 +10,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Toolbar from '@material-ui/core/Toolbar';
-import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
+import axios from 'axios';
+import Box from '@material-ui/core/Box';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import Grid from '@material-ui/core/Grid';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -120,9 +119,21 @@ const EnhancedTableToolbar = (props) => {
           {numSelected} selected
         </Typography>
       ) : (
-          <Typography className={classes.title} variant="h5" id="tableTitle" component="div">
+          <Grid container display="flex" direction="row" justifyContent="space-around" >
+        
+            <Grid item xs md>
+          <Typography  variant="h5" id="tableTitle" component="div">
             Missing Days
           </Typography>
+          </Grid>
+        
+          <Grid item  style={{marginRight:'20px'}} >
+          <Typography  variant="h6" id="tableTitle" component="div">
+          Missing Hours: {props.missingHours}
+        </Typography>
+        </Grid>
+        
+        </Grid>
         )}
     </Toolbar>
   );
@@ -169,7 +180,15 @@ export default function EnhancedTable(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [missingHours,setMissingHours]=React.useState("loading..");
 
+  React.useEffect(async()=>{
+    if(missingHours=="loading.."){
+      const hours=(await axios.get('/viewMissingHours')).data;
+      console.log("the hours are",  hours)
+      setMissingHours(hours);
+    }
+  },[])
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -224,7 +243,7 @@ export default function EnhancedTable(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} missingHours={missingHours}/>
         <TableContainer>
           <Table
             className={classes.table}
