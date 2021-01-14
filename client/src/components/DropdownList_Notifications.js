@@ -28,7 +28,7 @@ export default function SimpleMenu() {
                 if (resJSON != JSON.stringify(notifications))
                     setNotifications(res);
 
-            }, 10_000)
+            }, 100000)
         })();
           
 
