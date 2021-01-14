@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EditDepartmentForm(props) {
     const classes = useStyles();
     const [newHOD, setNewHOD] = React.useState(null);
-    const [newMembers, setNewMembers] = React.useState(null);
+    //const [newMembers, setNewMembers] = React.useState(null);
 
     const handleChange = (event) => {
         setNewHOD(event.target.value);
@@ -49,8 +49,8 @@ export default function EditDepartmentForm(props) {
                 name: newName,
             };
             if (newHOD != null) req.hodID = newHOD;
-            if (newMembers != null) req.members = newMembers;
-            console.log(newMembers);
+            //if (newMembers != null) req.members = newMembers;
+            //console.log(newMembers);
             const res = await axios.put(`/hr/updateDepartment/${props.department.ID}`, req);
             props.setComponentInMain("department");
             props.openAlert("Department updated Successfully!" ,"success");
@@ -91,7 +91,7 @@ export default function EditDepartmentForm(props) {
                                 />
                             )}
                         />
-                        <Autocomplete
+                        {/* <Autocomplete
                             multiple
                             options={props.academicMembers}
                             getOptionLabel={(option) => option.name}
@@ -111,7 +111,7 @@ export default function EditDepartmentForm(props) {
                                     label="Members"
                                 />
                             )}
-                        />
+                        /> */}
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
