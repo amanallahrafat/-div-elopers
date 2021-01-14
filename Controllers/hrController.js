@@ -612,7 +612,8 @@ const deleteDepartment = async (req, res) => {
     const department = await Department.findOne({ ID: req.params.ID });
     if (!department)
         return res.status(404).send("Department name Not Valid");
-
+    if(department.members && department.members.length > 0)
+        return res.status(400).send("You can not delete a department with members, please update them first !");
     await Department.deleteOne({ ID: req.params.ID });
     await removeCascade.removeDepartment(req.params.ID);
     res.send("Department Deleted Successfully!");

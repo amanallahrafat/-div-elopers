@@ -169,9 +169,6 @@ export default function MainFeaturedPost(props) {
                     </Typography>                    
                   </CardContent>
                 </div>
-                <Hidden xsDown>
-                  <CardMedia className={classes.cardMedia} title={"SARAH"} />
-                </Hidden>
               </Card>
           </Grid>
           <Grid item xs={12} md={6}>
