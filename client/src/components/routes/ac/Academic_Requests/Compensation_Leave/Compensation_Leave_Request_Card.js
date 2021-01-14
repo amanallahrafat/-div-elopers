@@ -136,7 +136,12 @@ export default function RequestForm(props) {
                     <Button onClick={handleClose} color="primary">
                         Back
           </Button>
-                    <Button onClick={handleSubmitRequest} color="primary">
+                    <Button
+                        disabled={msg == "" ||
+                            msg == " " ||
+                            selectedAbsenceDate == null ||
+                            selectedCompensationDate == null}
+                        onClick={handleSubmitRequest} color="primary">
                         Submit request
           </Button>
                 </DialogActions>
