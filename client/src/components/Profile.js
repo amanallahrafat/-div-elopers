@@ -86,6 +86,10 @@ export default function MainFeaturedPost(props) {
     setOpenExtraInfo(false);
   }
 
+  const calculateSalary = async () => {
+    const salary = props.profile.salary;
+  }
+
   const handleDeleteExtraInfo = async (event) => {
     setBackdropIsOpen(true);
     const newInfo = props.profile.extraInfo.filter((info, idx) => {
@@ -161,6 +165,7 @@ export default function MainFeaturedPost(props) {
                       <b>Gender:</b> {props.profile.gender}<br />
                       <b>Day off:</b> {props.profile.dayOff}<br />
                       <b>Salary:</b> {props.profile.salary}<br />
+                      <b>Current Month Salary:</b> {calculateSalary()}<br />
                       <b>Annual Balance:</b> {props.profile.annualBalance}<br />
                       <b>Accidental Leave Balance:</b> {props.profile.accidentalLeaveBalance}<br />
                       <Collapse in ={localStorage.getItem("type") != 1}>
