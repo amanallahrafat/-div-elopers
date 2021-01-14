@@ -51,6 +51,7 @@ export default function AddSlotForm(props) {
                     locationID : location
                 }
             };
+            console.log(req);
             const res = await axios.post(`/cc/createSlot`, req);
             console.log(res.data);
             await props.handleSlots(res.data,0);

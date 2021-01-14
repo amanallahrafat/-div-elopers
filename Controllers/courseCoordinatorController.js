@@ -112,7 +112,7 @@ const createSlot = async(req, res) => {
         return res.status(400).send(isValid.error.details[0].message);
 
     const course = await Course.findOne({ ID: courseID });
-    if (!courseID)
+    if (!course)
         return res.status(400).send("the requested course does not existed!");
     if(course.coordinatorID!= ID){
         return res.status(400).send("You have to be a coordinator of this course to do this");
