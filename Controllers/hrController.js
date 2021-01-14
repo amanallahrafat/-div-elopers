@@ -591,12 +591,12 @@ const updateDepartment = async (req, res) => {
                     const index = dep.members.indexOf(mem);
                     dep.members.splice(index, 1);
                     if (dep.hodID == mem) {
-                        await Department.updateOne({ ID: dep.ID }, { $unset: { hodID: 1 } })
+                        await Academic_Member.updateOne({ ID: dep.hodID }, { type: 1 });
+                        await Department.updateOne({ ID: dep.ID }, { $unset: { hodID: 1 } });
                     }
                 }
                 await Department.updateOne({ ID: dep.ID }, { members: dep.members })
             }
-            await Academic_Member.updateOne({ ID: mem }, { type: 1 });
         }
     }
 
