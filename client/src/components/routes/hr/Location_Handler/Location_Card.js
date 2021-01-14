@@ -86,10 +86,15 @@ export default function Location_Card(props) {
 
     const handleDeleteLocation = async (event) => {
         const deletedID = event.currentTarget.id.split('_')[1];
-        const res = await axios.delete(`/hr/deleteLocation/${deletedID}`);
-        props.handleLocations({ID : deletedID},2);
-        props.setComponentInMain("location");
-        props.openAlert("Location deleted Successfully!","success");
+        try{
+            const res = await axios.delete(`/hr/deleteLocation/${deletedID}`);
+            props.handleLocations({ID : deletedID},2);
+            props.setComponentInMain("location");
+            props.openAlert("Location deleted Successfully!","success");
+        }
+        catch(err){
+            props.openAlert(err.response.data);
+        }
     }
 
     const handleUpdateLocation = async (event) => {
