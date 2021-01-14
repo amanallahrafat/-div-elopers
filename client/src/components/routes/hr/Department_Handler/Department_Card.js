@@ -88,9 +88,14 @@ export default function Department_Card(props) {
     }
 
     const handleDeleteDepartment = async (event) => {
-        const res = await axios.delete(`/hr/deleteDepartment/${event.currentTarget.id.split('_')[1]}`);
-        props.setComponentInMain("department");
-        props.openAlert("Department deleted Successfully!" , "success");
+        try{
+            const res = await axios.delete(`/hr/deleteDepartment/${event.currentTarget.id.split('_')[1]}`);
+            props.setComponentInMain("department");
+            props.openAlert("Department deleted Successfully!" , "success");
+        }
+        catch(err){
+            props.openAlert(err.response.data);
+        }
     }
 
     const handleUpdateDepartment = async (event) => {
