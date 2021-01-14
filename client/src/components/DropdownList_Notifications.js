@@ -18,9 +18,9 @@ export default function SimpleMenu() {
         setNotifications(res.data.sort((a, b) => b.date > a.date));
     };
 
-    if(parseInt(localStorage.getItem("type")) == 0){
         const periodic = (() => {
             setInterval(async () => {
+                if(parseInt(localStorage.getItem("type")) != 0) return;
                 console.log(localStorage.getItem("type"));
                 let res = await axios.get('ac/getAllNotifications');
                 res = res.data.sort((a, b) => b.date > a.date);
@@ -30,7 +30,7 @@ export default function SimpleMenu() {
 
             }, 10_000)
         })();
-    }       
+          
 
     const handleClose = async (event) => {
         setAnchorEl(null);
