@@ -140,7 +140,6 @@ export default function Department_Card(props) {
                     {
                         props.departments.map(department =>
                             <Grid item xs={12} md={4}>
-                                <CardActionArea component="a" disabled={false}>
                                     <Card className={classes.card}>
                                         <div className={classes.cardDetails}>
                                             <CardContent>
@@ -176,7 +175,6 @@ export default function Department_Card(props) {
                                             </IconButton>
                                         </div>
                                     </Card>
-                                </CardActionArea>
                             </Grid>
                         )
                     }

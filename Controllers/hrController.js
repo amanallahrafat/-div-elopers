@@ -129,9 +129,24 @@ const deleteLocation = async (req, res) => {
     const location = await Location.findOne({ ID: req.params.ID });
     if (!location)
         return res.status(404).send("Location ID Not Valid");
-
+    const staffMem=await Staff_Member.find();
+    for(const mem of staffMem){
+        if(mem.officeID==location.ID){
+            return res.status(400).send("You can't delete an occupied office, update members' offices first");
+        }
+    }
+    const schedules=await Course_Schedule.find();
+    for(const sch of schedules){
+        if(sch.slots){
+            for(const slot of sch.slots){
+                if(slot.locationID==location.ID){
+                    return res.status(400).send("You can't delete an occupied location, update slots' locations first");
+                }
+            }
+        }
+    }
     await Location.deleteOne({ ID: req.params.ID });
-    await removeCascade.removeLocation(req.params.ID);
+   // await removeCascade.removeLocation(req.params.ID);
     res.send("Location Deleted Successfully!");
 }
 // End Location CRUD
