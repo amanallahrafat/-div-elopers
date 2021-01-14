@@ -74,7 +74,7 @@ let scheduleObj = {
     'monday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
     'tuesday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
     'wednesday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
-    'thurseday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
+    'thursday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
     'friday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
 }
 export default function CustomizedTables(props) {
@@ -111,7 +111,7 @@ export default function CustomizedTables(props) {
             'monday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
             'tuesday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
             'wednesday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
-            'thurseday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
+            'thursday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
             'friday': [[<div />], [<div />], [<div />], [<div />], [<div />]],
         }
         console.log("course schedule ", courseSchedule);
