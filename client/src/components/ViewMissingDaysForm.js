@@ -107,7 +107,17 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
-
+  const calculateHours=(missingHours)=>{
+    if(missingHours=="loading..")return missingHours;
+    if(missingHours<0)
+    missingHours=-missingHours;
+  
+      const numberOfHours=parseInt(missingHours);
+      const numberOfMinutes=parseInt((missingHours-numberOfHours)*60);
+      
+      return ""+numberOfHours+":"+numberOfMinutes;
+   
+  }
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -129,7 +139,7 @@ const EnhancedTableToolbar = (props) => {
         
           <Grid item  style={{marginRight:'20px'}} >
           <Typography  variant="h6" id="tableTitle" component="div">
-          Missing Hours: {props.missingHours}
+          {props.missingHours>=0?"Missing ":"Extra"} Hours: {calculateHours(props.missingHours)}
         </Typography>
         </Grid>
         
@@ -185,7 +195,6 @@ export default function EnhancedTable(props) {
   React.useEffect(async()=>{
     if(missingHours=="loading.."){
       const hours=(await axios.get('/viewMissingHours')).data;
-      console.log("the hours are",  hours)
       setMissingHours(hours);
     }
   },[])

@@ -121,13 +121,15 @@ const getMissingHours = (staffMem, accidentalLeaves, annualLeaves, compensationL
     let noOfDaysTillToday = 0;
     while (startOfMonth.getTime() <= curDate.getTime()) {
         if (!isFreeDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves)) {
-            if(!isMissingDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves))
+            const missingDay= isMissingDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
+            if(!missingDay){
+            
             noOfDaysTillToday = noOfDaysTillToday + 1;
         }
+    }
         startDay = startDay + 1;
         startOfMonth = new Date(startYear, startMonth, startDay, 2, 0, 0, 0);
     }
-
     return missingHours = noOfDaysTillToday * 8.4 - attendedHours;
 }
 const isFreeDay = (staffMem, date, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves) => {
@@ -194,7 +196,7 @@ const getMissingDays = async (staffMem, accidentalLeaves, annualLeaves, compensa
     let startYear = startOfMonth.getFullYear();
     let missingDays = [];
     while (startOfMonth.getTime() <= curDate.getTime()) {
-        const miss = await isMissingDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
+        const miss =  isMissingDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
         if (miss) {
             missingDays.push(startOfMonth);
         }
@@ -215,7 +217,7 @@ const twoDatesAreEqual = (date1, date2) => { // date entered as normal date not 
 
 
 
-const isMissingDay = async (staffMem, date, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves) => { // date is in normal date format not miliseconds
+const isMissingDay =  (staffMem, date, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves) => { // date is in normal date format not miliseconds
     const dateInms = date.getTime();
 
     //checking that this is not a dayOff or friday
