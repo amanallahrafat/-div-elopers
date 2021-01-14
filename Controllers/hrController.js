@@ -737,6 +737,9 @@ const deleteCourse = async (req, res) => {
         await Course_Schedule.deleteOne({ ID: scheduleID });
     }
     await Course.deleteOne({ ID: courseID });
+    if(course.coordinatorID){
+        await Academic_Member.updateOne({ID : course.coordinatorID},{type : 3});
+    }
     return res.send("Course has been deleted successfully");
 }
 
