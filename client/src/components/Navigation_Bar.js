@@ -99,17 +99,17 @@ class Navigation_Bar extends Component {
 
     async componentDidMount() {
         // window.addEventListener('scroll',this.handleScroll);
-        window.onscroll = () => {
-            const newScrollHeight = Math.ceil(window.scrollY / 50) * 50;
-            if (this.state.currentScrollHeight !== newScrollHeight) {
-                this.setState({ currentScrollHeight: newScrollHeight });
-            }
-        };
-        await this.setState({
-            targetHeight:
-                this.props.first -
-                document.getElementById("Header").getClientRects()[0].y
-        });
+        // window.onscroll = () => {
+        //     const newScrollHeight = Math.ceil(window.scrollY / 50) * 50;
+        //     if (this.state.currentScrollHeight !== newScrollHeight) {
+        //         this.setState({ currentScrollHeight: newScrollHeight });
+        //     }
+        // };
+        // await this.setState({
+        //     targetHeight:
+        //         this.props.first -
+        //         document.getElementById("Header").getClientRects()[0].y
+        // });
         this.handleViewProfile();
     }
 
@@ -122,8 +122,14 @@ class Navigation_Bar extends Component {
         const currentRoute=window.location.pathname;
         
         return (
-            <div className={classes.grow} id = "Header" style={styles.Header} ref="Header" style={{zIndex:500000000}}>
-                <AppBar style={{zIndex:500000000}} position="fixed" className={clsx(classes.appBar, {
+            <div className={classes.grow} id = "Header" 
+            // style={styles.Header} ref="Header" 
+            // style={{zIndex:500000000}}
+            >
+                <AppBar 
+                // style={{zIndex:500000000}}
+                //  position="fixed" 
+                 className={clsx(classes.appBar, {
                     [classes.appBarShift]: this.state.isSlideBarOpen,
                 })}>
                     <Toolbar >
