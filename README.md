@@ -10,14 +10,14 @@
 		* `For The server in The root directory :`  `npm install`
 		* `For the client side in the root directory :`  `cd client` then `npm install`
 	* To start the data base by creating an HR you should call the route: `/init`
-	(POST) This adds an HR manually to the database and should only be called once. To login the email is : "HR@guc.com"  , the password is : "123456". 
-## Test The API Manually using Postman
+	(POST) This adds an HR manually to the database and should only be called once. To login the email is : `HR@guc.com`  , the password is : `123456`. 
+## Testing The API Manually using Postman
 * The server can be run using : node server.js
 * The server runs on port 3000.
 * The server.js file in the root directory contains the connection string to the database.
 * You need to create an HR manually to start testing as this is the recommended starting point
 * The UML is provided in the file ACML Project.png in the root directory
-* To start the data base by creating an HR you should call the route: `/init` (POST) This adds an HR manually to the database and should only be called once. To login the email is : "HR@guc.com"  , the password is : "123456" 
+* To start the data base by creating an HR you should call the route: `/init` (POST) This adds an HR manually to the database and should only be called once. To login the email is : `HR@guc.com`  , the password is : `123456` 
 ## HR Functionalities
 
 ### <b>Functionality: </b> Add a new location <br>
