@@ -131,7 +131,6 @@ export default function Faculty_Card(props) {
                     {
                         props.faculties.map(faculty =>
                             <Grid item xs={12} md={4}>
-                                <CardActionArea component="a" href="#" disabled={false}>
                                     <Card className={classes.card}>
                                         <div className={classes.cardDetails}>
                                             <CardContent>
@@ -166,7 +165,6 @@ export default function Faculty_Card(props) {
                                             </IconButton>
                                         </div>
                                     </Card>
-                                </CardActionArea>
                             </Grid>
                         )
                     }

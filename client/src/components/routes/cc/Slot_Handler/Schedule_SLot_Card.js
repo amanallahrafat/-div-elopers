@@ -16,7 +16,7 @@ import axios from 'axios';
 
 const useStyles = makeStyles({
     root: {
-        width : 160
+        width : 180
     },
     bullet: {
         display: 'inline-block',
@@ -72,7 +72,7 @@ export default function SimpleCard(props) {
 
     return (
         <div>
-                <Card className={classes.root}>
+                <Card className={classes.root} >
                     <CardContent style={{margin : "0px",padding : "7px"}} >
                         <Box display="flex" flexDirection="row" style={{margin : "0px",padding : "0px"}}>
                             <Box style={{margin : "0px",padding : "0px"}}>

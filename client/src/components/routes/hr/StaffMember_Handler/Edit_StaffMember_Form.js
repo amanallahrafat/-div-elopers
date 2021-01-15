@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EditStaffMemberForm(props) {
 
     const classes = useStyles();
-
+    
     const [name , setName] = React.useState(null);
     const [salary , setSalary] = React.useState(null);
     const [dayOff , setDayOff] = React.useState(null);
@@ -143,8 +143,11 @@ export default function EditStaffMemberForm(props) {
                     <Autocomplete
                         options={props.offices}
                         getOptionLabel={(option) => option.name}
-                        defaultValue = {getDefaultOffice(props.staffMember.officeID)}
+                        
+                        defaultValue = {props.offices.find(elm =>elm.ID == props.staffMember.officeID)}
+                        // defaultValue = {getDefaultOffice(props.staffMember.officeID)}
                         onChange={(event, value) => {
+                            if(value!=null)
                             setOffice(value.ID);
                         }}
                         renderInput={(params) => (
@@ -152,7 +155,8 @@ export default function EditStaffMemberForm(props) {
                                 {...params}
                                 variant="standard"
                                 label="Office"
-                            />
+                         
+                                />
                         )}
                     />
                     <Collapse in ={props.staffMember.type == 0 }>
@@ -161,6 +165,7 @@ export default function EditStaffMemberForm(props) {
                         getOptionLabel={(option) => option.name}
                         defaultValue = {props.departments.find(elm =>elm.ID == props.staffMember.departmentID)}
                         onChange={(event, value) => {
+                            if(value!=null)
                             setDepartment(value.ID);
                         }}
                         renderInput={(params) => (
@@ -168,6 +173,7 @@ export default function EditStaffMemberForm(props) {
                                 {...params}
                                 variant="standard"
                                 label="Department"
+                         
                             />
                         )}
                     />
