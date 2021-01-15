@@ -152,7 +152,7 @@ class Academic_Member_List extends Component {
                         <ListItemIcon ><CallReceivedIcon /></ListItemIcon>
                         <ListItemText style={{ textAlign: "left" }}
                             className={classes.menuButton}
-                            primary={"Academic Requests"} />
+                            primary={"Send Requests"} />
                     </AccordionSummary>
                     <AccordionDetails>
                         <List>

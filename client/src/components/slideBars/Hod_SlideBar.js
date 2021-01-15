@@ -199,7 +199,7 @@ export default function PersistentDrawerLeft(props) {
             id="panel1a-header"
           >
             <ListItemIcon ><CallReceivedIcon /></ListItemIcon>
-            <ListItemText style={{ textAlign: "left" }} className={classes.menuButton} primary={"Requests"} />
+            <ListItemText style={{ textAlign: "left" }} className={classes.menuButton} primary={"Incoming Requests"} />
           </AccordionSummary>
           <AccordionDetails>
             <List>
