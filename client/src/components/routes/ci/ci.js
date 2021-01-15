@@ -465,7 +465,7 @@ class CI extends Component {
             return;
         }
         try {
-            setAuthToken(localStorage.getItem('auth-token'));
+           // setAuthToken(localStorage.getItem('auth-token'));
             await axios.get('/authStaffMember');
             await axios.get('/authCourseInstructor');
             this.setState({ isLoggedIn: 2 });

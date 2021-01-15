@@ -500,7 +500,7 @@ class HOD extends Component {
             return;
         }
         try {
-            setAuthToken(localStorage.getItem("auth-token"));
+            //setAuthToken(localStorage.getItem("auth-token"));
             await axios.get("/authStaffMember");
             await axios.get("/authHOD");
             this.setState({ isLoggedIn: 2 });

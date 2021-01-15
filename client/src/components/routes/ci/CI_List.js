@@ -53,7 +53,7 @@ class Course_Instructor_List extends Component {
             return;
         }
         try {
-            setAuthToken(localStorage.getItem('auth-token'));
+           // setAuthToken(localStorage.getItem('auth-token'));
             await axios.get('/authStaffMember');
             this.setState({ isLoggedIn: 2 });
         }

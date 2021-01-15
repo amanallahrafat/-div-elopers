@@ -8,10 +8,12 @@ export const login = async userData => {
         token = user.headers['auth-token'];
     if (!token)
         throw new Error("Wrong Email or Password");
-    localStorage.setItem("auth-token", token);
+    localStorage.clear();
+     localStorage.setItem("auth-token", token);
     localStorage.setItem("type",user.data.type);
     localStorage.setItem("ID",user.data.ID);
     localStorage.setItem("academicMemberType",user.data.academicMemberType);
+
     setAuthToken(token);
     return {
         type: user.data.type,

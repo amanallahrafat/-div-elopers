@@ -364,7 +364,7 @@ class CC extends Component {
             return;
         }
         try {
-            setAuthToken(localStorage.getItem("auth-token"));
+         //   setAuthToken(localStorage.getItem("auth-token"));
             await axios.get("/authStaffMember");
             await axios.get('/authCourseCoordinator');
             console.log("here");
