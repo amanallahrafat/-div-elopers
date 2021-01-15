@@ -7,7 +7,7 @@
 	* The Backend server runs on port 5000 using the command in the root directory : `npm start`
 	* The Frontend server runs on port 3000 using the following commands in the root directory : `cd client` then `npm start`
 	* Note : `You should install the requied packages before trying to start the App using the following command in the both server and client sides :`
-		* `For The server in The root directory : npm install`
+		* `For The server in The root directory :`  `npm install`
 		* `For the client side in the root directory :`  `cd client` then `npm install`
 	* To start the data base by creating an HR you should call the route: `/init`
 	(POST) This adds an HR manually to the database and should only be called once. To login the email is : "HR@guc.com"  , the password is : "123456". 
