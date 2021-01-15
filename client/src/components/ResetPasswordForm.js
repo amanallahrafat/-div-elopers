@@ -51,6 +51,14 @@ export default function ResetPassword(props) {
   const [newequalOld , setNewequalOld] = React.useState(false);
   const [errorMsg , setErrorMsg] = React.useState(null);
 
+  const equalString = () => {
+    if(oldPassword != null && newPassword != null){
+      const equal = oldPassword.localeCompare(newPassword) == 0 ;
+      return equal;
+    }
+    return false;
+  }
+
   const handleSubmit = async (event) =>{
         event.preventDefault();
         setClicked(true);
@@ -105,7 +113,9 @@ export default function ResetPassword(props) {
             name="oldPassword"
             type ="password"
             autoFocus
-            onChange = {(event) => {setOldPassword(event.target.value)}}
+            onChange = {async (event) => {await setOldPassword(event.target.value)
+
+            }}
           />
           <TextField
             variant="outlined"
@@ -163,7 +173,7 @@ export default function ResetPassword(props) {
               />
             ) :
           <Button
-            disabled = {oldPassword == null || newPassword == null || newPasswordConfirm == null}
+            disabled = {oldPassword == null || newPassword == null || newPasswordConfirm == null || equalString()}
             type="submit"
             fullWidth
             variant="contained"
