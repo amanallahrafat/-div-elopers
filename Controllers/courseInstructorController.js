@@ -209,6 +209,17 @@ const assignAcademicMemberToSlot = async(req, res) => {
     // Q1: Could a course Instructor assign another course instructor (OR it should eb only a TA) to an assigned slot?
     // Q2: What is the difference betweeh this functionalty and the functionality of the course-coordinator of assigning slot
     // After the slot linkin request is approved.
+    const allCourseSchedule =await Course_Schedule.find();
+    for(const cs of allCourseSchedule){
+        if(cs&&cs.slots){
+            for(const s of cs.slots){
+                console.log("course is ",cs.ID," slot is ",s," academic memberID ",academicMemberID)
+                if(s.instructor==academicMemberID&&slot[0].day==s.day&&slot[0].slotNumber==s.slotNumber)
+                return res.status(400).send("This instructor already teaches a slot in this time");
+            }
+        }
+    }
+    
     const slots = schedule.slots;
     slots.forEach(elm => {
         if (elm.ID == slotID) {
@@ -293,6 +304,19 @@ const updateAcademicMemberslotAssignment = async(req, res) => {
         return res.status(400).send("No newSlot is assigned for the given course with the provided slotID");
     if (newSlot[0].instructor != null)
         return res.status(400).send("The slot is already assigned to another academic member");
+
+    const allCourseSchedule =await Course_Schedule.find();
+    for(const cs of allCourseSchedule){
+        if(cs&&cs.slots){
+            for(const slot of cs.slots){
+                console.log("course is ",cs.ID," slot is ",slot," academic memberID ",academicMemberID,newSlot[0].slotNumber,newSlot[0].day)
+          
+                if(parseInt(slot.instructor)==parseInt(academicMemberID) &&slot.day==newSlot[0].day&&parseInt(slot.slotNumber)==parseInt(newSlot[0].slotNumber))
+                return res.status(400).send("This instructor already teaches a slot in this time");
+            }
+        }
+    }
+
     // Q1: Could a course Instructor assign another course instructor (OR it should eb only a TA) to an assigned slot?
     // Q2: What is the difference betweeh this functionalty and the functionality of the course-coordinator of assigning slot
     // After the slot linkin request is approved.
