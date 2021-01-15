@@ -101,7 +101,7 @@ const getMissingHours = (staffMem, accidentalLeaves, annualLeaves, compensationL
             // const isFree = isFreeDay(staffMem, new Date(record.signin), accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
             // if (isFree)
             //     continue;
-            if((getCurDay(date) == "friday"))
+            if((getCurDay(new Date(record.signin)) == "friday"))
                 continue;
             const signinDate = new Date(record.signin);
             const signinYear = signinDate.getFullYear();
@@ -123,7 +123,7 @@ const getMissingHours = (staffMem, accidentalLeaves, annualLeaves, compensationL
     while (startOfMonth.getTime() <= curDate.getTime()) {
         
         //if (!isFreeDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves)) {
-          if (!(getCurDay(date) == "friday")) {
+          if (!(getCurDay(new Date(startOfMonth)) == "friday")) {
                 const missingDay= isMissingDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
             if(!missingDay){
             
