@@ -13,7 +13,8 @@ export const login = async userData => {
     localStorage.setItem("type",user.data.type);
     localStorage.setItem("ID",user.data.ID);
     localStorage.setItem("academicMemberType",user.data.academicMemberType);
-
+    console.log("before setting the token with token",token)
+    console.log("id is ",user.data.ID," type is ",user.data.type);
     setAuthToken(token);
     return {
         type: user.data.type,
