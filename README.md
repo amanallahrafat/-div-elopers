@@ -2,7 +2,7 @@
 * Team Number : Team-9
 * Team Members : Sarah Ahmed - Amanallah Rafat - Mohamed Khaled - Salma Khaled - Ali Kabeel
 ## Frontend Milestone :
-* ### The Deployed Link : 
+* ### The Deployed Link : https://guc-staff-portal.herokuapp.com/
 * ### Testing Milestone two Locally :
 	* The Backend server runs on port 5000 using the command in the root directory : `npm start`
 	* The Frontend server runs on port 3000 using the following commands in the root directory :
