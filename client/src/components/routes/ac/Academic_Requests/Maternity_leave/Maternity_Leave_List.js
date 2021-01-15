@@ -167,7 +167,8 @@ export default function MaternityLeaveRequest(props) {
                                                             aria-label="account of current user"
                                                             aria-haspopup="true"
                                                             color='primary'
-                                                            style={(req.status != "pending") ? { display: 'none' } : {}}
+                                                            // style={(req.status != "pending") ? { display: 'none' } : {}}
+                                                            style={(req.status == "pending"||(req.status=="accepted"&&(new Date(req.startDate)>new Date()))) ?  {}:{ display: 'none' }}
                                                             onClick={() => { handleCancelForm(req.ID) }}
                                                         >
                                                             <CloseIcon

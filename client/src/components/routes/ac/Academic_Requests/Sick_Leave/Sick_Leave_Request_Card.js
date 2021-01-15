@@ -50,7 +50,7 @@ export default function RequestForm(props) {
     function disablePast(date) {
         const today = new Date()
         const threeDaysBefore = new Date(today)
-        threeDaysBefore.setDate(tomorrow.getDate() - 4)
+        threeDaysBefore.setDate(today.getDate() - 4)
         return date.getTime() <= new Date(threeDaysBefore);
     }
 

@@ -85,7 +85,8 @@ export default function RequestForm(props) {
         const currMonth = (new Date(Date.now())).getMonth();
         const currYear = (new Date(Date.now())).getFullYear();
         const currDay = (new Date(Date.now())).getDate();
-
+        if(weekday[date.getDay()]=="friday")return true;
+        if(date<new Date())return true;
         console.log(props.senderObj.dayOff, date.getDay(), currDay, currMonth, month)
         if (year < currYear - 1 || year > currYear + 1)
             return true;

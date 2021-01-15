@@ -27,7 +27,7 @@ const sendReplacementRequest = async (req, res) => {
     const requestedDate = req.body.requestedDate;
     const isValid = validator.validateReplacementRequest(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send( isValid.error.details[0].message);
     const replacedCourse = (await Course_Schedule.findOne({ ID: courseID }));
     if (replacedCourse == null)
         return res.status(404).send("The requested course was not found");
@@ -161,7 +161,7 @@ const sendChangeDayOffRequest = async (req, res) => {
         message = "";
     const isValid = validator.validateDayOff(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     const request = await Change_Day_Off_Request.find();
     const changeDayOffRequest = new Change_Day_Off_Request({
         ID: getMaxChangeDayOffRequest(request) + 1,
@@ -484,7 +484,11 @@ const sendMaternityLeaveRequest = async (req, res) => {
         message = "";
     const isValid = validator.validateMaternityLeave(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
+    if(new Date(endDate) < new Date(startDate)){
+        return res.status(400).send("Start date should be before end date.")
+    }    
+
     const request = await Maternity_Leave_Request.find();
     const maternity_leave_request = new Maternity_Leave_Request({
         ID: getMaxSlotID(request) + 1,
@@ -517,8 +521,9 @@ const sendSickLeaveRequest = async (req, res) => {
         message = "";
     const isValid = validator.validateSickLeave(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
-    if (extraUtils.getDifferenceInDays(Date.now(), requestedDate) > 3)
+        return res.status(400).send(isValid.error.details[0].message);
+    //We changed this    
+    if (parseInt(extraUtils.getDifferenceInDays(Date.now(), requestedDate)) > 3)
         return res.status(400).send("You can't send sick leave requests for days more than three days before.")
     const request = await Sick_Leave_Request.find();
     const sick_leave_request = new Sick_Leave_Request({
@@ -540,7 +545,7 @@ const sendCompensationLeaveRequest = async (req, res) => {
     const { ID, type } = req.header.user;
     isValid = validator.validateCompensationRequest(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send( isValid.error.details[0].message);
     const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
     const department = await Department.findOne({ ID: departmentID });
     const requestedDate = req.body.requestedDate;
@@ -595,7 +600,7 @@ const sendAccidentalLeaveRequest = async (req, res) => {
         return res.status(400).send("You don't have enough anuual/accidental leave balance available.");
     isValid = validator.validateAccidentalRequest(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     const departmentID = (await Academic_Member.findOne({ ID: ID })).departmentID;
     const department = await Department.findOne({ ID: departmentID });
     const requestedDate = req.body.requestedDate;
@@ -687,7 +692,7 @@ const sendAnnualLeaveRequest = async (req, res) => {
     if (message == null) message = "";
     const isValid = validator.validateAnnualLeaveRequest(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     const user = await Academic_Member.findOne({ ID: ID });
     const department = await Department.findOne({ ID: user.departmentID });
     if (department == null)
@@ -772,7 +777,7 @@ const cancelAnnualLeaveRequest = async (req, res) => {
     if (annualLeave.status == "accepted") {
         if (new Date() < annualLeave.requestedDate) {
             const staffMem = await Staff_Member.findOne({ ID: ID, type: type });
-            staffMem.accidentalLeaveBalance = staffMem.accidentalLeaveBalance + 1;
+            staffMem.annualBalance = staffMem.annualBalance + 1;
             await Staff_Member.updateOne({ ID: ID, type: type }, staffMem);
             await Annual_Leave_Request.deleteOne({ ID: req.params.ID });
             return res.send("request has been deleted succuessfully ");

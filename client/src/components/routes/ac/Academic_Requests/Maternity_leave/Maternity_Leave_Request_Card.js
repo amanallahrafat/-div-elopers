@@ -82,7 +82,7 @@ export default function RequestForm(props) {
                         <br /><br /><label> <div style={{ fontSize: "18px" }}>Start Date:</div> </label>
                         <DatePicker
                             value={selectedStartDate}
-                            shouldDisableDate={disablePast}
+                            // shouldDisableDate={disablePast}
                             onChange={handleStartDateChange}
                         />
                     </MuiPickersUtilsProvider>
@@ -90,7 +90,7 @@ export default function RequestForm(props) {
                         <br /><br /><label> <div style={{ fontSize: "18px" }}>End Date:</div> </label>
                         <DatePicker
                             value={selectedEndDate}
-                            shouldDisableDate={disablePast}
+                            // shouldDisableDate={disablePast}
                             onChange={handleEndDateChange}
                         />
                     </MuiPickersUtilsProvider>

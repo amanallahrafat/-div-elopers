@@ -98,10 +98,11 @@ const getMissingHours = (staffMem, accidentalLeaves, annualLeaves, compensationL
     let totalHours = 0;
     for (const record of attendanceArray) {
         if (record.signin && record.signout && startOfMonth.getTime() <= record.signin && record.signin <= endOfMonth.getTime()) {
-            const isFree = isFreeDay(staffMem, new Date(record.signin), accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
-            if (isFree)
+            // const isFree = isFreeDay(staffMem, new Date(record.signin), accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
+            // if (isFree)
+            //     continue;
+            if((getCurDay(date) == "friday"))
                 continue;
-
             const signinDate = new Date(record.signin);
             const signinYear = signinDate.getFullYear();
             const signinMonth = signinDate.getMonth();
@@ -120,8 +121,10 @@ const getMissingHours = (staffMem, accidentalLeaves, annualLeaves, compensationL
     let startYear = startOfMonth.getFullYear();
     let noOfDaysTillToday = 0;
     while (startOfMonth.getTime() <= curDate.getTime()) {
-        if (!isFreeDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves)) {
-            const missingDay= isMissingDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
+        
+        //if (!isFreeDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves)) {
+          if (!(getCurDay(date) == "friday")) {
+                const missingDay= isMissingDay(staffMem, startOfMonth, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);
             if(!missingDay){
             
             noOfDaysTillToday = noOfDaysTillToday + 1;
@@ -174,6 +177,9 @@ const isFreeDay = (staffMem, date, accidentalLeaves, annualLeaves, compensationL
 
     return false;
 }
+
+
+
 
 const haveMissingDays = async (staffMem, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves) => {
     const allMissed = await getMissingDays(staffMem, accidentalLeaves, annualLeaves, compensationLeaves, maternalityLeaves, sickLeaves);

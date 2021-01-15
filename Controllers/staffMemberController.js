@@ -51,7 +51,7 @@ const signOut = async (req, res) => {
 const login = async (req, res) => {
     const isValid = validator.validateLogin(req.body);
     if (isValid.error)
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message);
     const u = await Staff_Member.findOne({ email: req.body.email });
     if (!u)
         return res.status(403).send("The user does not exist. The login falied!");
@@ -215,7 +215,7 @@ const updateMyProfile = async (req, res) => {
     const isValid = validator.validateUpdateProfile(obj);
 
     if (isValid.error){
-        return res.status(400).send({ error: isValid.error.details[0].message });
+        return res.status(400).send(isValid.error.details[0].message );
     }
 
     await Staff_Member.updateOne({ ID: ID, type: type }, obj);
