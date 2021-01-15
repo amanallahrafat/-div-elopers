@@ -145,11 +145,11 @@ export default function MainFeaturedPost(props) {
     <div>
       <Container maxWidth="lg">
 
-        <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: `url(https://i.pinimg.com/originals/94/f6/41/94f641161d1d124c6bfa2463c7feb8d4.jpg)` }}>
+        <Paper className={classes.mainFeaturedPost} style={{ padding:"0px", backgroundImage: `url(https://i.pinimg.com/originals/94/f6/41/94f641161d1d124c6bfa2463c7feb8d4.jpg)` }}>
           {/* Increase the priority of the hero background image */}
           {<img style={{ display: 'none' }} />}
           <div className={classes.overlay} />
-          <Grid container  style = {{textAlign: 'left', padding: "25px"}}>  
+          <Grid container direction="row" justify="space-between" style = {{textAlign: 'left', padding: "25px"}}>  
             <Grid item md={6}>
               <div className={classes.mainFeaturedPostContent}>
                 <Typography component="h1" variant="h3" color="inherit" gutterBottom>
@@ -168,17 +168,13 @@ export default function MainFeaturedPost(props) {
                 </Link>
               </div>
             </Grid>
-
             <Grid item md={6} style={{ textAlign: 'right' }}>
               <IconButton
                 // edge="end"
                 aria-label="account of current user"
-                //   aria-controls={menuId}
                 aria-haspopup="true"
                 id='profile'
-                // onClick={this.handleViewProfile}
                 color='primary'
-                //style={{color:'black'}}
                 onClick={handleOpenEdit}
               >
                 <EditIcon style={{ fontSize: 30, opacity: 1 }}
@@ -186,7 +182,7 @@ export default function MainFeaturedPost(props) {
               </IconButton>
 
             </Grid>
-
+        
           </Grid>
         </Paper>
         <Grid container spacing={4} >

@@ -147,14 +147,14 @@ class Navigation_Bar extends Component {
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
                             <Tooltip title={"View Missing Days/Hours"}>
-                                <IconButton aria-label="show 4 new mails" color="inherit" onClick={this.handleViewMissingDays}>
+                                <IconButton  color="inherit" onClick={this.handleViewMissingDays}>
                                     <Badge badgeContent={0} color="secondary">
                                         <WorkOffIcon />
                                     </Badge>
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title={"View Attendance"}>
-                                <IconButton aria-label="show 4 new mails" color="inherit" onClick={this.handleViewAttendance}>
+                                <IconButton  color="inherit" onClick={this.handleViewAttendance}>
                                     <Badge badgeContent={0} color="secondary">
                                         <TodayIcon />
                                     </Badge>

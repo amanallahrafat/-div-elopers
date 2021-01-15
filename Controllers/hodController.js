@@ -609,7 +609,7 @@ const respondToMaternityLeaveRequest = async (req, res) => {
         await Maternity_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "rejected" });
     }
     let msg = req.body.response == 1 ? "Your maternity leave request was accepted" : "Your maternity leave request was rejected";
-    if (req.body.msg != null)
+    if (req.body.msg != null&& req.body.msg != "")
         msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();
@@ -641,7 +641,7 @@ const respondToSickLeaveRequests = async (req, res) => {
         await Sick_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "rejected" });
     }
     let msg = req.body.response == 1 ? "Your sick leave request was accepted" : "Your sick leave request was rejected";
-    if (req.body.msg != null)
+    if (req.body.msg != null&& req.body.msg != "")
         msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();
@@ -693,7 +693,7 @@ const respondToAccidentalLeaveRequest = async (req, res) => {
         await Accidental_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "rejected" });
     }
     let msg = req.body.response == 1 ? "Your accidental leave request was accepted" : "Your accidental leave request was rejected";
-    if (req.body.msg != null)
+    if (req.body.msg != null&& req.body.msg != "")
         msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();
@@ -732,7 +732,7 @@ const respondToCompensationLeaveRequest = async (req, res) => {
         await Compensation_Leave_Request.updateOne({ ID: parseInt(req.params.ID) }, { status: "rejected" });
     }
     let msg = req.body.response == 1 ? "Your compensation leave request was accepted" : "Your compensation leave request was rejected";
-    if (req.body.msg != null)
+    if (req.body.msg != null&& req.body.msg != "")
         msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();
@@ -776,7 +776,7 @@ const respondToAnnualLeaveRequests = async (req, res) => {
 
     }
     let msg = req.body.response == 1 ? "Your annual leave request was accepted" : "Your annual leave request was rejected";
-    if (req.body.msg != null)
+    if (req.body.msg != null&& req.body.msg != "")
         msg = msg +". Reason: " + req.body.msg;
     const notification = new Notification({ senderID: ID, receiverID: memID, msg: msg, date: Date.now() });
     await notification.save();

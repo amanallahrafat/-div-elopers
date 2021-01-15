@@ -6,6 +6,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import axios from 'axios';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import Grid from '@material-ui/core/Grid';
 
 let isPeriodicCalled = false;
 export default function SimpleMenu() {
@@ -65,11 +66,21 @@ export default function SimpleMenu() {
                         return (
                             <div>
                                 <MenuItem>
+                                    <Grid container direction="column">
+                                    <Grid item>
                                     <p>
                                         <b>{mem.senderName + " : "}
                                         </b>
                                     </p>
                                     <p>{mem.msg}</p>
+                                  
+                                    </Grid>
+                                    <Grid item>
+                                    <p>{(new Date(mem.date)).toLocaleDateString("en-US")}</p>
+                                  
+                                    </Grid>
+                                    </Grid>
+                                    
                                 </MenuItem>
                             </div>);
                     })
