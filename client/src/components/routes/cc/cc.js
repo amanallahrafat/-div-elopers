@@ -112,7 +112,7 @@ class CC extends Component {
         if(this.state.firstTimeRequests){
             const requests = await requestAllSlotLinkingRequests();
             this.setState({
-                firstTimeRequests : false,
+                // firstTimeRequests : false,
                 slotLinkingRequests : requests
             })
         }

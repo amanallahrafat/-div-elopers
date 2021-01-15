@@ -32,9 +32,9 @@ export default function RequestForm(props) {
 
     const handleSubmitRequest = async () => {
         try {
+            handleClose();
             const res = await axios.post("ac/sendAccidentalLeaveRequest",
                 { "requestedDate": (new Date(selectedDate)).getTime(), "msg": msg });
-            handleClose();
             await props.setComponentInMain("ac_accidentalLeaveRequest");
             props.openAlert('Request has been submitted successfully!',"success");
         } catch (err) {

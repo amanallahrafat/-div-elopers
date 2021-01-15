@@ -29,13 +29,13 @@ export default function RequestForm(props) {
     const handleSubmitRequest = async () => {
         try {
             console.log(msg);
+            handleClose();
             const res = await axios.post("ac/sendCompensationLeaveRequest",
                 {
                     "absenceDate": (new Date(selectedAbsenceDate)).getTime(),
                     "requestedDate": (new Date(selectedCompensationDate)).getTime(),
                     "msg": msg,
                 });
-            handleClose();
             await props.setComponentInMain("ac_compensationLeaveRequest");
             props.openAlert("The Request has been submitted Successfully!", "success");
         } catch (err) {
